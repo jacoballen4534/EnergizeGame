@@ -2,10 +2,12 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -37,8 +39,21 @@ public class Main extends Application {
 
         //Main menu scene and layout
         VBox menuLayout = new VBox(20);
+        menuLayout.setAlignment(Pos.CENTER);
         menuLayout.getChildren().addAll(title, newGameButton, loadGameButton, highScoreButton, OptionsButton, CreditsButton, QuitButton);
         Scene menuScene = new Scene(menuLayout, WIDTH, Height);
+
+        final double scale = 2;
+        menuLayout.setMinWidth(primaryStage.getWidth() * 1/scale);
+        primaryStage.widthProperty().addListener(observable -> {
+            menuLayout.setMinWidth(primaryStage.getWidth() * 1 / scale);
+        });
+
+        menuLayout.setMinHeight(primaryStage.getHeight() * 1/scale);
+        primaryStage.heightProperty().addListener(observable -> {
+            menuLayout.setMinHeight(primaryStage.getHeight() * 1 / scale);
+        });
+
 
 
         //New game buttons
@@ -48,6 +63,7 @@ public class Main extends Application {
 
         //New game scene and layout
         VBox newGameLayout = new VBox(20);
+        newGameLayout.setAlignment(Pos.CENTER);
         newGameLayout.getChildren().addAll(quickPlayButton, customPlayButton, newGameBackButton);
         Scene newGameScene = new Scene(newGameLayout, WIDTH, Height);
 
@@ -58,6 +74,7 @@ public class Main extends Application {
 
         //Load game scene and layout
         VBox loadGameLayout = new VBox(20);
+        loadGameLayout.setAlignment(Pos.CENTER);
         loadGameLayout.getChildren().addAll(loadGameOptionButton, loadGameBackButton);
         Scene loadGameScene = new Scene(loadGameLayout, WIDTH, Height);
 
@@ -68,6 +85,7 @@ public class Main extends Application {
 
         //High score scene and layout
         VBox highScoreLayout = new VBox(20);
+        highScoreLayout.setAlignment(Pos.CENTER);
         highScoreLayout.getChildren().addAll(viewHighScoresButton, highScoresBackButton);
         Scene highScoreScene = new Scene(highScoreLayout, WIDTH, Height);
 
@@ -81,6 +99,7 @@ public class Main extends Application {
 
         //Options scene and layout
         VBox optionsLayout = new VBox(20);
+        optionsLayout.setAlignment(Pos.CENTER);
         optionsLayout.getChildren().addAll(changeResolutionButton, changeVolumeButton, editKeyBindsButton, selectDifficultyButton, optionsBackButton);
         Scene optionsScene = new Scene(optionsLayout, WIDTH, Height);
 
@@ -90,6 +109,7 @@ public class Main extends Application {
 
         //Credits scene and layout
         VBox creditsLayout = new VBox(20);
+        creditsLayout.setAlignment(Pos.CENTER);
         creditsLayout.getChildren().addAll(creditsBackButton);
         Scene creditsScene = new Scene(creditsLayout, WIDTH, Height);
 
@@ -102,6 +122,11 @@ public class Main extends Application {
 
         //Main menu buttons
         newGameButton.setOnAction(event -> primaryStage.setScene(newGameScene));
+        /* change the stage title to reflect menu change. Need to define names at top as macros
+        newGameButton.setOnAction(event -> {
+                    primaryStage.setScene(newGameScene);
+                    primaryStage.setTitle("New Game");
+                });*/
         loadGameButton.setOnAction(event -> primaryStage.setScene(loadGameScene));
         highScoreButton.setOnAction(event -> primaryStage.setScene(highScoreScene));
         OptionsButton.setOnAction(event -> primaryStage.setScene(optionsScene));
