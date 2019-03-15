@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
@@ -36,14 +37,14 @@ public class mainMenuController implements Initializable {
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
 
-//        camera.getTransforms().addAll(new Translate(0,-40,-100), new Rotate(-25, Rotate.X_AXIS));
         scene.setCamera(camera);
         stage.setScene(scene);
 
-        camera.setNearClip(1);
-        camera.setFarClip(1000);
+        camera.setNearClip(1.0);
+        camera.setFarClip(3000.0);
 
         BricknBallGame game = new BricknBallGame(root, stage, scene, camera);
+        game.play();
 
 
 
