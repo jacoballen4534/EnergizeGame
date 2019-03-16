@@ -15,19 +15,20 @@ import javafx.stage.Stage;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BricknBallGame {
+public class  BricknBallGame {
 
     private Ball ball;
     private Platform platform;
     private ArrayList<Brick> bricks;
-    private final int howManyBricks = 30;
-    private final int numberOfCols = 10;
+    private final int howManyBricks = 40;
     private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private  Stage stage;
     private  Scene scene;
+    private Group root;
     private boolean start = false;
     private AnimationTimer animationTimer;
     private long lastTime;
+    private double animationTimeFactor = 0;
     private PerspectiveCamera camera;
     private Rotate rotateX,rotateY,rotateZ;
     private Translate translate;
@@ -45,6 +46,7 @@ public class BricknBallGame {
 
 
     public BricknBallGame(Group root, Stage stage, Scene scene, PerspectiveCamera camera) {
+        this.root = root;
         this.stage = stage;
         this.scene = scene;
         this.camera = camera;
@@ -67,23 +69,20 @@ public class BricknBallGame {
         borders.add(new Border(new Point2D(windowWidth/2, 0), new Point3D(windowWidth, borderThickness, borderDepth), Border.WallLocation.Top)); //Top
         borders.add(new Border(new Point2D(windowWidth/2, windowHeight), new Point3D(windowWidth, borderThickness, borderDepth), Border.WallLocation.Bottom)); //Bottom
         for (Border border : borders) {
-            root.getChildren().add(border);
+            this.root.getChildren().add(border);
         }
 
+//      Create and add platform
+        this.addPlactform();
 
-        this.platform = new Platform(stage.getWidth()/2,windowHeight - (double)borderThickness/2 - Platform.getSize().getY()/2, Color.BLUE);
-        root.getChildren().add(platform);
 
-        this.ball = new Ball(new Point2D(windowWidth/2, windowHeight/2), 10);
-        root.getChildren().add(ball);
+//      Create and add the ball
+        this.addBall(windowWidth/2, windowHeight/2);
 
-        int currentRow = 0;
-        bricks = new ArrayList<>();
-        for (int i = 0; i < howManyBricks; i++) {
-            Brick brick = new Brick( Brick.getSize().getX() * i / stage.getWidth(), currentRow*Brick.getSize().getY());
-            bricks.add(brick);
-//            root.getChildren().add(brick);
-        }
+
+//      Create and add the bricks
+        this.addBricks();
+
 
         this.scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -96,6 +95,9 @@ public class BricknBallGame {
                 case SPACE:
                     this.start = true;
                     break;
+                case R:
+                    this.restart();
+
 //                    To move the camera around
                 case A:
                     translate.setX(translate.getX() - 20);
@@ -116,7 +118,6 @@ public class BricknBallGame {
                     rotateY.setAngle(rotateY.getAngle() + 5);
             }
         });
-
 
 
         this.scene.setOnKeyReleased(event -> {
@@ -167,8 +168,39 @@ public class BricknBallGame {
     }
 
 
+    private void restart() {
+        this.root.getChildren().remove(platform);
+        this.root.getChildren().remove(ball);
+        this.addPlactform();
+        this.addBall(windowWidth/2, windowHeight/2);
+    }
 
-    public void play() {
+    private void addPlactform() {
+        this.platform = new Platform(this.stage.getWidth()/2,windowHeight - (double)borderThickness/2 - Platform.getSize().getY(), Color.BLUE);
+        this.root.getChildren().add(platform);
+    }
+
+    private void addBall(double x, double y) {
+        this.ball = new Ball(new Point2D(x,y));
+        this.root.getChildren().add(ball);
+    }
+
+    private void addBricks(){
+        int currentRow = 1;
+        int columbsOfBricks = (int)(windowWidth / Brick.getSize().getX()) - 1;
+        bricks = new ArrayList<>();
+        for (int i = 0; i < howManyBricks/columbsOfBricks; i++) {
+            for (int col = 1; col < columbsOfBricks; col++) {
+                Brick brick = new Brick(col * Brick.getSize().getX() + Brick.getSize().getX()/2, currentRow * Brick.getSize().getY() + Brick.getSize().getY()/2);
+                bricks.add(brick);
+                this.root.getChildren().add(brick);
+            }
+            currentRow++;
+        }
+    }
+
+        public void play() {
+
         this.lastTime = 0;
         this.animationTimer = new AnimationTimer() {
             @Override
@@ -177,6 +209,7 @@ public class BricknBallGame {
                 lastTime = now;
                 gameUpdate(timePassed);
 //                System.out.println((int)1000000000.0/timePassed + " Fps");
+
             }
         };
         this.animationTimer.start();
@@ -184,6 +217,7 @@ public class BricknBallGame {
 
     private void gameUpdate(long timePassed) {
         this.platform.Update(timePassed, borders);
+        this.ball.Update(timePassed, borders, bricks);
     }
 
 }

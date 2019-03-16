@@ -8,6 +8,7 @@ import javafx.scene.shape.Box;
 import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Platform extends Box {
@@ -19,8 +20,8 @@ public class Platform extends Box {
     public Platform(double x, double y, Color color){ //This is centre of platform need to expand in all directions
         super(size.getX(), size.getY(),60);
         this.setMaterial(new PhongMaterial(color));
-        location = new Point2D(x, y);
-        this.setLocation(location);
+        this.location = new Point2D(x, y);
+        this.setLocation(this.location);
     }
 
     public static Point2D getSize() {
@@ -37,26 +38,27 @@ public class Platform extends Box {
     }
 
     public void Update(long timePassed, ArrayList<Border> borders) {
-        Point2D backupPosition = this.location;
-        this.location = this.location.add(this.direction.multiply(timePassed / 1e6));
+        Point2D nextPos = this.location.add(this.direction.multiply(timePassed / 1e6));
 
-        switch (this.intersects(borders)) {
-            case Left:
-                this.location = backupPosition.add(new Point2D(Platform.size.getX()/4, 0));
-                break;
-            case Right:
-                this.location = backupPosition.subtract(new Point2D(Platform.size.getX()/4, 0));
-                break;
+        if(this.intersects(nextPos, borders) == Border.WallLocation.Null) {
+            this.location = nextPos;
         }
+
         this.setLocation(this.location);
     }
 
-    private Border.WallLocation intersects(ArrayList<Border> borders) {
+    private Border.WallLocation intersects(Point2D position, ArrayList<Border> borders) {
+
         for (Border border : borders) {
-            if (border.intersects(border.sceneToLocal(this.localToScene(this.getBoundsInLocal())))) {
+            HashMap<Border.WallLocation, Double> borderBounds = border.getBounds();
+            if (position.getX() - Platform.size.getX() / 2 <= borderBounds.get(Border.WallLocation.Right) &&
+                    position.getX() + Platform.size.getX() / 2 >= borderBounds.get(Border.WallLocation.Left) &&
+                    position.getY() - Platform.size.getY()/2 <= borderBounds.get(Border.WallLocation.Bottom) &&
+                    position.getY() + Platform.size.getY()/2 >= borderBounds.get(Border.WallLocation.Top)) {
                 return border.getWallLocation();
             }
         }
+
         return Border.WallLocation.Null;
     }
 }
