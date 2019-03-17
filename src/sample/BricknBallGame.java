@@ -72,7 +72,7 @@ public class  BricknBallGame {
         }
 
 //      Create and add platform
-        this.addPlactform();
+        this.addPlatform();
 
 
 //      Create and add the ball
@@ -86,10 +86,18 @@ public class  BricknBallGame {
         this.scene.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT:
-                    this.platform.setXDirection(new Point2D(-1, 0));
+                    if (event.isShiftDown()) {
+                        this.platform.setXDirection(new Point2D(-0.3, 0));
+                    } else {
+                        this.platform.setXDirection(new Point2D(-1, 0));
+                    }
                     break;
                 case RIGHT:
-                    this.platform.setXDirection(new Point2D(1, 0));
+                    if (event.isShiftDown()) {
+                        this.platform.setXDirection(new Point2D(0.3, 0));
+                    } else {
+                        this.platform.setXDirection(new Point2D(1, 0));
+                    }
                     break;
                 case SPACE:
                     this.start = true;
@@ -168,13 +176,13 @@ public class  BricknBallGame {
         for (Brick brick : bricks) {
             this.root.getChildren().remove(brick);
         }
-        this.addPlactform();
+        this.addPlatform();
         this.addBall(platform.getLocation().getX(), platform.getLocation().getY() - Platform.getSize().getY() - Ball.getRadus());
         this.addBricks();
         animationTimer.start();
     }
 
-    private void addPlactform() {
+    private void addPlatform() {
         this.platform = new Platform(this.stage.getWidth()/2,windowHeight - (double)borderThickness/2 - Platform.getSize().getY(), Color.BLUE);
         this.root.getChildren().add(platform);
     }
