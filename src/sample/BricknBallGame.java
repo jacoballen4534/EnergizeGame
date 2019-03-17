@@ -28,7 +28,6 @@ public class  BricknBallGame {
     private boolean start = false;
     private AnimationTimer animationTimer;
     private long lastTime;
-    private double animationTimeFactor = 0;
     private PerspectiveCamera camera;
     private Rotate rotateX,rotateY,rotateZ;
     private Translate translate;
@@ -77,7 +76,7 @@ public class  BricknBallGame {
 
 
 //      Create and add the ball
-        this.addBall(windowWidth/2, windowHeight/2);
+        this.addBall(platform.getLocation().getX(), platform.getLocation().getY() - Platform.getSize().getY() - Ball.getRadus());
 
 
 //      Create and add the bricks
@@ -111,11 +110,6 @@ public class  BricknBallGame {
                 case S:
                     translate.setY(translate.getY() + 20);
                     break;
-                case I:
-                    rotateX.setAngle(rotateX.getAngle() + 5);
-                    break;
-                case J:
-                    rotateY.setAngle(rotateY.getAngle() + 5);
             }
         });
 
@@ -171,8 +165,13 @@ public class  BricknBallGame {
     private void restart() {
         this.root.getChildren().remove(platform);
         this.root.getChildren().remove(ball);
+        for (Brick brick : bricks) {
+            this.root.getChildren().remove(brick);
+        }
         this.addPlactform();
-        this.addBall(windowWidth/2, windowHeight/2);
+        this.addBall(platform.getLocation().getX(), platform.getLocation().getY() - Platform.getSize().getY() - Ball.getRadus());
+        this.addBricks();
+        animationTimer.start();
     }
 
     private void addPlactform() {
@@ -206,9 +205,11 @@ public class  BricknBallGame {
             @Override
             public void handle(long now) {
                 long timePassed = now - lastTime;
-                lastTime = now;
-                gameUpdate(timePassed);
-//                System.out.println((int)1000000000.0/timePassed + " Fps");
+//                if (timePassed >= (16666666)) {
+                    lastTime = now;
+                    gameUpdate(timePassed);
+//                    System.out.println((int)1000000000.0/timePassed + " Fps");
+//                }
 
             }
         };
@@ -217,7 +218,13 @@ public class  BricknBallGame {
 
     private void gameUpdate(long timePassed) {
         this.platform.Update(timePassed, borders);
-        this.ball.Update(timePassed, borders, bricks);
+        try {
+            this.ball.Update(timePassed, borders, bricks, this.platform);
+        } catch (Exception exception) {
+            if (exception.getMessage().contains("GameOver")) {
+                animationTimer.stop();
+            }
+        }
     }
 
 }

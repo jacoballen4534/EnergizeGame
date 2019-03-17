@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -21,10 +22,10 @@ public class Brick extends Box {
         this.setMaterial(new PhongMaterial(Color.ORANGE));
         this.setLocation(this.location);
         this.bounds = new HashMap<>();
-        this.bounds.put(Border.WallLocation.Top, this.location.getY() - width/2);
-        this.bounds.put(Border.WallLocation.Bottom, this.location.getY() + width/2);
-        this.bounds.put(Border.WallLocation.Left, this.location.getX() - height/2);
-        this.bounds.put(Border.WallLocation.Right, this.location.getX() + height/2);
+        this.bounds.put(Border.WallLocation.Top, this.location.getY() - height/2);
+        this.bounds.put(Border.WallLocation.Bottom, this.location.getY() + height/2);
+        this.bounds.put(Border.WallLocation.Left, this.location.getX() - width/2);
+        this.bounds.put(Border.WallLocation.Right, this.location.getX() + width/2);
     }
 
 
@@ -39,6 +40,27 @@ public class Brick extends Box {
 
     public HashMap<Border.WallLocation, Double> getBounds() {
         return this.bounds;
+    }
+
+    public Border.WallLocation findHitSide(Point2D ballLocation, double radius) {
+        if (ballLocation.getX() - radius <= this.bounds.get(Border.WallLocation.Right) && ballLocation.getX() + radius >= this.bounds.get(Border.WallLocation.Left)) {
+            if (ballLocation.getY() - radius >= this.bounds.get(Border.WallLocation.Bottom)) {
+                return Border.WallLocation.Bottom;
+            } else {
+                return Border.WallLocation.Top;
+            }
+        } else {
+            if (ballLocation.getX() - radius >= this.bounds.get(Border.WallLocation.Right)) {
+                return Border.WallLocation.Right;
+            } else {
+                return Border.WallLocation.Left;
+            }
+        }
+    }
+
+    public void hit () {
+        Group root = (Group)this.getParent();
+        root.getChildren().remove(this);
     }
 
 }

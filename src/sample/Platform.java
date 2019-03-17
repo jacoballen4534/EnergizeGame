@@ -37,15 +37,23 @@ public class Platform extends Box {
         this.direction = direction;
     }
 
+    public Point2D getDirection () {
+        return this.direction;
+    }
+
     public void Update(long timePassed, ArrayList<Border> borders) {
-        Point2D nextPos = this.location.add(this.direction.multiply(timePassed / 1e6));
+        Point2D nextPos = this.location.add(this.direction.multiply(Math.min(timePassed / 1e6, 4)));
 
         if(this.intersects(nextPos, borders) == Border.WallLocation.Null) {
             this.location = nextPos;
         }
-
         this.setLocation(this.location);
     }
+
+    public Point2D getLocation() {
+        return this.location;
+    }
+
 
     private Border.WallLocation intersects(Point2D position, ArrayList<Border> borders) {
 
