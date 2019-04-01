@@ -14,66 +14,86 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class highScoreController implements Initializable {
     @FXML
     public AnchorPane highScorePane;
-    private Label Person1;
-    private Label Score1;
-    private Label Person2;
-    private Label Score2;
-    private Label Person3;
-    private Label Score3;
-    private Label Person4;
-    private Label Score4;
-    private Label Person5;
-    private Label Score5;
+    @FXML
+    private Label Person1, Person2, Person3, Person4, Person5, Score1, Score2, Score3, Score4, Score5;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            File file = new File(highScoreController.class.getClassLoader().getResource("highScores.txt").getPath());
-            Scanner scanner = new Scanner(file);
-            ArrayList<Pair<String, Integer>> scores = new ArrayList<>();
+            ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("highScores.txt");
+            List<Pair<String, Integer>> scores = new ArrayList<>();
 
-            while(scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (!line.startsWith("//")){ //Ignore comments
-                    String[] tokens = line.split("-");
-                    Pair<String, Integer> score = new Pair<>(tokens[0], Integer.parseInt(tokens[1]));
-                    scores.add(score);
-                }
+            //Put each score into list of pairs in the form of <Name,Score>
+            for (ArrayList<Pair<String,String>> block : highScores) {
+                scores.add(new Pair<>(block.get(0).getValue(), Integer.parseInt(block.get(1).getValue())));
             }
 
-            scores.forEach((n) -> System.out.println(n));
+            //Sort the scores into descending order
+            scores.sort((score1, score2) -> (score2.getValue() - score1.getValue()));
 
-            Person1.setText("Hi");
-            Score1.setText(scores.get(0).getKey());
-            Score2.setText(scores.get(0).getValue().toString());
+            Person1.setText(scores.get(0).getKey());
+            Person2.setText(scores.get(1).getKey());
+            Person3.setText(scores.get(2).getKey());
+            Person4.setText(scores.get(3).getKey());
+            Person5.setText(scores.get(4).getKey());
+
+            Score1.setText(scores.get(0).getValue().toString());
+            Score2.setText(scores.get(1).getValue().toString());
+            Score3.setText(scores.get(2).getValue().toString());
+            Score4.setText(scores.get(3).getValue().toString());
+            Score5.setText(scores.get(4).getValue().toString());
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
 
+    //Array of arrays to make it more generic for better reusability.
+    private ArrayList<ArrayList<Pair<String, String>>> readFile(String filepath) throws FileNotFoundException {
+        ArrayList<ArrayList<Pair<String, String>>> allContent = new ArrayList<>();
+        boolean openedBlock = false;
+        File file = new File(highScoreController.class.getClassLoader().getResource(filepath).getPath());
+        Scanner scanner = new Scanner(file);
+        ArrayList<Pair<String, String>> blockOfData = null;
 
-
-
-    public void /*some list type*/loadHighScores(String filepath){
-        //Figure out how file i/o in Java
-        //Call a json parser here to load the json file
-        //return it as a yet-to-be-confirmed data type
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (!line.startsWith("//")) { //Ignore comments
+                if (!openedBlock) {
+                    if (line.equalsIgnoreCase("<begin>")) {//Start new structure
+                        blockOfData = new ArrayList<>();
+                        openedBlock = true;
+                    }
+                    continue;
+                } else { //Inside a begin statment
+                    if (blockOfData != null && line.equalsIgnoreCase("<end>")) {
+                        //Inset line items into
+                        allContent.add(blockOfData);
+                        openedBlock = false;
+                        blockOfData = null;
+                        continue;
+                    } else {
+                        // Split and add to lineItem
+                        String[] tokens = line.split(":");
+                        blockOfData.add(new Pair<>(
+                                tokens[0].replaceAll("[^A-Za-z0-9]+", "").toLowerCase(),
+                                tokens[1].replaceAll("[^A-Za-z0-9]+", "")));
+                    }
+                }
+            }
+        }
+        return allContent;
     }
 
-    /*public void highScoreButtonPressed() {
-        System.out.println("Shows High Scores");
-    }*/
 
     public void highScoreBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
