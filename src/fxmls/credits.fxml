@@ -2,33 +2,31 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane fx:id="creditsPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.creditsController">
     <children>
-        <VBox fx:id="creditsVBox" alignment="CENTER" prefHeight="768.0" prefWidth="1024.0" spacing="30">
-            <children>
-                <Label fx:id="creditsTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Credits">
-                    <font>
-                        <Font name="Cantarell Thin" size="60.0" />
-                    </font>
-                </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="490.0" text="Nocturnal Tutelage Studios presents" textAlignment="CENTER">
-               <font>
-                  <Font name="Serif Italic" size="24.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="33.0" prefWidth="301.0" text="Belda" textAlignment="CENTER">
-               <font>
-                  <Font name="Bangers Regular" size="96.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#creditsBackButtonPressed" prefHeight="36.0" prefWidth="56.0" text="EXIT" textAlignment="CENTER">
-               <font>
-                  <Font name="Cantarell Thin" size="24.0" />
-               </font>
-            </Label>
-            </children></VBox>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="662.0" onMouseClicked="#creditsBackButtonPressed" prefHeight="76.0" prefWidth="166.0" text="EXIT" textAlignment="CENTER">
+         <font>
+            <Font name="Cantarell Thin" size="72.0" />
+         </font>
+      </Label>
+          <Label fx:id="creditsTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="416.0" layoutY="76.0" prefHeight="40.0" text="Credits">
+              <font>
+                  <Font name="Cantarell Thin" size="60.0" />
+              </font>
+          </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="267.0" layoutY="175.0" prefHeight="37.0" prefWidth="490.0" text="Nocturnal Tutelage Studios" textAlignment="CENTER">
+         <font>
+            <Font name="Serif Italic" size="24.0" />
+         </font>
+      </Label>
+      <TextFlow layoutX="404.0" layoutY="223.0" prefHeight="200.0" prefWidth="211.0">
+         <children>
+            <Label text="Lead Programmer: Jacob Allen" />
+            <Label text="Co-Programmer: Matt Eden" />
+         </children>
+      </TextFlow>
     </children>
 </AnchorPane>

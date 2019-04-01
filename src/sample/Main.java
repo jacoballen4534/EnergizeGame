@@ -12,6 +12,7 @@ import java.awt.*;
 public class Main extends Application {
 
     public static void main(String[] args) {
+        java.net.URL url = ClassLoader.getSystemResource("/home/matteas/Pictures/lyoko_logo.png");
         launch(args);
     }
 
