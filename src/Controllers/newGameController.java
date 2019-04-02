@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.Game;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +27,8 @@ public class newGameController implements Initializable {
 
     public void quickPlayButtonPressed() throws IOException {
         System.out.println("Starts a new quick play game");
+        Game game = new Game();
+        game.start();
     }
 
     public void customGameButtonPressed() throws IOException {

@@ -10,15 +10,16 @@ import javafx.stage.Stage;
 import java.awt.*;
 
 public class Main extends Application {
+    private static Stage stage;
 
     public static void main(String[] args) {
-        java.net.URL url = ClassLoader.getSystemResource("/home/matteas/Pictures/lyoko_logo.png");
+//        java.net.URL url = ClassLoader.getSystemResource("/home/matteas/Pictures/lyoko_logo.png");
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
+        stage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("../fxmls/mainMenu.fxml"));
         primaryStage.setTitle("Main Menu");
         primaryStage.setScene(new Scene(root));
@@ -27,4 +28,7 @@ public class Main extends Application {
 
     }
 
+    static Stage getStage() {
+        return stage;
+    }
 }
