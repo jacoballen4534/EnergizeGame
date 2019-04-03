@@ -1,32 +1,31 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.Handler;
-import model.KeyInput;
-import model.Protagonist;
+import model.*;
 
-import java.awt.event.KeyAdapter;
-import java.security.Key;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Game extends Canvas {
 
     private AnimationTimer animationTimer;
     private long previousTime = System.nanoTime();
-    private Handler handler;
     private KeyInput keyInput;
     private final double width = Main.getStage().getWidth();
     private final double height = Main.getStage().getHeight();
     private double delta = 0;
     private double ns = 1000000000 / 60.0;
     private int frames = 0;
+    private BufferedImage level = null;//map will load and hold all of the levels
+    private Camera camera;
+    private Protagonist protagonist = null;
 
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
@@ -37,12 +36,13 @@ public class Game extends Canvas {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         init();
-        this.handler = new Handler();
         stage.show();
         this.keyInput = new KeyInput(scene);
-        handler.addObject(new Protagonist(100,100, this.keyInput));
+        BufferImageLoader imageLoader = new BufferImageLoader();
+        this.camera = new Camera(0,0);
+        level = imageLoader.loadImage("GameMap.png");
 
-
+        loadLevel(level);
     }
 
 
@@ -73,20 +73,47 @@ public class Game extends Canvas {
 
 
     private void tick() {
-        this.handler.tick();
+        Handler.tick();
+        if (this.protagonist != null) {
+            this.camera.tick(this.protagonist, this.width, this.height);
+        }
 
     }
 
     private void render() {
         GraphicsContext graphicsContext = this.getGraphicsContext2D();
-
         //First put the background
-        graphicsContext.setFill(Color.RED);
+        graphicsContext.setFill(Color.FIREBRICK);
         graphicsContext.fillRect(0,0,this.width, this.height);
 
-        handler.render(graphicsContext);
+        graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
+        Handler.render(graphicsContext);
+        graphicsContext.translate(this.camera.getX(), this.camera.getY());
+
         //Then objects on top
     }
 
+    private void loadLevel(BufferedImage level) {
+        for (int x = 0; x < level.getWidth(); x++) {
+            for (int y = 0; y < level.getHeight(); y++) {
+                int pixel = level.getRGB(x,y);
+                int red = (pixel >> 16) & 0xff;
+                int green = (pixel >> 8) & 0xff;
+                int blue = (pixel) & 0xff;
+
+                if (red == 0 && green == 0 && blue == 0) { //Black = Wall
+                    Handler.addObject(new Wall(x,y, true));
+                } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
+                    Protagonist tempProtagonist = new Protagonist(x,y, true, this.keyInput);
+                    Handler.addObject(tempProtagonist);
+                    Handler.addObject(new Floor(x,y,true)); //Add tile under characters
+                    this.protagonist = tempProtagonist;
+                } else if (red == 255 && green == 255 && blue == 255) { //White = Floor
+                    Handler.addObject(new Floor(x,y,true));
+
+                }
+            }
+        }
+    }
 
 }

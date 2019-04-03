@@ -30,14 +30,14 @@ public class KeyInput{
 
 
         this.scene.setOnKeyPressed(keyEvent -> {
-            if (!keyBinds.get(keyEvent.getCode())) { //One of the correct keys are pressed
+            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), true);
                 updateActions();
             }
         });
 
         this.scene.setOnKeyReleased(keyEvent -> {
-            if (keyBinds.get(keyEvent.getCode()) != null) { //One of the correct keys are pressed
+            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), false);
                 updateActions();
             }

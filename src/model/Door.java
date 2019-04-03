@@ -4,35 +4,14 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
 
-public class Grunt extends Enemy {
+public class Door extends Tile {
 
-    public Grunt(int x, int y, boolean scale) {
+    public Door(int x, int y, boolean scale) {
         super(x, y, scale);
-
     }
 
     @Override
-    void isPlayerInSight() {
-
-    }
-
-    @Override
-    void findPlayer() {
-
-    }
-
-    @Override
-    void attack() {
-
-    }
-
-    @Override
-    void playSound() {
-
-    }
-
-    @Override
-    void getHit() {
+    public void tick() {
 
     }
 
@@ -45,4 +24,5 @@ public class Grunt extends Enemy {
     public Rectangle getBounds() {
         return super.getBounds();
     }
+
 }

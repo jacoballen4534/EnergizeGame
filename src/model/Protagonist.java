@@ -15,10 +15,11 @@ public class Protagonist extends Character {
 //     public Inventory inventory;
 
 
-    public Protagonist(int x, int y, KeyInput keyInput) {
-        super(x, y);
+    public Protagonist(int x, int y, boolean scale, KeyInput keyInput) {
+        super(x, y, scale);
         this.id = nextID++;
         this.keyInput = keyInput;
+        this.height = 48;
     }
 
     @Override
@@ -51,24 +52,30 @@ public class Protagonist extends Character {
         else if(!this.keyInput.right) this.velocityX = 0;
 
         super.tick();
+
+        //Turn around if protagonist has collided with something
+        if (Handler.checkCollision(this)) {
+            this.x += this.velocityX * -1;
+            this.y += this.velocityY * -1;
+        }
+
     }
 
     @Override
     public void render(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Color.BLUE);
-        graphicsContext.fillRect(this.x, this.y,32, 48);
+        graphicsContext.setFill(Color.DARKSLATEBLUE);
+        graphicsContext.fillRect(this.x, this.y,this.width, this.height);
 
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(this.x, this.y,32, 48);
+        return super.getBounds();
     }
 
     protected void GetHit(){
         System.out.println("I got hit!");
     }
-
 
 }
 

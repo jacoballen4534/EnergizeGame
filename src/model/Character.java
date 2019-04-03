@@ -14,8 +14,9 @@ public abstract class Character extends GameObject{
 //    protected Direction direction;
 
 
-    public Character(int x, int y){
-        super(x,y);
+    public Character(int x, int y, boolean scale){
+        super(x,y,scale);
+        this.renderHeight = 2;
     }
 
     abstract void attack();
