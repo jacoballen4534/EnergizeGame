@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
 
 public class Main extends Application {
     private static Stage stage;
@@ -22,7 +23,13 @@ public class Main extends Application {
         stage = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("../fxmls/mainMenu.fxml"));
         primaryStage.setTitle("Main Menu");
-        primaryStage.setScene(new Scene(root));
+
+
+        File f = new File("resources/css/Viper.css");
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\","/"));
+
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
 

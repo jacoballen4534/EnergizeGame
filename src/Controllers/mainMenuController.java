@@ -29,7 +29,6 @@ public class mainMenuController implements Initializable {
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/newGame.fxml")));
     }
 
-
     @FXML private void loadGameButtonPressed() throws IOException {
         changeStageName("Load Game");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
@@ -55,8 +54,6 @@ public class mainMenuController implements Initializable {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();
         stage.close();
     }
-
-
 
     private void changeStageName(String newStageName) {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();

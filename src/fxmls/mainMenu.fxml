@@ -10,12 +10,12 @@
    <children>
       <VBox fx:id="mainMenuVBox" alignment="CENTER" prefHeight="768.0" prefWidth="1024.0" spacing="25">
          <children>
-            <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Belda">
+            <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Energize">
                <font>
                   <Font size="60.0" />
                </font>
             </Label>
-            <Button fx:id="newGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGameButtonPressed" prefHeight="40.0" prefWidth="200.0" text="New Game" textAlignment="CENTER" />
+            <Button fx:id="newGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGameButtonPressed" prefHeight="40.0" prefWidth="200.0" styleClass="button-blue" text="New Game" textAlignment="CENTER" />
             <Button fx:id="loadGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#loadGameButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Load Game" textAlignment="CENTER" />
             <Button fx:id="highScoreButton" alignment="CENTER" mnemonicParsing="false" onAction="#highScoreButtonPressed" prefHeight="40.0" prefWidth="200.0" text="High Scores" textAlignment="CENTER" />
             <Button fx:id="OptionsButton" alignment="CENTER" mnemonicParsing="false" onAction="#optionsButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Options" textAlignment="CENTER" />

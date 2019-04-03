@@ -81,7 +81,7 @@ public class Game extends Canvas {
         GraphicsContext graphicsContext = this.getGraphicsContext2D();
 
         //First put the background
-        graphicsContext.setFill(Color.RED);
+        graphicsContext.setFill(Color.GRAY);
         graphicsContext.fillRect(0,0,this.width, this.height);
 
         handler.render(graphicsContext);
