@@ -26,6 +26,7 @@ public class Game extends Canvas {
     private BufferedImage level = null;//map will load and hold all of the levels
     private Camera camera;
     private Protagonist protagonist = null;
+    private BufferImageLoader imageLoader;
 
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
@@ -38,10 +39,9 @@ public class Game extends Canvas {
         init();
         stage.show();
         this.keyInput = new KeyInput(scene);
-        BufferImageLoader imageLoader = new BufferImageLoader();
+        this.imageLoader = new BufferImageLoader();
         this.camera = new Camera(0,0);
         level = imageLoader.loadImage("GameMap.png");
-
         loadLevel(level);
     }
 
