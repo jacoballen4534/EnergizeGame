@@ -4,16 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.mainMenuController">
    <children>
       <VBox fx:id="mainMenuVBox" alignment="CENTER" prefHeight="768.0" prefWidth="1024.0" spacing="25">
          <children>
-            <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Energize">
-               <font>
-                  <Font size="60.0" />
-               </font>
+            <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" styleClass="title" text="Energize">
             </Label>
             <Button fx:id="newGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGameButtonPressed" prefHeight="40.0" prefWidth="200.0" styleClass="button-blue" text="New Game" textAlignment="CENTER" />
             <Button fx:id="loadGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#loadGameButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Load Game" textAlignment="CENTER" />
