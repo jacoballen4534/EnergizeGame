@@ -20,6 +20,7 @@ public class Protagonist extends Character {
     private KeyInput keyInput;
     private Image jfxImage;
     private GraphicsContext graphicsContext;
+    //TODO add this to all animations or implament in state machine / enum
     private int animationRow = 0;
     private int animationCol = 0;
     private int animationMaxRow = 15;
@@ -27,19 +28,22 @@ public class Protagonist extends Character {
 //     public Inventory inventory;
 
 
-    public Protagonist(int x, int y, boolean scale, BufferedImage image, KeyInput keyInput, GraphicsContext graphicsContext) {
+    public Protagonist(int x, int y, boolean scale, BufferedImage image, KeyInput keyInput) {
         super(x, y, scale, image);
         this.id = nextID++;
         this.keyInput = keyInput;
         //This is the redder width and height.
         this.width = 100;
         this.height = 74;
+        //TODO: Add sprite boder to all class
         this.leftBorder = 11;
         this.rightBorder = 18;
         this.topBorder = 6;
         this.bottomBorder = 5;
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
-//        this.graphicsContext = graphicsContext; //Dont need to pass in atm
+
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
+
+        //Use a timeline instead of render, or tick methods to control the speed of the animation
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
 
@@ -99,8 +103,6 @@ public class Protagonist extends Character {
 
     @Override
     public void render(GraphicsContext graphicsContext) {
-//        graphicsContext.setFill(Color.DARKSLATEBLUE);
-//        graphicsContext.fillRect(this.x, this.y,this.width, this.height);
 //        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
         graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.width, this.height);
 
