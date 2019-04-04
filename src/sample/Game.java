@@ -31,6 +31,7 @@ public class Game extends Canvas {
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
         Stage stage = Main.getStage();
+        
         stage.setTitle("Tutorial Room");
         Group root = new Group();
         root.getChildren().add(this);
@@ -83,7 +84,7 @@ public class Game extends Canvas {
     private void tick() {
         Handler.tick();
         if (this.protagonist != null) {
-            this.camera.tick(this.protagonist, this.width, this.height);
+            this.camera.tick(this.protagonist, this.width, this.height, this.map.getCurrentLevelWidth(), this.map.getCurrentLevelHeight());
         }
 
     }
@@ -118,7 +119,7 @@ public class Game extends Canvas {
                     Handler.addObject(new Wall(x,y, true, this.preLoadedImages.getWallSpriteSheet()));
                 } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
                     Protagonist tempProtagonist = new Protagonist(x,y, true,
-                            this.preLoadedImages.getProtagonistSpriteSheet(), this.keyInput);
+                            this.preLoadedImages.getProtagonistSpriteSheet(), this.keyInput, this.getGraphicsContext2D());
                     Handler.addObject(tempProtagonist);
                     this.protagonist = tempProtagonist;
                 }

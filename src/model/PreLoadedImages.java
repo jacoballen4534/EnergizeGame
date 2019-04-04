@@ -22,7 +22,7 @@ public class PreLoadedImages {
 //            this.doorSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
             this.floorSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/Floor.png").getPath()));
 //            this.gruntSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
-            this.protagonistSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/Protagonist.png").getPath()));
+            this.protagonistSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/ProtagonistSheet.png").getPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }

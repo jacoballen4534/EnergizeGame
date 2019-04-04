@@ -8,7 +8,15 @@ public class SpriteSheet {
     private int spriteWidth;
     private int spriteHeight;
 
+
     public SpriteSheet(BufferedImage spriteSheet, int width, int height) {
+        this.spriteSheet = spriteSheet;
+        this.spriteWidth = width;
+        this.spriteHeight = height;
+    }
+
+    public SpriteSheet(BufferedImage spriteSheet, int width, int height, int leftBorder,
+                       int rightBorder, int topBorder, int bottomBorder) {
         this.spriteSheet = spriteSheet;
         this.spriteWidth = width;
         this.spriteHeight = height;

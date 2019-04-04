@@ -19,7 +19,7 @@ public class Floor {
         this.y = y * width;
         SpriteSheet spriteSheet = new SpriteSheet(image, this.width, this.height);
 //        Need to convert it to a JFXImage to be able to draw it to the canvas
-        this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(2,5), null);
+        this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(11,0), null);
     }
 
 

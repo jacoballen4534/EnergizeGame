@@ -1,6 +1,9 @@
 package model;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,6 +16,11 @@ public abstract class GameObject {
     protected boolean movable = true;
     protected int width = 32, height = 32; //size of sprite
     protected SpriteSheet spriteSheet;
+    protected int leftBorder = 0;
+    protected int rightBorder = 0;
+    protected int topBorder = 0;
+    protected int bottomBorder = 0;
+
     public GameObject(int x, int y, boolean scale, BufferedImage image) { //Scale is true when loading from map image
         if (scale) {
             this.x = x * this.width;
@@ -28,7 +36,8 @@ public abstract class GameObject {
     public abstract void tick();
     public abstract void render(GraphicsContext graphicsContext);
     protected Rectangle getBounds() {
-        return new Rectangle(this.x, this.y, this.width, this.height);
+        return new Rectangle(this.x + this.leftBorder, this.y + this.topBorder,
+                this.width - this.leftBorder - this.rightBorder, this.height - this.topBorder - this.bottomBorder);
     }
 
     public int getX() {

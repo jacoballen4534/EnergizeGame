@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
-    private String name;
+    private java.lang.String name;
     protected int health;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
@@ -22,7 +22,7 @@ public abstract class Character extends GameObject{
     abstract void getHit();
 
 
-    protected String getName() {
+    protected java.lang.String getName() {
         return name;
     }
 

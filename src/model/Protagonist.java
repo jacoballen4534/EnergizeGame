@@ -1,10 +1,14 @@
 package model;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,16 +19,43 @@ public class Protagonist extends Character {
     private int lives;
     private KeyInput keyInput;
     private Image jfxImage;
+    private GraphicsContext graphicsContext;
+    private int animationRow = 0;
+    private int animationCol = 0;
+    private int animationMaxRow = 15;
+    private int animationMaxCol = 6;
 //     public Inventory inventory;
 
 
-    public Protagonist(int x, int y, boolean scale, BufferedImage image, KeyInput keyInput) {
+    public Protagonist(int x, int y, boolean scale, BufferedImage image, KeyInput keyInput, GraphicsContext graphicsContext) {
         super(x, y, scale, image);
         this.id = nextID++;
         this.keyInput = keyInput;
         //This is the redder width and height.
         this.width = 100;
         this.height = 74;
+        this.leftBorder = 11;
+        this.rightBorder = 18;
+        this.topBorder = 6;
+        this.bottomBorder = 5;
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
+//        this.graphicsContext = graphicsContext; //Dont need to pass in atm
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+            this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
+
+            if (this.animationCol < this.animationMaxCol) {
+                this.animationCol++;
+            } else {
+                this.animationCol = 0;
+                if (this.animationRow < this.animationMaxRow){
+                    this.animationRow++;
+                } else {
+                    animationRow = 0;
+                }
+            }
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     @Override
@@ -70,7 +101,7 @@ public class Protagonist extends Character {
     public void render(GraphicsContext graphicsContext) {
 //        graphicsContext.setFill(Color.DARKSLATEBLUE);
 //        graphicsContext.fillRect(this.x, this.y,this.width, this.height);
-        jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
+//        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
         graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.width, this.height);
 
     }
@@ -82,7 +113,7 @@ public class Protagonist extends Character {
 
     @Override
     protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, 50, 37); //Pass in physical width and height
+        this.spriteSheet = new SpriteSheet(image, 50, 37); //Pass in physical width and height of each sprite
     }
 
     protected void GetHit(){
