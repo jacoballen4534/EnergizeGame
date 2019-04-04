@@ -24,33 +24,33 @@ public class mainMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
-    @FXML private void newGameButtonPressed() throws IOException {
+    @FXML private void NewGameClicked() throws IOException {
         changeStageName("New Game");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/newGame.fxml")));
     }
 
-    @FXML private void loadGameButtonPressed() throws IOException {
+    @FXML private void LoadGameClicked() throws IOException {
         changeStageName("Load Game");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
     }
 
-    @FXML private void highScoreButtonPressed() throws IOException {
+    @FXML private void HighScoreClicked() throws IOException {
         changeStageName("High Score");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/highScore.fxml")));
     }
 
-    @FXML private void optionsButtonPressed() throws IOException {
+    @FXML private void OptionsClicked() throws IOException {
         changeStageName("Options");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/options.fxml")));
     }
 
 
-    @FXML private void creditsButtonPressed() throws IOException {
+    @FXML private void CreditsClicked() throws IOException {
         changeStageName("Credits");
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/credits.fxml")));
     }
 
-    @FXML private void quitButtonPressed() {
+    @FXML private void QuitClicked() {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();
         stage.close();
     }
