@@ -3,6 +3,7 @@ package model;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public abstract class GameObject {
 
@@ -11,8 +12,8 @@ public abstract class GameObject {
     protected boolean isSolid = true;
     protected boolean movable = true;
     protected int width = 32, height = 32; //size of sprite
-    protected  int renderHeight;
-    public GameObject(int x, int y, boolean scale) { //Scale is true when loading from map image
+    protected SpriteSheet spriteSheet;
+    public GameObject(int x, int y, boolean scale, BufferedImage image) { //Scale is true when loading from map image
         if (scale) {
             this.x = x * this.width;
             this.y = y * this.height;
@@ -20,6 +21,7 @@ public abstract class GameObject {
             this.x = x;
             this.y = y;
         }
+        this.loadSpriteSheet(image);
     }
 
 
@@ -53,7 +55,6 @@ public abstract class GameObject {
         return this.height;
     }
 
-    protected int getRenderHeight() {
-        return this.renderHeight;
-    }
+    protected abstract void loadSpriteSheet(BufferedImage image);
+
 }

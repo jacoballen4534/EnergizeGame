@@ -1,32 +1,35 @@
 package model;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-public class Floor extends Tile {
+public class Floor {
 
-    public Floor(int x, int y, boolean scale) {
-        super(x, y, scale);
-        this.renderHeight = 0;
+    private int x,y;
+    private int width = 32, height = 32; //size of sprite
+    private Image jfxImage;
 
+    public Floor(int x, int y, BufferedImage image) {
+        this.x = x * width;
+        this.y = y * width;
+        SpriteSheet spriteSheet = new SpriteSheet(image, this.width, this.height);
+//        Need to convert it to a JFXImage to be able to draw it to the canvas
+        this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(2,5), null);
     }
 
-    @Override
-    public void tick() {
 
-    }
 
-    @Override
     public void render(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Color.DODGERBLUE);
-        graphicsContext.fillRect(this.x, this.y, this.width, this.height);
+//        graphicsContext.setFill(Color.FIREBRICK);
+//        graphicsContext.fillRect(this.x, this.y, this.width, this.height);
+
+        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.width, this.height);
     }
 
-    @Override
-    public Rectangle getBounds() {
-        //Size is zero so nothing intersects with it.
-        return new Rectangle(0,0,0,0);
-    }
+
 }

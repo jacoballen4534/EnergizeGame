@@ -1,11 +1,12 @@
 package model;
 
+import java.awt.image.BufferedImage;
+
 public abstract class Tile extends GameObject{
 
-    public Tile(int x, int y, boolean scale){
-        super(x,y, scale);
+    public Tile(int x, int y, boolean scale, BufferedImage image){
+        super(x,y, scale, image);
         this.movable = false;
-        this.renderHeight = 1;
     }
 
 }
