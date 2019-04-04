@@ -119,7 +119,7 @@ public class Game extends Canvas {
                     Handler.addObject(new Wall(x,y, true, this.preLoadedImages.getWallSpriteSheet()));
                 } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
                     Protagonist tempProtagonist = new Protagonist(x,y, true,
-                            this.preLoadedImages.getProtagonistSpriteSheet(), this.keyInput, this.getGraphicsContext2D());
+                            this.preLoadedImages.getProtagonistSpriteSheet(), this.keyInput);
                     Handler.addObject(tempProtagonist);
                     this.protagonist = tempProtagonist;
                 }
