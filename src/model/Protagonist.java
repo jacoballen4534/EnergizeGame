@@ -18,48 +18,45 @@ public class Protagonist extends Character {
     protected int id;
     private int lives;
     private KeyInput keyInput;
-    private Image jfxImage;
     private GraphicsContext graphicsContext;
-    //TODO add this to all animations or implament in state machine / enum
-    private int animationRow = 0;
-    private int animationCol = 0;
-    private int animationMaxRow = 15;
-    private int animationMaxCol = 6;
-//     public Inventory inventory;
+//    public Inventory inventory;
 
 
-    public Protagonist(int x, int y, boolean scale, BufferedImage image, KeyInput keyInput) {
-        super(x, y, scale, image);
+    public Protagonist(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, KeyInput keyInput) {
+        super(x, y, scale, image, spriteSheetWidth, spriteSheetHeight);
         this.id = nextID++;
         this.keyInput = keyInput;
         //This is the redder width and height.
-        this.width = 100;
-        this.height = 74;
-        //TODO: Add sprite boder to all class
+        this.spriteWidth = 100;
+        this.spriteHeight = 74;
+
+        this.animationMaxRow = 15;
+        this.animationMaxCol = 6;
+
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
+    }
+
+    @Override
+    protected void updateSprite() { //TODO: Setup fsm, probably use enum
         this.leftBorder = 11;
         this.rightBorder = 18;
         this.topBorder = 6;
         this.bottomBorder = 5;
 
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
+//        super.updateSprite();
+        if (this.animationCol < this.animationMaxCol) {
+            this.animationCol++;
+        } else {
+            this.animationCol = 0;
 
-        //Use a timeline instead of render, or tick methods to control the speed of the animation
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
-            this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
-
-            if (this.animationCol < this.animationMaxCol) {
-                this.animationCol++;
+            if (this.animationRow < this.animationMaxRow) {
+                this.animationRow++;
             } else {
-                this.animationCol = 0;
-                if (this.animationRow < this.animationMaxRow){
-                    this.animationRow++;
-                } else {
-                    animationRow = 0;
-                }
+                animationRow = 0;
             }
-        }));
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
+        }
+
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
     }
 
     @Override
@@ -103,9 +100,9 @@ public class Protagonist extends Character {
 
     @Override
     public void render(GraphicsContext graphicsContext) {
+        //TODO: After fsm's are setup, check if this can be implamented in gameobject
 //        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.width, this.height);
-
+        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
 
     @Override
@@ -115,7 +112,7 @@ public class Protagonist extends Character {
 
     @Override
     protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, 50, 37); //Pass in physical width and height of each sprite
+        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight); //Pass in physical width and height of each sprite
     }
 
     protected void GetHit(){

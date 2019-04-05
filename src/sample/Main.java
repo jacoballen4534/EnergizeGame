@@ -10,6 +10,7 @@ import javafx.scene.text.Font;
 import java.io.InputStream;
 import java.awt.*;
 import java.io.File;
+import java.net.URL;
 
 public class Main extends Application {
     private static Stage stage;
@@ -22,11 +23,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         //Attempts to load a custom font
-        File beon = new File("resources/fonts/beon.otf");
-        Font.loadFont(
-                getClass().getResourceAsStream("file:///" + beon.getAbsolutePath().replace("\\","/")),
-                10
-        );
+        Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
 
         stage = primaryStage;
 
@@ -34,9 +31,11 @@ public class Main extends Application {
         primaryStage.setTitle("Main Menu");
 
         //Loads a global stylesheet
-        File styleSheet = new File("resources/css/globalStyle.css");
+//        File styleSheet = new File("resources/css/globalStyle.css");
+        String url = Main.class.getResource("/css/globalStyle.css").toExternalForm();
+
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("file:///" + styleSheet.getAbsolutePath().replace("\\","/"));
+        scene.getStylesheets().add(url);
 
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

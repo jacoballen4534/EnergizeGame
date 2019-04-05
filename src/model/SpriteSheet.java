@@ -9,23 +9,15 @@ public class SpriteSheet {
     private int spriteHeight;
 
 
-    public SpriteSheet(BufferedImage spriteSheet, int width, int height) {
+    public SpriteSheet(BufferedImage spriteSheet, int spriteWidth, int spriteHeight) {
         this.spriteSheet = spriteSheet;
-        this.spriteWidth = width;
-        this.spriteHeight = height;
+        this.spriteWidth = spriteWidth;
+        this.spriteHeight = spriteHeight;
     }
 
-    public SpriteSheet(BufferedImage spriteSheet, int width, int height, int leftBorder,
-                       int rightBorder, int topBorder, int bottomBorder) {
-        this.spriteSheet = spriteSheet;
-        this.spriteWidth = width;
-        this.spriteHeight = height;
-    }
-
+    //Returns a sprite with border around it.
     public BufferedImage getSprite (int x, int y) {
         return spriteSheet.getSubimage(x * this.spriteWidth,y * this.spriteHeight,this.spriteWidth,this.spriteHeight);
     }
-
-
 
 }

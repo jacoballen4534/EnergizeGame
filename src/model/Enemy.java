@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 public abstract class Enemy extends Character{
     private Character target;
 
-    public Enemy(int x, int y, boolean scale, BufferedImage image) {
-        super(x, y, scale, image);
+    public Enemy(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight) {
+        super(x, y, scale, image, spriteSheetWidth, spriteSheetHeight);
     }
 
     abstract void isPlayerInSight();

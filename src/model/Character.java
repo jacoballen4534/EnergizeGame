@@ -10,11 +10,9 @@ public abstract class Character extends GameObject{
     protected int health;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
-//    protected Direction direction;
 
-
-    public Character(int x, int y, boolean scale, BufferedImage image){
-        super(x,y,scale,image);
+    public Character(int xLocation, int yLocation, boolean scale, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight) {
+        super(xLocation, yLocation, scale, spriteSheet, spriteSheetWidth, spriteSheetHeight);
     }
 
     abstract void attack();

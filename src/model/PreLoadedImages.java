@@ -14,16 +14,18 @@ public class PreLoadedImages {
     private BufferedImage floorSpriteSheet = null;
     private BufferedImage gruntSpriteSheet = null;
     private BufferedImage protagonistSpriteSheet = null;
+    private BufferedImage campFireSpriteSheet = null;
 
 
     public PreLoadedImages() {
         try {
             this.tutorialRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GameMap.png"));
 //            this.wallSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
-//            this.doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
+            this.doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Door.png"));
             this.floorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
 //            this.gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
             this.protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
+            this.campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,5 +53,9 @@ public class PreLoadedImages {
 
     public BufferedImage getProtagonistSpriteSheet() {
         return this.protagonistSpriteSheet;
+    }
+
+    public BufferedImage getcampFireSpriteSheet() {
+        return this.campFireSpriteSheet;
     }
 }

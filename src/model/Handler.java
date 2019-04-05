@@ -1,6 +1,10 @@
 package model;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.util.Duration;
 import sample.Game;
 
 import java.awt.*;
@@ -11,6 +15,14 @@ import java.util.TreeMap;
 
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
     private static ArrayList<GameObject> gameObjects = new ArrayList<>();
+
+    //Use a timeline instead of render, or tick methods to control the speed of the animation
+    public static Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+        for (GameObject object: gameObjects) {
+            object.updateSprite();
+        }
+    }));
+
 
     public static void tick() {
         for (GameObject object : gameObjects) {

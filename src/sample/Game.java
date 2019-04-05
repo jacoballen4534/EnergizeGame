@@ -1,6 +1,7 @@
 package sample;
 
 import com.sun.org.apache.xalan.internal.xsltc.compiler.Constants;
+import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -46,7 +47,8 @@ public class Game extends Canvas {
         this.keyInput = new KeyInput(scene);
         this.camera = new Camera(0,0);
         loadLevel(this.map.getLevel(0));
-
+        Handler.timeline.setCycleCount(Animation.INDEFINITE);
+        Handler.timeline.play();
     }
 
 
@@ -121,12 +123,14 @@ public class Game extends Canvas {
                 int blue = (pixel) & 0xff;
 
                 if (red == 0 && green == 0 && blue == 0) { //Black = Wall
-                    Handler.addObject(new Wall(x,y, true, this.preLoadedImages.getWallSpriteSheet()));
+                    Handler.addObject(new Wall(x,y, true, this.preLoadedImages.getcampFireSpriteSheet(), 64, 64));
                 } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
                     Protagonist tempProtagonist = new Protagonist(x,y, true,
-                            this.preLoadedImages.getProtagonistSpriteSheet(), this.keyInput);
+                            this.preLoadedImages.getProtagonistSpriteSheet(), 50, 37, this.keyInput);
                     Handler.addObject(tempProtagonist);
                     this.protagonist = tempProtagonist;
+                } else if (red == 214 && green == 127 && blue == 255) { //Pink = Door
+                    Handler.addObject(new Door(x,y,true,this.preLoadedImages.getDoorSpriteSheet(), 72,96,0,1));
                 }
 
                 this.map.addFloor(new Floor(x,y,this.preLoadedImages.getFloorSpriteSheet()));
@@ -142,6 +146,7 @@ public class Game extends Canvas {
         return this.preLoadedImages;
     }
 
+    //This may not be needed anymore after changing to read methods
     private void saveDataToFile(String dataToWrite) {
         //Cant write to file that is inside jar, so find where the jar is, make a text file there, then save things like settings and high scores
         String jarPath = "";
