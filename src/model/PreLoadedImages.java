@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class PreLoadedImages {
@@ -17,12 +18,12 @@ public class PreLoadedImages {
 
     public PreLoadedImages() {
         try {
-            this.tutorialRoom = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
-//            this.wallSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
-//            this.doorSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
-            this.floorSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/Floor.png").getPath()));
-//            this.gruntSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/GameMap.png").getPath()));
-            this.protagonistSpriteSheet = ImageIO.read(new File(PreLoadedImages.class.getClassLoader().getResource("Images/ProtagonistSheet.png").getPath()));
+            this.tutorialRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GameMap.png"));
+//            this.wallSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
+//            this.doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
+            this.floorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
+//            this.gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
+            this.protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

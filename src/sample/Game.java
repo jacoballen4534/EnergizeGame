@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Constants;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,6 +11,8 @@ import javafx.stage.Stage;
 import model.*;
 
 import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.URLDecoder;
 
 public class Game extends Canvas {
 
@@ -26,6 +29,7 @@ public class Game extends Canvas {
     private Protagonist protagonist = null;
     private PreLoadedImages preLoadedImages = new PreLoadedImages();
     private Map map= new Map(this.preLoadedImages);
+    private static final String sp = File.separator; //Used to read/write to file
 
 
     public Game() {
@@ -42,6 +46,7 @@ public class Game extends Canvas {
         this.keyInput = new KeyInput(scene);
         this.camera = new Camera(0,0);
         loadLevel(this.map.getLevel(0));
+
     }
 
 
@@ -136,4 +141,67 @@ public class Game extends Canvas {
     public PreLoadedImages getPreLoadedImages() {
         return this.preLoadedImages;
     }
+
+    private void saveDataToFile(String dataToWrite) {
+        //Cant write to file that is inside jar, so find where the jar is, make a text file there, then save things like settings and high scores
+        String jarPath = "";
+        try {
+            jarPath = URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+            System.out.println(jarPath);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String completePath = jarPath.substring(0, jarPath.lastIndexOf("/")) + sp + "File_Name";
+        File f = new File(completePath);
+        try {
+            if (!f.exists() && !f.createNewFile()) {
+                System.out.println("File doesnt exist and creating file with path: " + completePath + " failed. ");
+            } else {
+                System.out.println("Input data exists, or file with path " + completePath + " created successfully. ");
+                System.out.println("Absolute Path: "  +f.getAbsolutePath());
+                System.out.println("Path: " + f.getPath());
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));
+                out.writeObject(dataToWrite);
+                out.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private String recoverInputFromFile() {
+        System.out.println("Reading data...");
+        String completePath = "";
+        String jarPath = "";
+        String readData = "";
+        try {
+            jarPath = URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
+            System.out.println(jarPath);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        completePath = jarPath.substring(0, jarPath.lastIndexOf("/")) + sp + "File_Name";
+        File f = new File(completePath);
+
+        if (f.exists()) {
+            System.out.println("File exists. ");
+            System.out.println("Absolute Path: "  +f.getAbsolutePath());
+            System.out.println("Path: " + f.getPath());
+            try {
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
+                readData = (String)in.readObject();
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("File doesnt exist, or path " + completePath + " is wrong. ");
+        }
+        return readData;
+    }
+
+
 }
