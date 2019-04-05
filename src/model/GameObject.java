@@ -40,6 +40,9 @@ public abstract class GameObject {
                 this.width - this.leftBorder - this.rightBorder, this.height - this.topBorder - this.bottomBorder);
     }
 
+    /////////////////////////////////////////
+    /*----------GETTERS AND SETTERS--------*/
+    /////////////////////////////////////////
     public int getX() {
         return this.x;
     }

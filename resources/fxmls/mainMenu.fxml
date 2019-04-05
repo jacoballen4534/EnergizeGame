@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -8,19 +8,22 @@
 
 <AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.mainMenuController">
    <children>
-      <VBox fx:id="mainMenuVBox" alignment="CENTER" prefHeight="768.0" prefWidth="1024.0" spacing="25">
+      <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="160.0" prefWidth="276.0">
          <children>
-            <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Belda">
-               <font>
-                  <Font size="60.0" />
-               </font>
-            </Label>
-            <Button fx:id="newGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#newGameButtonPressed" prefHeight="40.0" prefWidth="200.0" text="New Game" textAlignment="CENTER" />
-            <Button fx:id="loadGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#loadGameButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Load Game" textAlignment="CENTER" />
-            <Button fx:id="highScoreButton" alignment="CENTER" mnemonicParsing="false" onAction="#highScoreButtonPressed" prefHeight="40.0" prefWidth="200.0" text="High Scores" textAlignment="CENTER" />
-            <Button fx:id="OptionsButton" alignment="CENTER" mnemonicParsing="false" onAction="#optionsButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Options" textAlignment="CENTER" />
-            <Button fx:id="CreditsButton" alignment="CENTER" mnemonicParsing="false" onAction="#creditsButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Credits" textAlignment="CENTER" />
-            <Button fx:id="QuitButton" alignment="CENTER" mnemonicParsing="false" onAction="#quitButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Quit" textAlignment="CENTER" />
-         </children></VBox>
+            <Label onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
+            <Label onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
+            <Label onMouseClicked="#OptionsClicked" styleClass="menulabel" text="OPTIONS" />
+            <Label onMouseClicked="#HighScoreClicked" styleClass="menulabel" text="HIGH SCORES" />
+            <Label onMouseClicked="#CreditsClicked" styleClass="menulabel" text="CREDITS" />
+            <Label onMouseClicked="#QuitClicked" styleClass="menulabel" text="QUIT" />
+         </children>
+         <padding>
+            <Insets top="40.0" />
+         </padding></VBox>
+      <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="-50.0" styleClass="title" text="Energize">
+         <font>
+            <Font size="200.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

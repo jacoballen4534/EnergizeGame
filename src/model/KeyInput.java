@@ -27,8 +27,6 @@ public class KeyInput{
         keyBinds.put(KeyCode.S, false);//down
         keyBinds.put(KeyCode.D, false);//right
 
-
-
         this.scene.setOnKeyPressed(keyEvent -> {
             if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), true);
