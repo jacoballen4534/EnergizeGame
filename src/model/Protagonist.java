@@ -102,7 +102,12 @@ public class Protagonist extends Character {
     public void render(GraphicsContext graphicsContext) {
         //TODO: After fsm's are setup, check if this can be implamented in gameobject
 //        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        this.spriteDirection = this.velocityX >= 0 ? 1 : -1;
+        if (this.spriteDirection == 1) { //facing right
+            graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        } else {
+            graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
+        }
     }
 
     @Override

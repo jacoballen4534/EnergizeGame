@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Door extends Tile {
+public class Door extends GameObject {
     private int currentLevel;
     private int nextLevel;
 

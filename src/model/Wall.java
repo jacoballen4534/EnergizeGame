@@ -3,11 +3,12 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Wall extends Tile {
+public class Wall extends GameObject {
 
     public Wall(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight) {
         super(x , y, scale, image, spriteSheetWidth, spriteSheetHeight);
@@ -27,19 +28,19 @@ public class Wall extends Tile {
 
     @Override
     public void render(GraphicsContext graphicsContext) {
-//        graphicsContext.setFill(Color.BLACK);
-//        graphicsContext.fillRect(this.x,this.y, this.spriteWidth, this.spriteHeight);
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        graphicsContext.setFill(Color.BLACK);
+        graphicsContext.fillRect(this.x,this.y, this.spriteWidth, this.spriteHeight);
+//        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
 
     }
 
     protected void updateSprite() {
-        if (this.animationCol < this.animationMaxCol) {
-            this.animationCol++;
-        } else {
-            this.animationCol = 0;
-        }
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
+//        if (this.animationCol < this.animationMaxCol) {
+//            this.animationCol++;
+//        } else {
+//            this.animationCol = 0;
+//        }
+//        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
 
     }
 

@@ -1,13 +1,11 @@
 package sample;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Constants;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.*;
 
@@ -21,9 +19,10 @@ public class Game extends Canvas {
     private long previousTime = System.nanoTime();
     private long time = 0; //For fps counter
     private int frames = 0;//For fps counter
+    private int updates = 0;//For ups counter
     private KeyInput keyInput;
-    private final double width = Main.getStage().getWidth();
-    private final double height = Main.getStage().getHeight();
+    private final double screenWidth = Main.getStage().getWidth();
+    private final double screenHeight = Main.getStage().getHeight();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
     private Camera camera;
@@ -31,11 +30,12 @@ public class Game extends Canvas {
     private PreLoadedImages preLoadedImages = new PreLoadedImages();
     private Map map= new Map(this.preLoadedImages);
     private static final String sp = File.separator; //Used to read/write to file
+    private Stage stage;
 
 
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
-        Stage stage = Main.getStage();
+        stage = Main.getStage();
         
         stage.setTitle("Tutorial Room");
         Group root = new Group();
@@ -63,24 +63,29 @@ public class Game extends Canvas {
 
 
     private void init() {
+        Stage stage1 = this.stage;
+        String stageName = stage1.getTitle();
         this.animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) {
 //                Tick/sec counter (Uncomment frames++
-//                time += now - previousTime;
-//                if (time >= 1000000000.0f) {
+                time += now - previousTime;
+                if (time >= 1000000000.0f) {
 //                    System.out.println(frames);
-//                    time = 0;
-//                    frames = 0;
-//                }
+                    stage1.setTitle(stageName + " | " + frames + " FPS | " + updates + " UPS");
+                    time = 0;
+                    frames = 0;
+                    updates = 0;
+                }
 
                 delta += (now - previousTime) / NS;
                 previousTime = now;
                 while (delta >= 1) {
                     tick();
                     delta--;
-//                    frames++;
+                    updates++;
                 }
+                frames++;
                 render();
 
             }
@@ -91,7 +96,7 @@ public class Game extends Canvas {
     private void tick() {
         Handler.tick();
         if (this.protagonist != null) {
-            this.camera.tick(this.protagonist, this.width, this.height, this.map.getCurrentLevelWidth(), this.map.getCurrentLevelHeight());
+            this.camera.tick(this.protagonist, this.screenWidth, this.screenHeight, this.map.getCurrentLevelWidth(), this.map.getCurrentLevelHeight());
         }
 
     }
@@ -102,8 +107,9 @@ public class Game extends Canvas {
 
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
         // Draw the floor first, so they dont cover objects
-        for (Floor floor: map.getCurrentFloors()) {
-            floor.render(graphicsContext);
+        for (FloorTile floorTile : map.getCurrentFloorTiles()) {
+            if (floorTile.getX() - this.camera.getX() < this.screenWidth && floorTile.getY() - this.camera.getY() < this.screenHeight)
+                floorTile.render(graphicsContext);
         }
 
         Handler.render(graphicsContext);

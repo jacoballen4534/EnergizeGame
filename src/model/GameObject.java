@@ -30,6 +30,7 @@ public abstract class GameObject {
     protected int animationMaxRow = 0;
     protected int animationMaxCol = 0;
 
+    protected int spriteDirection = 1; //This is used to flip the image, -1 is face left, 1 is face right.
     protected Image jfxImage; //To draw onto the canvas
 
 
