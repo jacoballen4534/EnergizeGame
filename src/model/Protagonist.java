@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
 
 import java.awt.*;
@@ -105,6 +106,9 @@ public class Protagonist extends Character {
         } else {
             graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
         }
+        graphicsContext.setFill(new Color(0.5,0.5,0.5,0.5));
+        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
+                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }
 
     @Override

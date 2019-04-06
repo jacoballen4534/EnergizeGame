@@ -115,8 +115,9 @@ public class Map {
                         break;
 
                     case WALL:
-                        Handler.addObject(new Wall(x,y, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
-                                CAMP_FIRE_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
+//                        Handler.addObject(new Wall(x,y, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
+//                                CAMP_FIRE_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
+                        Handler.addObject(new NullTile(x,y,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
                         Handler.addTile(new Floor(x,y,PreLoadedImages.floorSpriteSheet, FLOOR_SPRITE_WIDTH,FLOOR_SPRITE_HEIGHT,FLOOR_SPRITE_WIDTH * Game.SCALE,FLOOR_SPRITE_HEIGHT * Game.SCALE,13,0));
                         break;
 
