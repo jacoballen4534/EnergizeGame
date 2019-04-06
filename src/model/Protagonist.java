@@ -22,13 +22,10 @@ public class Protagonist extends Character {
 //    public Inventory inventory;
 
 
-    public Protagonist(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, KeyInput keyInput) {
-        super(x, y, scale, image, spriteSheetWidth, spriteSheetHeight);
+    public Protagonist(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, KeyInput keyInput) {
+        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
         this.id = nextID++;
         this.keyInput = keyInput;
-        //This is the redder width and height.
-        this.spriteWidth = 100;
-        this.spriteHeight = 74;
 
         this.animationMaxRow = 15;
         this.animationMaxCol = 6;

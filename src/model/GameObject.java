@@ -1,11 +1,8 @@
 package model;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.util.Duration;
+import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,18 +31,15 @@ public abstract class GameObject {
     protected Image jfxImage; //To draw onto the canvas
 
 
-    public GameObject(int xLocation, int yLocation, boolean scale, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight) {
-        if (scale) {
-            //Multiply by Floor width/height to scale up to real map size
-            this.x = xLocation * Floor.getWidth();
-            this.y = yLocation * Floor.getHeight();
-        } else {
-            this.x = xLocation;
-            this.y = yLocation;
-        }
+    public GameObject(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
+        //Multiply by Floor width/height to scale up to real map size
+        this.x = xLocation * Game.PIXEL_UPSCALE;
+        this.y = yLocation * Game.PIXEL_UPSCALE;
         this.spriteWidth = spriteSheetWidth;
         this.spriteHeight = spriteSheetHeight;
         this.loadSpriteSheet(spriteSheet);
+        this.spriteWidth = renderWidth;
+        this.spriteHeight = renderHeight;
     }
 
 

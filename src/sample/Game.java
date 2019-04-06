@@ -9,7 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import model.*;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLDecoder;
 
@@ -27,11 +26,11 @@ public class Game extends Canvas {
     private final double NS = 1000000000 / 60.0;
     private Camera camera;
     private Protagonist protagonist = null;
-    private PreLoadedImages preLoadedImages = new PreLoadedImages();
-    private Map map= new Map(this.preLoadedImages);
+    private Map map;
     private static final String sp = File.separator; //Used to read/write to file
     private Stage stage;
-
+    public static final int SCALE = 1; //Scale from pixel to screen size
+    public static final int PIXEL_UPSCALE = 32 * Game.SCALE;
 
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
@@ -46,7 +45,8 @@ public class Game extends Canvas {
         stage.show();
         this.keyInput = new KeyInput(scene);
         this.camera = new Camera(0,0);
-        loadLevel(this.map.getLevel(0));
+        this.map = new Map(this);
+        this.map.loadLevel(0);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
     }
@@ -60,6 +60,9 @@ public class Game extends Canvas {
         this.animationTimer.start();
     }
 
+    public KeyInput getKeyInput() {
+        return this.keyInput;
+    }
 
 
     private void init() {
@@ -96,7 +99,8 @@ public class Game extends Canvas {
     private void tick() {
         Handler.tick();
         if (this.protagonist != null) {
-            this.camera.tick(this.protagonist, this.screenWidth, this.screenHeight, this.map.getCurrentLevelWidth(), this.map.getCurrentLevelHeight());
+            this.camera.tick(this.protagonist, this.screenWidth, this.screenHeight,
+                    this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
 
     }
@@ -104,53 +108,27 @@ public class Game extends Canvas {
     private void render() {
 
         GraphicsContext graphicsContext = this.getGraphicsContext2D();
-
+        //Translate the to where the camera is looking
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
-        // Draw the floor first, so they dont cover objects
-        for (FloorTile floorTile : map.getCurrentFloorTiles()) {
-            if (floorTile.getX() - this.camera.getX() < this.screenWidth && floorTile.getY() - this.camera.getY() < this.screenHeight)
-                floorTile.render(graphicsContext);
-        }
-
-        Handler.render(graphicsContext);
 
 
+        Handler.render(graphicsContext, this.camera.getX(), this.camera.getY(), this.screenWidth, this.screenHeight);
+
+        //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
 
         //Then objects on top
     }
 
-    private void loadLevel(BufferedImage level) {
-        for (int x = 0; x < level.getWidth(); x++) {
-            for (int y = 0; y < level.getHeight(); y++) {
-                int pixel = level.getRGB(x,y);
-                int red = (pixel >> 16) & 0xff;
-                int green = (pixel >> 8) & 0xff;
-                int blue = (pixel) & 0xff;
-
-                if (red == 0 && green == 0 && blue == 0) { //Black = Wall
-                    Handler.addObject(new Wall(x,y, true, this.preLoadedImages.getcampFireSpriteSheet(), 64, 64));
-                } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
-                    Protagonist tempProtagonist = new Protagonist(x,y, true,
-                            this.preLoadedImages.getProtagonistSpriteSheet(), 50, 37, this.keyInput);
-                    Handler.addObject(tempProtagonist);
-                    this.protagonist = tempProtagonist;
-                } else if (red == 214 && green == 127 && blue == 255) { //Pink = Door
-                    Handler.addObject(new Door(x,y,true,this.preLoadedImages.getDoorSpriteSheet(), 72,96,0,1));
-                }
-
-                this.map.addFloor(new Floor(x,y,this.preLoadedImages.getFloorSpriteSheet()));
-            }
-        }
+    public void setProtagonist (Protagonist protagonist) {
+        this.protagonist = protagonist;
     }
+
 
     public Map getMap() {
         return this.map;
     }
 
-    public PreLoadedImages getPreLoadedImages() {
-        return this.preLoadedImages;
-    }
 
     //This may not be needed anymore after changing to read methods
     private void saveDataToFile(String dataToWrite) {

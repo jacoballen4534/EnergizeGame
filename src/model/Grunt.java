@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
 
-    public Grunt(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight) {
-        super(x, y, scale, image, spriteSheetWidth, spriteSheetHeight);
+    public Grunt(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
+        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderHeight, renderHeight);
 
     }
 

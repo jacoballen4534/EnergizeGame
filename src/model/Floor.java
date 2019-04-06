@@ -8,34 +8,32 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Floor {
+public class Floor extends Tile{
 
-    private int x,y;
-    private static final int width = 32, height = 32; //size of sprite
+    public static final int width = 32, height = 32; //size of sprite
     private Image jfxImage;
 
-    public Floor(int x, int y, BufferedImage image) {
-        this.x = x * width;
-        this.y = y * width;
-        SpriteSheet spriteSheet = new SpriteSheet(image, width, height);
+    public Floor(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int spriteSheetCol, int spriteSheetRow) {
+        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
 //        Need to convert it to a JFXImage to be able to draw it to the canvas
-        this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(11,0), null);
+        this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(spriteSheetCol,spriteSheetRow), null);
     }
 
 
+    @Override
+    public void tick() {
+
+    }
 
     public void render(GraphicsContext graphicsContext) {
 //        graphicsContext.setFill(Color.FIREBRICK);
 //        graphicsContext.fillRect(this.x, this.y, this.width, this.height);
 
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, width, height);
+        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
 
-    public static int getWidth() {
-        return width;
-    }
-
-    public static int getHeight() {
-        return height;
+    @Override
+    protected void loadSpriteSheet(BufferedImage image) {
+        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight);
     }
 }

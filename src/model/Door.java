@@ -10,12 +10,10 @@ public class Door extends GameObject {
     private int currentLevel;
     private int nextLevel;
 
-    public Door(int x, int y, boolean scale, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int currentLevel, int nextLevel) {
-        super(x, y, scale, image, spriteSheetWidth, spriteSheetHeight);
+    public Door(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int currentLevel, int nextLevel) {
+        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
         this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
-        this.spriteWidth = 72;
-        this.spriteHeight = 96;
 
         this.animationMaxRow = 7;
         this.animationMaxCol = 11;

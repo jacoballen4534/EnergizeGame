@@ -6,13 +6,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
-    private java.lang.String name;
+    private String name;
     protected int health;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
 
-    public Character(int xLocation, int yLocation, boolean scale, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight) {
-        super(xLocation, yLocation, scale, spriteSheet, spriteSheetWidth, spriteSheetHeight);
+    public Character(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int rederHeight) {
+        super(xLocation, yLocation, spriteSheet, spriteSheetWidth, spriteSheetHeight, renderWidth, rederHeight);
     }
 
     abstract void attack();

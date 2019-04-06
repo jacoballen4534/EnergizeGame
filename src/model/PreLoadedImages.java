@@ -20,7 +20,7 @@ public class PreLoadedImages {
             doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Door.png"));
             floorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Floor.png"));
 //            gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Grunt.png"));
-            protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
+            protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheetx8.png"));
             campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
         } catch (IOException e) {
             e.printStackTrace();
