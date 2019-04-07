@@ -29,6 +29,8 @@ public class Level {
 
     private final int PROTAGONIST_SPRITE_WIDTH = 400;
     private final int PROTAGONIST_SPRITE_HEIGHT = 296;
+    //Protagonist is downscaled from x8 spreadsheet to wanted size.
+    private final double PROTAGONIST_SPRITE_SCALE = 0.35;
 
     private final int CAMP_FIRE_SPRITE_WIDTH = 64;
     private final int CAMP_FIRE_SPRITE_HEIGHT = 64;
@@ -110,7 +112,7 @@ public class Level {
 
                     case PROTAGONIST:
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
-                                PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * 0.35), (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * 0.35), this.game.getKeyInput());
+                                PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE), (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.game.getKeyInput());
                         Handler.addObject(tempProtagonist);
                         game.setProtagonist(tempProtagonist);
                         break;
