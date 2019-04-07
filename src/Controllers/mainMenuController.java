@@ -133,27 +133,42 @@ public class mainMenuController implements Initializable {
 
     private void ShowNewGameMenu(){
         FadeOutCurrentMenu();
-        Label testLabel = new Label("Testing");
-        Label otherLabel = new Label("HELLO");
-        miniMenuVBox.getChildren().add(testLabel);
-        miniMenuVBox.getChildren().add(otherLabel);
+        Label newGameLabel = new Label("New Game");
+        newGameLabel.getStyleClass().setAll("label-heading");
+        miniMenuVBox.getChildren().add(newGameLabel);
         FadeInMenu(miniMenuVBox);
     }
 
     private void ShowLoadGameMenu(){
         FadeOutCurrentMenu();
+        Label loadGameLabel = new Label("Load Game");
+        loadGameLabel.getStyleClass().setAll("label-heading");
+        miniMenuVBox.getChildren().add(loadGameLabel);
+        FadeInMenu(miniMenuVBox);
     }
 
     private void ShowHighScoresMenu(){
         FadeOutCurrentMenu();
+        Label highScoresLabel = new Label("High Scores");
+        highScoresLabel.getStyleClass().setAll("label-heading");
+        miniMenuVBox.getChildren().add(highScoresLabel);
+        FadeInMenu(miniMenuVBox);
     }
 
     private void ShowOptionsMenu(){
         FadeOutCurrentMenu();
+        Label optionsLabel = new Label("Options");
+        optionsLabel.getStyleClass().setAll("label-heading");
+        miniMenuVBox.getChildren().add(optionsLabel);
+        FadeInMenu(miniMenuVBox);
     }
 
     private void ShowCreditsMenu(){
         FadeOutCurrentMenu();
+        Label creditsLabel = new Label("Credits");
+        creditsLabel.getStyleClass().setAll("label-heading");
+        miniMenuVBox.getChildren().add(creditsLabel);
+        FadeInMenu(miniMenuVBox);
     }
 
     private void FadeOutCurrentMenu(){
@@ -162,7 +177,7 @@ public class mainMenuController implements Initializable {
 
         FadeTransition ft = new FadeTransition();
         ft.setNode(miniMenuVBox);
-        ft.setDuration(new Duration(1000));
+        ft.setDuration(new Duration(10));
         ft.setFromValue(1.0);
         ft.setToValue(0.0);
         ft.setAutoReverse(false);
@@ -173,7 +188,7 @@ public class mainMenuController implements Initializable {
 
     private void FadeInMenu(Node node){
         FadeTransition ft = new FadeTransition();
-        ft.setDuration(new Duration(1000));
+        ft.setDuration(new Duration(10));
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
         ft.setNode(node);
