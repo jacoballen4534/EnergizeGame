@@ -13,15 +13,15 @@ public abstract class GameObject {
     protected int x,y;
     protected boolean isSolid = true;
     protected boolean movable = true;
-    protected int spriteWidth, spriteHeight; //This is the full width/height including borders
-    protected SpriteSheet spriteSheet;
-    //This is the border around where the sprite actually starts and spriteWidth / Height. To get better collisions.
+    protected int spriteWidth, spriteHeight; //This is the full width/height including any borders
+    protected SpriteSheet spriteSheet; //The full sheet, able to get subsections to draw
+    //This is the difference between where the sprite actually starts and spriteWidth / Height. Used to improve collisions.
     protected int leftBorder = 0;
     protected int rightBorder = 0;
     protected int topBorder = 0;
     protected int bottomBorder = 0;
 
-    //This is updated in updateSprite for animations
+    //This is updated in updateSprite for animations to cycle through the appropriate sprites
     protected int animationRow = 0;
     protected int animationCol = 0;
     protected int animationMaxRow = 0;

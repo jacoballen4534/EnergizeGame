@@ -2,11 +2,15 @@ package model;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
@@ -20,37 +24,61 @@ public class Protagonist extends Character {
     private int lives;
     private KeyInput keyInput;
     private GraphicsContext graphicsContext;
-//    public Inventory inventory;
-
+    private boolean attacking = false;
+    //    public Inventory inventory;
 
     public Protagonist(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, KeyInput keyInput) {
         super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
         this.id = nextID++;
         this.keyInput = keyInput;
 
-        this.animationMaxRow = 15;
-        this.animationMaxCol = 6;
-
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
     protected void updateSprite() { //TODO: Setup fsm, probably use enum
-        this.leftBorder = 11;
-        this.rightBorder = 18;
-        this.topBorder = 6;
-        this.bottomBorder = 5;
 
-//        super.updateSprite();
-        if (this.animationCol < this.animationMaxCol) {
-            this.animationCol++;
-        } else {
-            this.animationCol = 0;
+        if (this.velocityX == 0 && this.velocityY == 0) { //Idle
+            //Update bounding box
+            this.leftBorder = 45;
+            this.rightBorder = 48;
+            this.topBorder = 17;
+            this.bottomBorder = 5;
 
-            if (this.animationRow < this.animationMaxRow) {
-                this.animationRow++;
+            //Update idle sprite
+            this.animationRow = 0;
+            this.animationMaxCol = 3;
+            if (this.animationCol < this.animationMaxCol) {
+                this.animationCol++;
             } else {
-                animationRow = 0;
+                this.animationCol = 0;
+            }
+        } else if (this.attacking) { //Attacking
+            //Update attack animation
+            this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
+        } else { //Running
+
+            //Update the direction, flip the bounding box depending on the direction
+            if (this.velocityX > 0) {//right
+                this.spriteDirection = 1;
+                this.leftBorder = 52;
+                this.rightBorder = 38;
+            } else if (this.velocityX < 0) {//left
+                this.leftBorder = 38;
+                this.rightBorder = 52;
+                this.spriteDirection = -1;
+            } //other case is idle so leave the direction how it how it was before
+
+            //Update the rest of the bounding box
+            this.topBorder = 20;
+            this.bottomBorder = 5;
+            //Update running animation sprite
+            this.animationRow = 1;
+            this.animationMaxCol = 6;
+            if (this.animationCol < this.animationMaxCol) {
+                this.animationCol++;
+            } else {
+                this.animationCol = 1;
             }
         }
 
@@ -98,15 +126,14 @@ public class Protagonist extends Character {
 
     @Override
     public void render(GraphicsContext graphicsContext) {
-        //TODO: After fsm's are setup, check if this can be implamented in gameobject
-//        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
-        this.spriteDirection = this.velocityX >= 0 ? 1 : -1;
+        graphicsContext.setFill(new Color(0.5,0.5,0.5,0.5));
+
         if (this.spriteDirection == 1) { //facing right
             graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
         } else {
             graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
         }
-        graphicsContext.setFill(new Color(0.5,0.5,0.5,0.5));
+
         graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
                 this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }

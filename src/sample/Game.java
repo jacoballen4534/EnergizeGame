@@ -1,7 +1,6 @@
 package sample;
 
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -9,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.*;
 
 import java.awt.geom.Rectangle2D;
@@ -54,6 +54,7 @@ public class Game extends Canvas {
         this.map.loadLevel(0);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
+
     }
 
 

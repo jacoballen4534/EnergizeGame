@@ -10,9 +10,11 @@ public class Camera {
     }
 
     public void tick(GameObject gameObject, double windowWidth, double windowHeight, int levelWidth, int levelHeight){
+        //Update the camera to keep the protagonist in the centre of the screen but *0.05 so it doesnt snap to them
         this.x += ((gameObject.getX() - x) - windowWidth/2) * 0.05f;
         this.y += ((gameObject.getY() - y) - windowHeight/2) * 0.05f;
 
+        //Clamp the camera to the edges of the map
         if (this.x <= 0) this.x = 0;
         if (this.x >= levelWidth - windowWidth) this.x = levelWidth - windowWidth;
         if (this.y <= 0) this.y = 0;

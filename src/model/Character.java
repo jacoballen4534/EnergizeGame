@@ -20,7 +20,7 @@ public abstract class Character extends GameObject{
     abstract void getHit();
 
 
-    protected java.lang.String getName() {
+    protected String getName() {
         return name;
     }
 
@@ -41,7 +41,7 @@ public abstract class Character extends GameObject{
     }
 
     @Override
-    public void tick() {
+    public void tick() {//Update position
         this.x += this.velocityX;
         this.y += this.velocityY;
     }

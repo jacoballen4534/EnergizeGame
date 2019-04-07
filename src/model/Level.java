@@ -5,6 +5,7 @@ import sample.Game;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+//These are the different things that can be on the map
 enum TileType {
     FLOOR,
     WALL,
@@ -17,13 +18,13 @@ enum TileType {
 
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
-    private int levelNumber;
+    private int levelNumber; //Used for doors, to go to the correct room
     private int levelWidth;
     private int levelHeight;
     Game game; //To add the protagonist to.
     //Add everything else to the handler
 
-    //////////////Macros///////////
+    //////////////Macros, Actual size of different sprites///////////
     private final int FLOOR_SPRITE_WIDTH = 32;
     private final int FLOOR_SPRITE_HEIGHT = 32;
 
