@@ -92,7 +92,6 @@ public class highScoreController implements Initializable {
         return allContent;
     }
 
-
     public void highScoreBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
         highScorePane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/mainMenu.fxml")));

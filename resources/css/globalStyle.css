@@ -28,9 +28,9 @@
     -fx-text-fill:#ff0000;
     -fx-label-padding: 0 0 0 15;
 }
-#mainMenuTitle{
+.label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
-    -fx-font-family: beon;
+    /*-fx-font-family: beon;*/
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
     -fx-font-size: 200;
@@ -44,6 +44,7 @@
     -fx-font-size: 150;
     -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
 }
+/*Unused*/
 .button{
     -fx-background-color: #ffc700;/*#AB4642;*/
     -fx-text-fill: #000000;
