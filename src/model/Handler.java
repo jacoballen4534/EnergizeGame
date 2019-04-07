@@ -56,8 +56,9 @@ public class Handler { //This class will hold all the game objects and is respon
         gameObjects.remove(object);
     }
 
-    public static void clearObjectList() {
+    public static void clearAllObjects() {
         gameObjects.clear();
+        tiles.clear();
     }
 
     public static boolean checkCollision (GameObject character) {

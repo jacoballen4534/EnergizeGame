@@ -30,7 +30,9 @@ public class Game extends Canvas {
     private static final String sp = File.separator; //Used to read/write to file
     private Stage stage;
     public static final int SCALE = 1; //Scale from pixel to screen size
-    public static final int PIXEL_UPSCALE = 32 * Game.SCALE;
+    public static final int PIXEL_UPSCALE = 64 * Game.SCALE;
+    public static final int SCREEN_WIDTH = 1024;
+    public static final int SCREEN_HEIGHT = 768;
 
     public Game() {
         super(Main.getStage().getWidth(),Main.getStage().getHeight());
@@ -39,7 +41,7 @@ public class Game extends Canvas {
         stage.setTitle("Tutorial Room");
         Group root = new Group();
         root.getChildren().add(this);
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, true);
         stage.setScene(scene);
         init();
         stage.show();
