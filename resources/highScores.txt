@@ -10,7 +10,7 @@
 
 <begin>
     name:Hassaan
-    score:48900
+    score:400
 <end>
 
 <begin>

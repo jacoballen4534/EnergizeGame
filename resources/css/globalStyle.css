@@ -18,11 +18,17 @@
     -fx-font-size: 30;
     -fx-font-style: italic;
 }
+.menulabel-clicked{
+    -fx-text-fill:#ffcccc;
+    -fx-font-family: beon;
+    -fx-font-size: 30;
+    -fx-label-padding: 0 0 0 15;
+}
 .menulabel:hover{
     -fx-text-fill:#ff0000;
     -fx-label-padding: 0 0 0 15;
 }
-.title{
+#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
     -fx-font-family: beon;
     -fx-text-alignment:center;

@@ -23,8 +23,6 @@ public class highScoreController implements Initializable {
     @FXML
     private Label Person1, Person2, Person3, Person4, Person5, Score1, Score2, Score3, Score4, Score5;
 
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
