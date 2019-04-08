@@ -39,8 +39,16 @@ public abstract class Character extends GameObject{
     }
 
     @Override
-    public void tick() {//Update position
+    public void tick() {//Update x and y secretly to allow sliding
+        //Turn around if protagonist has collided with something
         this.x += this.velocityX;
+        if (Handler.checkCollision(this)) {
+            this.x += this.velocityX * -1;
+        }
+
         this.y += this.velocityY;
+        if (Handler.checkCollision(this)) {
+            this.y += this.velocityY * -1;
+        }
     }
 }

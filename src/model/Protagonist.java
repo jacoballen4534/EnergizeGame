@@ -119,13 +119,7 @@ public class Protagonist extends Character {
         else if(!this.keyInput.right) this.velocityX = 0;
 
         super.tick();
-
-        //Turn around if protagonist has collided with something
-        if (Handler.checkCollision(this)) {
-            this.x += this.velocityX * -1;
-            this.y += this.velocityY * -1;
-        }
-
+        
     }
 
     @Override
