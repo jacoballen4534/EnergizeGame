@@ -8,22 +8,23 @@
 
 <AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.mainMenuController">
    <children>
-      <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="160.0" prefWidth="276.0">
+      <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="176.0" prefWidth="400.0">
          <children>
-            <Label onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
-            <Label onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
-            <Label onMouseClicked="#OptionsClicked" styleClass="menulabel" text="OPTIONS" />
-            <Label onMouseClicked="#HighScoreClicked" styleClass="menulabel" text="HIGH SCORES" />
-            <Label onMouseClicked="#CreditsClicked" styleClass="menulabel" text="CREDITS" />
-            <Label onMouseClicked="#QuitClicked" styleClass="menulabel" text="QUIT" />
+            <Label fx:id="newGame" onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
+            <Label fx:id="loadGame" onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
+            <Label fx:id="options" onMouseClicked="#OptionsClicked" styleClass="menulabel" text="OPTIONS" />
+            <Label fx:id="highScores" onMouseClicked="#HighScoreClicked" styleClass="menulabel" text="HIGH SCORES" />
+            <Label fx:id="credits" onMouseClicked="#CreditsClicked" styleClass="menulabel" text="CREDITS" />
+            <Label fx:id="quit" onMouseClicked="#QuitClicked" styleClass="menulabel" text="QUIT" />
          </children>
          <padding>
-            <Insets top="40.0" />
+            <Insets top="50.0" />
          </padding></VBox>
       <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="-50.0" styleClass="title" text="Energize">
          <font>
             <Font size="200.0" />
          </font>
       </Label>
+      <VBox fx:id="miniMenuVBox" alignment="CENTER_LEFT" layoutX="600.0" layoutY="184.0" prefHeight="200.0" prefWidth="100.0" />
    </children>
 </AnchorPane>
