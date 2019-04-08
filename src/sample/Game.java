@@ -54,6 +54,7 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
+        Handler.setCamera(camera);
         Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
