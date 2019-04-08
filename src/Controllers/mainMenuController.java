@@ -3,6 +3,7 @@ package Controllers;
 import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -38,17 +39,15 @@ public class mainMenuController implements Initializable {
     @FXML private void LoadGameClicked() throws IOException {
         //changeStageName("Load Game");
         focussedLabel = UpdateFocussedLabel(focussedLabel, "loadGame");
-        //VBox vbox = (VBox) mainMenuPane.getChildren().get(0);
-        //vbox.getChildren().remove(options);
         UpdateMenu(focussedLabel);
         //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
     }
 
     @FXML private void HighScoreClicked() throws IOException {
-        //changeStageName("High Score");
-        focussedLabel = UpdateFocussedLabel(focussedLabel,"highScores");
-        UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/highScore.fxml")));
+        ChangeStageName("High Score");
+        //focussedLabel = UpdateFocussedLabel(focussedLabel,"highScores");
+        //UpdateMenu(focussedLabel);
+        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/highScore.fxml")));
     }
 
     @FXML private void OptionsClicked() throws IOException {
@@ -60,10 +59,10 @@ public class mainMenuController implements Initializable {
 
 
     @FXML private void CreditsClicked() throws IOException {
-        //changeStageName("Credits");
-        focussedLabel = UpdateFocussedLabel(focussedLabel, "credits");
-        UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/credits.fxml")));
+        ChangeStageName("Credits");
+        //focussedLabel = UpdateFocussedLabel(focussedLabel, "credits");
+        //UpdateMenu(focussedLabel);
+        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/credits.fxml")));
     }
 
     @FXML private void QuitClicked() {
@@ -178,8 +177,15 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
-        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
+        CreateSubmenuLabel(subMenu,"Game Save 1",0,event -> {
+            System.out.println("Loads the first game save");
+        });
+        CreateSubmenuLabel(subMenu,"Game Save 2",1,event -> {
+            System.out.println("Loads second game save");
+        });
+        CreateSubmenuLabel(subMenu,"Game Save 3",2,event -> {
+            System.out.println("Loads third game save");
+        });
         //Add submenu to menu
         mainMenuVBox.getChildren().add(2,subMenu);
         //System.out.println(subMenu.getChildren());
