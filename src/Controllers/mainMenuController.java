@@ -10,15 +10,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.event.EventHandler;
+import sample.Game;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class mainMenuController implements Initializable {
 
     @FXML private AnchorPane mainMenuPane;
+    @FXML private VBox mainMenuVBox;
     @FXML private VBox miniMenuVBox;
     private Label focussedLabel = null;
 
@@ -69,26 +71,34 @@ public class mainMenuController implements Initializable {
         stage.close();
     }
 
+    private void QuickPlayClicked(){
+        System.out.println("///////// START QUICK PLAY /////////");
+    }
+
+    private void CustomPlayClicked(){
+        System.out.println("///////// START CUSTOM GAME /////////");
+    }
+
     private void ChangeStageName(String newStageName) {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();
         stage.setTitle(newStageName);
     }
 
-    private Label getLabelByID(String id){
+    private Node getNodeByID(String id){
         ObservableList<Node> menuLabels = ((VBox)(mainMenuPane.getChildren().get(0))).getChildren();
         Iterator<Node> it = menuLabels.iterator();
         while (it.hasNext()) {
-            Label label = (Label)it.next();
-            if (label.getId().equals(id)){
-                //System.out.println("Found label: " + id);
-                return label;
+            Node node = it.next();
+            if (node.getId().equals(id)){
+                //System.out.println("Found node: " + id);
+                return node;
             }
         }
         return null;
     }
 
     private Label UpdateFocussedLabel(Label currFocussedLabel, String id){
-        Label newLabel = getLabelByID(id);
+        Label newLabel = (Label)getNodeByID(id);
         if (currFocussedLabel != null){
             currFocussedLabel.getStyleClass().setAll("menulabel");
         }
@@ -105,10 +115,24 @@ public class mainMenuController implements Initializable {
         return currFocussedLabel;
     }
 
+    private VBox CreateSubMenu(){
+        VBox subMenu = new VBox();
+        subMenu.getStyleClass().setAll("submenu");
+        subMenu.setId("subMenuVBox");
+        return subMenu;
+    }
+    private void CreateSubmenuLabel(VBox subMenu, String labelText, int position, EventHandler mouseOnClick){
+        Label label = new Label(labelText);
+        label.getStyleClass().setAll("submenu-label");
+        if (mouseOnClick != null) label.setOnMouseClicked(mouseOnClick);
+        subMenu.getChildren().add(position,label);
+    }
+
     //TODO refactor switch statement to be less hardcoded
     private void UpdateMenu(Label currFocussedLabel){
         if (currFocussedLabel == null){
-            FadeOutCurrentMenu();
+            //FadeOutCurrentMenu();
+            HideCurrentSubMenu();
             return;
         }
         String lblId = currFocussedLabel.getId();
@@ -132,45 +156,81 @@ public class mainMenuController implements Initializable {
     }
 
     private void ShowNewGameMenu(){
-        FadeOutCurrentMenu();
-        Label newGameLabel = new Label("New Game");
-        newGameLabel.getStyleClass().setAll("label-heading");
-        miniMenuVBox.getChildren().add(newGameLabel);
-        FadeInMenu(miniMenuVBox);
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateSubmenuLabel(subMenu,"Quick Play",0,event -> {
+            System.out.println("Starts a new quick play game");
+            Game game = new Game();
+            game.start();
+        });
+        CreateSubmenuLabel(subMenu,"Custom Play",1,event -> System.out.println("Start custom game"));
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(1,subMenu);
+        //System.out.println(subMenu.getChildren());
     }
 
     private void ShowLoadGameMenu(){
-        FadeOutCurrentMenu();
-        Label loadGameLabel = new Label("Load Game");
-        loadGameLabel.getStyleClass().setAll("label-heading");
-        miniMenuVBox.getChildren().add(loadGameLabel);
-        FadeInMenu(miniMenuVBox);
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
+        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(2,subMenu);
+        //System.out.println(subMenu.getChildren());
     }
 
     private void ShowHighScoresMenu(){
-        FadeOutCurrentMenu();
-        Label highScoresLabel = new Label("High Scores");
-        highScoresLabel.getStyleClass().setAll("label-heading");
-        miniMenuVBox.getChildren().add(highScoresLabel);
-        FadeInMenu(miniMenuVBox);
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
+        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(4,subMenu);
+        //System.out.println(subMenu.getChildren());
     }
 
     private void ShowOptionsMenu(){
-        FadeOutCurrentMenu();
-        Label optionsLabel = new Label("Options");
-        optionsLabel.getStyleClass().setAll("label-heading");
-        miniMenuVBox.getChildren().add(optionsLabel);
-        FadeInMenu(miniMenuVBox);
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateSubmenuLabel(subMenu,"Change Keybindings",0,null);
+        CreateSubmenuLabel(subMenu,"Change volume",1,null);
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(3,subMenu);
+        //System.out.println(subMenu.getChildren());
     }
 
     private void ShowCreditsMenu(){
-        FadeOutCurrentMenu();
-        Label creditsLabel = new Label("Credits");
-        creditsLabel.getStyleClass().setAll("label-heading");
-        miniMenuVBox.getChildren().add(creditsLabel);
-        FadeInMenu(miniMenuVBox);
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
+        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
+        CreateSubmenuLabel(subMenu,"Even more stuff",1,null);
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(5,subMenu);
+        //System.out.println(subMenu.getChildren());
     }
 
+    private void HideCurrentSubMenu(){
+        VBox subMenu = (VBox)getNodeByID("subMenuVBox");
+        mainMenuVBox.getChildren().remove(subMenu);
+    }
+
+    /* DEPRECATED */
     private void FadeOutCurrentMenu(){
         ObservableList<Node> currItems = miniMenuVBox.getChildren();
         if (currItems.isEmpty()){return;}
@@ -185,7 +245,7 @@ public class mainMenuController implements Initializable {
         //System.out.println(miniMenuVBox.getChildren());
         ft.setOnFinished(e -> miniMenuVBox.getChildren().removeAll(currItems));
     }
-
+    /* DEPRECATED */
     private void FadeInMenu(Node node){
         FadeTransition ft = new FadeTransition();
         ft.setDuration(new Duration(10));

@@ -21,12 +21,24 @@
 .menulabel-clicked{
     -fx-text-fill:#ffcccc;
     -fx-font-family: beon;
-    -fx-font-size: 30;
-    -fx-label-padding: 0 0 0 15;
+    -fx-font-size: 50;
+    -fx-label-padding: 0 0 0 0;
 }
 .menulabel:hover{
     -fx-text-fill:#ff0000;
     -fx-label-padding: 0 0 0 15;
+}
+.submenu{
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 0 30;
+}
+.submenu-label{
+    -fx-text-fill: #dd00bb;
+    -fx-font-family: beon;
+    -fx-font-size: 25;
+}
+.submenu-label:hover{
+    -fx-text-fill: #ffffff;
 }
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
