@@ -48,7 +48,7 @@ public class Door extends GameObject {
 
     @Override
     public void render(GraphicsContext graphicsContext) {
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        graphicsContext.drawImage(this.jfxImage, this.x - this.leftBorder, this.y - this.topBorder, this.spriteWidth, this.spriteHeight);
     }
 
     @Override

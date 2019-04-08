@@ -13,7 +13,8 @@ enum TileType {
     PROTAGONIST,
     DOOR,
     ENEMY,
-    NULLTILE
+    NULLTILE,
+    ITEM
 }
 
 public class Level {
@@ -69,7 +70,7 @@ public class Level {
         for (int row = 0; row < this.levelHeight; row++) {
             ArrayList<TileType> column = new ArrayList<>();
             for (int col = 0; col < this.levelWidth; col++) {
-                int pixel = PreLoadedImages.tutorialRoom.getRGB(row, col);
+                int pixel = image.getRGB(col, row);
                 int red = (pixel >> 16) & 0xff;
                 int green = (pixel >> 8) & 0xff;
                 int blue = (pixel) & 0xff;
@@ -84,6 +85,8 @@ public class Level {
                     column.add(TileType.DOOR);
                 } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / item
                     column.add(TileType.CAMP_FIRE);
+                } else if (red == 128 && green == 0 && blue == 128) {
+                    column.add(TileType.ITEM);
                 } else {
                     column.add(TileType.NULLTILE);
                 }
@@ -97,7 +100,7 @@ public class Level {
 
         for (int row = 0; row < this.levelHeight; row++) {
             for (int col = 0; col < this.levelWidth; col++) {
-                TileType tile = this.tiles.get(col).get(row);
+                TileType tile = this.tiles.get(row).get(col);
                 //May be able to move sprite width into respective class's later. Keep here for testing
                 switch (tile) {
                     case CAMP_FIRE:
@@ -119,12 +122,16 @@ public class Level {
                         break;
 
                     case DOOR:
-                        Handler.addObject(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_SPRITE_WIDTH * Game.SCALE, DOOR_SPRITE_HEIGHT * Game.SCALE, this.levelNumber, 1));
+                        Handler.addObject(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelNumber, 1));
                         break;
 
                     case FLOOR:
                         //Can add different tiles texture, just pass in a different spriteSheet row and col
                         break;
+
+                    case ITEM:
+                        Handler.addObject(new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, false));
+                        continue;
 
                     default:
                         Handler.addObject(new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));

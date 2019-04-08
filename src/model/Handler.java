@@ -16,6 +16,7 @@ import java.util.TreeMap;
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
     private static ArrayList<GameObject> gameObjects = new ArrayList<>();
     private static ArrayList<Tile> tiles = new ArrayList<>(); //Need tiles separate to render first
+    private static ArrayList<Character> characters = new ArrayList<>(); //Hold all players and enemy's
 
     //Use a timeline instead of render, or tick methods to control the speed of the animation
     public static Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
@@ -61,7 +62,7 @@ public class Handler { //This class will hold all the game objects and is respon
         tiles.clear();
     }
 
-    public static boolean checkCollision (GameObject character) {
+    public static boolean checkCollision (Character character) {
         for (GameObject object : gameObjects) {
             if (!object.equals(character) && character.getBounds().intersects(object.getBounds())) {
                 return true;

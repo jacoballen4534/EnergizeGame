@@ -66,14 +66,9 @@ public class Protagonist extends Character {
         } else { //Running
 
 
-            if (this.spriteDirection == 1) {//right
-                this.leftBorder = 52;
-                this.rightBorder = 38;
-            } else {//left
-                this.leftBorder = 38;
-                this.rightBorder = 52;
-            }
-            //Update the rest of the bounding box
+
+            this.leftBorder = 52;
+            this.rightBorder = 38;
             this.topBorder = 20;
             this.bottomBorder = 5;
             //Update running animation sprite
@@ -119,7 +114,7 @@ public class Protagonist extends Character {
         else if(!this.keyInput.right) this.velocityX = 0;
 
         super.tick();
-        
+
     }
 
     @Override
@@ -132,8 +127,15 @@ public class Protagonist extends Character {
             graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
         }
 
-        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
-                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+        //Swap the left and right border depending on which way the character is facing
+        if (this.spriteDirection == 1) {//right
+            graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
+                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+        } else {//left
+            graphicsContext.fillRect(this.x + this.rightBorder, this.y + this.topBorder,
+                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+        }
+
     }
 
     @Override
