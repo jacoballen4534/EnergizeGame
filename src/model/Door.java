@@ -18,7 +18,7 @@ public class Door extends GameObject {
         //Set up animation sprites
         this.animationMaxRow = 3;
 
-        this.leftBorder = 3;
+        this.leftBorder = 5;
         this.rightBorder = 0;
         this.topBorder = 15;
         this.bottomBorder = 0;

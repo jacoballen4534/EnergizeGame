@@ -22,8 +22,6 @@ public class Game extends Canvas {
     private int frames = 0;
     private int updates = 0;
     private KeyInput keyInput;
-    private final double screenWidth = Main.getStage().getWidth();
-    private final double screenHeight = Main.getStage().getHeight();
 
     //For game loop
     private AnimationTimer animationTimer;
@@ -107,7 +105,7 @@ public class Game extends Canvas {
     private void tick() {
         Handler.tick();
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
-            this.camera.tick(this.protagonist, this.screenWidth, this.screenHeight,
+            this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
 
@@ -119,7 +117,7 @@ public class Game extends Canvas {
         //Translate the to where the camera is looking for proper coordinates.
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
 
-        Handler.render(graphicsContext, this.camera.getX(), this.camera.getY(), this.screenWidth, this.screenHeight);
+        Handler.render(graphicsContext, this.camera.getX(), this.camera.getY(), Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
 
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());

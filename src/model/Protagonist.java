@@ -25,6 +25,7 @@ public class Protagonist extends Character {
     private KeyInput keyInput;
     private GraphicsContext graphicsContext;
     private boolean attacking = false;
+    private boolean buttonAllreadyDown = false;
     //    public Inventory inventory;
 
     public Protagonist(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, KeyInput keyInput) {
@@ -36,7 +37,7 @@ public class Protagonist extends Character {
     }
 
     @Override
-    protected void updateSprite() { //TODO: Setup fsm, probably use enum
+    protected void updateSprite() {
 
         //Update the direction, Do this first so vertical movement gets the updated bounding box
         if (this.velocityX > 0) {//right
@@ -65,8 +66,6 @@ public class Protagonist extends Character {
             this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
         } else { //Running
 
-
-
             this.leftBorder = 52;
             this.rightBorder = 38;
             this.topBorder = 20;
@@ -81,7 +80,14 @@ public class Protagonist extends Character {
             }
         }
 
+        if (this.spriteDirection == -1) { //If the character is facing left, swap the left and right borders
+            int temp = this.leftBorder;
+            this.leftBorder = this.rightBorder;
+            this.rightBorder = temp;
+        }
+
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
+
     }
 
     @Override
@@ -107,11 +113,34 @@ public class Protagonist extends Character {
         if (this.keyInput.down) this.velocityY = 5;
         else if(!this.keyInput.up) this.velocityY = 0;
 
-        if (this.keyInput.right) this.velocityX = 5;
-        else if(!this.keyInput.left) this.velocityX = 0;
+        if (this.keyInput.right) {
+            this.velocityX = 5;
+            if (!this.buttonAllreadyDown) {
+                this.updateSprite();
+                this.buttonAllreadyDown = true;
+            }
 
-        if (this.keyInput.left) this.velocityX = -5;
-        else if(!this.keyInput.right) this.velocityX = 0;
+        } else if(!this.keyInput.left) {
+            this.velocityX = 0;
+            if (this.buttonAllreadyDown) {
+                this.updateSprite();
+                this.buttonAllreadyDown = false;
+            }
+        }
+
+        if (this.keyInput.left) {
+            this.velocityX = -5;
+            if (!this.buttonAllreadyDown) {
+                this.updateSprite();
+                this.buttonAllreadyDown = true;
+            }
+        } else if(!this.keyInput.right) {
+            this.velocityX = 0;
+            if (this.buttonAllreadyDown) {
+                this.updateSprite();
+                this.buttonAllreadyDown = false;
+            }
+        }
 
         super.tick();
 
@@ -127,15 +156,8 @@ public class Protagonist extends Character {
             graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
         }
 
-        //Swap the left and right border depending on which way the character is facing
-        if (this.spriteDirection == 1) {//right
-            graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
-                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
-        } else {//left
-            graphicsContext.fillRect(this.x + this.rightBorder, this.y + this.topBorder,
-                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
-        }
-
+        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
+                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }
 
     @Override

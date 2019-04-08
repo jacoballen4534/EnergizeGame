@@ -49,14 +49,8 @@ public abstract class GameObject {
     public abstract void render(GraphicsContext graphicsContext);
     protected Rectangle getBounds() {
         //As the full sprite includes empty space on the sides, Shrink the bounds by the specific border to get the actual bounds.
-        //Swap the left and right border depending on which way the character is facing
-        if (this.spriteDirection == 1) {//right
-            return new Rectangle(this.x + this.leftBorder, this.y + this.topBorder,
-                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
-        } else {//left
-            return new Rectangle(this.x + this.rightBorder, this.y + this.topBorder,
-                    this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
-        }
+        return new Rectangle(this.x + this.leftBorder, this.y + this.topBorder,
+                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }
 
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.
