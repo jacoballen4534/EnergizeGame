@@ -24,6 +24,12 @@ public class mainMenuController implements Initializable {
     @FXML private VBox mainMenuVBox;
     @FXML private VBox miniMenuVBox;
     private Label focussedLabel = null;
+    private EventHandler QuickPlayClicked = event -> {
+        System.out.println("Starts a new quick play game");
+        Game game = new Game();
+        game.start();
+    };
+    private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,14 +74,6 @@ public class mainMenuController implements Initializable {
     @FXML private void QuitClicked() {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();
         stage.close();
-    }
-
-    private void QuickPlayClicked(){
-        System.out.println("///////// START QUICK PLAY /////////");
-    }
-
-    private void CustomPlayClicked(){
-        System.out.println("///////// START CUSTOM GAME /////////");
     }
 
     private void ChangeStageName(String newStageName) {
@@ -160,12 +158,8 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Quick Play",0,event -> {
-            System.out.println("Starts a new quick play game");
-            Game game = new Game();
-            game.start();
-        });
-        CreateSubmenuLabel(subMenu,"Custom Play",1,event -> System.out.println("Start custom game"));
+        CreateSubmenuLabel(subMenu,"Quick Play",0, QuickPlayClicked);
+        CreateSubmenuLabel(subMenu,"Custom Play",1,CustomPlayClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(1,subMenu);
         //System.out.println(subMenu.getChildren());

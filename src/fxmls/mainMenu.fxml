@@ -8,7 +8,7 @@
 
 <AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.mainMenuController">
    <children>
-      <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="160.0" prefWidth="276.0">
+      <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="176.0" prefWidth="400.0">
          <children>
             <Label fx:id="newGame" onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
             <Label fx:id="loadGame" onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
