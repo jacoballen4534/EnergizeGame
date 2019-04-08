@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.event.EventHandler;
@@ -33,6 +35,9 @@ public class mainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        /*Media media = new Media("file:///music/maintheme.mp3");
+        MediaPlayer player = new MediaPlayer(media);
+        player.play()*/
     }
 
     @FXML private void NewGameClicked() throws IOException {
