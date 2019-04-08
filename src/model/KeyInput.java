@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class KeyInput{
 
+    //TODO: Can put this in the handler instead of protagonist
     private Scene scene;
     public HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
 
