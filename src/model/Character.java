@@ -38,16 +38,15 @@ public abstract class Character extends GameObject{
         this.velocityY = velocityY;
     }
 
-    @Override
-    public void tick() {//Update x and y secretly to allow sliding
+    public void tick(double cameraX, double cameraY) {//Update x and y secretly to allow sliding
         //Turn around if protagonist has collided with something
         this.x += this.velocityX;
-        if (Handler.checkCollision(this)) {
+        if (Handler.checkCollision(this, cameraX, cameraY)) {
             this.x += this.velocityX * -1;
         }
 
         this.y += this.velocityY;
-        if (Handler.checkCollision(this)) {
+        if (Handler.checkCollision(this, cameraX, cameraY)) {
             this.y += this.velocityY * -1;
         }
     }

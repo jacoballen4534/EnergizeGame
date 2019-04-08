@@ -18,19 +18,15 @@ public class Floor extends Tile{
 
 
     @Override
-    public void tick() {
-
-    }
-
-    @Override
     protected void loadSpriteSheet(BufferedImage image) {
         super.loadSpriteSheet(image);
     }
 
-    public void render(GraphicsContext graphicsContext) {
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
 //        graphicsContext.setFill(Color.FIREBRICK);
 //        graphicsContext.fillRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
-
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+        }
     }
 }

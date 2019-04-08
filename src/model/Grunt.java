@@ -38,8 +38,10 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    public void render(GraphicsContext graphicsContext) {
-
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            //Render
+        }
     }
 
     @Override

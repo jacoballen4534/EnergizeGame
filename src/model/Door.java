@@ -28,11 +28,6 @@ public class Door extends GameObject {
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0, 0), null);
     }
 
-    @Override
-    public void tick() {
-        //If the protagonist intersects with this, load the next level
-    }
-
     protected void updateSprite() {
         // Get the next sprite in the animation then convert it so it can be drawn.
         if (this.animationRow < this.animationMaxRow) {
@@ -47,8 +42,10 @@ public class Door extends GameObject {
 
 
     @Override
-    public void render(GraphicsContext graphicsContext) {
-        graphicsContext.drawImage(this.jfxImage, this.x - this.leftBorder, this.y - this.topBorder, this.spriteWidth, this.spriteHeight);
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            graphicsContext.drawImage(this.jfxImage, this.x - this.leftBorder, this.y - this.topBorder, this.spriteWidth, this.spriteHeight);
+        }
     }
 
     @Override

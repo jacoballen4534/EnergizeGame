@@ -54,6 +54,7 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
+        Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
 
@@ -103,7 +104,7 @@ public class Game extends Canvas {
 
 
     private void tick() {
-        Handler.tick();
+        Handler.tick(this.camera.getX(), this.camera.getY());
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
@@ -117,7 +118,7 @@ public class Game extends Canvas {
         //Translate the to where the camera is looking for proper coordinates.
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
 
-        Handler.render(graphicsContext, this.camera.getX(), this.camera.getY(), Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+        Handler.render(graphicsContext, this.camera.getX(), this.camera.getY());
 
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());

@@ -10,11 +10,6 @@ public abstract class Tile extends GameObject{
         super(x,y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
     }
 
-    @Override
-    public void tick() {
-
-    }
-
     protected Rectangle getBounds() {
         if (this.solid) {
             return new Rectangle(this.x, this.y, this.spriteWidth, this.spriteHeight);

@@ -106,7 +106,7 @@ public class Protagonist extends Character {
     }
 
 
-    public void tick() {
+    public void tick(double cameraX, double cameraY) {
         if (this.keyInput.up) this.velocityY = -5;
         else if(!this.keyInput.down) this.velocityY = 0;
 
@@ -142,22 +142,21 @@ public class Protagonist extends Character {
             }
         }
 
-        super.tick();
+        super.tick(cameraX,cameraY);
 
     }
 
     @Override
-    public void render(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(new Color(0.5,0.5,0.5,0.5));
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
 
-        if (this.spriteDirection == 1) { //facing right
-            graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
-        } else {
-            graphicsContext.drawImage(this.jfxImage, this.x  + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            if (this.spriteDirection == 1) { //facing right
+                graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+            } else {
+                graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
+            }
+            this.renderBoundingBox(graphicsContext);
         }
-
-        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
-                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }
 
     @Override

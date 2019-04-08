@@ -106,7 +106,7 @@ public class Level {
                     case CAMP_FIRE:
                         Handler.addObject(new Wall(col, row, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
                                 CAMP_FIRE_SPRITE_HEIGHT, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
-                        break;
+                        continue;
 
                     case WALL:
                         Handler.addObject(new Wall(col,row, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,

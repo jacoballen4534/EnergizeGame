@@ -14,9 +14,11 @@ public class NullTile extends Tile {
     }
 
     @Override
-    public void render(GraphicsContext graphicsContext) {
-        graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillRect(this.x,this.y, this.spriteWidth, this.spriteHeight);
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            graphicsContext.setFill(Color.BLACK);
+            graphicsContext.fillRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
+        }
     }
 
     @Override

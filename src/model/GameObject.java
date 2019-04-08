@@ -2,6 +2,7 @@ package model;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import sample.Game;
 
 import java.awt.*;
@@ -45,16 +46,28 @@ public abstract class GameObject {
     }
 
 
-    public abstract void tick();
-    public abstract void render(GraphicsContext graphicsContext);
+    public void tick(double cameraX, double cameraY){
+
+    }
+    public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
     protected Rectangle getBounds() {
         //As the full sprite includes empty space on the sides, Shrink the bounds by the specific border to get the actual bounds.
         return new Rectangle(this.x + this.leftBorder, this.y + this.topBorder,
                 this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
     }
 
+    protected void renderBoundingBox(GraphicsContext graphicsContext) {
+        graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
+        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
+                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+    }
+
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.
 
+    }
+
+    protected boolean inCameraBounds(double cameraX, double cameraY) {
+        return (this.x + this.spriteWidth > cameraX && this.x < cameraX + Game.SCREEN_WIDTH && this.y + this.spriteHeight > cameraY && this.y < cameraY + Game.SCREEN_HEIGHT);
     }
 
     protected void loadSpriteSheet(BufferedImage image) {
