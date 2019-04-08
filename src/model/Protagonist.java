@@ -155,7 +155,7 @@ public class Protagonist extends Character {
             } else {
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
             }
-            this.renderBoundingBox(graphicsContext);
+//            this.renderBoundingBox(graphicsContext);
         }
     }
 
