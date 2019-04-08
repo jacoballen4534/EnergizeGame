@@ -38,6 +38,13 @@ public class Protagonist extends Character {
     @Override
     protected void updateSprite() { //TODO: Setup fsm, probably use enum
 
+        //Update the direction, Do this first so vertical movement gets the updated bounding box
+        if (this.velocityX > 0) {//right
+            this.spriteDirection = 1;
+        } else if (this.velocityX < 0) {//left
+            this.spriteDirection = -1;
+        } //other case is idle so leave the direction how it how it was before
+
         if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             //Update bounding box
             this.leftBorder = 45;
@@ -58,17 +65,14 @@ public class Protagonist extends Character {
             this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
         } else { //Running
 
-            //Update the direction, flip the bounding box depending on the direction
-            if (this.velocityX > 0) {//right
-                this.spriteDirection = 1;
+
+            if (this.spriteDirection == 1) {//right
                 this.leftBorder = 52;
                 this.rightBorder = 38;
-            } else if (this.velocityX < 0) {//left
+            } else {//left
                 this.leftBorder = 38;
                 this.rightBorder = 52;
-                this.spriteDirection = -1;
-            } //other case is idle so leave the direction how it how it was before
-
+            }
             //Update the rest of the bounding box
             this.topBorder = 20;
             this.bottomBorder = 5;
@@ -141,11 +145,6 @@ public class Protagonist extends Character {
     @Override
     public Rectangle getBounds() {
         return super.getBounds();
-    }
-
-    @Override
-    protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight); //Pass in physical width and height of each sprite
     }
 
     protected void GetHit(){

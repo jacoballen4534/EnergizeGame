@@ -34,7 +34,7 @@ public class Main extends Application {
 //        File styleSheet = new File("resources/css/globalStyle.css");
         String url = Main.class.getResource("/css/globalStyle.css").toExternalForm();
 
-        Scene scene = new Scene(root, Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT, true);
+        Scene scene = new Scene(root, Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT, false);
         scene.getStylesheets().add(url);
 
         primaryStage.setScene(scene);

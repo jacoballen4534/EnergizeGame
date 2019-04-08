@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
 
-    public Grunt(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
-        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderHeight, renderHeight);
+    public Grunt(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, Character target) {
+        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight, target);
 
     }
 
@@ -47,8 +47,4 @@ public class Grunt extends Enemy {
         return super.getBounds();
     }
 
-    @Override
-    protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight);
-    }
 }

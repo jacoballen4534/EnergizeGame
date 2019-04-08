@@ -54,10 +54,4 @@ public class Wall extends GameObject {
         return super.getWidth();
     }
 
-    @Override
-    protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight);
-    }
-
-
 }

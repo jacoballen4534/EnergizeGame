@@ -21,6 +21,6 @@ public class NullTile extends Tile {
 
     @Override
     protected void loadSpriteSheet(BufferedImage image) {
-
+        //Override with nothing as this does not have a sprite.
     }
 }

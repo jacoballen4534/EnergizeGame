@@ -12,37 +12,34 @@ public class Door extends GameObject {
 
     public Door(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int currentLevel, int nextLevel) {
         super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
+        //To load the appropriate next room
         this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
+        //Set up animation sprites
+        this.animationMaxRow = 3;
 
-        this.animationMaxRow = 7;
-        this.animationMaxCol = 11;
-
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0, 0), null); //Initialise image for first animation
-    }
-
-    @Override
-    public void tick() {
-
-    }
-
-    protected void updateSprite() {
         this.leftBorder = 3;
         this.rightBorder = 0;
         this.topBorder = 15;
         this.bottomBorder = 0;
 
-//        super.updateSprite();
+        //Get a sub image from the full sprite sheet, then convert this to an FXImage so it can be drawn
+        //Initialise image for first animation
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0, 0), null);
+    }
+
+    @Override
+    public void tick() {
+        //If the protagonist intersects with this, load the next level
+    }
+
+    protected void updateSprite() {
+        // Get the next sprite in the animation then convert it so it can be drawn.
         if (this.animationRow < this.animationMaxRow) {
             this.animationRow++;
         } else {
-            this.animationRow = 4;
+            this.animationRow = 0;
 
-            if (this.animationCol < this.animationMaxCol) {
-                this.animationCol++;
-            } else {
-                animationCol = 0;
-            }
         }
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
 
@@ -54,21 +51,14 @@ public class Door extends GameObject {
         graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
 
-
     @Override
     public Rectangle getBounds() {
         return super.getBounds();
     }
 
-    @Override
-    protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight);
-    }
-
     public int getCurrentLevel() {
         return currentLevel;
     }
-
     public int getNextLevel() {
         return nextLevel;
     }

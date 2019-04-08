@@ -106,9 +106,9 @@ public class Level {
                         break;
 
                     case WALL:
-//                        Handler.addObject(new Wall(x,y, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
-//                                CAMP_FIRE_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
-                        Handler.addObject(new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
+                        Handler.addObject(new Wall(col,row, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
+                                CAMP_FIRE_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
+//                        Handler.addObject(new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
                         continue;
 
                     case PROTAGONIST:

@@ -19,23 +19,21 @@ public abstract class Character extends GameObject{
     abstract void playSound();
     abstract void getHit();
 
-
+    /////////////////////////////////////////
+    /*----------GETTERS AND SETTERS--------*/
+    /////////////////////////////////////////
     protected String getName() {
         return name;
     }
-
     protected float getVelocityX() {
         return velocityX;
     }
-
     protected void setVelocityX(float velocityX) {
         this.velocityX = velocityX;
     }
-
     protected float getVelocityY() {
         return velocityY;
     }
-
     protected void setVelocityY(float velocityY) {
         this.velocityY = velocityY;
     }

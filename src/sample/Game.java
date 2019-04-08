@@ -17,38 +17,42 @@ import java.net.URLDecoder;
 
 public class Game extends Canvas {
 
-    private AnimationTimer animationTimer;
-    private long previousTime = System.nanoTime();
-    private long time = 0; //For fps counter
-    private int frames = 0;//For fps counter
-    private int updates = 0;//For ups counter
+    //For FPS / UPS counter
+    private long time = 0;
+    private int frames = 0;
+    private int updates = 0;
     private KeyInput keyInput;
     private final double screenWidth = Main.getStage().getWidth();
     private final double screenHeight = Main.getStage().getHeight();
+
+    //For game loop
+    private AnimationTimer animationTimer;
+    private long previousTime = System.nanoTime();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
+
     private Camera camera;
     private Protagonist protagonist = null;
     private Map map;
-    private static final String sp = File.separator; //Used to read/write to file
     private Stage stage;
-    public static final int SCALE = 1; //Scale from pixel to screen size
-    public static final int PIXEL_UPSCALE = 64 * Game.SCALE;
+    public static final int SCALE = 1; //To scale the full game
+    public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
 
     public Game() {
-        super(Main.getStage().getWidth(),Main.getStage().getHeight());
+        //Setup the canvas
+        super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         stage = Main.getStage();
-        
         stage.setTitle("Tutorial Room");
         Group root = new Group();
         root.getChildren().add(this);
-        Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, true);
+        Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         stage.setScene(scene);
-        init();
+
+        init(); //Setup game loop
         stage.show();
-        this.keyInput = new KeyInput(scene);
+        this.keyInput = new KeyInput(scene); //Keyboard inputs
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
@@ -61,41 +65,39 @@ public class Game extends Canvas {
     public void stop() {
         this.animationTimer.stop();
     }
-
     public void start() {
         this.animationTimer.start();
     }
-
     public KeyInput getKeyInput() {
         return this.keyInput;
     }
 
 
     private void init() {
-        Stage stage1 = this.stage;
-        String stageName = stage1.getTitle();
+        Stage stage1 = this.stage; //Need to make a local copy to use inside the handle method
+        String stageName = stage1.getTitle(); //To keep the base name
         this.animationTimer = new AnimationTimer() {
             @Override
-            public void handle(long now) {
-//                Tick/sec counter (Uncomment frames++
+            public void handle(long now) { //This gets called 60 times per second
                 time += now - previousTime;
+                //Every second, display how many ticks have occurred and frames have been rendered.
                 if (time >= 1000000000.0f) {
-//                    System.out.println(frames);
                     stage1.setTitle(stageName + " | " + frames + " FPS | " + updates + " UPS");
                     time = 0;
                     frames = 0;
                     updates = 0;
                 }
 
-                delta += (now - previousTime) / NS;
+                delta += (now - previousTime) / NS;//Update the actual time that has passed since the last update
                 previousTime = now;
-                while (delta >= 1) {
-                    tick();
+                while (delta >= 1) { //If delta is < 1 this means frames have been missed so dont update so many times.
+                    // To stick to 60 updates per second despite different hardware.
+                    tick(); //Advance all game logic a step
                     delta--;
                     updates++;
                 }
                 frames++;
-                render();
+                render(); //Draw everything to the screen. This is uncapped and varies based on the hardware.
 
             }
         };
@@ -104,7 +106,7 @@ public class Game extends Canvas {
 
     private void tick() {
         Handler.tick();
-        if (this.protagonist != null) {
+        if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, this.screenWidth, this.screenHeight,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
@@ -114,16 +116,14 @@ public class Game extends Canvas {
     private void render() {
 
         GraphicsContext graphicsContext = this.getGraphicsContext2D();
-        //Translate the to where the camera is looking
+        //Translate the to where the camera is looking for proper coordinates.
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
-
 
         Handler.render(graphicsContext, this.camera.getX(), this.camera.getY(), this.screenWidth, this.screenHeight);
 
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
 
-        //Then objects on top
     }
 
     public void setProtagonist (Protagonist protagonist) {
@@ -134,69 +134,5 @@ public class Game extends Canvas {
     public Map getMap() {
         return this.map;
     }
-
-
-    //This may not be needed anymore after changing to read methods
-    private void saveDataToFile(String dataToWrite) {
-        //Cant write to file that is inside jar, so find where the jar is, make a text file there, then save things like settings and high scores
-        String jarPath = "";
-        try {
-            jarPath = URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-            System.out.println(jarPath);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        String completePath = jarPath.substring(0, jarPath.lastIndexOf("/")) + sp + "File_Name";
-        File f = new File(completePath);
-        try {
-            if (!f.exists() && !f.createNewFile()) {
-                System.out.println("File doesnt exist and creating file with path: " + completePath + " failed. ");
-            } else {
-                System.out.println("Input data exists, or file with path " + completePath + " created successfully. ");
-                System.out.println("Absolute Path: "  +f.getAbsolutePath());
-                System.out.println("Path: " + f.getPath());
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));
-                out.writeObject(dataToWrite);
-                out.close();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private String recoverInputFromFile() {
-        System.out.println("Reading data...");
-        String completePath = "";
-        String jarPath = "";
-        String readData = "";
-        try {
-            jarPath = URLDecoder.decode(getClass().getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8");
-            System.out.println(jarPath);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        completePath = jarPath.substring(0, jarPath.lastIndexOf("/")) + sp + "File_Name";
-        File f = new File(completePath);
-
-        if (f.exists()) {
-            System.out.println("File exists. ");
-            System.out.println("Absolute Path: "  +f.getAbsolutePath());
-            System.out.println("Path: " + f.getPath());
-            try {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
-                readData = (String)in.readObject();
-                in.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("File doesnt exist, or path " + completePath + " is wrong. ");
-        }
-        return readData;
-    }
-
 
 }

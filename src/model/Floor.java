@@ -4,18 +4,15 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Floor extends Tile{
 
-    public static final int width = 32, height = 32; //size of sprite
     private Image jfxImage;
 
     public Floor(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int spriteSheetCol, int spriteSheetRow) {
         super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
-//        Need to convert it to a JFXImage to be able to draw it to the canvas
         this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(spriteSheetCol,spriteSheetRow), null);
     }
 
@@ -25,15 +22,15 @@ public class Floor extends Tile{
 
     }
 
-    public void render(GraphicsContext graphicsContext) {
-//        graphicsContext.setFill(Color.FIREBRICK);
-//        graphicsContext.fillRect(this.x, this.y, this.width, this.height);
-
-        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
-    }
-
     @Override
     protected void loadSpriteSheet(BufferedImage image) {
-        this.spriteSheet = new SpriteSheet(image, this.spriteWidth, this.spriteHeight);
+        super.loadSpriteSheet(image);
+    }
+
+    public void render(GraphicsContext graphicsContext) {
+//        graphicsContext.setFill(Color.FIREBRICK);
+//        graphicsContext.fillRect(this.x, this.y, this.spriteWidth, this.spriteHeight);
+
+        graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
     }
 }
