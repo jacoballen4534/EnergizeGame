@@ -1,7 +1,5 @@
 package Controllers;
 
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,9 +8,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -26,7 +24,7 @@ public class highScoreController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("highScores.txt");
+            ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("/highScores.txt");
             List<Pair<String, Integer>> scores = new ArrayList<>();
 
             //Put each score into list of pairs in the form of <Name,Score>
@@ -59,8 +57,9 @@ public class highScoreController implements Initializable {
     private ArrayList<ArrayList<Pair<String, String>>> readFile(String filepath) throws FileNotFoundException {
         ArrayList<ArrayList<Pair<String, String>>> allContent = new ArrayList<>();
         boolean openedBlock = false;
-        File file = new File(highScoreController.class.getClassLoader().getResource(filepath).getPath());
-        Scanner scanner = new Scanner(file);
+        InputStream stream = highScoreController.class.getResourceAsStream(filepath);
+//        File file = new File(highScoreController.class.getClassLoader().getResource(filepath).getPath());
+        Scanner scanner = new Scanner(stream);
         ArrayList<Pair<String, String>> blockOfData = null;
 
         while (scanner.hasNextLine()) {
@@ -94,7 +93,7 @@ public class highScoreController implements Initializable {
 
     public void highScoreBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
-        highScorePane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/mainMenu.fxml")));
+        highScorePane.getChildren().setAll((AnchorPane) new FXMLLoader().load(mainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
     private void changeStageName(String newStageName) {

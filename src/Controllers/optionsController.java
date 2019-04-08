@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
@@ -38,8 +37,7 @@ public class optionsController implements Initializable {
 
     public void optionsBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
-        optionsPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/mainMenu.fxml")));
-
+        optionsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(mainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
     private void changeStageName(String newStageName) {

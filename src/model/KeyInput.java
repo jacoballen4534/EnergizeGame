@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class KeyInput{
 
+    //TODO: Can put this in the handler instead of protagonist
     private Scene scene;
     public HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
 
@@ -28,14 +29,14 @@ public class KeyInput{
         keyBinds.put(KeyCode.D, false);//right
 
         this.scene.setOnKeyPressed(keyEvent -> {
-            if (!keyBinds.get(keyEvent.getCode())) { //One of the correct keys are pressed
+            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), true);
                 updateActions();
             }
         });
 
         this.scene.setOnKeyReleased(keyEvent -> {
-            if (keyBinds.get(keyEvent.getCode()) != null) { //One of the correct keys are pressed
+            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), false);
                 updateActions();
             }
