@@ -28,10 +28,10 @@ public class Main extends Application {
         //Play background music
         //String musicFile = "/music/mainMenuTheme.mp3";
         //Media media = new Media(this.getClass().getResource(musicFile).toURI().toString());
-        Media media = new Media(
+        /*Media media = new Media(
                 new File("resources/music/mainMenuTheme.mp3").toURI().toString());
         MediaPlayer player = new MediaPlayer(media);
-        player.play();
+        player.setAutoPlay(true);*/
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
@@ -40,6 +40,7 @@ public class Main extends Application {
 
         Parent root = (Parent) new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/mainMenu.fxml"));
         primaryStage.setTitle("Main Menu");
+
 
         //Loads a global stylesheet
 //        File styleSheet = new File("resources/css/globalStyle.css");
