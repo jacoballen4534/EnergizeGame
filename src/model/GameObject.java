@@ -17,10 +17,7 @@ public abstract class GameObject {
     protected SpriteSheet spriteSheet; //The full sheet, able to get subsections to draw
 
     //The difference between where the sprite actually starts and spriteWidth / Height. Used to improve collisions.
-    protected int leftBorder = 0;
-    protected int rightBorder = 0;
-    protected int topBorder = 0;
-    protected int bottomBorder = 0;
+    protected BoundingBorder boundingBorder = new BoundingBorder();
 
     // Used to cycle through the appropriate sprites for the desired animation
     protected int animationRow = 0;
@@ -52,14 +49,16 @@ public abstract class GameObject {
     public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
     protected Rectangle getBounds() {
         //As the full sprite includes empty space on the sides, Shrink the bounds by the specific border to get the actual bounds.
-        return new Rectangle(this.x + this.leftBorder, this.y + this.topBorder,
-                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+        return new Rectangle(this.x + this.boundingBorder.getLeftBorder(), this.y + this.boundingBorder.getTopBorder(),
+                this.spriteWidth - this.boundingBorder.getLeftBorder() - this.boundingBorder.getRightBorder(),
+                this.spriteHeight - this.boundingBorder.getTopBorder() - this.boundingBorder.getBottomBorder());
     }
 
     protected void renderBoundingBox(GraphicsContext graphicsContext) {
         graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
-        graphicsContext.fillRect(this.x + this.leftBorder, this.y + this.topBorder,
-                this.spriteWidth - this.leftBorder - this.rightBorder, this.spriteHeight - this.topBorder - this.bottomBorder);
+        graphicsContext.fillRect(this.x + this.boundingBorder.getLeftBorder(), this.y + this.boundingBorder.getTopBorder(),
+                this.spriteWidth - this.boundingBorder.getLeftBorder() - this.boundingBorder.getRightBorder(),
+                this.spriteHeight - this.boundingBorder.getTopBorder() - this.boundingBorder.getBottomBorder());
     }
 
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.

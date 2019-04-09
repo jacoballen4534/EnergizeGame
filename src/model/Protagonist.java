@@ -23,15 +23,21 @@ public class Protagonist extends Character {
     protected int id;
     private int lives;
     private KeyInput keyInput;
-    private GraphicsContext graphicsContext;
     private boolean attacking = false;
     private boolean buttonAllreadyDown = false;
+    private BoundingBorder runningBorder;
+    private BoundingBorder idleBorder;
+    private BoundingBorder attackBorder;
     //    public Inventory inventory;
 
     public Protagonist(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, KeyInput keyInput) {
         super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
         this.id = nextID++;
         this.keyInput = keyInput;
+
+        this.idleBorder = new BoundingBorder(45,48,17, 5);
+        this.runningBorder = new BoundingBorder(52,38,20,5);
+//        this.attackBorder = new BoundingBorder();
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
@@ -46,12 +52,14 @@ public class Protagonist extends Character {
             this.spriteDirection = -1;
         } //other case is idle so leave the direction how it how it was before
 
-        if (this.velocityX == 0 && this.velocityY == 0) { //Idle
+        if (this.attacking) { //Attacking
+            //Update attack animation
+//            this.boundingBorder.copy(attackBorder);
+            this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
+
+        } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             //Update bounding box
-            this.leftBorder = 45;
-            this.rightBorder = 48;
-            this.topBorder = 17;
-            this.bottomBorder = 5;
+            this.boundingBorder.copy(this.idleBorder);
 
             //Update idle sprite
             this.animationRow = 0;
@@ -61,15 +69,8 @@ public class Protagonist extends Character {
             } else {
                 this.animationCol = 0;
             }
-        } else if (this.attacking) { //Attacking
-            //Update attack animation
-            this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
         } else { //Running
-
-            this.leftBorder = 52;
-            this.rightBorder = 38;
-            this.topBorder = 20;
-            this.bottomBorder = 5;
+            this.boundingBorder.copy(runningBorder);
             //Update running animation sprite
             this.animationRow = 1;
             this.animationMaxCol = 6;
@@ -81,9 +82,7 @@ public class Protagonist extends Character {
         }
 
         if (this.spriteDirection == -1) { //If the character is facing left, swap the left and right borders
-            int temp = this.leftBorder;
-            this.leftBorder = this.rightBorder;
-            this.rightBorder = temp;
+            this.boundingBorder.flipBoundingBoxX();
         }
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
@@ -155,7 +154,7 @@ public class Protagonist extends Character {
             } else {
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
             }
-//            this.renderBoundingBox(graphicsContext);
+            this.renderBoundingBox(graphicsContext);
         }
     }
 

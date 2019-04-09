@@ -1,5 +1,6 @@
 package model;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;

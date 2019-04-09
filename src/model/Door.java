@@ -17,11 +17,8 @@ public class Door extends GameObject {
         this.nextLevel = nextLevel;
         //Set up animation sprites
         this.animationMaxRow = 3;
+        this.boundingBorder = new BoundingBorder(5,0,15,0);
 
-        this.leftBorder = 5;
-        this.rightBorder = 0;
-        this.topBorder = 15;
-        this.bottomBorder = 0;
 
         //Get a sub image from the full sprite sheet, then convert this to an FXImage so it can be drawn
         //Initialise image for first animation
@@ -44,7 +41,8 @@ public class Door extends GameObject {
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
         if (this.inCameraBounds(cameraX,cameraY)) {
-            graphicsContext.drawImage(this.jfxImage, this.x - this.leftBorder, this.y - this.topBorder, this.spriteWidth, this.spriteHeight);
+            graphicsContext.drawImage(this.jfxImage, this.x - this.boundingBorder.getLeftBorder(),
+                    this.y - this.boundingBorder.getTopBorder(), this.spriteWidth, this.spriteHeight);
         }
     }
 
