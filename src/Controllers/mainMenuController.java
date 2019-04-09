@@ -1,6 +1,5 @@
 package Controllers;
 
-import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,10 +11,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.event.EventHandler;
 import sample.Game;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -35,9 +34,6 @@ public class mainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*Media media = new Media(mainMenuController.class.getResourceAsStream(""));
-        MediaPlayer player = new MediaPlayer(media);
-        player.play();*/
     }
 
     @FXML private void NewGameClicked() throws IOException {

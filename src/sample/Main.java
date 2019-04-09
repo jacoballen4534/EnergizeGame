@@ -4,8 +4,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import java.lang.String;
 
 import java.io.InputStream;
 import java.awt.*;
@@ -21,6 +24,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        //Play background music
+        //String musicFile = "/music/mainMenuTheme.mp3";
+        //Media media = new Media(this.getClass().getResource(musicFile).toURI().toString());
+        Media media = new Media(
+                new File("resources/music/mainMenuTheme.mp3").toURI().toString());
+        MediaPlayer player = new MediaPlayer(media);
+        player.play();
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
