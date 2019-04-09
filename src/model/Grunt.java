@@ -8,12 +8,16 @@ import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
 
-    public Grunt(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, Character target) {
-        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight, target);
+    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target);
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
 
+    @Override
+    void updateAnimationState() {
+        //Fill out after sorting out what the different states are going to be.
+    }
 
     @Override
     void isPlayerInSight() {

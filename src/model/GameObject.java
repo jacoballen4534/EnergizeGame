@@ -18,23 +18,21 @@ public abstract class GameObject {
 
     //The difference between where the sprite actually starts and spriteWidth / Height. Used to improve collisions.
     protected AnimationsState animationsState = new AnimationsState();
-
+    protected int currentAnimationCol = 0;
     // Used to cycle through the appropriate sprites for the desired animation
-    protected int animationRow = 0;
-    protected int animationCol = 0;
-    protected int animationMaxCol = 0;
+
 
     protected int spriteDirection = 1; //This is used to flip the image, -1 is face left, 1 is face right.
     protected Image jfxImage; //The sprite To draw onto the canvas. Needs to be in FXImage form.
 
 
-    public GameObject(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
+    public GameObject(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight) {
         //Multiply by PIXEL_UPSCALE to scale up from single pixels to desired map size
         this.x = xLocation * Game.PIXEL_UPSCALE;
         this.y = yLocation * Game.PIXEL_UPSCALE;
         //Create the sprite sheet with the actual size of the image.
-        this.spriteWidth = spriteSheetWidth;
-        this.spriteHeight = spriteSheetHeight;
+        this.spriteWidth = spriteWidth;
+        this.spriteHeight = spriteHeight;
         this.loadSpriteSheet(spriteSheet);
         //Update the sprite width and height to the desired render size to allow up/down scaling.
         this.spriteWidth = renderWidth;

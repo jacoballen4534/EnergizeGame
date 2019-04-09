@@ -10,13 +10,13 @@ public class Door extends GameObject {
     private int currentLevel;
     private int nextLevel;
 
-    public Door(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int currentLevel, int nextLevel) {
-        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
+    public Door(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int currentLevel, int nextLevel) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
         //To load the appropriate next room
         this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
         //Set up animation sprites
-        this.animationsState = new AnimationsState(5,0,15,0);
+        this.animationsState = new AnimationsState(0,0,0,0, 3,0,0);
 
 
         //Get a sub image from the full sprite sheet, then convert this to an FXImage so it can be drawn
@@ -26,13 +26,8 @@ public class Door extends GameObject {
 
     protected void updateSprite() {
         // Get the next sprite in the animation then convert it so it can be drawn.
-        if (this.animationCol < this.animationMaxCol) { //TODO:Put used sprites into 1 row
-            this.animationCol++;
-        } else {
-            this.animationCol = 0;
-
-        }
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
+        this.currentAnimationCol = this.animationsState.updateAnimationSprite(this.currentAnimationCol);
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.currentAnimationCol,this.animationsState.getAnimationRow()), null);
 
     }
 

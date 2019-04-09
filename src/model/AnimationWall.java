@@ -5,21 +5,15 @@ import javafx.embed.swing.SwingFXUtils;
 import java.awt.image.BufferedImage;
 
 public class AnimationWall extends Wall {
-    public AnimationWall(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int animationMaxCol) {
-        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
-        this.animationMaxCol = animationMaxCol;
-
+    public AnimationWall(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int animationMaxCol, int animationRow, int resetCol) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
+        this.animationsState = new AnimationsState(0,0,0,0,animationMaxCol,animationRow,resetCol);
     }
 
 
-    protected void updateSprite() {
-        if (this.animationCol < this.animationMaxCol) {
-            this.animationCol++;
-        } else {
-            this.animationCol = 0;
-        }
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
-
+    protected void updateSprite() { //TODO:Look at moving this to super
+        this.currentAnimationCol = this.animationsState.updateAnimationSprite(this.currentAnimationCol);
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.currentAnimationCol,this.animationsState.getAnimationRow()), null);
     }
 
 }

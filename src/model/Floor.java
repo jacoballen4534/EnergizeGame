@@ -11,8 +11,8 @@ public class Floor extends Tile{
 
     private Image jfxImage;
 
-    public Floor(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int spriteSheetCol, int spriteSheetRow) {
-        super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
+    public Floor(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int spriteSheetCol, int spriteSheetRow) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
         this.jfxImage = SwingFXUtils.toFXImage(spriteSheet.getSprite(spriteSheetCol,spriteSheetRow), null);
     }
 

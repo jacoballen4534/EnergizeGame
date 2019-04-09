@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 
 public class Wall extends GameObject {
 
-    public Wall(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
-        super(x , y, image, spriteSheetWidth, spriteSheetHeight, renderWidth,renderHeight);
+    public Wall(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight) {
+        super(x , y, image, spriteWidth, spriteHeight, renderWidth,renderHeight);
 
 //        this.animationMaxCol = 4;//TODO: Set this once we have a wall sprte
 
