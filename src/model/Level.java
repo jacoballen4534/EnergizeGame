@@ -145,7 +145,7 @@ public class Level {
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, false));
                         continue;
 
-                    case GRUNT: //TODO: Either find some way of adding these last, or add the protagonist as target after protagonist is loading in.
+                    case GRUNT: //TODO: Either find some way of adding these last, or add the protagonist as target after protagonist is loading in. 
                         Handler.addCharacter(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE * 3,
                                 GRUNT_SPRITE_HEIGHT * Game.SCALE * 3, game.getProtagonist(), this.levelWidth));
                         break;

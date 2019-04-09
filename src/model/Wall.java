@@ -25,7 +25,7 @@ public class Wall extends GameObject {
 
         if (this.inCameraBounds(cameraX,cameraY)) {
             graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
-            this.renderBoundingBox(graphicsContext);
+//            this.renderBoundingBox(graphicsContext);
         }
 
     }

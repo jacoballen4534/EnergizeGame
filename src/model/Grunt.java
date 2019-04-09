@@ -20,7 +20,7 @@ public class Grunt extends Enemy {
 
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
-        //TODO: Add borders
+        //TODO: Add borders and aditional sprite sheets
         this.walkState = new AnimationsState(0,0,0,0,12, 0,0);
         this.idleState = new AnimationsState();
         this.getHitState = new AnimationsState();
