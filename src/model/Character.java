@@ -1,6 +1,7 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.image.BufferedImage;
 
@@ -9,11 +10,17 @@ public abstract class Character extends GameObject{
     protected int health;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
-    protected boolean attacking = false;
+    //To play each animation once.
+   protected boolean playGotAttackedAnimation = false;
+   protected boolean playAttckAnimation = false;
+   protected boolean playDieAnimation = false;
+   private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
 
 
-    public Character(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int rederHeight) {
+    public Character(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int rederHeight, int levelWidth) {
         super(xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight, renderWidth, rederHeight);
+        this.levelWidth = levelWidth;
+
     }
 
 
@@ -62,6 +69,10 @@ public abstract class Character extends GameObject{
         this.velocityY = velocityY;
     }
 
+    public int getLevelWidth() {
+        return this.levelWidth;
+    }
+
     public void tick(double cameraX, double cameraY) {//Update x and y secretly to allow sliding
         //Turn around if protagonist has collided with something
         this.x += this.velocityX;
@@ -72,6 +83,20 @@ public abstract class Character extends GameObject{
         this.y += this.velocityY;
         if (Handler.checkCollision(this, cameraX, cameraY)) {
             this.y += this.velocityY * -1;
+        }
+    }
+
+
+    @Override
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            if (this.spriteDirection == 1) { //facing right
+                graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+            } else {
+                graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
+            }
+            this.renderBoundingBox(graphicsContext);
         }
     }
 }

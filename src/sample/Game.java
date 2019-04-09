@@ -14,6 +14,7 @@ import model.*;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.Random;
 
 public class Game extends Canvas {
 
@@ -37,6 +38,8 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
+    private static Random random = new Random();//used for enemy movement and map generation.
+
 
     public Game() {
         //Setup the canvas
@@ -58,7 +61,10 @@ public class Game extends Canvas {
         Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
+    }
 
+    public static int getNextRandomInt(int bounds) {
+        return random.nextInt(bounds);
     }
 
 
@@ -130,6 +136,9 @@ public class Game extends Canvas {
         this.protagonist = protagonist;
     }
 
+    public Protagonist getProtagonist () {
+        return this.protagonist;
+    }
 
     public Map getMap() {
         return this.map;

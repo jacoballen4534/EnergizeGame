@@ -127,8 +127,8 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Character otherCharacter : characters) {
-            if (!character.equals(otherCharacter) && otherCharacter.inCameraBounds(cameraX,cameraY)
-                    && character.getBounds().intersects(otherCharacter.getBounds())) {
+            //If we add lots of enemy on screen, check if x,y are within threshold of the other character, otherwise dont check bounds
+            if (!character.equals(otherCharacter) && character.getBounds().intersects(otherCharacter.getBounds())) {
                 return true;
             }
         }
@@ -138,10 +138,17 @@ public class Handler { //This class will hold all the game objects and is respon
         // character x = (Character.x/PIXEL_UPSCALE) + 1, character y = (Character.y/PIXEL_UPSCALE) + 1
         //Instead of Math.celi just let the integer truncate and then add 1. Using 2 square radius to allow for minor offsets
 
-        for (java.util.Map.Entry<Integer, GameObject> entry : walls.entrySet()) {
-            GameObject wall = entry.getValue();
-            if (wall.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(wall.getBounds())) {
-                return true;
+        int characterX = (int)(character.getX() / Game.PIXEL_UPSCALE) + 1;
+        int characterY = (int)(character.getY() / Game.PIXEL_UPSCALE) + 1;
+
+        for (int x = characterX - 2; x <= characterX + 2; x++) { //Get tiles in 2 square radius
+            for (int y = characterY - 2; y <= characterY + 2; y++) {
+                if (walls.containsKey(x + y * character.getLevelWidth())) {//If it exists, check if its intersecting.
+                    GameObject wall = walls.get(x + y * character.getLevelWidth());
+                    if (character.getBounds().intersects(wall.getBounds())) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

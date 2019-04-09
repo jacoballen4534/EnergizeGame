@@ -14,7 +14,10 @@ enum TileType {
     DOOR,
     ENEMY,
     NULLTILE,
-    ITEM
+    ITEM,
+    GRUNT,
+    BOMBER,
+    ARCHER
 }
 
 public class Level {
@@ -39,6 +42,10 @@ public class Level {
 
     private final int DOOR_SPRITE_WIDTH = 72;
     private final int DOOR_SPRITE_HEIGHT = 96;
+
+    private final int GRUNT_SPRITE_WIDTH = 22;
+    private final int GRUNT_SPRITE_HEIGHT = 33;
+
 
 
     public Level(Game game, BufferedImage image, int levelNumber) { //Makes a level from an image
@@ -83,10 +90,16 @@ public class Level {
                     column.add(TileType.PROTAGONIST);
                 } else if (red == 0 && green == 255 && blue == 0) { //Green = Door
                     column.add(TileType.DOOR);
-                } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / item
+                } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / random chance of some other background but not solid.
                     column.add(TileType.CAMP_FIRE);
-                } else if (red == 128 && green == 0 && blue == 128) {
+                } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
                     column.add(TileType.ITEM);
+                } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
+                    column.add(TileType.GRUNT);
+                } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
+                    column.add(TileType.BOMBER);
+                } else if (red == 255 && green == 0 && blue == 3) { // Red = Enemy, (Blue = 3) = Archer
+                    column.add(TileType.ARCHER);
                 } else {
                     column.add(TileType.NULLTILE);
                 }
@@ -115,7 +128,8 @@ public class Level {
                         break;
                     case PROTAGONIST:
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
-                                PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE), (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.game.getKeyInput());
+                                PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
+                                (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.game.getKeyInput(), this.levelWidth);
                         Handler.addCharacter(tempProtagonist);
                         game.setProtagonist(tempProtagonist);
                         break;
@@ -130,6 +144,11 @@ public class Level {
                     case ITEM:
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, false));
                         continue;
+
+                    case GRUNT: //TODO: Either find some way of adding these last, or add the protagonist as target after protagonist is loading in.
+                        Handler.addCharacter(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE * 3,
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE * 3, game.getProtagonist(), this.levelWidth));
+                        break;
 
                     default:
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
