@@ -19,7 +19,9 @@ public class KeyInput{
     public HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
 
     // Using this to make it easier to custom add key bindings later
-    public boolean up = false, down = false, left = false, right = false;
+    public boolean up = false, down = false,
+            left = false, right = false,
+            pause = false, quit = false;
 
     public KeyInput(Scene scene) {
         this.scene = scene;
@@ -27,6 +29,8 @@ public class KeyInput{
         keyBinds.put(KeyCode.A, false);//left
         keyBinds.put(KeyCode.S, false);//down
         keyBinds.put(KeyCode.D, false);//right
+        keyBinds.put(KeyCode.P, false); //Pause
+        keyBinds.put(KeyCode.ESCAPE, false); //Exit game
 
         this.scene.setOnKeyPressed(keyEvent -> {
             if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
@@ -48,5 +52,7 @@ public class KeyInput{
         this.down = keyBinds.get(KeyCode.S);
         this.left = keyBinds.get(KeyCode.A);
         this.right = keyBinds.get(KeyCode.D);
+        this.pause = keyBinds.get(KeyCode.P);
+        this.quit = keyBinds.get(KeyCode.ESCAPE);
     }
 }
