@@ -13,8 +13,8 @@ public class Wall extends GameObject {
     public Wall(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight) {
         super(x , y, image, spriteSheetWidth, spriteSheetHeight, renderWidth,renderHeight);
 
-        this.animationMaxRow = 0;
-        this.animationMaxCol = 4;
+//        this.animationMaxRow = 0;//TODO: Set this once we have a wall sprte
+//        this.animationMaxCol = 4;
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
@@ -28,16 +28,6 @@ public class Wall extends GameObject {
             graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
 //            this.renderBoundingBox(graphicsContext);
         }
-
-    }
-
-    protected void updateSprite() {
-        if (this.animationCol < this.animationMaxCol) {
-            this.animationCol++;
-        } else {
-            this.animationCol = 0;
-        }
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
 
     }
 

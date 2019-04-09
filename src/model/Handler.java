@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
 
-    private static ArrayList<Floor> floors = new ArrayList<>(); //Holds hte floor tiles. these are rendered first and dont need to be check for colisions.
+    private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     private static ArrayList<Character> characters = new ArrayList<>(); //Hold all players and enemy's
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
