@@ -12,7 +12,7 @@ public abstract class Tile extends GameObject{
 
     protected Rectangle getBounds() {
         if (this.solid) {
-            return new Rectangle(this.x, this.y, this.spriteWidth, this.spriteHeight);
+            return new Rectangle((int)this.x, (int)this.y, this.spriteWidth, this.spriteHeight);
         } else {
             return new Rectangle(0, 0, 0, 0);
         }

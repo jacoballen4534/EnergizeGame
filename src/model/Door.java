@@ -16,8 +16,7 @@ public class Door extends GameObject {
         this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
         //Set up animation sprites
-        this.animationMaxRow = 3;
-        this.boundingBorder = new BoundingBorder(5,0,15,0);
+        this.animationsState = new AnimationsState(5,0,15,0);
 
 
         //Get a sub image from the full sprite sheet, then convert this to an FXImage so it can be drawn
@@ -27,10 +26,10 @@ public class Door extends GameObject {
 
     protected void updateSprite() {
         // Get the next sprite in the animation then convert it so it can be drawn.
-        if (this.animationRow < this.animationMaxRow) {
-            this.animationRow++;
+        if (this.animationCol < this.animationMaxCol) { //TODO:Put used sprites into 1 row
+            this.animationCol++;
         } else {
-            this.animationRow = 0;
+            this.animationCol = 0;
 
         }
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.animationCol,this.animationRow), null);
@@ -41,8 +40,8 @@ public class Door extends GameObject {
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
         if (this.inCameraBounds(cameraX,cameraY)) {
-            graphicsContext.drawImage(this.jfxImage, this.x - this.boundingBorder.getLeftBorder(),
-                    this.y - this.boundingBorder.getTopBorder(), this.spriteWidth, this.spriteHeight);
+            graphicsContext.drawImage(this.jfxImage, this.x - this.animationsState.getLeftBorder(),
+                    this.y - this.animationsState.getTopBorder(), this.spriteWidth, this.spriteHeight);
         }
     }
 

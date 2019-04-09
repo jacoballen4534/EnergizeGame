@@ -5,9 +5,8 @@ import javafx.embed.swing.SwingFXUtils;
 import java.awt.image.BufferedImage;
 
 public class AnimationWall extends Wall {
-    public AnimationWall(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int animationMaxRow, int animationMaxCol) {
+    public AnimationWall(int x, int y, BufferedImage image, int spriteSheetWidth, int spriteSheetHeight, int renderWidth, int renderHeight, int animationMaxCol) {
         super(x, y, image, spriteSheetWidth, spriteSheetHeight, renderWidth, renderHeight);
-        this.animationMaxRow = animationMaxRow;
         this.animationMaxCol = animationMaxCol;
 
     }

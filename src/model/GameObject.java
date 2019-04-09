@@ -11,18 +11,17 @@ import java.awt.image.BufferedImage;
 public abstract class GameObject {
 
 
-    protected int x,y;
+    protected double x, y;
     protected boolean isSolid = true; //For collisions.
     protected int spriteWidth, spriteHeight; //Full width/height including any borders to setup sprite sheet
     protected SpriteSheet spriteSheet; //The full sheet, able to get subsections to draw
 
     //The difference between where the sprite actually starts and spriteWidth / Height. Used to improve collisions.
-    protected BoundingBorder boundingBorder = new BoundingBorder();
+    protected AnimationsState animationsState = new AnimationsState();
 
     // Used to cycle through the appropriate sprites for the desired animation
     protected int animationRow = 0;
     protected int animationCol = 0;
-    protected int animationMaxRow = 0;
     protected int animationMaxCol = 0;
 
     protected int spriteDirection = 1; //This is used to flip the image, -1 is face left, 1 is face right.
@@ -49,16 +48,16 @@ public abstract class GameObject {
     public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
     protected Rectangle getBounds() {
         //As the full sprite includes empty space on the sides, Shrink the bounds by the specific border to get the actual bounds.
-        return new Rectangle(this.x + this.boundingBorder.getLeftBorder(), this.y + this.boundingBorder.getTopBorder(),
-                this.spriteWidth - this.boundingBorder.getLeftBorder() - this.boundingBorder.getRightBorder(),
-                this.spriteHeight - this.boundingBorder.getTopBorder() - this.boundingBorder.getBottomBorder());
+        return new Rectangle((int)(this.x + this.animationsState.getLeftBorder()), (int)(this.y + this.animationsState.getTopBorder()),
+                (int)(this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder()),
+                (int)(this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()));
     }
 
     protected void renderBoundingBox(GraphicsContext graphicsContext) {
         graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
-        graphicsContext.fillRect(this.x + this.boundingBorder.getLeftBorder(), this.y + this.boundingBorder.getTopBorder(),
-                this.spriteWidth - this.boundingBorder.getLeftBorder() - this.boundingBorder.getRightBorder(),
-                this.spriteHeight - this.boundingBorder.getTopBorder() - this.boundingBorder.getBottomBorder());
+        graphicsContext.fillRect(this.x + this.animationsState.getLeftBorder(), this.y + this.animationsState.getTopBorder(),
+                this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
+                this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
     }
 
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.
@@ -77,16 +76,16 @@ public abstract class GameObject {
     /////////////////////////////////////////
     /*----------GETTERS AND SETTERS--------*/
     /////////////////////////////////////////
-    public int getX() {
+    public double getX() {
         return this.x;
     }
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
-    public int getY() {
+    public double getY() {
         return this.y;
     }
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
     protected int getWidth() {

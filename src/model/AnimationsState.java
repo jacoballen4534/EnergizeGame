@@ -1,50 +1,50 @@
 package model;
 
-public class BoundingBorder {
-    private int leftBorder;
-    private int rightBorder;
-    private int topBorder;
-    private int bottomBorder;
+public class AnimationsState {
+    private double leftBorder;
+    private double rightBorder;
+    private double topBorder;
+    private double bottomBorder;
 
-    public BoundingBorder(int leftBorder, int rightBorder, int topBorder, int bottomBorder) {
+    public AnimationsState(int leftBorder, int rightBorder, int topBorder, int bottomBorder) {
         this.leftBorder = leftBorder;
         this.rightBorder = rightBorder;
         this.topBorder = topBorder;
         this.bottomBorder = bottomBorder;
     }
 
-    public BoundingBorder() {
+    public AnimationsState() {
         this.leftBorder = 0;
         this.rightBorder = 0;
         this.topBorder = 0;
         this.bottomBorder = 0;
     }
 
-    public void copy(BoundingBorder toCopy) {
+    public void copy(AnimationsState toCopy) {
         this.leftBorder = toCopy.leftBorder;
         this.rightBorder = toCopy.rightBorder;
         this.topBorder = toCopy.topBorder;
         this.bottomBorder = toCopy.bottomBorder;
     }
 
-    public int getLeftBorder() {
+    public double getLeftBorder() {
         return this.leftBorder;
     }
 
-    public int getRightBorder() {
+    public double getRightBorder() {
         return this.rightBorder;
     }
 
-    public int getTopBorder() {
+    public double getTopBorder() {
         return this.topBorder;
     }
 
-    public int getBottomBorder() {
+    public double getBottomBorder() {
         return this.bottomBorder;
     }
 
     public void flipBoundingBoxX() {
-        int temp = this.leftBorder;
+        double temp = this.leftBorder;
         this.leftBorder = this.rightBorder;
         this.rightBorder = temp;
     }

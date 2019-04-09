@@ -1,9 +1,5 @@
 package model;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.GraphicsContext;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
@@ -43,7 +39,7 @@ public abstract class Character extends GameObject{
         //Turn around if protagonist has collided with something
         this.x += this.velocityX;
         if (Handler.checkCollision(this, cameraX, cameraY)) {
-            this.x += this.velocityX * -1;
+            this.x += this.velocityX * -1.02;
         }
 
         this.y += this.velocityY;
