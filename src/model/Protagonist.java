@@ -12,26 +12,27 @@ public class Protagonist extends Character {
     private int lives;
     private KeyInput keyInput;
     private boolean buttonAllreadyDown = false;
-    private AnimationsState runningBorder;
-    private AnimationsState idleBorder;
-    private AnimationsState attackBorder;
+    private AnimationsState runningState;
+    private AnimationsState idleState;
+    private AnimationsState attackState;
+
     //    public Inventory inventory;
 
-    public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, KeyInput keyInput) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
+    public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, KeyInput keyInput, int levelWidth) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
         this.id = nextID++;
         this.keyInput = keyInput;
 
-        this.idleBorder = new AnimationsState(45,48,17, 5, 3, 0, 0);
-        this.runningBorder = new AnimationsState(52,38,20,5, 6, 1, 1);
-//        this.attackBorder = new AnimationsState();
+        this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
+        this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
+//        this.attackState = new AnimationsState();
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
     void attack() {
-
+        this.playAttckAnimation = true;
     }
 
     @Override
@@ -41,21 +42,27 @@ public class Protagonist extends Character {
 
     @Override
     void getHit() {
-
+        this.playGotAttackedAnimation = true;
+        if (this.health <= 0) { //died
+            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+        }
     }
 
     @Override
     void updateAnimationState() {
-        if (this.attacking) { //Attacking
+        //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
+        //After die animation last frame, fade out ...Gmae over
+        if (this.playAttckAnimation) { //Attacking
             //Update attack animation
-//            this.animationsState.copy(attackBorder);
-            this.attacking = false; //Once the animation has finished, set this to false to only play the animation once
-
+            this.animationsState.copy(attackState);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+            }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             //Update bounding box
-            this.animationsState.copy(this.idleBorder);
+            this.animationsState.copy(this.idleState);
         } else { //Running
-            this.animationsState.copy(runningBorder);
+            this.animationsState.copy(runningState);
         }
     }
 
@@ -101,25 +108,19 @@ public class Protagonist extends Character {
     }
 
     @Override
-    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
-
-        if (this.inCameraBounds(cameraX,cameraY)) {
-            if (this.spriteDirection == 1) { //facing right
-                graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
-            } else {
-                graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
-            }
-            this.renderBoundingBox(graphicsContext);
-        }
-    }
-
-    @Override
     public Rectangle getBounds() {
         return super.getBounds();
     }
 
     protected void GetHit(){
         System.out.println("I got hit!");
+        this.playGotAttackedAnimation = true;
+        if (this.health <= 0) { //loose life
+            this.lives --;
+            if (this.lives <= 0) { //died
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            }
+        }
     }
 
 }
