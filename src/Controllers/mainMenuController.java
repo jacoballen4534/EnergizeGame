@@ -24,7 +24,7 @@ public class mainMenuController implements Initializable {
 
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
-    @FXML private VBox miniMenuVBox;
+
     private Label focussedLabel = null;
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
@@ -35,9 +35,9 @@ public class mainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        /*Media media = new Media("file:///music/maintheme.mp3");
+        /*Media media = new Media(mainMenuController.class.getResourceAsStream(""));
         MediaPlayer player = new MediaPlayer(media);
-        player.play()*/
+        player.play();*/
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -58,7 +58,7 @@ public class mainMenuController implements Initializable {
         ChangeStageName("High Score");
         //focussedLabel = UpdateFocussedLabel(focussedLabel,"highScores");
         //UpdateMenu(focussedLabel);
-        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/highScore.fxml")));
+        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/highScore.fxml")));
     }
 
     @FXML private void OptionsClicked() throws IOException {
@@ -73,7 +73,7 @@ public class mainMenuController implements Initializable {
         ChangeStageName("Credits");
         //focussedLabel = UpdateFocussedLabel(focussedLabel, "credits");
         //UpdateMenu(focussedLabel);
-        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/credits.fxml")));
+        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/credits.fxml")));
     }
 
     @FXML private void QuitClicked() {
@@ -236,6 +236,7 @@ public class mainMenuController implements Initializable {
     }
 
     /* DEPRECATED */
+    /*
     private void FadeOutCurrentMenu(){
         ObservableList<Node> currItems = miniMenuVBox.getChildren();
         if (currItems.isEmpty()){return;}
@@ -249,16 +250,15 @@ public class mainMenuController implements Initializable {
         ft.play();
         //System.out.println(miniMenuVBox.getChildren());
         ft.setOnFinished(e -> miniMenuVBox.getChildren().removeAll(currItems));
-    }
-    /* DEPRECATED */
-    private void FadeInMenu(Node node){
+    }*/
+    /*private void FadeInMenu(Node node){
         FadeTransition ft = new FadeTransition();
         ft.setDuration(new Duration(10));
         ft.setFromValue(0.0);
         ft.setToValue(1.0);
         ft.setNode(node);
         ft.play();
-    }
+    }*/
 }
 
 
