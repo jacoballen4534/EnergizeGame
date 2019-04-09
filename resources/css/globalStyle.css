@@ -19,7 +19,7 @@
     -fx-font-style: italic;
 }
 .menulabel-clicked{
-    -fx-text-fill:#ffcccc;
+    -fx-text-fill:#ff8800;
     -fx-font-family: beon;
     -fx-font-size: 50;
     -fx-label-padding: 0 0 0 0;
@@ -33,12 +33,12 @@
     -fx-padding: 0 0 0 30;
 }
 .submenu-label{
-    -fx-text-fill: #dd00bb;
+    -fx-text-fill: #00ffff;
     -fx-font-family: beon;
     -fx-font-size: 25;
 }
 .submenu-label:hover{
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #ff0000;
 }
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
