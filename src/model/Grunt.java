@@ -11,26 +11,27 @@ public class Grunt extends Enemy {
     private AnimationsState walkState;
     private AnimationsState idleState;
     private AnimationsState getHitState;
-    private AnimationsState deadState;
+    private AnimationsState dieState;
     private AnimationsState attackState;
+    private AnimationsState alertState;
 
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
         //TODO: Add borders and additional sprite sheets
-        this.walkState = new AnimationsState(0,0,0,0,12, 0,0);
-        this.idleState = new AnimationsState();
-        this.getHitState = new AnimationsState();
-        this.deadState = new AnimationsState();
-        this.attackState = new AnimationsState();
+        this.attackState = new AnimationsState(9,54,16,1,17, 0,0);
+        this.dieState = new AnimationsState(0,0,0,0,14, 1,0); //Doesnt need a border
+        this.walkState = new AnimationsState(0,72,15,0,12, 2,0);
+        this.idleState = new AnimationsState(0,63,15,0,10, 3,0);
+        this.getHitState = new AnimationsState(0,45,15,0,7, 4,0);
+        this.alertState = new AnimationsState(0,63,15,0,3, 4,0);
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
     void updateAnimationState() {
-        //TODO: Update the spritesheet
         if (this.playDieAnimation) {
-            this.animationsState.copy(this.deadState);
+            this.animationsState.copy(this.dieState);
 //            this.spriteSheet =
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
@@ -66,7 +67,7 @@ public class Grunt extends Enemy {
         if (Game.getNextRandomInt(100) > 94) {
             this.velocityY = (Game.getNextRandomInt(3) - 1) * 3;
         }
-
+        
         super.tick(cameraX,cameraY);
 
     }

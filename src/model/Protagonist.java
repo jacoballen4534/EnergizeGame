@@ -33,7 +33,7 @@ public class Protagonist extends Character {
 
     @Override
     void attack() {
-        //TODO: Actualy attack.
+        //TODO: Actually attack.
         this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
     }
 
@@ -53,7 +53,7 @@ public class Protagonist extends Character {
 
     @Override
     void updateAnimationState() {
-        //Determon what state the player is in, and update the animation accordingly.
+        //Determine what state the player is in, and update the animation accordingly.
         //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
         //After die animation last frame, fade out ...Game over
         if (this.playAttackAnimation) { //Attacking

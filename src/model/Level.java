@@ -43,8 +43,8 @@ public class Level {
     private final int DOOR_SPRITE_WIDTH = 72;
     private final int DOOR_SPRITE_HEIGHT = 96;
 
-    private final int GRUNT_SPRITE_WIDTH = 43;
-    private final int GRUNT_SPRITE_HEIGHT = 37;
+    private final int GRUNT_SPRITE_WIDTH = 129;
+    private final int GRUNT_SPRITE_HEIGHT = 111;
 
 
 
@@ -146,8 +146,8 @@ public class Level {
                         continue;
 
                     case GRUNT:
-                        Handler.addCharacter(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE * 3,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE * 3, game.getProtagonist(), this.levelWidth));
+                        Handler.addCharacter(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, game.getProtagonist(), this.levelWidth));
                         break;
 
                     default:

@@ -46,17 +46,16 @@ public abstract class GameObject {
     }
     public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
     protected Rectangle getBounds() {
-        //As the full sprite includes empty space on the sides, Shrink the bounds by the specific border to get the actual bounds.
-        return new Rectangle((int)(this.x + this.animationsState.getLeftBorder()), (int)(this.y + this.animationsState.getTopBorder()),
+        return new Rectangle((int)this.x, (int)this.y,
                 (int)(this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder()),
                 (int)(this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()));
     }
 
     protected void renderBoundingBox(GraphicsContext graphicsContext) {
         graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
-        graphicsContext.fillRect(this.x + this.animationsState.getLeftBorder(), this.y + this.animationsState.getTopBorder(),
-                this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
-                this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
+        graphicsContext.fillRect((int)this.x, (int)(this.y),
+                (int)(this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder()),
+                (int)(this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()));
     }
 
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.

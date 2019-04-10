@@ -35,14 +35,12 @@ public class AnimationsState {
     }
 
     public int updateAnimationSprite(int animationCol) {
-        if (animationCol < this.resetCol) {
+        if (animationCol < this.resetCol) { //If the animation doesnt start at col 0. Need to move to the first frame.
             animationCol = this.resetCol;
         }
         else if (!isLastFrame(animationCol)){
             animationCol++;
-        }/*else if (/*animationCol < this.animationMaxCol) {
-            animationCol++;
-        } */else {
+        } else {
             animationCol = this.resetCol;
         }
         return animationCol;
