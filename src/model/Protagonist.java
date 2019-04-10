@@ -10,7 +10,7 @@ public class Protagonist extends Character {
     protected int id;
     private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     private KeyInput keyInput; //The keyboard inputs to move the character.
-    private boolean buttonAllreadyDown = false; //To only update animation state on button initial press, not on hold.
+    private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState runningState;
     private AnimationsState idleState;
@@ -20,7 +20,7 @@ public class Protagonist extends Character {
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, KeyInput keyInput, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
+        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multiplayer)
         this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
@@ -60,7 +60,7 @@ public class Protagonist extends Character {
             //Update attack animation
             this.animationsState.copy(attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
-                this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -73,46 +73,62 @@ public class Protagonist extends Character {
     public void tick(double cameraX, double cameraY) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if (this.keyInput.up) this.velocityY = -5;
-        else if(!this.keyInput.down) this.velocityY = 0;
+        if (this.keyInput.getKeyPressed("up")) this.velocityY = -5;
+        else if(!this.keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-        if (this.keyInput.down) this.velocityY = 5;
-        else if(!this.keyInput.up) this.velocityY = 0;
+        if (this.keyInput.getKeyPressed("down")) this.velocityY = 5;
+        else if(!this.keyInput.getKeyPressed("up")) this.velocityY = 0;
 
-        if (this.keyInput.right) {
+        if (this.keyInput.getKeyPressed("right")) {
             this.velocityX = 5;
-            if (!this.buttonAllreadyDown) {
+            if (!this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = true;
+                this.buttonAlreadyDown = true;
             }
 
-        } else if(!this.keyInput.left) {
+        } else if(!this.keyInput.getKeyPressed("left")) {
             this.velocityX = 0;
-            if (this.buttonAllreadyDown) {
+            if (this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = false;
+                this.buttonAlreadyDown = false;
             }
         }
 
-        if (this.keyInput.left) {
+        if (this.keyInput.getKeyPressed("left")) {
             this.velocityX = -5;
-            if (!this.buttonAllreadyDown) {
+            if (!this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = true;
+                this.buttonAlreadyDown = true;
             }
-        } else if(!this.keyInput.right) {
+        } else if(!this.keyInput.getKeyPressed("right")) {
             this.velocityX = 0;
-            if (this.buttonAllreadyDown) {
+            if (this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = false;
+                this.buttonAlreadyDown = false;
             }
         }
 
-        if (this.keyInput.pause){
+        if (this.keyInput.getKeyPressed("attack")){
+            this.playAttackAnimation = true;
+        }
+
+        if (this.keyInput.getKeyPressed("jump")){
+            System.out.println("Jump for joy");
+        }
+
+        if (this.keyInput.getKeyPressed("useItem")){
+            System.out.println("Using an item");
+        }
+
+        if (this.keyInput.getKeyPressed("useSpecial")){
+            System.out.println("Azarath, metrion, zinthos!"); //Outdated reference
+        }
+
+        if (this.keyInput.getKeyPressed("pause")){
             //Set a pause game flag true
         }
 
-        if (this.keyInput.quit) {
+        if (this.keyInput.getKeyPressed("quit")) {
             System.exit(0);
         }
         super.tick(cameraX,cameraY); //Check collisions and update x and y

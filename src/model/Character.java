@@ -54,30 +54,8 @@ public abstract class Character extends GameObject{
     protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy
     }
-    /////////////////////////////////////////
-    /*----------GETTERS AND SETTERS--------*/
-    /////////////////////////////////////////
-    protected String getName() {
-        return name;
-    }
-    protected float getVelocityX() {
-        return velocityX;
-    }
-    protected void setVelocityX(float velocityX) {
-        this.velocityX = velocityX;
-    }
-    protected float getVelocityY() {
-        return velocityY;
-    }
-    protected void setVelocityY(float velocityY) {
-        this.velocityY = velocityY;
-    }
 
-    public int getLevelWidth() {
-        return this.levelWidth;
-    }
-
-    public void tick(double cameraX, double cameraY) {//Update x and y secretly to allow sliding
+    public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
         //Turn around if protagonist has collided with something
         this.x += this.velocityX;
         if (Handler.checkCollision(this, cameraX, cameraY)) {
@@ -103,5 +81,28 @@ public abstract class Character extends GameObject{
             }
             this.renderBoundingBox(graphicsContext);
         }
+    }
+
+    /////////////////////////////////////////
+    /*----------GETTERS AND SETTERS--------*/
+    /////////////////////////////////////////
+    protected String getName() {
+        return name;
+    }
+    protected float getVelocityX() {
+        return velocityX;
+    }
+    protected void setVelocityX(float velocityX) {
+        this.velocityX = velocityX;
+    }
+    protected float getVelocityY() {
+        return velocityY;
+    }
+    protected void setVelocityY(float velocityY) {
+        this.velocityY = velocityY;
+    }
+
+    public int getLevelWidth() {
+        return this.levelWidth;
     }
 }

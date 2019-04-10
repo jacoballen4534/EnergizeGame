@@ -51,6 +51,7 @@ public class Handler { //This class will hold all the game objects and is respon
     public static void setMap (model.Map _map) {
         map = _map;
     }
+
     public static void tick(double cameraX, double cameraY) {
         for (Character character : characters) {
             character.tick(cameraX, cameraY);
@@ -78,6 +79,8 @@ public class Handler { //This class will hold all the game objects and is respon
         for (Item pickup : pickups) {
 //            pickup.render //TODO: Implement pickup items.
         }
+
+        //HUD.render(graphicsContext);
     }
 
     public static void updateEnemyTarget (Character target) {
