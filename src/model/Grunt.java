@@ -1,13 +1,10 @@
 package model;
 
-import javafx.animation.Animation;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.GraphicsContext;
 import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 public class Grunt extends Enemy {
 
@@ -17,10 +14,9 @@ public class Grunt extends Enemy {
     private AnimationsState deadState;
     private AnimationsState attackState;
 
-
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
-        //TODO: Add borders and aditional sprite sheets
+        //TODO: Add borders and additional sprite sheets
         this.walkState = new AnimationsState(0,0,0,0,12, 0,0);
         this.idleState = new AnimationsState();
         this.getHitState = new AnimationsState();
@@ -32,7 +28,6 @@ public class Grunt extends Enemy {
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
-
 
     @Override
     void updateAnimationState() {
@@ -50,11 +45,11 @@ public class Grunt extends Enemy {
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false;
             }
-        } else if (this.playAttckAnimation) {
+        } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
 //            this.spriteSheet =
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
-                this.playAttckAnimation = false;
+                this.playAttackAnimation = false;
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -91,7 +86,7 @@ public class Grunt extends Enemy {
 
     @Override
     void attack() {
-        this.playAttckAnimation = true;
+        this.playAttackAnimation = true;
 
     }
 

@@ -116,7 +116,6 @@ public class Game extends Canvas {
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
-
     }
 
     private void render() {
