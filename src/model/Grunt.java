@@ -17,7 +17,6 @@ public class Grunt extends Enemy {
     private AnimationsState deadState;
     private AnimationsState attackState;
 
-
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
         //TODO: Add borders and aditional sprite sheets
@@ -26,9 +25,6 @@ public class Grunt extends Enemy {
         this.getHitState = new AnimationsState();
         this.deadState = new AnimationsState();
         this.attackState = new AnimationsState();
-
-        //Add extra sprite sheets
-//        this.spriteSheet = new SpriteSheet(preloadedim., hard code actual Width, Hard code actual height);
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
@@ -68,11 +64,11 @@ public class Grunt extends Enemy {
     public void tick(double cameraX, double cameraY) {
         //Give a 5% chance of changing each direction
         if (Game.getNextRandomInt(100) > 94) { //Use 94 as it is from 0 to 99
-            this.velocityX = (Game.getNextRandomInt(3) - 1) * 2; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
+            this.velocityX = (Game.getNextRandomInt(3) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
         }
 
         if (Game.getNextRandomInt(100) > 94) {
-            this.velocityY = (Game.getNextRandomInt(3) - 1) * 2;
+            this.velocityY = (Game.getNextRandomInt(3) - 1) * 3;
         }
 
         super.tick(cameraX,cameraY);

@@ -38,7 +38,7 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random random = new Random();//used for enemy movement and map generation.
+    private static Random random = new Random(1);//used for enemy movement and map generation.
 
 
     public Game() {

@@ -50,6 +50,9 @@ public abstract class Character extends GameObject{
     abstract void playSound();
     abstract void getHit();
 
+    protected void updateTarget(Character target) {
+        //Empty for Protagonist, override in enemy
+    }
     /////////////////////////////////////////
     /*----------GETTERS AND SETTERS--------*/
     /////////////////////////////////////////
@@ -96,7 +99,7 @@ public abstract class Character extends GameObject{
             } else {
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth, this.y, -this.spriteWidth, this.spriteHeight);
             }
-//            this.renderBoundingBox(graphicsContext);
+            this.renderBoundingBox(graphicsContext);
         }
     }
 }

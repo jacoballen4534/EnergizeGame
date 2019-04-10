@@ -80,6 +80,12 @@ public class Handler { //This class will hold all the game objects and is respon
         }
     }
 
+    public static void updateEnemyTarget (Character target) {
+        for (Character enemy : characters) {
+            enemy.updateTarget(target);
+        }
+    }
+
 
 
     public static void addWall (int location, GameObject wall) {

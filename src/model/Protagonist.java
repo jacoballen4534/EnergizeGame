@@ -7,11 +7,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Protagonist extends Character {
-    private static int nextID; //Unique id for all characters, this will be used for multiplayer
+    private static int nextID; //Unique id for all characters, this will be used for multilayer
     protected int id;
-    private int lives;
-    private KeyInput keyInput;
-    private boolean buttonAllreadyDown = false;
+    private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
+    private KeyInput keyInput; //The keyboard inputs to move the character.
+    private boolean buttonAllreadyDown = false; //To only update animation state on button initial press, not on hold.
+    //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState runningState;
     private AnimationsState idleState;
     private AnimationsState attackState;
@@ -20,19 +21,21 @@ public class Protagonist extends Character {
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, KeyInput keyInput, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.id = nextID++;
+        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
         this.keyInput = keyInput;
 
+        //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
-//        this.attackState = new AnimationsState();
+//        this.attackState = new AnimationsState(); //After attack button is setup
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
     void attack() {
-        this.playAttckAnimation = true;
+        //TODO: Actualy attack.
+        this.playAttckAnimation = true; //Indicate to start playing the attack animation once.
     }
 
     @Override
@@ -44,14 +47,16 @@ public class Protagonist extends Character {
     void getHit() {
         this.playGotAttackedAnimation = true;
         if (this.health <= 0) { //died
+            this.playGotAttackedAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }
 
     @Override
     void updateAnimationState() {
+        //Determon what state the player is in, and update the animation accordingly.
         //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
-        //After die animation last frame, fade out ...Gmae over
+        //After die animation last frame, fade out ...Game over
         if (this.playAttckAnimation) { //Attacking
             //Update attack animation
             this.animationsState.copy(attackState);
@@ -59,15 +64,16 @@ public class Protagonist extends Character {
                 this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
-            //Update bounding box
             this.animationsState.copy(this.idleState);
-        } else { //Running
+        } else { //Running (As this is the only other option)
             this.animationsState.copy(runningState);
         }
     }
 
 
     public void tick(double cameraX, double cameraY) {
+        //Update the velocity according to what keys are pressed.
+        //If the key has just been pressed, update the animation. This leads to more responsive animations.
         if (this.keyInput.up) this.velocityY = -5;
         else if(!this.keyInput.down) this.velocityY = 0;
 
@@ -103,7 +109,7 @@ public class Protagonist extends Character {
             }
         }
 
-        super.tick(cameraX,cameraY);
+        super.tick(cameraX,cameraY); //Check collisions and update x and y
 
     }
 

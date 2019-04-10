@@ -60,7 +60,6 @@ public abstract class GameObject {
     }
 
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.
-
     }
 
     protected boolean inCameraBounds(double cameraX, double cameraY) {
