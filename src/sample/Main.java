@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.io.BufferedInputStream;
 import java.lang.String;
 
@@ -38,6 +39,10 @@ public class Main extends Application {
         Clip clip = AudioSystem.getClip();
         clip.open(audioInput);
         clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(-5.0f);
+
         clip.start();
 
         //Attempts to load a custom font

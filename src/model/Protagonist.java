@@ -42,7 +42,7 @@ public class Protagonist extends Character {
     @Override
     void getHit() {
         this.playGotAttackedAnimation = true;
-        if (this.health <= 0) { //died
+        if (this.currHealth <= 0) { //died
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }
@@ -122,7 +122,7 @@ public class Protagonist extends Character {
     protected void GetHit(){
         System.out.println("I got hit!");
         this.playGotAttackedAnimation = true;
-        if (this.health <= 0) { //loose life
+        if (this.currHealth <= 0) { //loose life
             this.lives --;
             if (this.lives <= 0) { //died
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
