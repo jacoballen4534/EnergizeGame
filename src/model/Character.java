@@ -7,12 +7,13 @@ import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
     private String name;
-    protected int health;
+    protected int currHealth;
+    protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
     //To play each animation once.
    protected boolean playGotAttackedAnimation = false;
-   protected boolean playAttckAnimation = false;
+   protected boolean playAttackAnimation = false;
    protected boolean playDieAnimation = false;
    private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
 

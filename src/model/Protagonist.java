@@ -1,7 +1,6 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,7 +39,7 @@ public class Protagonist extends Character {
 
     @Override
     void playSound() {
-
+        System.out.println("Beep");
     }
 
     @Override
@@ -82,34 +81,42 @@ public class Protagonist extends Character {
 
         if (this.keyInput.right) {
             this.velocityX = 5;
-            if (!this.buttonAllreadyDown) {
+            if (!this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = true;
+                this.buttonAlreadyDown = true;
             }
 
         } else if(!this.keyInput.left) {
             this.velocityX = 0;
-            if (this.buttonAllreadyDown) {
+            if (this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = false;
+                this.buttonAlreadyDown = false;
             }
         }
 
         if (this.keyInput.left) {
             this.velocityX = -5;
-            if (!this.buttonAllreadyDown) {
+            if (!this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = true;
+                this.buttonAlreadyDown = true;
             }
         } else if(!this.keyInput.right) {
             this.velocityX = 0;
-            if (this.buttonAllreadyDown) {
+            if (this.buttonAlreadyDown) {
                 this.updateSprite();
-                this.buttonAllreadyDown = false;
+                this.buttonAlreadyDown = false;
             }
         }
 
+        if (this.keyInput.pause){
+            //Set a pause game flag true
+        }
+
+        if (this.keyInput.quit){
+            System.exit(0);
         super.tick(cameraX,cameraY); //Check collisions and update x and y
+        }
+
 
     }
 
@@ -121,7 +128,7 @@ public class Protagonist extends Character {
     protected void GetHit(){
         System.out.println("I got hit!");
         this.playGotAttackedAnimation = true;
-        if (this.health <= 0) { //loose life
+        if (this.currHealth <= 0) { //loose life
             this.lives --;
             if (this.lives <= 0) { //died
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.

@@ -37,9 +37,12 @@ public class AnimationsState {
     public int updateAnimationSprite(int animationCol) {
         if (animationCol < this.resetCol) {
             animationCol = this.resetCol;
-        } else if (animationCol < this.animationMaxCol) {
+        }
+        else if (!isLastFrame(animationCol)){
             animationCol++;
-        } else {
+        }/*else if (/*animationCol < this.animationMaxCol) {
+            animationCol++;
+        } */else {
             animationCol = this.resetCol;
         }
         return animationCol;

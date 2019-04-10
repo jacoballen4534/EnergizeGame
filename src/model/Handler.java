@@ -119,7 +119,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static boolean checkCollision (Character character, double cameraX, double cameraY) {
-//        //TODO:Implament items and inventory first
+//        //TODO:Implement items and inventory first
 //        for (Item pickup : pickups) {
 //            if (pickups.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(pickup.getBounds())) {
 //                character.pickup(pickup); //Enemies will have a blank method here, while protagonist will be able to pick the item up
@@ -142,15 +142,17 @@ public class Handler { //This class will hold all the game objects and is respon
         //Only check walls that are on screen
         //TODO: Only check walls in a 2 square radius. Using
         // character x = (Character.x/PIXEL_UPSCALE) + 1, character y = (Character.y/PIXEL_UPSCALE) + 1
-        //Instead of Math.celi just let the integer truncate and then add 1. Using 2 square radius to allow for minor offsets
+        //Instead of Math.ceil just let the integer truncate and then add 1. Using 2 square radius to allow for minor offsets
 
         int characterX = (int)(character.getX() / Game.PIXEL_UPSCALE) + 1;
         int characterY = (int)(character.getY() / Game.PIXEL_UPSCALE) + 1;
+        int coord;
 
         for (int x = characterX - 2; x <= characterX + 2; x++) { //Get tiles in 2 square radius
             for (int y = characterY - 2; y <= characterY + 2; y++) {
-                if (walls.containsKey(x + y * character.getLevelWidth())) {//If it exists, check if its intersecting.
-                    GameObject wall = walls.get(x + y * character.getLevelWidth());
+                coord =  x + y * character.getLevelWidth();
+                if (walls.containsKey(coord)) {//If it exists, check if its intersecting.
+                    GameObject wall = walls.get(coord);
                     if (character.getBounds().intersects(wall.getBounds())) {
                         return true;
                     }
