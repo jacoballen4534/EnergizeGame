@@ -34,7 +34,7 @@ public class Protagonist extends Character {
     @Override
     void attack() {
         //TODO: Actualy attack.
-        this.playAttckAnimation = true; //Indicate to start playing the attack animation once.
+        this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Protagonist extends Character {
     @Override
     void getHit() {
         this.playGotAttackedAnimation = true;
-        if (this.health <= 0) { //died
+        if (this.currHealth <= 0) { //died
             this.playGotAttackedAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
@@ -56,7 +56,7 @@ public class Protagonist extends Character {
         //Determon what state the player is in, and update the animation accordingly.
         //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
         //After die animation last frame, fade out ...Game over
-        if (this.playAttckAnimation) { //Attacking
+        if (this.playAttackAnimation) { //Attacking
             //Update attack animation
             this.animationsState.copy(attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
@@ -81,30 +81,30 @@ public class Protagonist extends Character {
 
         if (this.keyInput.right) {
             this.velocityX = 5;
-            if (!this.buttonAlreadyDown) {
+            if (!this.buttonAllreadyDown) {
                 this.updateSprite();
-                this.buttonAlreadyDown = true;
+                this.buttonAllreadyDown = true;
             }
 
         } else if(!this.keyInput.left) {
             this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
+            if (this.buttonAllreadyDown) {
                 this.updateSprite();
-                this.buttonAlreadyDown = false;
+                this.buttonAllreadyDown = false;
             }
         }
 
         if (this.keyInput.left) {
             this.velocityX = -5;
-            if (!this.buttonAlreadyDown) {
+            if (!this.buttonAllreadyDown) {
                 this.updateSprite();
-                this.buttonAlreadyDown = true;
+                this.buttonAllreadyDown = true;
             }
         } else if(!this.keyInput.right) {
             this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
+            if (this.buttonAllreadyDown) {
                 this.updateSprite();
-                this.buttonAlreadyDown = false;
+                this.buttonAllreadyDown = false;
             }
         }
 
@@ -112,10 +112,11 @@ public class Protagonist extends Character {
             //Set a pause game flag true
         }
 
-        if (this.keyInput.quit){
+        if (this.keyInput.quit) {
             System.exit(0);
-        super.tick(cameraX,cameraY); //Check collisions and update x and y
         }
+        super.tick(cameraX,cameraY); //Check collisions and update x and y
+
 
 
     }
