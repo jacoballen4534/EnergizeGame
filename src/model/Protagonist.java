@@ -26,15 +26,15 @@ public class Protagonist extends Character {
         //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
-//        this.attackState = new AnimationsState(); //After attack button is setup
+        this.attackState = new AnimationsState(45,48,17,5,6,6,0); //After attack button is setup
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
-    void attack() {
+    protected void attack() {
+        super.attack();
         //TODO: Actually attack.
-        this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
     }
 
     @Override
@@ -43,8 +43,8 @@ public class Protagonist extends Character {
     }
 
     @Override
-    void getHit() {
-        this.playGotAttackedAnimation = true;
+    protected void getHit() {
+        super.getHit();
         if (this.currHealth <= 0) { //died
             this.playGotAttackedAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
