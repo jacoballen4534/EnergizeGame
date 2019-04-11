@@ -71,40 +71,46 @@ public class Protagonist extends Character {
 
 
     public void tick(double cameraX, double cameraY) {
-        //Update the velocity according to what keys are pressed.
-        //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if (this.keyInput.getKeyPressed("up")) this.velocityY = -5;
-        else if(!this.keyInput.getKeyPressed("down")) this.velocityY = 0;
-
-        if (this.keyInput.getKeyPressed("down")) this.velocityY = 5;
-        else if(!this.keyInput.getKeyPressed("up")) this.velocityY = 0;
-
-        if (this.keyInput.getKeyPressed("right")) {
-            this.velocityX = 5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
-            }
-
-        } else if(!this.keyInput.getKeyPressed("left")) {
+        //TODO: If an animation is being played, eg attacking, getting hit. dont move.
+        if (this.playAttackAnimation || this.playGotAttackedAnimation || this.playDieAnimation) { //If an animation is playing, set velocity to 0.
             this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
-            }
-        }
+            this.velocityY = 0;
+        } else {
+            //Update the velocity according to what keys are pressed.
+            //If the key has just been pressed, update the animation. This leads to more responsive animations.
+            if (this.keyInput.getKeyPressed("up")) this.velocityY = -5;
+            else if (!this.keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-        if (this.keyInput.getKeyPressed("left")) {
-            this.velocityX = -5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
+            if (this.keyInput.getKeyPressed("down")) this.velocityY = 5;
+            else if (!this.keyInput.getKeyPressed("up")) this.velocityY = 0;
+
+            if (this.keyInput.getKeyPressed("right")) {
+                this.velocityX = 5;
+                if (!this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = true;
+                }
+
+            } else if (!this.keyInput.getKeyPressed("left")) {
+                this.velocityX = 0;
+                if (this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = false;
+                }
             }
-        } else if(!this.keyInput.getKeyPressed("right")) {
-            this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
+
+            if (this.keyInput.getKeyPressed("left")) {
+                this.velocityX = -5;
+                if (!this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = true;
+                }
+            } else if (!this.keyInput.getKeyPressed("right")) {
+                this.velocityX = 0;
+                if (this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = false;
+                }
             }
         }
 
