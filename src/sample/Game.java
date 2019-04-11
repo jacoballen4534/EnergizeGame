@@ -111,7 +111,7 @@ public class Game extends Canvas {
 
 
     private void tick() {
-        Handler.tick(this.camera.getX(), this.camera.getY());
+        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);

@@ -12,7 +12,6 @@ public abstract class Enemy extends Character{
         this.target = target;
     }
 
-    @Override
     protected void updateTarget(Character target) {
         this.target = target;
     }

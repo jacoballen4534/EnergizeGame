@@ -1,25 +1,24 @@
 package model;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
 import sample.Game;
 
-import java.awt.*;
 import java.util.*;
 
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
 
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
-    private static ArrayList<Character> characters = new ArrayList<>(); //Hold all players and enemy's
+    private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players
+    private static ArrayList<Enemy> enemies = new ArrayList<>(); //Hold all enemies
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
-
+    //private static KeyInput keyInput = new KeyInput(getKeyInput());
 
     //Use a timeline instead of render, or tick methods to control the speed of the animation
     public static Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), event -> {
@@ -37,7 +36,7 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Character character : characters) {
+        for (Character character : players) {
             if (character.inCameraBounds(camera.getX(),camera.getY())) {
                 character.updateSprite();
             }
@@ -52,9 +51,12 @@ public class Handler { //This class will hold all the game objects and is respon
         map = _map;
     }
 
-    public static void tick(double cameraX, double cameraY) {
-        for (Character character : characters) {
-            character.tick(cameraX, cameraY);
+    public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
+        for (Protagonist player : players) {
+            player.tick(cameraX, cameraY, keyInput);
+        }
+        for (Enemy enemy : enemies) {
+            enemy.tick(cameraX, cameraY);
         }
     }
 
@@ -68,7 +70,7 @@ public class Handler { //This class will hold all the game objects and is respon
             wall.render(graphicsContext,cameraX,cameraY);
         });
 
-        for (Character character : characters) {
+        for (Character character : players) {
             character.render(graphicsContext,cameraX,cameraY);
         }
 
@@ -84,7 +86,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void updateEnemyTarget (Character target) {
-        for (Character enemy : characters) {
+        for (Enemy enemy : enemies) {
             enemy.updateTarget(target);
         }
     }
@@ -95,8 +97,12 @@ public class Handler { //This class will hold all the game objects and is respon
         walls.put(location, wall);
     }
 
-    public static void addCharacter (Character character) {
-        characters.add(character);
+    public static void addPlayer (Protagonist player) {
+        players.add(player);
+    }
+
+    public static void addEnemy (Enemy enemy) {
+        enemies.add(enemy);
     }
 
     public static void addDoor (Door door) {
@@ -115,7 +121,8 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearAllObjects() {
         walls.clear();
-        characters.clear();
+        players.clear();
+        enemies.clear();
         doors.clear();
         floors.clear();
         pickups.clear();
@@ -135,7 +142,7 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Character otherCharacter : characters) {
+        for (Character otherCharacter : players) {
             //If we add lots of enemy on screen, check if x,y are within threshold of the other character, otherwise dont check bounds
             if (!character.equals(otherCharacter) && character.getBounds().intersects(otherCharacter.getBounds())) {
                 return true;

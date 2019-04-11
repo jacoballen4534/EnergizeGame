@@ -9,7 +9,7 @@ public class Protagonist extends Character {
     private static int nextID; //Unique id for all characters, this will be used for multilayer
     protected int id;
     private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
-    private KeyInput keyInput; //The keyboard inputs to move the character.
+    //private KeyInput keyInput; //The keyboard inputs to move the character.
     private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState runningState;
@@ -18,10 +18,10 @@ public class Protagonist extends Character {
 
     //    public Inventory inventory;
 
-    public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, KeyInput keyInput, int levelWidth) {
+    public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
         this.id = nextID++; //Give each protagonist a unique id. (Will be used for multiplayer)
-        this.keyInput = keyInput;
+        //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
@@ -70,23 +70,23 @@ public class Protagonist extends Character {
     }
 
 
-    public void tick(double cameraX, double cameraY) {
+    public void tick(double cameraX, double cameraY, KeyInput keyInput) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if (this.keyInput.getKeyPressed("up")) this.velocityY = -5;
-        else if(!this.keyInput.getKeyPressed("down")) this.velocityY = 0;
+        if (keyInput.getKeyPressed("up")) this.velocityY = -5;
+        else if(!keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-        if (this.keyInput.getKeyPressed("down")) this.velocityY = 5;
-        else if(!this.keyInput.getKeyPressed("up")) this.velocityY = 0;
+        if (keyInput.getKeyPressed("down")) this.velocityY = 5;
+        else if(!keyInput.getKeyPressed("up")) this.velocityY = 0;
 
-        if (this.keyInput.getKeyPressed("right")) {
+        if (keyInput.getKeyPressed("right")) {
             this.velocityX = 5;
             if (!this.buttonAlreadyDown) {
                 this.updateSprite();
                 this.buttonAlreadyDown = true;
             }
 
-        } else if(!this.keyInput.getKeyPressed("left")) {
+        } else if(!keyInput.getKeyPressed("left")) {
             this.velocityX = 0;
             if (this.buttonAlreadyDown) {
                 this.updateSprite();
@@ -94,13 +94,13 @@ public class Protagonist extends Character {
             }
         }
 
-        if (this.keyInput.getKeyPressed("left")) {
+        if (keyInput.getKeyPressed("left")) {
             this.velocityX = -5;
             if (!this.buttonAlreadyDown) {
                 this.updateSprite();
                 this.buttonAlreadyDown = true;
             }
-        } else if(!this.keyInput.getKeyPressed("right")) {
+        } else if(!keyInput.getKeyPressed("right")) {
             this.velocityX = 0;
             if (this.buttonAlreadyDown) {
                 this.updateSprite();
@@ -108,27 +108,31 @@ public class Protagonist extends Character {
             }
         }
 
-        if (this.keyInput.getKeyPressed("attack")){
+        if (keyInput.getKeyPressed("attack")){
             this.playAttackAnimation = true;
         }
 
-        if (this.keyInput.getKeyPressed("jump")){
-            System.out.println("Jump for joy");
+        if (keyInput.getKeyPressed("jump")){
+            System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
-        if (this.keyInput.getKeyPressed("useItem")){
+        if (keyInput.getKeyPressed("useItem")){
             System.out.println("Using an item");
         }
 
-        if (this.keyInput.getKeyPressed("useSpecial")){
+        if (keyInput.getKeyPressed("useSpecial")){
             System.out.println("Azarath, metrion, zinthos!"); //Outdated reference
         }
 
-        if (this.keyInput.getKeyPressed("pause")){
+        if (keyInput.getKeyPressed("cheatKey")){
+            System.out.println("Wow, cheating in 2019?");
+        }
+
+        if (keyInput.getKeyPressed("pause")){
             //Set a pause game flag true
         }
 
-        if (this.keyInput.getKeyPressed("quit")) {
+        if (keyInput.getKeyPressed("quit")) {
             System.exit(0);
         }
         super.tick(cameraX,cameraY); //Check collisions and update x and y

@@ -51,9 +51,9 @@ public abstract class Character extends GameObject{
     abstract void playSound();
     abstract void getHit();
 
-    protected void updateTarget(Character target) {
+    /*protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy
-    }
+    }*/
 
     public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
         //Turn around if protagonist has collided with something

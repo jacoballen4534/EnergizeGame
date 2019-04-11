@@ -129,8 +129,8 @@ public class Level {
                     case PROTAGONIST:
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
                                 PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
-                                (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.game.getKeyInput(), this.levelWidth);
-                        Handler.addCharacter(tempProtagonist);
+                                (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelWidth);
+                        Handler.addPlayer(tempProtagonist);
                         game.setProtagonist(tempProtagonist);
                         break;
 
@@ -146,7 +146,7 @@ public class Level {
                         continue;
 
                     case GRUNT:
-                        Handler.addCharacter(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
+                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
                                 GRUNT_SPRITE_HEIGHT * Game.SCALE, game.getProtagonist(), this.levelWidth));
                         break;
 
