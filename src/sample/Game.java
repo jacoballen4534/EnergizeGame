@@ -34,6 +34,7 @@ public class Game extends Canvas {
     private Protagonist protagonist = null;
     private Map map;
     private Stage stage;
+    private HUD hud;
     public static final int SCALE = 1; //To scale the full game
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
@@ -57,8 +58,10 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
-        Handler.setCamera(camera);
+        this.hud = new HUD(this.map);
+        Handler.setCamera(this.camera);
         Handler.setMap(this.map);
+        Handler.setHUD(this.hud);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
     }
@@ -77,7 +80,6 @@ public class Game extends Canvas {
     public KeyInput getKeyInput() {
         return this.keyInput;
     }
-
 
     private void init() {
         Stage stage1 = this.stage; //Need to make a local copy to use inside the handle method

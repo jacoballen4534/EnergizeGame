@@ -12,12 +12,14 @@ public class Handler { //This class will hold all the game objects and is respon
 
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
+    //private static ArrayList<Character> characters = new ArrayList<>();
     private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players
     private static ArrayList<Enemy> enemies = new ArrayList<>(); //Hold all enemies
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
+    private static HUD hud;
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
 
     //Use a timeline instead of render, or tick methods to control the speed of the animation
@@ -36,9 +38,15 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Character character : players) {
-            if (character.inCameraBounds(camera.getX(),camera.getY())) {
-                character.updateSprite();
+        for (Protagonist player : players) {
+            if (player.inCameraBounds(camera.getX(),camera.getY())) {
+                player.updateSprite();
+            }
+        }
+
+        for (Enemy enemy : enemies) {
+            if (enemy.inCameraBounds(camera.getX(),camera.getY())) {
+                enemy.updateSprite();
             }
         }
     }));
@@ -49,6 +57,10 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void setMap (model.Map _map) {
         map = _map;
+    }
+
+    public static void setHUD (model.HUD _hud) {
+        hud = _hud;
     }
 
     public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
@@ -70,8 +82,12 @@ public class Handler { //This class will hold all the game objects and is respon
             wall.render(graphicsContext,cameraX,cameraY);
         });
 
-        for (Character character : players) {
-            character.render(graphicsContext,cameraX,cameraY);
+        for (Protagonist player: players) {
+            player.render(graphicsContext,cameraX,cameraY);
+        }
+
+        for (Enemy enemy : enemies){
+            enemy.render(graphicsContext,cameraX,cameraY);
         }
 
         for (Door door : doors) {
@@ -82,7 +98,7 @@ public class Handler { //This class will hold all the game objects and is respon
 //            pickup.render //TODO: Implement pickup items.
         }
 
-        //HUD.render(graphicsContext);//Need to render hud last, as it is the top overlay.
+        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
     public static void updateEnemyTarget (Character target) {
@@ -90,8 +106,6 @@ public class Handler { //This class will hold all the game objects and is respon
             enemy.updateTarget(target);
         }
     }
-
-
 
     public static void addWall (int location, GameObject wall) {
         walls.put(location, wall);
@@ -117,8 +131,6 @@ public class Handler { //This class will hold all the game objects and is respon
         pickups.add(pickup);
     }
 
-
-
     public static void clearAllObjects() {
         walls.clear();
         players.clear();
@@ -142,9 +154,14 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Character otherCharacter : players) {
-            //If we add lots of enemy on screen, check if x,y are within threshold of the other character, otherwise dont check bounds
-            if (!character.equals(otherCharacter) && character.getBounds().intersects(otherCharacter.getBounds())) {
+        for (Protagonist player: players){
+            if (!character.equals(player) && character.getBounds().intersects(player.getBounds())){
+                return true;
+            }
+        }
+
+        for (Enemy enemy: enemies){
+            if (!character.equals(enemy) && character.getBounds().intersects(enemy.getBounds())){
                 return true;
             }
         }
