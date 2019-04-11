@@ -80,7 +80,7 @@ public class Handler { //This class will hold all the game objects and is respon
 //            pickup.render //TODO: Implement pickup items.
         }
 
-        //HUD.render(graphicsContext);
+        //HUD.render(graphicsContext);//Need to render hud last, as it is the top overlay.
     }
 
     public static void updateEnemyTarget (Character target) {
