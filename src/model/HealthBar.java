@@ -13,7 +13,7 @@ public class HealthBar {
         this.currHealth = currHealth;
         this.maxHealth = maxHealth;
         this.healthPercentage = currHealth/maxHealth;
-        health2D = new Rectangle(0,0,healthPercentage*200,50);
+        this.health2D = new Rectangle(0,0,healthPercentage*200,50);
     }
 
     public void setCurrHealth(float currHealth) {

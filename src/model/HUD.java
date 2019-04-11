@@ -23,8 +23,8 @@ public class HUD{
         float healthPercentage = healthBar.getHealthPercentage();
         graphicsContext.setFill(Color.RED);
         graphicsContext.fillRect(cameraX,cameraY + Game.SCREEN_HEIGHT - 100,
-                healthPercentage*1000,50);
-        System.out.format("X: %s, Y: %s%n", cameraX, cameraY);
+                healthPercentage*Game.SCREEN_WIDTH,50);
+//        System.out.format("X: %s, Y: %s%n", cameraX, cameraY);
     }
 
 }

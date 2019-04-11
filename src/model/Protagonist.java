@@ -15,6 +15,7 @@ public class Protagonist extends Character {
     private AnimationsState runningState;
     private AnimationsState idleState;
     private AnimationsState attackState;
+    private AnimationsState gotHitState;
 
     //    public Inventory inventory;
 
@@ -26,15 +27,18 @@ public class Protagonist extends Character {
         //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
-        this.attackState = new AnimationsState(45,48,17,5,6,6,0); //After attack button is setup
+//        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
+        this.attackState = new AnimationsState(45,48,17,5,6,6,0);
+        this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
     @Override
     protected void attack() {
+        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
-        //TODO: Actually attack.
+        Handler.attack(this);
     }
 
     @Override
@@ -44,6 +48,7 @@ public class Protagonist extends Character {
 
     @Override
     protected void getHit() {
+        this.animationsState.copy(this.gotHitState);
         super.getHit();
         if (this.currHealth <= 0) { //died
             this.playGotAttackedAnimation = false;
@@ -58,9 +63,14 @@ public class Protagonist extends Character {
         //After die animation last frame, fade out ...Game over
         if (this.playAttackAnimation) { //Attacking
             //Update attack animation
-            this.animationsState.copy(attackState);
+            this.animationsState.copy(this.attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+            }
+        }else if (this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.gotHitState);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -73,43 +83,48 @@ public class Protagonist extends Character {
     public void tick(double cameraX, double cameraY, KeyInput keyInput) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if (keyInput.getKeyPressed("up")) this.velocityY = -5;
-        else if(!keyInput.getKeyPressed("down")) this.velocityY = 0;
-
-        if (keyInput.getKeyPressed("down")) this.velocityY = 5;
-        else if(!keyInput.getKeyPressed("up")) this.velocityY = 0;
-
-        if (keyInput.getKeyPressed("right")) {
-            this.velocityX = 5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
-            }
-
-        } else if(!keyInput.getKeyPressed("left")) {
+        if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) { //If the player is in an animation, disable movement
             this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
-            }
-        }
+            this.velocityY = 0;
+        } else {
+            if (keyInput.getKeyPressed("up")) this.velocityY = -5;
+            else if (!keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-        if (keyInput.getKeyPressed("left")) {
-            this.velocityX = -5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
+            if (keyInput.getKeyPressed("down")) this.velocityY = 5;
+            else if (!keyInput.getKeyPressed("up")) this.velocityY = 0;
+
+            if (keyInput.getKeyPressed("right")) {
+                this.velocityX = 5;
+                if (!this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = true;
+                }
+
+            } else if (!keyInput.getKeyPressed("left")) {
+                this.velocityX = 0;
+                if (this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = false;
+                }
             }
-        } else if(!keyInput.getKeyPressed("right")) {
-            this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
+
+            if (keyInput.getKeyPressed("left")) {
+                this.velocityX = -5;
+                if (!this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = true;
+                }
+            } else if (!keyInput.getKeyPressed("right")) {
+                this.velocityX = 0;
+                if (this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = false;
+                }
             }
         }
 
         if (keyInput.getKeyPressed("attack")){
-            this.playAttackAnimation = true;
+            this.attack();
         }
 
         if (keyInput.getKeyPressed("jump")){

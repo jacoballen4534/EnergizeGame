@@ -59,13 +59,18 @@ public class Grunt extends Enemy {
     }
 
     public void tick(double cameraX, double cameraY) {
-        //Give a 5% chance of changing each direction
-        if (Game.getNextRandomInt(100) > 94) { //Use 94 as it is from 0 to 99
-            this.velocityX = (Game.getNextRandomInt(3) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
-        }
+        if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) {
+            this.velocityX = 0;
+            this.velocityY = 0;
+        } else {
+            //Give a 5% chance of changing each direction
+            if (Game.getNextRandomInt(100) > 94) { //Use 94 as it is from 0 to 99
+                this.velocityX = (Game.getNextRandomInt(3) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
+            }
 
-        if (Game.getNextRandomInt(100) > 94) {
-            this.velocityY = (Game.getNextRandomInt(3) - 1) * 3;
+            if (Game.getNextRandomInt(100) > 94) {
+                this.velocityY = (Game.getNextRandomInt(3) - 1) * 3;
+            }
         }
         
         super.tick(cameraX,cameraY);
@@ -84,7 +89,9 @@ public class Grunt extends Enemy {
 
     @Override
     protected void attack() {
+        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
+        Handler.attack(this);
     }
 
     @Override
@@ -94,6 +101,7 @@ public class Grunt extends Enemy {
 
     @Override
     protected void getHit() {
+        this.animationsState.copy(this.getHitState);
         super.getHit();
         if (this.currHealth <= 0) { //died
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.

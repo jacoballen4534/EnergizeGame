@@ -55,11 +55,11 @@ public class Handler { //This class will hold all the game objects and is respon
         camera = _camera;
     }
 
-    public static void setMap (model.Map _map) {
+    public static void setMap (Map _map) {
         map = _map;
     }
 
-    public static void setHUD (model.HUD _hud) {
+    public static void setHUD (HUD _hud) {
         hud = _hud;
     }
 
@@ -140,6 +140,23 @@ public class Handler { //This class will hold all the game objects and is respon
         pickups.clear();
     }
 
+    public static void attack(Protagonist protagonist) {
+        for (Enemy enemy: enemies){
+            if (protagonist.getBounds().intersects(enemy.getBounds())){
+                enemy.getHit(); //TODO: Pass in damage
+            }
+        }
+    }
+
+    public static void attack(Enemy enemy) {
+        for (Protagonist player: players){
+            if (enemy.getBounds().intersects(player.getBounds())){
+                player.getHit(); //Pass in damage
+            }
+        }
+    }
+
+
     public static boolean checkCollision (Character character, double cameraX, double cameraY) {
 //        //TODO:Implement items and inventory first
 //        for (Item pickup : pickups) {
@@ -149,8 +166,10 @@ public class Handler { //This class will hold all the game objects and is respon
 //        }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (door.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(door.getBounds())) {
-//                map.loadLevel(door.getNextLevel()); //TODO: Add more levels to load.
+            if (door.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+//                map.loadLevel(door.getNextLevel());
+//                TODO: Add more levels to load. Make sure it is a the protagonist.
+//                 (not other protagonist) Could get unique id on startup, if character.getID matches, then load the next stage
             }
         }
 
