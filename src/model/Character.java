@@ -47,9 +47,17 @@ public abstract class Character extends GameObject{
     }
 
     abstract void updateAnimationState();
-    abstract void attack();
+    protected void attack() {
+        this.currentAnimationCol = 0; //To start the animation from the start.
+        this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
+    }
+
     abstract void playSound();
-    abstract void getHit();
+
+    protected void getHit() {
+        this.currentAnimationCol = 0;//To start the animation from the start.
+        this.playGotAttackedAnimation = true;
+    }
 
     protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy

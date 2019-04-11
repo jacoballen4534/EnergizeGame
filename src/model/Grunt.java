@@ -83,9 +83,8 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    void attack() {
-        this.playAttackAnimation = true;
-
+    protected void attack() {
+        super.attack();
     }
 
     @Override
@@ -94,8 +93,8 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    void getHit() {
-        this.playGotAttackedAnimation = true;
+    protected void getHit() {
+        super.getHit();
         if (this.currHealth <= 0) { //died
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }

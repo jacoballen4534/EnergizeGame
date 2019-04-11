@@ -19,7 +19,7 @@ public class KeyInput{
     //TODO: Can put this in the handler instead of protagonist
     private Scene scene;
     public HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
-    public Map<String, KeyCode> keyMap = new HashMap<>(){
+    public Map<String, KeyCode> keyMap = new HashMap<String, KeyCode>(){
         {
             put("up",KeyCode.W);
             put("left",KeyCode.A);
