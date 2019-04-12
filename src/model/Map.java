@@ -24,18 +24,10 @@ public class Map {
 
     public Map(Game game){
         this.game = game;
+        //Genderate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4);
 
-        for (int row = 0; row < levelLayout.size(); row ++) {
-            for (int col = 0; col < levelLayout.get(row).size(); col++) {
-                System.out.print(levelLayout.get(row).get(col) + "\t");
-            }
-            System.out.println("");
-        }
-
-
-
-
+        //For each level in the map, generate a random level.
         for (int row = 0; row < levelLayout.size(); row ++) {
             for (int col = 1; col < levelLayout.get(row).size(); col++) {
                 if (!levelLayout.get(row).get(col).equals(0)) {
@@ -45,13 +37,10 @@ public class Map {
             }
         }
 
+        //Add the tutorial room last so it will be the level you load into.
         this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialRow,0 ,MAP_WIDTH); //Level number = col + row * width, col is 0
         this.levels.put(tutorialRow*MAP_WIDTH, this.currentLevel); //Level number = col + row * width, col is 0
-
-
-//        Load tutorial room and add it to start of levels array.
-//        Go through and make each level
-
+        
     }
 
     public Level getLevel(int levelNumber) {

@@ -188,6 +188,7 @@ public class Level {
                                 (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelWidth);
                         Handler.addPlayer(tempProtagonist);
                         game.setProtagonist(tempProtagonist);
+                        this.tiles.get(row).set(col, TileType.FLOOR);
                         break;
 
                     case DOOR_UP:
