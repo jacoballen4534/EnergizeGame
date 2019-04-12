@@ -23,6 +23,7 @@ public class Grunt extends Enemy {
         this.walkState = new AnimationsState(0,72,15,0,12, 2,0);
         this.idleState = new AnimationsState(0,63,15,0,10, 3,0);
         this.getHitState = new AnimationsState(0,45,15,0,7, 4,0);
+//        this.getHitState = new AnimationsState(45,45,15,0,7, 4,0);
         this.alertState = new AnimationsState(0,63,15,0,3, 4,0);
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
@@ -32,29 +33,24 @@ public class Grunt extends Enemy {
     void updateAnimationState() {
         if (this.playDieAnimation) {
             this.animationsState.copy(this.dieState);
-//            this.spriteSheet =
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
                 //Remove from handler.
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
             this.animationsState.copy(this.getHitState);
-//            this.spriteSheet =
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false;
             }
         } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
-//            this.spriteSheet =
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false;
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
-//            this.spriteSheet =
         } else { //Walking
             this.animationsState.copy(walkState);
-//            this.spriteSheet =
         }
     }
 

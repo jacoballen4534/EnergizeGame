@@ -6,6 +6,14 @@ import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+
+enum DoorLocation {
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
+}
+
 public class Door extends GameObject {
     private int currentLevel;
     private int nextLevel;

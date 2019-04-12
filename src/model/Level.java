@@ -11,7 +11,8 @@ enum TileType {
     WALL,
     CAMP_FIRE,
     PROTAGONIST,
-    DOOR,
+    DOOR_ENTER,
+    DOOR_EXIT,
     ENEMY,
     NULLTILE,
     ITEM,
@@ -49,11 +50,32 @@ public class Level {
 
 
     public Level(Game game, BufferedImage image, int levelNumber) { //Makes a level from an image
-
         this.game = game;
         ProcessImage(image);
         this.levelNumber = levelNumber;
     }
+
+    public Level(Game game, int levelNumber, DoorLocation entrance) { //Makes a random level
+
+        this.game = game;
+        this.levelNumber = levelNumber;
+        //Random size between (20-35)^2
+        this.levelWidth = Game.getNextRandomInt(15) + 20;
+        this.levelHeight = Game.getNextRandomInt(15) + 20;
+        //Initalize with all walls then make path
+        for (int row = 0; row < this.levelHeight; row ++) {
+            ArrayList<TileType> column = new ArrayList<>();
+            for (int col = 0; col < this.levelWidth; col++) {
+                if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
+                    column.add(TileType.NULLTILE);
+                } else {
+                    column.add(TileType.WALL);
+                }
+            }
+            this.tiles.add(column);
+        }
+    }
+
 
     public ArrayList<ArrayList<TileType>> getTiles() {
         return this.tiles;
@@ -89,7 +111,7 @@ public class Level {
                 } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
                     column.add(TileType.PROTAGONIST);
                 } else if (red == 0 && green == 255 && blue == 0) { //Green = Door
-                    column.add(TileType.DOOR);
+                    column.add(TileType.DOOR_EXIT);
                 } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / random chance of some other background but not solid.
                     column.add(TileType.CAMP_FIRE);
                 } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
@@ -134,7 +156,7 @@ public class Level {
                         game.setProtagonist(tempProtagonist);
                         break;
 
-                    case DOOR:
+                    case DOOR_EXIT:
                         Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelNumber, 1));
                         break;
 
@@ -161,5 +183,5 @@ public class Level {
         Handler.updateEnemyTarget(game.getProtagonist()); //As enemies can be added before protagonist making their target null. So add at the end.
     }
 
-    //Generate level
+
 }

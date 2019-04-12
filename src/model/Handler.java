@@ -98,7 +98,7 @@ public class Handler { //This class will hold all the game objects and is respon
 //            pickup.render //TODO: Implement pickup items.
         }
 
-        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
+//        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
     public static void updateEnemyTarget (Character target) {
@@ -142,9 +142,9 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-            if (protagonist.getBounds().intersects(enemy.getBounds())){
+//            if (protagonist.getBounds().intersects(enemy.getBounds())){
                 enemy.getHit(); //TODO: Pass in damage
-            }
+//            }
         }
     }
 

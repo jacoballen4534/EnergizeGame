@@ -59,8 +59,10 @@ public abstract class Character extends GameObject{
 
     protected void getHit() {
         if (!this.playGotAttackedAnimation) {
+            System.out.println("Grunt got hit");
             this.currentAnimationCol = 0;//To start the animation from the start.
             this.playGotAttackedAnimation = true;
+            this.currHealth--;
         }
     }
 
@@ -69,20 +71,41 @@ public abstract class Character extends GameObject{
     }*/
 
     public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
-        //Turn around if protagonist has collided with something
-        if (this.x != 0) { //Dont need to move or check collisions if it inst moving in that direction.
-            this.x += this.velocityX;
+        //Move 1 pixel at a time until reaching the destination or colliding with something.
+        //If this slows down the game, revert to old version below.
+        double directionX = this.velocityX / Math.abs(this.velocityX);
+        double directionY = this.velocityY / Math.abs(this.velocityY);
+
+        for (int x = 0; x < Math.abs(this.velocityX); x++) {
+            this.x += directionX;
             if (Handler.checkCollision(this, cameraX, cameraY)) {
-                this.x += this.velocityX * -1.02;
+                this.x -= directionX;
+                break;
             }
         }
 
-        if (this.y != 0) { //Dont need to move or check collisions if it inst moving in that direction.
-            this.y += this.velocityY;
+        for (int y = 0; y < Math.abs(this.velocityY); y++) {
+            this.y += directionY;
             if (Handler.checkCollision(this, cameraX, cameraY)) {
-                this.y += this.velocityY * -1;
+                this.y -= directionY;
+                break;
             }
         }
+
+//        //Turn around if protagonist has collided with something
+//        if (this.x != 0) { //Dont need to move or check collisions if it inst moving in that direction.
+//            this.x += this.velocityX;
+//            if (Handler.checkCollision(this, cameraX, cameraY)) {
+//                this.x += this.velocityX * -1.02;
+//            }
+//        }
+//
+//        if (this.y != 0) { //Dont need to move or check collisions if it inst moving in that direction.
+//            this.y += this.velocityY;
+//            if (Handler.checkCollision(this, cameraX, cameraY)) {
+//                this.y += this.velocityY * -1;
+//            }
+//        }
     }
 
 
@@ -96,7 +119,7 @@ public abstract class Character extends GameObject{
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth - this.animationsState.getLeftBorder(),
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
-//            this.renderBoundingBox(graphicsContext);
+            this.renderBoundingBox(graphicsContext);
         }
     }
 

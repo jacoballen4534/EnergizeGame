@@ -10,12 +10,21 @@ public class Map {
     //May need to put this into a level class so we dont need to get the floor each time.
     private Level currentLevel;
     Game game; //To add the protagonist to.
-
+    private final int NumberOfLevles = 3;
+    private DoorLocation nextLevelEntrance;
 
     public Map(Game game){
         this.game = game;
-        this.currentLevel = new Level(game,PreLoadedImages.tutorialRoom,0);
-        this.levels.add(this.currentLevel);
+        this.nextLevelEntrance = DoorLocation.LEFT;
+        this.levels.add(new Level(game, PreLoadedImages.tutorialRoom, 0));
+
+        for (int i = 1; i < NumberOfLevles; i++) { //Tutorial is level 0, so start at 1.
+            Level makingLevel = new Level(game,i,nextLevelEntrance);
+//            this.nextLevelEntrance = makingLevel.getExit();
+            this.levels.add(makingLevel);
+        }
+//        this.currentLevel = new Level(game,PreLoadedImages.tutorialRoom,0);
+        this.currentLevel = levels.get(0);
         this.currentLevel.loadLevel();
     }
 
