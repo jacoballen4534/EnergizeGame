@@ -2,6 +2,7 @@ package model;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
 import sample.Game;
@@ -20,6 +21,7 @@ public class Handler { //This class will hold all the game objects and is respon
     private static Map map;
     private static Camera camera;
     private static HUD hud;
+    private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
 
     //Use a timeline instead of render, or tick methods to control the speed of the animation
@@ -133,7 +135,6 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearAllObjects() {
         walls.clear();
-        players.clear();
         enemies.clear();
         doors.clear();
         floors.clear();
@@ -156,6 +157,10 @@ public class Handler { //This class will hold all the game objects and is respon
         }
     }
 
+    public static void setProtagonist (Protagonist _protagonist) {
+        protagonist = _protagonist;
+    }
+
 
     public static boolean checkCollision (Character character, double cameraX, double cameraY) {
 //        //TODO:Implement items and inventory first
@@ -166,10 +171,22 @@ public class Handler { //This class will hold all the game objects and is respon
 //        }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (door.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
-//                map.loadLevel(door.getNextLevel());
+            if (character.equals(protagonist)) {
+                if (door.inCameraBounds(cameraX, cameraY) && character.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            map.loadLevel(door.getNextLevel());
+                            character.setX(map.getCurrentLevelWidth() * Game.PIXEL_UPSCALE / 2);
+                            character.setY(map.getCurrentLevelHeight() * Game.PIXEL_UPSCALE / 2);
+                        }
+                    });
+
+
+
 //                TODO: Add more levels to load. Make sure it is a the protagonist.
 //                 (not other protagonist) Could get unique id on startup, if character.getID matches, then load the next stage
+                }
             }
         }
 

@@ -16,7 +16,7 @@ public class KeyInput{
 
     private Scene scene;
     private HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
-    private HashMap<String, KeyCode> keyMap = new HashMap<String, KeyCode>(){
+    private HashMap<String, KeyCode> keyMap = new HashMap<String, KeyCode>(){ //TODO: Read custom keybinds in, convert to keycodes and set
         {
             put("up",KeyCode.W);
             put("left",KeyCode.A);

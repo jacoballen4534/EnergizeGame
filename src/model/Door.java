@@ -7,21 +7,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-enum DoorLocation {
-    LEFT,
-    RIGHT,
-    TOP,
-    BOTTOM
-}
-
 public class Door extends GameObject {
-    private int currentLevel;
     private int nextLevel;
 
-    public Door(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int currentLevel, int nextLevel) {
+    public Door(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int nextLevel) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
         //To load the appropriate next room
-        this.currentLevel = currentLevel;
         this.nextLevel = nextLevel;
         //Set up animation sprites
         this.animationsState = new AnimationsState(0,0,0,0, 3,0,0);
@@ -53,9 +44,6 @@ public class Door extends GameObject {
         return super.getBounds();
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
     public int getNextLevel() {
         return nextLevel;
     }

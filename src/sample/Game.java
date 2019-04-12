@@ -57,7 +57,7 @@ public class Game extends Canvas {
         this.keyInput = new KeyInput(scene); //Keyboard inputs
         this.camera = new Camera(0,0);
         this.map = new Map(this);
-        this.map.loadLevel(0);
+        this.map.loadLevel();
         this.hud = new HUD(this.map);
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
@@ -135,6 +135,7 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
+        Handler.setProtagonist(protagonist);
     }
 
     public Protagonist getProtagonist () {

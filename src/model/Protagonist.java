@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Protagonist extends Character {
-    private static int nextID; //Unique id for all characters, this will be used for multilayer
+    private static int nextID = 0; //Unique id for all characters, this will be used for multilayer
     protected int id;
     private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
@@ -21,7 +21,7 @@ public class Protagonist extends Character {
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multiplayer)
+        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
         //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.

@@ -4,6 +4,7 @@ import sample.Game;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -11,8 +12,10 @@ enum TileType {
     WALL,
     CAMP_FIRE,
     PROTAGONIST,
-    DOOR_ENTER,
-    DOOR_EXIT,
+    DOOR_UP,
+    DOOR_RIGHT,
+    DOOR_DOWN,
+    DOOR_LEFT,
     ENEMY,
     NULLTILE,
     ITEM,
@@ -24,9 +27,9 @@ enum TileType {
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
     private int levelNumber; //Used for doors, to go to the correct room
-    private int levelWidth;
-    private int levelHeight;
-    Game game; //To add the protagonist to.
+    private int levelWidth = 25;
+    private int levelHeight = 25;
+    private HashMap<TileType,Integer> doorMap = new HashMap<>(); //Map the location of the door, to which level it goes to.
     //Add everything else to the handler
 
     //////////////Macros, Actual size of different sprites///////////
@@ -49,31 +52,62 @@ public class Level {
 
 
 
-    public Level(Game game, BufferedImage image, int levelNumber) { //Makes a level from an image
-        this.game = game;
+    public Level(BufferedImage image, int mapRow, int mapCol, int mapWidth) { //Makes a level from an image
+        this.levelNumber = mapCol + mapRow * mapWidth;
+
         ProcessImage(image);
-        this.levelNumber = levelNumber;
+        this.doorMap.put(TileType.DOOR_RIGHT, mapCol + 1 + (mapRow) * mapWidth);
     }
 
-    public Level(Game game, int levelNumber, DoorLocation entrance) { //Makes a random level
+    public Level(int mapRow, int mapCol, int mapWidth, int wallArrangement) { //Makes a random level
+        this.levelNumber = mapCol + mapRow * mapWidth;
 
-        this.game = game;
-        this.levelNumber = levelNumber;
-        //Random size between (20-35)^2
-        this.levelWidth = Game.getNextRandomInt(15) + 20;
-        this.levelHeight = Game.getNextRandomInt(15) + 20;
-        //Initalize with all walls then make path
+        //map the doors to levels by checking the 4 sides with bit masking.
+        if ((wallArrangement & (0b1 << 3)) != 0) { //Add top door
+            this.doorMap.put(TileType.DOOR_UP, mapCol + (mapRow - 1) * mapWidth);
+        }
+        if ((wallArrangement & (0b1 << 2)) != 0) { //Add right door
+            this.doorMap.put(TileType.DOOR_RIGHT, mapCol + 1 + (mapRow) * mapWidth);
+        }
+        if ((wallArrangement & (0b1 << 1)) != 0) { //Add bottom door
+            this.doorMap.put(TileType.DOOR_DOWN, mapCol + (mapRow + 1) * mapWidth);
+        }
+        if ((wallArrangement & (0b1)) != 0) { //Add left door
+            this.doorMap.put(TileType.DOOR_LEFT, mapCol - 1 + (mapRow) * mapWidth);
+        }
+
+        //Initialize with all walls then make path
         for (int row = 0; row < this.levelHeight; row ++) {
             ArrayList<TileType> column = new ArrayList<>();
             for (int col = 0; col < this.levelWidth; col++) {
                 if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
-                    column.add(TileType.NULLTILE);
+                    column.add(TileType.NULLTILE); //CHANGED TO NULL TO TEST
                 } else {
-                    column.add(TileType.WALL);
+                    column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST
                 }
             }
             this.tiles.add(column);
         }
+
+        for (TileType doorLocation : doorMap.keySet()) {
+            int rows = this.tiles.size()-1; //Number of rows including the border buffer
+            int cols = this.tiles.get(0).size()-1; //Number of rows including the border buffer
+
+            if (doorLocation == TileType.DOOR_UP) {
+                this.tiles.get(1).set(cols/2, TileType.DOOR_UP); //row 1 as we have a nullTile border buffer
+
+            }else if (doorLocation == TileType.DOOR_RIGHT) {
+                this.tiles.get(rows/2).set(cols - 1, TileType.DOOR_RIGHT);
+
+            } else if (doorLocation == TileType.DOOR_DOWN) {
+                this.tiles.get(rows - 1).set(cols/2, TileType.DOOR_DOWN);
+
+            } else if (doorLocation == TileType.DOOR_LEFT) {
+                this.tiles.get(rows / 2).set(1, TileType.DOOR_LEFT);
+            }
+        }
+        //TODO: Store door location. DoorType, nextlevel, door x, door y). Can then get this door location and set protagonist next to it
+
     }
 
 
@@ -110,8 +144,8 @@ public class Level {
                     column.add(TileType.WALL);
                 } else if (red == 0 && green == 0 && blue == 255) { //Blue = Protagonist
                     column.add(TileType.PROTAGONIST);
-                } else if (red == 0 && green == 255 && blue == 0) { //Green = Door
-                    column.add(TileType.DOOR_EXIT);
+                } else if (red == 0 && green == 255 && blue == 0) { //Green = Door //Add different blue if we want to have non right doors
+                    column.add(TileType.DOOR_RIGHT);
                 } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / random chance of some other background but not solid.
                     column.add(TileType.CAMP_FIRE);
                 } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
@@ -130,7 +164,7 @@ public class Level {
         }
     }
 
-    public void loadLevel() {
+    public void loadLevel(Game game) {
         Handler.clearAllObjects();
 
         for (int row = 0; row < this.levelHeight; row++) {
@@ -156,8 +190,20 @@ public class Level {
                         game.setProtagonist(tempProtagonist);
                         break;
 
-                    case DOOR_EXIT:
-                        Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelNumber, 1));
+                    case DOOR_UP:
+                        Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.doorMap.get(TileType.DOOR_UP)));
+                        break;
+
+                    case DOOR_RIGHT:
+                        Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.doorMap.get(TileType.DOOR_RIGHT)));
+                        break;
+
+                    case DOOR_DOWN:
+                        Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.doorMap.get(TileType.DOOR_DOWN)));
+                        break;
+
+                    case DOOR_LEFT:
+                        Handler.addDoor(new Door(col, row, PreLoadedImages.doorSpriteSheet, DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.doorMap.get(TileType.DOOR_LEFT)));
                         break;
 
                     case FLOOR: //This is just here so if we add tiles with different textures, we can differentiate and create floor with different spreadsheet row/col
