@@ -39,6 +39,7 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
+//    private static Random random = new Random(0);//used for enemy movement and map generation.
     private static Random random = new Random(System.nanoTime());//used for enemy movement and map generation.
 
 
@@ -64,6 +65,7 @@ public class Game extends Canvas {
         Handler.setHUD(this.hud);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
+        Handler.setGame(this);
     }
 
     public static int getNextRandomInt(int bounds) {
@@ -105,7 +107,6 @@ public class Game extends Canvas {
                 }
                 frames++;
                 render(); //Draw everything to the screen. This is uncapped and varies based on the hardware.
-
             }
         };
     }
@@ -130,13 +131,23 @@ public class Game extends Canvas {
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
 
-        ///////DEBUG LOOK AT NEW MAPS WITHOUGT RESTARTING/////////////////////
-        if (this.keyInput.getKeyPressed("cheatKey")) {
-            new Map(this);
-            System.out.println("\n\n\n\n\n\n\n\n\n");
-        //////////////////////////////////////////////////////////////////////////
-        }
     }
+
+    public void pan (double originX, double originY, double destinationX, double destinationY) {
+        System.out.println("Start Pan");
+        this.animationTimer.stop();
+        this.camera.setX(originX);
+        this.camera.setY(originY);
+
+        while(!camera.panTransition(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, destinationX, destinationY)){
+            int xToGo = (int)(destinationX - this.camera.getX());
+            int yToGo = (int)(destinationY - this.camera.getY());
+            System.out.println("Camx: " + this.camera.getX() + " Camy: " + this.camera.getY() + "\tX to Go: " + xToGo + " Y to go: " + yToGo);
+            this.render();
+        }
+        this.animationTimer.start();
+    }
+
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;

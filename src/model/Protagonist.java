@@ -152,8 +152,6 @@ public class Protagonist extends Character {
         }
         super.tick(cameraX,cameraY); //Check collisions and update x and y
 
-
-
     }
 
     @Override

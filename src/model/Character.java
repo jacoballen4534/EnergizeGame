@@ -21,9 +21,7 @@ public abstract class Character extends GameObject{
     public Character(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int rederHeight, int levelWidth) {
         super(xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight, renderWidth, rederHeight);
         this.levelWidth = levelWidth;
-
     }
-
 
     @Override
     protected void updateSprite() {
@@ -144,5 +142,9 @@ public abstract class Character extends GameObject{
 
     public int getLevelWidth() {
         return this.levelWidth;
+    }
+
+    public void updateLevelWidth(int newLevelWidth) {
+        this.levelWidth = newLevelWidth;
     }
 }

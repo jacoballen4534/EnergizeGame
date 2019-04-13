@@ -1,5 +1,6 @@
 package model;
 
+import javafx.geometry.Point2D;
 import sample.Game;
 
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ public class Map {
     private int tutorialRow;
     private final int MAP_WIDTH = 10;
     private final int MAP_HEIGHT = 10;
+    private final int LEVEL_WIDTH = 20;
+    private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
+
     //Hold the layout of the different levels that makes up the map, Can be used for mini-map.
     //Using bitwise operations to indicate which side shares a wall with another level (need a door). Or 0 if it is not a level
     // 4 bits in the form Top,Right,Bottom,Left.
@@ -26,19 +30,41 @@ public class Map {
         //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4);
 
+        //Add the tutorial room first so it's the adjasent level can align its door.
+        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
+        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
+        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
+
         //For each level in the map, generate a random level.
+        //As we create levels from top to bottom, left to right. The current level needs to align its top and left door
+        //with the existing corresponding level. This allows the doors to in random positions along the boundary but still alight in the adjacent rooms.
         for (int row = 0; row < levelLayout.size(); row ++) {
             for (int col = 1; col < levelLayout.get(row).size(); col++) {
-                if (!levelLayout.get(row).get(col).equals(0)) { //Make sure there is a level in this location
-                    this.currentLevel = new Level(row, col, MAP_WIDTH, levelLayout.get(row).get(col)); //Set to current level to garnette there is something to load
+                int wallArrangement = levelLayout.get(row).get(col);
+                if (wallArrangement != 0) { //Make sure there is a level in this location
+                    HashMap<TileType, Point2D> currentLevelDoors = new HashMap<>();
+
+                    //If there is a level above, get the location of its bottom door. To align this levels top door
+                    if ((wallArrangement & (0b1 << 3)) != 0) { //Has level above
+                        Point2D connectingLevelAboveDoorLocation = this.levels.get(col + (row - 1) * MAP_WIDTH).getDoors().get(TileType.DOOR_DOWN);
+                        currentLevelDoors.put(TileType.DOOR_UP, new Point2D(connectingLevelAboveDoorLocation.getX(), 0));
+                    }
+
+                    //If there is a level to the left, get the location of its right door. To align this levels left door
+                    if ((wallArrangement & (0b1)) != 0) { //Has level to left
+                        Point2D connectingLevelToLeftDoorLocation = this.levels.get(col -1 + row * MAP_WIDTH).getDoors().get(TileType.DOOR_RIGHT);
+                        currentLevelDoors.put(TileType.DOOR_LEFT, new Point2D(0, connectingLevelToLeftDoorLocation.getY()));
+                    }
+
+
+                    //Pass in these doors to the new level
+                    this.currentLevel = new Level( col + row * MAP_WIDTH, MAP_WIDTH, levelLayout.get(row).get(col), currentLevelDoors, LEVEL_WIDTH, LEVEL_HEIGHT); //Set to current level to garnette there is something to load
                     this.levels.put(col + row * MAP_WIDTH, this.currentLevel);
                 }
             }
         }
 
-        //Add the tutorial room last so it will be the level you load into.
-        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialRow,0 ,MAP_WIDTH); //Level number = col + row * width, col is 0
-        this.levels.put(tutorialRow*MAP_WIDTH, this.currentLevel); //Level number = col + row * width, col is 0
+        this.currentLevel = levels.get(tutorialLevelNumber);
 
     }
 

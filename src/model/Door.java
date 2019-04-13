@@ -9,13 +9,15 @@ import java.awt.image.BufferedImage;
 
 public class Door extends GameObject {
     private int nextLevel;
+    private TileType doorType; //Holds the type of door, eg up, right, down, left
 
-    public Door(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int nextLevel) {
+    public Door(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int nextLevel, TileType doorType) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
         //To load the appropriate next room
         this.nextLevel = nextLevel;
         //Set up animation sprites
         this.animationsState = new AnimationsState(0,0,0,0, 3,0,0);
+        this.doorType = doorType;
 
 
         //Get a sub image from the full sprite sheet, then convert this to an FXImage so it can be drawn
@@ -37,6 +39,10 @@ public class Door extends GameObject {
             graphicsContext.drawImage(this.jfxImage, this.x - this.animationsState.getLeftBorder(),
                     this.y - this.animationsState.getTopBorder(), this.spriteWidth, this.spriteHeight);
         }
+    }
+
+    public TileType getDoorType () {
+        return this.doorType;
     }
 
     @Override

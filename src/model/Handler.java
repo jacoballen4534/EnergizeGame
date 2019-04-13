@@ -3,6 +3,7 @@ package model;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
 import sample.Game;
@@ -14,13 +15,15 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     //private static ArrayList<Character> characters = new ArrayList<>();
-    private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players
+    private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
+    // so the only other player will be in multilayer, where the handler can hold other player on its own also
     private static ArrayList<Enemy> enemies = new ArrayList<>(); //Hold all enemies
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
     private static HUD hud;
+    private static Game game;
     private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
 
@@ -65,6 +68,10 @@ public class Handler { //This class will hold all the game objects and is respon
         hud = _hud;
     }
 
+    public static void setGame (Game _game) {
+        game = _game;
+    }
+
     public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
         for (Protagonist player : players) {
             player.tick(cameraX, cameraY, keyInput);
@@ -99,9 +106,10 @@ public class Handler { //This class will hold all the game objects and is respon
         for (Item pickup : pickups) {
 //            pickup.render //TODO: Implement pickup items.
         }
-
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
+
+
 
     public static void updateEnemyTarget (Character target) {
         for (Enemy enemy : enemies) {
@@ -163,6 +171,20 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
 
+    public static void udateCharacterLevelWidth(int newLevelWidth) {
+        for (Enemy enemy : enemies) {
+            enemy.updateLevelWidth(newLevelWidth);
+        }
+
+        for (Protagonist player : players) {
+            player.updateLevelWidth(newLevelWidth);
+        }
+
+        protagonist.updateLevelWidth(newLevelWidth);
+    }
+
+
+
     public static boolean checkCollision (Character character, double cameraX, double cameraY) {
 //        //TODO:Implement items and inventory first
 //        for (Item pickup : pickups) {
@@ -176,13 +198,49 @@ public class Handler { //This class will hold all the game objects and is respon
                 //Need to make this thread safe as we are changing things on the main thread. So use runLater
                 Platform.runLater(() -> {
                     //TODO: Slow down camera pan speed.
-                    map.loadLevel(door.getNextLevel());
+//                    game.stop(); //Pause the animation timer
+                    //Pan out
 
-                    //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protag there.
-                    map.getCurrentLevel().getDoors();
-                    protagonist.setX(map.getCurrentLevelWidth() * Game.PIXEL_UPSCALE / 2);
-                    protagonist.setY(map.getCurrentLevelHeight() * Game.PIXEL_UPSCALE / 2);
+
+                    map.loadLevel(door.getNextLevel());
+                    double nextLevelX, nextLevelY; //This is the non up-scaled value
+
+                    //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protagonist there.
+                    HashMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
+
+                    switch (door.getDoorType()) { //Check the type of the door we hit. Then move player to the corresponding door,
+                        // plus an offset so they dont spawn inside the door.
+                        case DOOR_UP:
+                            nextLevelX = currentLevelDoors.get(TileType.DOOR_DOWN).getX();
+                            nextLevelY = currentLevelDoors.get(TileType.DOOR_DOWN).getY() - 1.3; //Protagonist height + door border
+                            break;
+
+                        case DOOR_RIGHT:
+                            nextLevelX = currentLevelDoors.get(TileType.DOOR_LEFT).getX() + 1; //Door is 1 tile wide
+                            nextLevelY = currentLevelDoors.get(TileType.DOOR_LEFT).getY();
+                            break;
+
+                        case DOOR_DOWN:
+                            nextLevelX = currentLevelDoors.get(TileType.DOOR_UP).getX();
+                            nextLevelY = currentLevelDoors.get(TileType.DOOR_UP).getY() + 1.65; //Door height + protagonist border
+                            break;
+
+//                        case DOOR_LEFT:
+                        default: //So it doesnt complain about x,y not being initialized
+                            nextLevelX = currentLevelDoors.get(TileType.DOOR_RIGHT).getX() - 1; //Protagonist is 1 tile wide
+                            nextLevelY = currentLevelDoors.get(TileType.DOOR_RIGHT).getY();
+                            break;
+                    }
+
+                    protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
+                    protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
+
+
+//                    game.pan(-Game.SCREEN_WIDTH, -Game.SCREEN_HEIGHT/2, protagonist.getX(), protagonist.getY());
+                    //Pan in
+                    //Start animation timer
                 });
+                return false;
 
             }
         }
@@ -200,8 +258,8 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         //Only check walls that are on screen
-        //TODO: Only check walls in a 2 square radius. Using
-        // character x = (Character.x/PIXEL_UPSCALE) + 1, character y = (Character.y/PIXEL_UPSCALE) + 1
+        // Only check walls in a 2 square radius.
+        // Using character x = (Character.x/PIXEL_UPSCALE) + 1, character y = (Character.y/PIXEL_UPSCALE) + 1
         //Instead of Math.ceil just let the integer truncate and then add 1. Using 2 square radius to allow for minor offsets
 
         int characterX = (int)(character.getX() / Game.PIXEL_UPSCALE) + 1;
