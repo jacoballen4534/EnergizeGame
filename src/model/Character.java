@@ -92,7 +92,7 @@ public abstract class Character extends GameObject{
             }
         }
 
-//        //Turn around if protagonist has collided with something
+        //Turn around if protagonist has collided with something
 //        if (this.x != 0) { //Dont need to move or check collisions if it inst moving in that direction.
 //            this.x += this.velocityX;
 //            if (Handler.checkCollision(this, cameraX, cameraY)) {

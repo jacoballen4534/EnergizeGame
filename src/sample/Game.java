@@ -39,7 +39,7 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random random = new Random(1);//used for enemy movement and map generation.
+    private static Random random = new Random(System.nanoTime());//used for enemy movement and map generation.
 
 
     public Game() {
@@ -69,7 +69,6 @@ public class Game extends Canvas {
     public static int getNextRandomInt(int bounds) {
         return random.nextInt(bounds);
     }
-
 
     public void stop() {
         this.animationTimer.stop();
@@ -131,6 +130,12 @@ public class Game extends Canvas {
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
 
+        ///////DEBUG LOOK AT NEW MAPS WITHOUGT RESTARTING/////////////////////
+        if (this.keyInput.getKeyPressed("cheatKey")) {
+            new Map(this);
+            System.out.println("\n\n\n\n\n\n\n\n\n");
+        //////////////////////////////////////////////////////////////////////////
+        }
     }
 
     public void setProtagonist (Protagonist protagonist) {

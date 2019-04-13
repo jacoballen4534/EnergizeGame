@@ -173,19 +173,17 @@ public class Handler { //This class will hold all the game objects and is respon
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
             if (door.inCameraBounds(cameraX, cameraY) && protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        map.loadLevel(door.getNextLevel());
-                        protagonist.setX(map.getCurrentLevelWidth() * Game.PIXEL_UPSCALE / 2);
-                        protagonist.setY(map.getCurrentLevelHeight() * Game.PIXEL_UPSCALE / 2);
-                    }
+                //Need to make this thread safe as we are changing things on the main thread. So use runLater
+                Platform.runLater(() -> {
+                    //TODO: Slow down camera pan speed.
+                    map.loadLevel(door.getNextLevel());
+
+                    //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protag there.
+                    map.getCurrentLevel().getDoors();
+                    protagonist.setX(map.getCurrentLevelWidth() * Game.PIXEL_UPSCALE / 2);
+                    protagonist.setY(map.getCurrentLevelHeight() * Game.PIXEL_UPSCALE / 2);
                 });
 
-
-
-//                TODO: Add more levels to load. Make sure it is a the protagonist.
-//                 (not other protagonist) Could get unique id on startup, if character.getID matches, then load the next stage
             }
         }
 

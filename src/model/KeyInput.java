@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
+import javax.xml.crypto.dsig.keyinfo.KeyName;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -53,6 +54,10 @@ public class KeyInput{
     }
 
     public boolean getKeyPressed(String keyName){
-        return keyBinds.get(keyMap.get(keyName));
+        if (keyMap.containsKey(keyName) && keyBinds.containsKey(keyMap.get(keyName))) { //Check that they action has a key associated with it.
+            return keyBinds.get(keyMap.get(keyName));
+        } else {
+            return false;
+        }
     }
 }

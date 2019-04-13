@@ -12,8 +12,7 @@ public class Map {
     private HashMap<Integer, Level> levels = new HashMap<>();
     //May need to put this into a level class so we dont need to get the floor each time.
     private Level currentLevel;
-    Game game; //To add the protagonist to.
-    private final int NumberOfLevles = 3;
+    private Game game; //To add the protagonist to.
     private int tutorialRow;
     private final int MAP_WIDTH = 10;
     private final int MAP_HEIGHT = 10;
@@ -24,13 +23,13 @@ public class Map {
 
     public Map(Game game){
         this.game = game;
-        //Genderate a random layout of levels.
+        //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4);
 
         //For each level in the map, generate a random level.
         for (int row = 0; row < levelLayout.size(); row ++) {
             for (int col = 1; col < levelLayout.get(row).size(); col++) {
-                if (!levelLayout.get(row).get(col).equals(0)) {
+                if (!levelLayout.get(row).get(col).equals(0)) { //Make sure there is a level in this location
                     this.currentLevel = new Level(row, col, MAP_WIDTH, levelLayout.get(row).get(col)); //Set to current level to garnette there is something to load
                     this.levels.put(col + row * MAP_WIDTH, this.currentLevel);
                 }
@@ -40,7 +39,7 @@ public class Map {
         //Add the tutorial room last so it will be the level you load into.
         this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialRow,0 ,MAP_WIDTH); //Level number = col + row * width, col is 0
         this.levels.put(tutorialRow*MAP_WIDTH, this.currentLevel); //Level number = col + row * width, col is 0
-        
+
     }
 
     public Level getLevel(int levelNumber) {
@@ -66,6 +65,9 @@ public class Map {
         return this.currentLevel.getLevelNumber();
     }
 
+    public Level getCurrentLevel () {
+        return this.currentLevel;
+    }
     public int getCurrentLevelHeight() {
         return this.currentLevel.getLevelHeight();
     }
@@ -74,6 +76,7 @@ public class Map {
         return this.currentLevel.getLevelWidth();
     }
 
+    //This generates where all the different levels will be and how they connect
     private void generateLevelLayout(int rows, int cols, int maxTunnels, int maxTunnelLength) {
         ArrayList<ArrayList<Integer>> directions = new ArrayList<>(); //A list of directions to randomly pick from. form x,y
         directions.add(new ArrayList<>(Arrays.asList(-1, 0))); //left
@@ -81,8 +84,8 @@ public class Map {
         directions.add(new ArrayList<>(Arrays.asList(0, -1))); //up
         directions.add(new ArrayList<>(Arrays.asList(0, 1))); //down
 
-        int currentRow = Game.getNextRandomInt(rows) + 1; //Pick a random starting height for the tutorial room
-        this.tutorialRow = currentRow - 1; //Return this to know where the tutorial room is.
+        int currentRow = Game.getNextRandomInt(rows-1) + 1; //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
+        this.tutorialRow = currentRow - 1; //Return this to know where the tutorial room is. -1 as currentRow includes a buffer at the top
         int currentCol = 2;
         int randomTunnelLength;
         int currentTunnelLength;
@@ -90,7 +93,7 @@ public class Map {
         ArrayList<Integer> randomDirection;
         ArrayList<ArrayList<Integer>> levelBuilder = new ArrayList<>(); //1 indicates a room, 0 is empty
 
-//        Initialize the map with no rooms
+//        Initialize the map with no rooms apart from tutorial room
         for (int row = 0; row < rows + 2; row++) { //Add a 1 row buffer above and below for easier boundary checks later.
             ArrayList<Integer> column = new ArrayList<>();
             for (int col = 0; col < cols + 2; col++) { //Add 1 col buffer for tutorial room to be on its own, then another border buffer.
@@ -119,10 +122,11 @@ public class Map {
 
                 //Check if we are on the boundary and trying to go offscreen. Use Col = 2 as bounday so the tutoial room can only have an exit on its right
                 if (currentRow == 1 && randomDirection.get(1).equals(-1) || currentCol == 2 && randomDirection.get(0).equals(-1) ||
-                        currentRow == rows - 2 && randomDirection.get(1).equals(1) ||
-                        currentCol == cols - 1 && randomDirection.get(0).equals(-1)) {
+                        currentRow == rows - 1 && randomDirection.get(1).equals(1) ||
+                        currentCol == cols - 1 && randomDirection.get(0).equals(1)) {
                     break;
                 } else {
+//                    System.out.println("row: " + currentRow + " col: " + currentCol);
                     levelBuilder.get(currentRow).set(currentCol, 1); //If this is not out of bounds, set it to a level.
                     currentRow += randomDirection.get(1);
                     currentCol += randomDirection.get(0);
@@ -140,8 +144,8 @@ public class Map {
         this.levelLayout.clear();
 
         ////////////////FOR DEBUG - Draw map //////////////////////
-        for (int row = 0; row < levelBuilder.size(); row ++) {
-            for (int col = 0; col < levelBuilder.get(row).size(); col++) {
+        for (int row = 1; row < levelBuilder.size() - 2; row ++) {
+            for (int col = 1; col < levelBuilder.get(row).size() -2; col++) {
                 System.out.print(levelBuilder.get(row).get(col));
             }
             System.out.println("");

@@ -27,8 +27,8 @@ enum TileType {
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
     private int levelNumber; //Used for doors, to go to the correct room
-    private int levelWidth = 25;
-    private int levelHeight = 25;
+    private int levelWidth = 20;
+    private int levelHeight = 15;
     private HashMap<TileType,Integer> doorMap = new HashMap<>(); //Map the location of the door, to which level it goes to.
     //Add everything else to the handler
 
@@ -59,7 +59,9 @@ public class Level {
         this.doorMap.put(TileType.DOOR_RIGHT, mapCol + 1 + (mapRow) * mapWidth);
     }
 
-    public Level(int mapRow, int mapCol, int mapWidth, int wallArrangement) { //Makes a random level
+
+    //Makes a random level. Needs the current row, col and map width to find what level each door should map to
+    public Level(int mapRow, int mapCol, int mapWidth, int wallArrangement) {
         this.levelNumber = mapCol + mapRow * mapWidth;
 
         //map the doors to levels by checking the 4 sides with bit masking.
@@ -125,6 +127,10 @@ public class Level {
 
     public int getLevelHeight() {
         return this.levelHeight;
+    }
+
+    public HashMap<TileType,Integer> getDoors () {
+        return this.doorMap;
     }
 
     private void ProcessImage(BufferedImage image) {
