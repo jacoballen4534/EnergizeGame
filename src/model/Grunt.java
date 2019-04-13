@@ -19,7 +19,7 @@ public class Grunt extends Enemy {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
         //TODO: Add borders and additional sprite sheets
         this.attackState = new AnimationsState(9,54,16,1,17, 0,0);
-        this.dieState = new AnimationsState(0,0,0,0,14, 1,0); //Doesnt need a border
+        this.dieState = new AnimationsState(0,0,15,0,14, 1,0); //Doesnt need a border
         this.walkState = new AnimationsState(0,72,15,0,12, 2,0);
         this.idleState = new AnimationsState(0,63,15,0,10, 3,0);
         this.getHitState = new AnimationsState(0,45,15,0,7, 4,0);
@@ -35,6 +35,7 @@ public class Grunt extends Enemy {
             this.animationsState.copy(this.dieState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                Handler.removeEnemy(this);
                 //Remove from handler.
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
@@ -100,6 +101,7 @@ public class Grunt extends Enemy {
         this.animationsState.copy(this.getHitState);
         super.getHit();
         if (this.currHealth <= 0) { //died
+            this.playDieAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }

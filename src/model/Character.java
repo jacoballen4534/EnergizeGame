@@ -23,6 +23,7 @@ public abstract class Character extends GameObject{
         this.levelWidth = levelWidth;
     }
 
+
     @Override
     protected void updateSprite() {
 

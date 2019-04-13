@@ -72,6 +72,11 @@ public class Protagonist extends Character {
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
             }
+        } else if (this.playDieAnimation) {
+//            this.animationsState.copy(this.dieAnimation);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                Handler.removePlayer(this);
+            }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
         } else { //Running (As this is the only other option)

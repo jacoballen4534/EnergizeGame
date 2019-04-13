@@ -23,21 +23,6 @@ public class Camera {
 
     }
 
-    public boolean panTransition (double windowWidth, double windowHeight, double destinationX, double destinationY) {
-        double moveX = (destinationX - this.x) - windowWidth/2;
-        double moveY = (destinationY - this.y) - windowHeight/2;
-
-        this.x += (moveX) * 0.01f;
-        this.y += (moveY) * 0.01f;
-        return this.x == destinationX && this.y == destinationY;
-    }
-
-    public void setX (double x) {
-        this.x = x;
-    }
-    public void setY (double y) {
-        this.y = y;
-    }
 
     public double getX() {
         return this.x;

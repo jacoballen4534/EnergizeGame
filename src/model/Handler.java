@@ -79,6 +79,12 @@ public class Handler { //This class will hold all the game objects and is respon
         for (Enemy enemy : enemies) {
             enemy.tick(cameraX, cameraY);
         }
+
+        if (enemies.isEmpty()) {
+            for (Door door : doors) {
+                door.openDoor();
+            }
+        }
     }
 
     public static void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
@@ -125,8 +131,20 @@ public class Handler { //This class will hold all the game objects and is respon
         players.add(player);
     }
 
+    public static void removePlayer (Protagonist player) {
+        Platform.runLater(() -> { //Use runLater to safely remove characters
+            players.remove(player);
+        });
+    }
+
     public static void addEnemy (Enemy enemy) {
         enemies.add(enemy);
+    }
+
+    public static void removeEnemy (Enemy enemy) { //TODO: Also remove these from the level so they dont spawn again
+        Platform.runLater(() -> {
+            enemies.remove(enemy);
+        });
     }
 
     public static void addDoor (Door door) {
@@ -139,6 +157,12 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void addPickup (Item pickup) {
         pickups.add(pickup);
+    }
+
+    public static void removePickup (Item pickup) {
+        Platform.runLater(() -> {
+            pickups.remove(pickup);
+        });
     }
 
     public static void clearAllObjects() {
@@ -195,52 +219,51 @@ public class Handler { //This class will hold all the game objects and is respon
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
             if (door.inCameraBounds(cameraX, cameraY) && protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
-                //Need to make this thread safe as we are changing things on the main thread. So use runLater
-                Platform.runLater(() -> {
-                    //TODO: Slow down camera pan speed.
-//                    game.stop(); //Pause the animation timer
-                    //Pan out
+                if (door.isOpen()) {
+                    //Need to make this thread safe as we are changing things on the main thread. So use runLater
+                    Platform.runLater(() -> {
+                        //TODO: Slow down camera pan speed.
+                        //Pan out
 
+                        map.loadLevel(door.getNextLevel());
+                        double nextLevelX, nextLevelY; //This is the non up-scaled value
 
-                    map.loadLevel(door.getNextLevel());
-                    double nextLevelX, nextLevelY; //This is the non up-scaled value
+                        //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protagonist there.
+                        HashMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
 
-                    //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protagonist there.
-                    HashMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
+                        switch (door.getDoorType()) { //Check the type of the door we hit. Then move player to the corresponding door,
+                            // plus an offset so they dont spawn inside the door.
+                            case DOOR_UP:
+                                nextLevelX = currentLevelDoors.get(TileType.DOOR_DOWN).getX();
+                                nextLevelY = currentLevelDoors.get(TileType.DOOR_DOWN).getY() - 1.3; //Protagonist height + door border
+                                break;
 
-                    switch (door.getDoorType()) { //Check the type of the door we hit. Then move player to the corresponding door,
-                        // plus an offset so they dont spawn inside the door.
-                        case DOOR_UP:
-                            nextLevelX = currentLevelDoors.get(TileType.DOOR_DOWN).getX();
-                            nextLevelY = currentLevelDoors.get(TileType.DOOR_DOWN).getY() - 1.3; //Protagonist height + door border
-                            break;
+                            case DOOR_RIGHT:
+                                nextLevelX = currentLevelDoors.get(TileType.DOOR_LEFT).getX() + 1; //Door is 1 tile wide
+                                nextLevelY = currentLevelDoors.get(TileType.DOOR_LEFT).getY();
+                                break;
 
-                        case DOOR_RIGHT:
-                            nextLevelX = currentLevelDoors.get(TileType.DOOR_LEFT).getX() + 1; //Door is 1 tile wide
-                            nextLevelY = currentLevelDoors.get(TileType.DOOR_LEFT).getY();
-                            break;
-
-                        case DOOR_DOWN:
-                            nextLevelX = currentLevelDoors.get(TileType.DOOR_UP).getX();
-                            nextLevelY = currentLevelDoors.get(TileType.DOOR_UP).getY() + 1.65; //Door height + protagonist border
-                            break;
+                            case DOOR_DOWN:
+                                nextLevelX = currentLevelDoors.get(TileType.DOOR_UP).getX();
+                                nextLevelY = currentLevelDoors.get(TileType.DOOR_UP).getY() + 1.65; //Door height + protagonist border
+                                break;
 
 //                        case DOOR_LEFT:
-                        default: //So it doesnt complain about x,y not being initialized
-                            nextLevelX = currentLevelDoors.get(TileType.DOOR_RIGHT).getX() - 1; //Protagonist is 1 tile wide
-                            nextLevelY = currentLevelDoors.get(TileType.DOOR_RIGHT).getY();
-                            break;
-                    }
+                            default: //So it doesnt complain about x,y not being initialized
+                                nextLevelX = currentLevelDoors.get(TileType.DOOR_RIGHT).getX() - 1; //Protagonist is 1 tile wide
+                                nextLevelY = currentLevelDoors.get(TileType.DOOR_RIGHT).getY();
+                                break;
+                        }
 
-                    protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
-                    protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
+                        protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
+                        protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
 
-
-//                    game.pan(-Game.SCREEN_WIDTH, -Game.SCREEN_HEIGHT/2, protagonist.getX(), protagonist.getY());
-                    //Pan in
-                    //Start animation timer
-                });
-                return false;
+                        //Pan in
+                    });
+                    return false;
+                } else {
+                    return true;
+                }
 
             }
         }

@@ -133,22 +133,6 @@ public class Game extends Canvas {
 
     }
 
-    public void pan (double originX, double originY, double destinationX, double destinationY) {
-        System.out.println("Start Pan");
-        this.animationTimer.stop();
-        this.camera.setX(originX);
-        this.camera.setY(originY);
-
-        while(!camera.panTransition(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, destinationX, destinationY)){
-            int xToGo = (int)(destinationX - this.camera.getX());
-            int yToGo = (int)(destinationY - this.camera.getY());
-            System.out.println("Camx: " + this.camera.getX() + " Camy: " + this.camera.getY() + "\tX to Go: " + xToGo + " Y to go: " + yToGo);
-            this.render();
-        }
-        this.animationTimer.start();
-    }
-
-
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
         Handler.setProtagonist(protagonist);

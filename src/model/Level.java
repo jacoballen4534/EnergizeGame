@@ -84,17 +84,37 @@ public class Level {
         }
 
 
-        //Initialize with all walls then make path
-        for (int row = 0; row < this.levelHeight; row ++) {
-            ArrayList<TileType> column = new ArrayList<>();
-            for (int col = 0; col < this.levelWidth; col++) {
-                if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
-                    column.add(TileType.WALL);
-                } else {
-                    column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
+        if (Game.getNextRandomInt(100) >= 90) { //9% of a chest room
+            for (int row = 0; row < this.levelHeight; row ++) {
+                ArrayList<TileType> column = new ArrayList<>();
+                for (int col = 0; col < this.levelWidth; col++) {
+                    if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
+                        column.add(TileType.WALL);
+                    } else if (row == this.levelHeight/2 && col == this.levelWidth/2) {
+                        column.add(TileType.ITEM); //Make this a chest
+                    } else {
+                        column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
+                    }
                 }
+                this.tiles.add(column);
             }
-            this.tiles.add(column);
+        } else {
+
+            //Initialize with all walls then make path
+            for (int row = 0; row < this.levelHeight; row ++) {
+                ArrayList<TileType> column = new ArrayList<>();
+                for (int col = 0; col < this.levelWidth; col++) {
+                    if (row == 0 || row == this.levelHeight - 1 || col == 0 || col == this.levelWidth - 1) {
+                        column.add(TileType.WALL);
+                    } else if (Game.getNextRandomInt(100) >= 98) { // 2% chance of spawing an enime.
+                        // TODO: Change this to selecting a random number of rows and cols to place enemiews so there is a controlled number of them and can make them not overlap
+                        column.add(TileType.GRUNT);
+                    } else {
+                        column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
+                    }
+                }
+                this.tiles.add(column);
+            }
         }
 
         //Add all the doors to the tile list.
