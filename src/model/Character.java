@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
     private String name;
-    protected int currHealth = 10;
+    protected int currHealth = 3;
     protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;

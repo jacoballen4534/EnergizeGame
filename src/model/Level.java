@@ -3,10 +3,12 @@ package model;
 import javafx.geometry.Point2D;
 import sample.Game;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -33,6 +35,11 @@ public class Level {
     private int levelHeight;
     private int mapWidth;//Used to calculate the level number of neighboring levels
     private HashMap<TileType, Point2D> doorMap; //Store the doors and their location.
+    //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
+    private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
+    private Point2D currentPoint;
+    private Point2D nextPoint;
+    private ArrayList<Point2D> floorLocation = new ArrayList<>();
 
 
     //////////////Macros, Actual size of different sprites///////////
@@ -64,7 +71,8 @@ public class Level {
 
 
     //Makes a random level. Needs the current row, col and map width to find what level each door should map to
-    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight) { //Pass in top and left door, if they exsist
+    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight) { //Pass in top and left door, if they exist
+        //////////////////////////////////// DOOR SETUP /////////////////////////////////////////////////////////////
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
         this.levelNumber = levelNumber;
@@ -82,44 +90,147 @@ public class Level {
             //Put door 1 tile above the bottom wall at random width. leave 1 tile on either side,
             this.doorMap.put(TileType.DOOR_DOWN, new Point2D(Game.getNextRandomInt(this.levelWidth - 2) + 1, this.levelHeight - 2));
         }
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        if (Game.getNextRandomInt(100) >= 90) { //9% of a chest room
-            for (int row = 0; row < this.levelHeight; row ++) {
-                ArrayList<TileType> column = new ArrayList<>();
-                for (int col = 0; col < this.levelWidth; col++) {
-                    if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
-                        column.add(TileType.WALL);
-                    } else if (row == this.levelHeight/2 && col == this.levelWidth/2) {
-                        column.add(TileType.ITEM); //Make this a chest
-                    } else {
-                        column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
-                    }
-                }
-                this.tiles.add(column);
+        //////////////////////////////////// INITIALIZE WALLS ///////////////////////////////////////////////////////
+        for (int row = 0; row < this.levelHeight; row ++) {
+            ArrayList<TileType> column = new ArrayList<>();
+            for (int col = 0; col < this.levelWidth; col++) {
+                column.add(TileType.WALL);
             }
-        } else {
+            this.tiles.add(column);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            //Initialize with all walls then make path
-            for (int row = 0; row < this.levelHeight; row ++) {
-                ArrayList<TileType> column = new ArrayList<>();
-                for (int col = 0; col < this.levelWidth; col++) {
-                    if (row == 0 || row == this.levelHeight - 1 || col == 0 || col == this.levelWidth - 1) {
-                        column.add(TileType.WALL);
-                    } else if (Game.getNextRandomInt(100) >= 98) { // 2% chance of spawing an enime.
-                        // TODO: Change this to selecting a random number of rows and cols to place enemiews so there is a controlled number of them and can make them not overlap
-                        column.add(TileType.GRUNT);
-                    } else {
-                        column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
-                    }
-                }
-                this.tiles.add(column);
+
+        ////////////////////////////// PICK STARTING POINT FOR RANDOM WALK /////////////////////////////////////////
+        for (Map.Entry<TileType, Point2D> door : this.doorMap.entrySet()) {
+            //Set currentPoint each time through loop to ensure it gets set at least once.
+            switch (door.getKey()){
+                case DOOR_UP:
+                    this.topDoorReachable = false;
+                    this.currentPoint = door.getValue().add(0, +1);
+                    break;
+                case DOOR_RIGHT:
+                    this.rightDoorReachable = false;
+                    this.currentPoint = door.getValue().add(-1, 0);
+                    break;
+                case DOOR_DOWN:
+                    this.currentPoint = door.getValue().add(0, -2);
+                    this.bottomDoorReachable = false;
+                    break;
+                case DOOR_LEFT:
+                    this.leftDoorReachable = false;
+                    this.currentPoint = door.getValue().add(+1, 0);
+                    break;
             }
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        while (!topDoorReachable || !rightDoorReachable || !bottomDoorReachable || !leftDoorReachable ||
+                this.floorLocation.size() < 15) { //Keep adding tiles until all doors are reachable with a minimum of 15 tiles
+
+            //place floor and add to floor list
+            this.placeFloor(currentPoint);
+
+            //check if a door is now reachable - update reachable boolean accordingly
+            this.updateReachableDoors(currentPoint);
+
+            //Pick next location
+            this.currentPoint = this.nextLocation(this.currentPoint);
+
+        }
+
+        ///////////////////////////////////////// PLACE DOORS /////////////////////////////////////////////////////
         //Add all the doors to the tile list.
         for (Map.Entry<TileType, Point2D> door : this.doorMap.entrySet()) {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        this.debugDrawFloor();
+
+
+//        for (int row = 0; row < this.levelHeight; row ++) {
+//            ArrayList<TileType> column = new ArrayList<>();
+//            for (int col = 0; col < this.levelWidth; col++) {
+//                if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
+//                    column.add(TileType.WALL);
+//                } else if (row == this.levelHeight/2 && col == this.levelWidth/2) {
+//                    column.add(TileType.ITEM); //Make this a chest
+//                } else {
+//                    column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
+//                }
+//            }
+//            this.tiles.add(column);
+//        }
+
+
+    }
+    private void debugDrawFloor() {
+        for (int row = 0; row < this.levelHeight; row ++) {
+            for (int col = 0; col < this.levelWidth; col++) {
+                switch (this.tiles.get(row).get(col)) {
+                    case WALL:
+                        System.out.print("W");
+                        break;
+                    case FLOOR:
+                        System.out.print("F");
+                        break;
+                    default:
+                        System.out.print("D");
+                        break;
+                }
+            }
+            System.out.println("");
+        }
+        System.out.print("\n\nXXXXXXXXXXXXXXXXXXXX\n\n");
+    }
+
+    private Point2D nextLocation (Point2D currentPoint) {
+        int xDirection = 0;
+        int yDirection = 0;
+
+        //Pick a random direction to step.
+        if (Game.getNextRandomInt(2) == 0) { //50% chance of moving in each direction
+            xDirection = Game.getNextRandomInt(2) == 0 ? 1 : -1;
+        } else {
+            yDirection = Game.getNextRandomInt(2) == 0 ? 1 : -1;
+        }
+
+        Point2D nextPosition = currentPoint.add(xDirection, yDirection);
+
+        //If this new position is out of bounds, move back in the opposite direction 2 steps
+        if (nextPosition.getX() < 1 || nextPosition.getX() > this.levelWidth - 2 ||
+                 nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
+            nextPosition = currentPoint.add(-xDirection, -yDirection);
+        }
+
+
+        return nextPosition;
+    }
+
+
+    private void placeFloor(Point2D location) {
+        this.tiles.get((int)location.getY()).set((int)location.getX(), TileType.FLOOR);
+        this.tiles.get((int)location.getY() + 1).set((int)location.getX(), TileType.FLOOR);
+        this.floorLocation.add(location);
+    }
+
+    private void updateReachableDoors(Point2D newLocation) {
+        //Only update doors that are still unreachable.
+        //Check if the new location is next to a door
+        if (!this.topDoorReachable) {
+            this.topDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_UP).add(0,1));
+        }
+        if (!this.rightDoorReachable) {
+            this.rightDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_RIGHT).add(-1,0));
+        }
+        if (!this.bottomDoorReachable) {
+            this.bottomDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_DOWN).add(0,-2));
+        }
+        if (!this.leftDoorReachable) {
+            this.leftDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_LEFT).add(1,0));
         }
     }
 
