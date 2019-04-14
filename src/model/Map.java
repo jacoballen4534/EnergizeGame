@@ -30,7 +30,7 @@ public class Map {
         //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4);
 
-        //Add the tutorial room first so it's the adjasent level can align its door.
+        //Add the tutorial room first so it's the adjacent level can align its door.
         int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
         this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
         this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
@@ -110,7 +110,7 @@ public class Map {
         directions.add(new ArrayList<>(Arrays.asList(0, -1))); //up
         directions.add(new ArrayList<>(Arrays.asList(0, 1))); //down
 
-        int currentRow = Game.getNextRandomInt(rows-1) + 1; //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
+        int currentRow = Game.getNextRandomInt(rows-1, true) + 1; //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
         this.tutorialRow = currentRow - 1; //Return this to know where the tutorial room is. -1 as currentRow includes a buffer at the top
         int currentCol = 2;
         int randomTunnelLength;
@@ -136,12 +136,12 @@ public class Map {
 
             //Make sure you dont keep going in the same direction as you just went, and dont backtrack over an existing path
             do {
-                randomDirection = directions.get(Game.getNextRandomInt(4)); //Pick a new direction
+                randomDirection = directions.get(Game.getNextRandomInt(4, true)); //Pick a new direction
             }
             while (randomDirection.get(0).equals(lastDirection.get(0) * -1) && randomDirection.get(1).equals(lastDirection.get(1) * -1) ||
                     randomDirection.get(0).equals(lastDirection.get(0)) && randomDirection.get(1).equals(lastDirection.get(1)));
 
-            randomTunnelLength = Game.getNextRandomInt(maxTunnelLength) + 1; //Add 1 as it was from 0<length.
+            randomTunnelLength = Game.getNextRandomInt(maxTunnelLength, true) + 1; //Add 1 as it was from 0<length.
             currentTunnelLength = 0;
 
             while (currentTunnelLength < randomTunnelLength) { //add floors until we reach the desired length, or hit an edge.

@@ -83,12 +83,12 @@ public class Level {
         if ((wallArrangement & (0b1 << 2)) != 0) { //Add right door
             //Put door on right wall at random height. leave 1 tile above for the horizontal walls,
             // and 2 tiles below as the door takes up 2 vertical tiles (want the bottom to be above the lower wall.
-            this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, Game.getNextRandomInt(this.levelHeight -3 ) + 1));
+            this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, Game.getNextRandomInt(this.levelHeight -3 , true) + 1));
         }
 
         if ((wallArrangement & (0b1 << 1)) != 0) { //Add bottom door
             //Put door 1 tile above the bottom wall at random width. leave 1 tile on either side,
-            this.doorMap.put(TileType.DOOR_DOWN, new Point2D(Game.getNextRandomInt(this.levelWidth - 2) + 1, this.levelHeight - 2));
+            this.doorMap.put(TileType.DOOR_DOWN, new Point2D(Game.getNextRandomInt(this.levelWidth - 2, true) + 1, this.levelHeight - 2));
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -128,19 +128,46 @@ public class Level {
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        while (!topDoorReachable || !rightDoorReachable || !bottomDoorReachable || !leftDoorReachable ||
-                this.floorLocation.size() < 15) { //Keep adding tiles until all doors are reachable with a minimum of 15 tiles
+        while (this.floorLocation.size() < (this.levelWidth * this.levelHeight * 0.45)) { //Set the percentage of walls to be removed
 
             //place floor and add to floor list
-            this.placeFloor(currentPoint);
+            this.placeFloor(currentPoint, true);
 
             //check if a door is now reachable - update reachable boolean accordingly
             this.updateReachableDoors(currentPoint);
 
             //Pick next location
             this.currentPoint = this.nextLocation(this.currentPoint);
-
         }
+
+
+        //If a door is still unreachable, make a path to it.
+
+        int steps = 1; //Converge from each door towards the centre. Converging at the same time will allow different paths to connect, making the full map connected earlie.
+        while (!this.topDoorReachable || !this.rightDoorReachable || !this.bottomDoorReachable || !this.leftDoorReachable) {
+            if (!this.topDoorReachable) {
+                this.nextPoint = doorMap.get(TileType.DOOR_UP).add(0, steps);
+                this.topDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelHeight - 4);
+                this.placeFloor(this.nextPoint, false);
+            }
+            if (!this.rightDoorReachable) {
+                this.nextPoint = doorMap.get(TileType.DOOR_RIGHT).add(-steps, 0);
+                this.rightDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelWidth - 3);
+                this.placeFloor(this.nextPoint, true);
+            }
+            if (!this.bottomDoorReachable) {
+                this.nextPoint = doorMap.get(TileType.DOOR_DOWN).add(0, -steps);
+                this.bottomDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelHeight - 4);
+                this.placeFloor(this.nextPoint, false);
+            }
+            if (!this.leftDoorReachable) {
+                this.nextPoint = doorMap.get(TileType.DOOR_LEFT).add(steps, 0);
+                this.leftDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelWidth - 3);
+                this.placeFloor(this.nextPoint, true);
+            }
+            steps++;
+        }
+
 
         ///////////////////////////////////////// PLACE DOORS /////////////////////////////////////////////////////
         //Add all the doors to the tile list.
@@ -192,10 +219,10 @@ public class Level {
         int yDirection = 0;
 
         //Pick a random direction to step.
-        if (Game.getNextRandomInt(2) == 0) { //50% chance of moving in each direction
-            xDirection = Game.getNextRandomInt(2) == 0 ? 1 : -1;
+        if (Game.getNextRandomInt(2, true) != 0) { //bias horizontal movement to balance the 2 vertical floors that need to be placed each time
+            xDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
         } else {
-            yDirection = Game.getNextRandomInt(2) == 0 ? 1 : -1;
+            yDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
         }
 
         Point2D nextPosition = currentPoint.add(xDirection, yDirection);
@@ -211,10 +238,19 @@ public class Level {
     }
 
 
-    private void placeFloor(Point2D location) {
+    private void placeFloor(Point2D location, boolean doubleTile) { //Double tile indicates if the tile underneath should be added also.
+        // This is sometimes needed due the protagonist being 2 tiles tall
         this.tiles.get((int)location.getY()).set((int)location.getX(), TileType.FLOOR);
-        this.tiles.get((int)location.getY() + 1).set((int)location.getX(), TileType.FLOOR);
-        this.floorLocation.add(location);
+        if (!this.floorLocation.contains(location)) {
+            this.floorLocation.add(location);
+        }
+
+        if (doubleTile) {
+            this.tiles.get((int) location.getY() + 1).set((int) location.getX(), TileType.FLOOR);
+            if (!this.floorLocation.contains(location.add(0, 1))) {
+                this.floorLocation.add(location.add(0, 1));
+            }
+        }
     }
 
     private void updateReachableDoors(Point2D newLocation) {

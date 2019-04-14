@@ -39,8 +39,8 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random random = new Random(1);//used for enemy movement and map generation.
-//    private static Random random = new Random(System.nanoTime());//used for enemy movement and map generation.
+    private static Random randomLevel = new Random(1);//used for map generation.
+    private static Random randomMovement = new Random(1);//used for enemy movement.
 
 
     public Game() {
@@ -53,13 +53,13 @@ public class Game extends Canvas {
         Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         stage.setScene(scene);
 
-        init(); //Setup game loop
         stage.show();
         this.keyInput = new KeyInput(scene); //Keyboard inputs
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel();
         this.hud = new HUD(this.map);
+        init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
         Handler.setHUD(this.hud);
@@ -68,8 +68,12 @@ public class Game extends Canvas {
         Handler.setGame(this);
     }
 
-    public static int getNextRandomInt(int bounds) {
-        return random.nextInt(bounds);
+    public static int getNextRandomInt(int bounds, boolean mapGen) {
+        if(mapGen) {
+            return randomLevel.nextInt(bounds);
+        } else {
+            return randomMovement.nextInt(bounds);
+        }
     }
 
     public void stop() {
