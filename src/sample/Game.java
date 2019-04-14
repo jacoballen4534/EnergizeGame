@@ -29,12 +29,12 @@ public class Game extends Canvas {
     private long previousTime = System.nanoTime();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
+    private boolean isPaused = false;
 
     private Camera camera;
     private Protagonist protagonist = null;
     private Map map;
     private Stage stage;
-    private HUD hud;
     public static final int SCALE = 1; //To scale the full game
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
@@ -58,10 +58,8 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
-        this.hud = new HUD(this.map);
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
-        Handler.setHUD(this.hud);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
     }
@@ -113,10 +111,19 @@ public class Game extends Canvas {
 
 
     private void tick() {
-        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
-        if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
-            this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
-                    this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
+        if (keyInput.getKeyPressed("quit")) {
+            System.exit(0);
+        }
+        if (keyInput.getKeyPressed("pause")){
+            System.out.println("Toggle game pause");
+            pauseUnpause();
+        }
+        if (!isPaused){
+            Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
+            if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
+                this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
+                        this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
+            }
         }
     }
 
@@ -145,4 +152,8 @@ public class Game extends Canvas {
         return this.map;
     }
 
+    private void pauseUnpause(){
+        isPaused = !isPaused;
+        Handler.pauseUnpauseTimeline();
+    }
 }

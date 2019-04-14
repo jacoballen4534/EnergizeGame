@@ -3,6 +3,7 @@ package model;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import sample.Game;
 
@@ -19,7 +20,7 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
-    private static HUD hud;
+    private static boolean timelineIsPaused = false;
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
 
     //Use a timeline instead of render, or tick methods to control the speed of the animation
@@ -59,11 +60,8 @@ public class Handler { //This class will hold all the game objects and is respon
         map = _map;
     }
 
-    public static void setHUD (model.HUD _hud) {
-        hud = _hud;
-    }
-
     public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
+
         for (Protagonist player : players) {
             player.tick(cameraX, cameraY, keyInput);
         }
@@ -73,6 +71,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
+
         //Render all floor tiles first, then objects
         for (Floor floor : floors) {
             floor.render(graphicsContext,cameraX,cameraY);
@@ -82,14 +81,6 @@ public class Handler { //This class will hold all the game objects and is respon
             wall.render(graphicsContext,cameraX,cameraY);
         });
 
-        for (Protagonist player: players) {
-            player.render(graphicsContext,cameraX,cameraY);
-        }
-
-        for (Enemy enemy : enemies){
-            enemy.render(graphicsContext,cameraX,cameraY);
-        }
-
         for (Door door : doors) {
             door.render(graphicsContext,cameraX,cameraY);
         }
@@ -98,7 +89,14 @@ public class Handler { //This class will hold all the game objects and is respon
 //            pickup.render //TODO: Implement pickup items.
         }
 
-        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
+        for (Enemy enemy : enemies){
+            enemy.render(graphicsContext,cameraX,cameraY);
+        }
+
+        for (Protagonist player: players) {
+            player.render(graphicsContext,cameraX,cameraY);
+        }
+
     }
 
     public static void updateEnemyTarget (Character target) {
@@ -129,6 +127,16 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void addPickup (Item pickup) {
         pickups.add(pickup);
+    }
+
+    public static void pauseUnpauseTimeline(){
+        if (timelineIsPaused){
+            timeline.play();
+        }
+        else{
+            timeline.pause();
+        }
+        timelineIsPaused = !timelineIsPaused;
     }
 
     public static void clearAllObjects() {

@@ -25,6 +25,7 @@ public class KeyInput{
             put("attack",KeyCode.J);
             put("useItem",KeyCode.K);
             put("useSpecial",KeyCode.L);
+            put("inventory", KeyCode.I);
             put("cheatKey",KeyCode.C);
             put("jump",KeyCode.SPACE);
             put("pause",KeyCode.P);
