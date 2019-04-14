@@ -1,19 +1,18 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import model.*;
 
-import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.net.URLDecoder;
 import java.util.Random;
 
 public class Game extends Canvas {
@@ -30,6 +29,13 @@ public class Game extends Canvas {
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
     private boolean isPaused = false;
+    private boolean pauseButtonDown = false;
+
+    //For handling UI
+    private Group root;
+    private AnchorPane anchorPane;
+    private VBox pauseGameVBox;
+    private Menu pauseMenu;
 
     private Camera camera;
     private Protagonist protagonist = null;
@@ -41,15 +47,48 @@ public class Game extends Canvas {
     public static final int SCREEN_HEIGHT = 768;
     private static Random random = new Random(1);//used for enemy movement and map generation.
 
-
     public Game() {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         stage = Main.getStage();
         stage.setTitle("Tutorial Room");
-        Group root = new Group();
+        root = new Group();
+        /*try{
+            root = new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/game.fxml"));
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            System.exit(1);
+        }*/
         root.getChildren().add(this);
         Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
+        scene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
+
+        //Setting up anchor pane
+        anchorPane = new AnchorPane();
+        anchorPane.setLayoutX(SCREEN_WIDTH/2-300);
+        anchorPane.setLayoutY(SCREEN_HEIGHT/2-300);
+        anchorPane.setStyle("-fx-background-color: #8a8a8a;");
+        anchorPane.setPrefSize(300,300);
+
+        //Setting up contents of menu
+        Label pauseTitle = new Label("Pause Menu");
+        pauseTitle.setStyle("-fx-font-size:50");
+        Button resumeButton = new Button("Resume");
+        resumeButton.setOnMouseClicked(mouseEvent -> unpause());
+        Button quitButton = new Button("Quit");
+        quitButton.setOnMouseClicked(mouseEvent -> System.exit(0));
+
+        //Setting up VBox
+        pauseGameVBox = new VBox(5);
+        anchorPane.getChildren().add(pauseGameVBox);
+        pauseGameVBox.setAlignment(Pos.CENTER);
+        pauseGameVBox.getChildren().add(pauseTitle);
+        pauseGameVBox.getChildren().add(resumeButton);
+        pauseGameVBox.getChildren().add(quitButton);
+        root.getChildren().add(anchorPane);
+        anchorPane.setVisible(false);
+
         stage.setScene(scene);
 
         init(); //Setup game loop
@@ -58,6 +97,7 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
+        this.pauseMenu = new Menu(100,100,100,100);
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
@@ -111,12 +151,9 @@ public class Game extends Canvas {
 
 
     private void tick() {
-        if (keyInput.getKeyPressed("quit")) {
-            System.exit(0);
-        }
-        if (keyInput.getKeyPressed("pause")){
+        if (keyInput.getKeyPress("pause") || keyInput.getKeyPress("quit")){
+            pause();
             System.out.println("Toggle game pause");
-            pauseUnpause();
         }
         if (!isPaused){
             Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
@@ -134,6 +171,7 @@ public class Game extends Canvas {
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
 
         Handler.render(graphicsContext, this.camera.getX(), this.camera.getY());
+        pauseMenu.render(graphicsContext, this.camera.getX(), this.camera.getY());
 
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
@@ -152,8 +190,15 @@ public class Game extends Canvas {
         return this.map;
     }
 
-    private void pauseUnpause(){
-        isPaused = !isPaused;
-        Handler.pauseUnpauseTimeline();
+    private void pause(){
+        isPaused = true;
+        Handler.timeline.pause();
+        anchorPane.setVisible(true);
+    }
+
+    private void unpause(){
+        isPaused = false;
+        anchorPane.setVisible(false);
+        Handler.timeline.play();
     }
 }

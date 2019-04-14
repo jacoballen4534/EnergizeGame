@@ -1,16 +1,9 @@
 package model;
 
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Pair;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
-import java.util.*;
-import java.util.Map;
+import java.util.HashMap;
 
 public class KeyInput{
 
@@ -49,11 +42,23 @@ public class KeyInput{
         this.scene.setOnKeyReleased(keyEvent -> {
             if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are released
                 keyBinds.put(keyEvent.getCode(), false);
+                //keyBinds.remove(keyEvent.getCode());
             }
         });
     }
 
-    public boolean getKeyPressed(String keyName){
+    public boolean getKeyPress(String keyName){
         return keyBinds.get(keyMap.get(keyName));
+    }
+
+    public boolean getKeyPressDebounced(String keyName){
+        Boolean isActive = keyBinds.get(keyMap.get(keyName));
+
+        if (isActive != null && isActive) {
+            keyBinds.put(keyMap.get(keyName), false);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -6,12 +6,12 @@
     -fx-font-family: beon;
     -fx-font-size: 20;
 }
-.label-heading{
+/*.label-heading{
     -fx-text-fill: #e8e8e8;
     -fx-font-family: beon;
     -fx-font-size: 35;
     -fx-font-weight: bold;
-}
+}*/
 .menulabel{
     -fx-text-fill: #ffc700;
     -fx-font-family: beon;
@@ -69,4 +69,7 @@
     -fx-background-color: #7cafc2;
     -fx-text-fill: #FFFFFF;
     -fx-background-radius: 4;
+}
+.gridpane{
+    -fx-background-color: #aaffaa;
 }

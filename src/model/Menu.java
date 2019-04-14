@@ -1,6 +1,9 @@
 package model;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import sample.Game;
 
 public class Menu {
     private int width, height;
@@ -17,9 +20,14 @@ public class Menu {
 
     public void show(){visible=true;}
     public void hide(){visible=false;}
-    private void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
-        if (visible)
-            graphicsContext.fillText("This is a menu",100,100);
+
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
+        if (visible){
+            graphicsContext.setFill(Color.WHITE);
+            graphicsContext.setFont(Font.font("Serif",100));
+            graphicsContext.fillText("PAUSED",cameraX+ Game.SCREEN_WIDTH/2,
+                    cameraY+Game.SCREEN_HEIGHT/2);
+        }
     }
 
 }

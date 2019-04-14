@@ -86,7 +86,7 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Item pickup : pickups) {
-//            pickup.render //TODO: Implement pickup items.
+//            pickup.render(graphicsContext,cameraX,cameraY); //TODO: Implement pickup items.
         }
 
         for (Enemy enemy : enemies){
@@ -138,6 +138,10 @@ public class Handler { //This class will hold all the game objects and is respon
         }
         timelineIsPaused = !timelineIsPaused;
     }
+
+    public static void pauseTimeline(){timeline.pause();}
+
+    public static void unpauseTimeline(){timeline.play();}
 
     public static void clearAllObjects() {
         walls.clear();

@@ -92,42 +92,28 @@ public class Protagonist extends Character {
     public void tick(double cameraX, double cameraY, KeyInput keyInput) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if (keyInput.getKeyPressed("up")) this.velocityY = -5;
-        else if(!keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-        if (keyInput.getKeyPressed("down")) this.velocityY = 5;
-        else if(!keyInput.getKeyPressed("up")) this.velocityY = 0;
+        if (keyInput.getKeyPress("up")){
+            this.velocityY = -5;
+            System.out.println("UP");
+        }
+        else if (keyInput.getKeyPress("down")){
+            this.velocityY = 5;
+            System.out.println("DOWN");
+        }
+        else this.velocityY=0;
 
-        if (keyInput.getKeyPressed("right")) {
+        if (keyInput.getKeyPress("right")){
             this.velocityX = 5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
-            }
-
-        } else if(!keyInput.getKeyPressed("left")) {
-            this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
-            }
+            System.out.println("RIGHT");
         }
-
-        if (keyInput.getKeyPressed("left")) {
+        else if (keyInput.getKeyPress("left")) {
             this.velocityX = -5;
-            if (!this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = true;
-            }
-        } else if(!keyInput.getKeyPressed("right")) {
-            this.velocityX = 0;
-            if (this.buttonAlreadyDown) {
-                this.updateSprite();
-                this.buttonAlreadyDown = false;
-            }
+            System.out.println("LEFT");
         }
+        else this.velocityX=0;
 
-        if (keyInput.getKeyPressed("attack")){
+        if (keyInput.getKeyPress("attack")){
             if (hud.getEnergyPercent() > 0.5){
                 if (!this.isAttacking) {
                     this.attack();
@@ -139,24 +125,24 @@ public class Protagonist extends Character {
             }
         }
 
-        if (keyInput.getKeyPressed("jump")){
+        if (keyInput.getKeyPress("jump")){
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
-        if (keyInput.getKeyPressed("useItem")){
+        if (keyInput.getKeyPress("useItem")){
             System.out.println("Using an item");
         }
 
-        if (keyInput.getKeyPressed("useSpecial")){
+        if (keyInput.getKeyPress("useSpecial")){
             System.out.println("Azarath, metrion, zinthos!"); //Outdated reference
         }
 
-        if (keyInput.getKeyPressed("cheatKey")){
+        if (keyInput.getKeyPress("cheatKey")){
             System.out.println("Wow, cheating in 2019?");
             hud.setEnergy(this.maxEnergy);
         }
 
-        if (keyInput.getKeyPressed("inventory")){
+        if (keyInput.getKeyPress("inventory")){
             System.out.println("Opens inventory");
             //Handler.pauseGame();
             //inventory.show();

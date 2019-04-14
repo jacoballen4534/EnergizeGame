@@ -67,8 +67,6 @@ public class mainMenuController implements Initializable {
 
     @FXML private void CreditsClicked() throws IOException {
         ChangeStageName("Credits");
-        //focussedLabel = UpdateFocussedLabel(focussedLabel, "credits");
-        //UpdateMenu(focussedLabel);
         mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/credits.fxml")));
     }
 

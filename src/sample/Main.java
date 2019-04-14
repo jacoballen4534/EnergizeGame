@@ -49,16 +49,14 @@ public class Main extends Application {
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
 
         stage = primaryStage;
-
         Parent root = (Parent) new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/mainMenu.fxml"));
         primaryStage.setTitle("Main Menu");
-
 
         //Loads a global stylesheet
 //        File styleSheet = new File("resources/css/globalStyle.css");
         String url = Main.class.getResource("/css/globalStyle.css").toExternalForm();
 
-        Scene scene = new Scene(root, Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT, false);
+        Scene scene = new Scene(root, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, false);
         scene.getStylesheets().add(url);
 
         primaryStage.setScene(scene);
