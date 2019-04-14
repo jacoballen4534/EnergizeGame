@@ -51,6 +51,7 @@ public class KeyInput{
         return keyBinds.get(keyMap.get(keyName));
     }
 
+    //From here: https://stackoverflow.com/questions/37472273/detect-single-key-press-in-javafx
     public boolean getKeyPressDebounced(String keyName){
         Boolean isActive = keyBinds.get(keyMap.get(keyName));
 
