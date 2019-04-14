@@ -128,7 +128,7 @@ public class Level {
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        while (this.floorLocation.size() < (this.levelWidth * this.levelHeight * 0.45)) { //Set the percentage of walls to be removed
+        while (this.floorLocation.size() < (this.levelWidth * this.levelHeight * 0.5)) { //Set the percentage of walls to be removed
 
             //place floor and add to floor list
             this.placeFloor(currentPoint, true);

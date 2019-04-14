@@ -118,7 +118,7 @@ public abstract class Character extends GameObject{
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth - this.animationsState.getLeftBorder(),
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
-            this.renderBoundingBox(graphicsContext);
+//            this.renderBoundingBox(graphicsContext);
         }
     }
 
