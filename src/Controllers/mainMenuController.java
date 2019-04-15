@@ -24,11 +24,12 @@ public class mainMenuController implements Initializable {
 
     public boolean gameActive = false;
     private Label focussedLabel = null;
+    private Label resumeLabel;
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
+        gameActive = true;
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
-        gameActive = true;
         this.game = new Game();
         this.game.start();
     };
@@ -40,6 +41,7 @@ public class mainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        System.out.println("///////////////INITIALISE/////////////////");
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -117,21 +119,30 @@ public class mainMenuController implements Initializable {
         return currFocussedLabel;
     }
 
+    private void AddMenuOption(int pos, Label menuLabel){
+        menuLabel.getStyleClass().setAll("menulabel");
+        mainMenuVBox.getChildren().add(pos, menuLabel);
+    }
+
     private VBox CreateSubMenu(){
         VBox subMenu = new VBox();
         subMenu.getStyleClass().setAll("submenu");
         subMenu.setId("subMenuVBox");
         return subMenu;
     }
-    private void CreateSubmenuLabel(VBox subMenu, String labelText, int position, EventHandler mouseOnClick){
+    private void CreateMenuLabel(VBox menu, String labelText, String styleClass, int position, EventHandler mouseOnClick){
         Label label = new Label(labelText);
-        label.getStyleClass().setAll("submenu-label");
+        label.setId(labelText);
+        label.getStyleClass().setAll(styleClass);
         if (mouseOnClick != null) label.setOnMouseClicked(mouseOnClick);
-        subMenu.getChildren().add(position,label);
+        menu.getChildren().add(position,label);
     }
 
     //TODO refactor switch statement to be less hardcoded
     private void UpdateMenu(Label currFocussedLabel){
+        if (gameActive) {
+            CreateMenuLabel(mainMenuVBox,"Resume","menulabel",0,ResumeClicked);
+        }
         if (currFocussedLabel == null){
             //FadeOutCurrentMenu();
             HideCurrentSubMenu();
@@ -164,9 +175,9 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        if (gameActive) CreateSubmenuLabel(subMenu,"Resume",labelPos++,ResumeClicked);
-        CreateSubmenuLabel(subMenu,"Quick Play",labelPos++, QuickPlayClicked);
-        CreateSubmenuLabel(subMenu,"Custom Play",labelPos++,CustomPlayClicked);
+        //if (gameActive) CreateMenuLabel(subMenu,"Resume",labelPos++,ResumeClicked);
+        CreateMenuLabel(subMenu,"Quick Play","submenu-label",labelPos++, QuickPlayClicked);
+        CreateMenuLabel(subMenu,"Custom Play","submenu-label",labelPos++,CustomPlayClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(1,subMenu);
         //System.out.println(subMenu.getChildren());
@@ -178,13 +189,13 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Game Save 1",0,event -> {
+        CreateMenuLabel(subMenu,"Game Save 1","submenu-label",0, event -> {
             System.out.println("Loads the first game save");
         });
-        CreateSubmenuLabel(subMenu,"Game Save 2",1,event -> {
+        CreateMenuLabel(subMenu,"Game Save 2","submenu-label",1, event -> {
             System.out.println("Loads second game save");
         });
-        CreateSubmenuLabel(subMenu,"Game Save 3",2,event -> {
+        CreateMenuLabel(subMenu,"Game Save 3","submenu-label",2, event -> {
             System.out.println("Loads third game save");
         });
         //Add submenu to menu
@@ -198,8 +209,8 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
-        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
+        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
+        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(4,subMenu);
         //System.out.println(subMenu.getChildren());
@@ -211,8 +222,8 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Change Keybindings",0,null);
-        CreateSubmenuLabel(subMenu,"Change volume",1,null);
+        CreateMenuLabel(subMenu,"Change Keybindings","submenu-label",0,null);
+        CreateMenuLabel(subMenu,"Change volume","submenu-label",1,null);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(3,subMenu);
         //System.out.println(subMenu.getChildren());
@@ -224,9 +235,9 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Do stuff",0,null);
-        CreateSubmenuLabel(subMenu,"Other stuff",1,null);
-        CreateSubmenuLabel(subMenu,"Even more stuff",1,null);
+        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
+        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
+        CreateMenuLabel(subMenu,"Even more stuff","submenu-label",1,null);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(5,subMenu);
         //System.out.println(subMenu.getChildren());

@@ -28,7 +28,7 @@ public class Protagonist extends Character {
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.id = ++nextID; //Give each protagonist a unique id. (Will be used for multilayer)
+        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
         //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
@@ -58,8 +58,8 @@ public class Protagonist extends Character {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
         Handler.attack(this);
-        hud.setEnergy(currEnergy);
         currEnergy -= 10;
+        hud.setEnergy(currEnergy);
     }
 
     @Override
@@ -138,11 +138,12 @@ public class Protagonist extends Character {
         }
 
         if (keyInput.getKeyPressDebounced("attack")){
-            if (hud.getEnergyPercent() > 0.5){
+            /*if (hud.getEnergyPercent() > 0.5){
                 this.attack();
             } else {
                 System.out.println("Not enough energy");
-            }
+            }*/
+            this.attack();
         }
 
         if (keyInput.getKeyPressed("jump")){
