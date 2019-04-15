@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class AnimationWall extends Wall {
     public AnimationWall(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int animationMaxCol, int animationRow, int resetCol) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight);
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, animationRow, resetCol);
         this.animationsState = new AnimationsState(0,0,0,0,animationMaxCol,animationRow,resetCol);
     }
 

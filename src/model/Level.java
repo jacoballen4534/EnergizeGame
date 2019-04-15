@@ -3,12 +3,10 @@ package model;
 import javafx.geometry.Point2D;
 import sample.Game;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -39,12 +37,13 @@ public class Level {
     private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
     private Point2D currentPoint;
     private Point2D nextPoint;
+    private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>();
 
 
     //////////////Macros, Actual size of different sprites///////////
-    private final int FLOOR_SPRITE_WIDTH = 32;
-    private final int FLOOR_SPRITE_HEIGHT = 32;
+    private final int Tile_SPRITE_WIDTH = 32;
+    private final int Tile_SPRITE_HEIGHT = 32;
 
     private final int PROTAGONIST_SPRITE_WIDTH = 400;
     private final int PROTAGONIST_SPRITE_HEIGHT = 296;
@@ -156,9 +155,9 @@ public class Level {
                 this.placeFloor(this.nextPoint, true);
             }
             if (!this.bottomDoorReachable) {
-                this.nextPoint = doorMap.get(TileType.DOOR_DOWN).add(0, -steps);
+                this.nextPoint = doorMap.get(TileType.DOOR_DOWN).add(0, -steps - 1);
                 this.bottomDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelHeight - 4);
-                this.placeFloor(this.nextPoint, false);
+                this.placeFloor(this.nextPoint, true);
             }
             if (!this.leftDoorReachable) {
                 this.nextPoint = doorMap.get(TileType.DOOR_LEFT).add(steps, 0);
@@ -215,22 +214,26 @@ public class Level {
     }
 
     private Point2D nextLocation (Point2D currentPoint) {
-        int xDirection = 0;
-        int yDirection = 0;
 
         //Pick a random direction to step.
-        if (Game.getNextRandomInt(2, true) != 0) { //bias horizontal movement to balance the 2 vertical floors that need to be placed each time
-            xDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
-        } else {
-            yDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
+        switch (Game.getNextRandomInt(4, true)) {
+            case 0: //25 %chance of moving in x direction
+                this.nextXDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
+                this.nextYDirection = 0;
+                break;
+            case 1: //25% chance of moving in y direction
+                this.nextYDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
+                this.nextXDirection = 0;
+                break;
+                // 50% chance of staying in the same direction
         }
 
-        Point2D nextPosition = currentPoint.add(xDirection, yDirection);
+        Point2D nextPosition = currentPoint.add(this.nextXDirection, this.nextYDirection);
 
         //If this new position is out of bounds, move back in the opposite direction 2 steps
         if (nextPosition.getX() < 1 || nextPosition.getX() > this.levelWidth - 2 ||
                  nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
-            nextPosition = currentPoint.add(-xDirection, -yDirection);
+            nextPosition = currentPoint.add(-this.nextXDirection, -this.nextYDirection);
         }
 
 
@@ -343,8 +346,8 @@ public class Level {
                         break;
 
                     case WALL:
-                        Handler.addWall(col + row * this.levelWidth, new Wall(col,row, PreLoadedImages.campFireSpriteSheet, CAMP_FIRE_SPRITE_WIDTH,
-                                CAMP_FIRE_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE));
+                        Handler.addWall(col + row * this.levelWidth, new Wall(col,row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH,
+                                Tile_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE, 0,2));
 //                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
                         break;
                     case PROTAGONIST:
@@ -401,7 +404,7 @@ public class Level {
                         continue;
                 }
                 //Move this into its own switch section above and add a tile to handler in the constructor of the other tiles that require a tile eg protagonist, door, enemy
-                Handler.addFloor(new Floor(col, row, PreLoadedImages.floorSpriteSheet, FLOOR_SPRITE_WIDTH, FLOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, Game.PIXEL_UPSCALE, 13, 0));
+                Handler.addFloor(new Floor(col, row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH, Tile_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, Game.PIXEL_UPSCALE, 0, 0));
             }
         }
         Handler.updateEnemyTarget(game.getProtagonist()); //As enemies can be added before protagonist making their target null. So add at the end.
