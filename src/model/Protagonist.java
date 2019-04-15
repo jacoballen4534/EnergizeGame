@@ -57,9 +57,8 @@ public class Protagonist extends Character {
     protected void attack() {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
-        Handler.attack(this); //Check energy before calling attack, update hud in handler?
-        hud.setEnergy(currEnergy);
         Handler.attack(this);
+        hud.setEnergy(currEnergy);
         currEnergy -= 10;
     }
 
@@ -117,34 +116,34 @@ public class Protagonist extends Character {
             this.velocityY = 0;
         } else {
 
-        if (keyInput.getKeyPress("up")){
-            this.velocityY = -5;
-        }
-        else if (keyInput.getKeyPress("down")){
-            this.velocityY = 5;
-        }
-        else this.velocityY=0;
+            if (keyInput.getKeyPressed("up")){
+                this.velocityY = -5;
+            } else if (keyInput.getKeyPressed("down")){
+                this.velocityY = 5;
+            } else this.velocityY=0;
 
-        if (keyInput.getKeyPress("right")){
-            this.velocityX = 5;
+            if (keyInput.getKeyPressed("right")) {
+                this.velocityX = 5;
                 if (!this.buttonAlreadyDown) { //TODO: Add to up/down
                     this.updateSprite();
                     this.buttonAlreadyDown = true;
                 }
-        else if (keyInput.getKeyPress("left")) {
-            this.velocityX = -5;
+            } else if (keyInput.getKeyPressed("left")) {
+                this.velocityX = -5;
                 if (this.buttonAlreadyDown) {
                     this.updateSprite();
                     this.buttonAlreadyDown = false;
                 }
+            } else this.velocityX=0;
         }
-        else this.velocityX=0;
-        }
+
         if (keyInput.getKeyPressDebounced("attack")){
             if (hud.getEnergyPercent() > 0.5){
-                    this.attack();
-                }
+                this.attack();
+            } else {
+                System.out.println("Not enough energy");
             }
+        }
 
         if (keyInput.getKeyPressed("jump")){
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
@@ -182,16 +181,7 @@ public class Protagonist extends Character {
         return super.getBounds();
     }
 
-    protected void GetHit(){
-        System.out.println("I got hit!");
-        this.playGotAttackedAnimation = true;
-        if (this.currHealth <= 0) { //lose life
-            this.lives--;
-            if (this.lives <= 0) { //died
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
-            }
-        }
-    }
+
 
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {

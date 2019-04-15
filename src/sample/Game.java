@@ -86,11 +86,13 @@ public class Game extends Canvas {
     }
 
     public static int getNextRandomInt(int bounds, boolean mapGen) {
-        if(mapGen) {
+        if (mapGen) {
             return randomLevel.nextInt(bounds);
         } else {
             return randomMovement.nextInt(bounds);
         }
+    }
+
     private AnchorPane createPauseMenu(){
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setLayoutX(SCREEN_WIDTH/2-150);
@@ -125,7 +127,7 @@ public class Game extends Canvas {
         anchorPane.getChildren().add(pauseGameVBox);
         return anchorPane;
     }
-    }
+
 
     public void start(){
         this.animationTimer.start();

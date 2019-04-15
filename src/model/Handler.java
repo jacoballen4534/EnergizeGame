@@ -66,9 +66,9 @@ public class Handler { //This class will hold all the game objects and is respon
         map = _map;
     }
 
-    public static void setHUD (HUD _hud) {
-        hud = _hud;
-    }
+//    public static void setHUD (HUD _hud) {
+//        hud = _hud;
+//    }
 
     public static void setGame (Game _game) {
         game = _game;
@@ -197,7 +197,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-//            if (protagonist.getBounds().intersects(enemy.getBounds())){
+//            if (protagonist.getBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
                 enemy.getHit(); //TODO: Pass in damage
 //            }
         }
