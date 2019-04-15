@@ -36,6 +36,7 @@ public class Game extends Canvas {
     private Menu pauseMenu;
     private Menu inventoryMenu;
 
+    private Scene gameScene;
     private Camera camera;
     private Protagonist protagonist = null;
     private Map map;
@@ -51,12 +52,12 @@ public class Game extends Canvas {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         Handler.clearForNewGame();
-        stage = Main.getStage();
-        stage.setTitle("Tutorial Room");
-        root = new Group();
-        root.getChildren().add(this);
-        Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
-        scene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
+        this.stage = Main.getStage();
+        this.stage.setTitle("Tutorial Room");
+        this.root = new Group();
+        this.root.getChildren().add(this);
+        this.gameScene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
+        this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
 
 
         /*===========================================\
@@ -96,11 +97,11 @@ public class Game extends Canvas {
         root.getChildren().add(inventoryMenu);
         pauseMenu.hide();
         /*===================================*/
-        stage.setScene(scene);
+        stage.setScene(this.gameScene);
 
         stage.show();
-        this.keyInput = new KeyInput(scene); //Keyboard inputs
-        this.camera = new Camera(0,0);
+        this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
+        this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
         this.map = new Map(this);
         this.map.loadLevel();
         init(); //Setup game loop
@@ -109,6 +110,10 @@ public class Game extends Canvas {
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
         Handler.setGame(this);
+    }
+
+    public void hidePauseMenu () {
+        this.pauseMenu.hide();
     }
 
     public static int getNextRandomInt(int bounds, boolean mapGen) {
@@ -128,7 +133,8 @@ public class Game extends Canvas {
         Handler.timeline.pause();
     }
 
-    private void unpause(){
+    public void unpause(){
+        this.stage.setScene(this.gameScene);
         this.animationTimer.start();
         Handler.timeline.play();
     }
