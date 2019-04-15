@@ -20,6 +20,7 @@ public class mainMenuController implements Initializable {
 
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
+    private Game game;
 
     public boolean gameActive = false;
     private Label focussedLabel = null;
@@ -28,11 +29,14 @@ public class mainMenuController implements Initializable {
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
         gameActive = true;
-        Game game = new Game();
-        game.start();
+        this.game = new Game();
+        this.game.start();
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
-    private EventHandler ResumeClicked = event -> System.out.println("Resumes current game");
+    private EventHandler ResumeClicked = event -> {
+        this.game.hidePauseMenu();
+        this.game.unpause();
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
