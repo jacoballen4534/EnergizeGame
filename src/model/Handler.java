@@ -69,6 +69,10 @@ public class Handler { //This class will hold all the game objects and is respon
 //    public static void setHUD (HUD _hud) {
 //        hud = _hud;
 //    }
+    public static void clearForNewGame() {
+        clearAllObjects();
+        players.clear();
+    }
 
     public static void setGame (Game _game) {
         game = _game;
@@ -186,7 +190,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void unpauseTimeline(){timeline.play();}
 
-    public static void clearAllObjects() {
+    public static void clearAllObjects() { //Not safe to use while in the middle of a level
         walls.clear();
         enemies.clear();
         doors.clear();

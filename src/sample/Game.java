@@ -50,6 +50,7 @@ public class Game extends Canvas {
     public Game() {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
+        Handler.clearForNewGame();
         stage = Main.getStage();
         stage.setTitle("Tutorial Room");
         root = new Group();
