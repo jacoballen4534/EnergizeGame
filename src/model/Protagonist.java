@@ -151,7 +151,6 @@ public class Protagonist extends Character {
 
         if (keyInput.getKeyPressDebounced("useItem")){
             useItem();
-            System.out.println("Using an item");
         }
 
         if (keyInput.getKeyPressDebounced("block")){
@@ -202,7 +201,12 @@ public class Protagonist extends Character {
     }
 
     public void useItem(){
-        equippedItem.useItem();
+        if (equippedItem != null) {
+            System.out.println("Using an item");
+            equippedItem.useItem();
+        } else {
+            System.out.println("You dont have an item to use");
+        }
     }
 
     public void setEquippedItem(Item item){
