@@ -8,13 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import sample.Game;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -27,6 +24,8 @@ public class mainMenuController implements Initializable {
     private Label focussedLabel = null;
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
+        focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+        UpdateMenu(focussedLabel);
         Game game = new Game();
         game.start();
     };

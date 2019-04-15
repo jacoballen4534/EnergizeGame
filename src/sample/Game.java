@@ -33,9 +33,8 @@ public class Game extends Canvas {
 
     //For handling UI
     private Group root;
-    private AnchorPane anchorPane;
-    private VBox pauseGameVBox;
-    private Menu pauseMenu;
+    private AnchorPane pauseMenu;
+    private Menu inventoryMenu;
 
     private Camera camera;
     private Protagonist protagonist = null;
@@ -53,42 +52,23 @@ public class Game extends Canvas {
         stage = Main.getStage();
         stage.setTitle("Tutorial Room");
         root = new Group();
-        /*try{
-            root = new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/game.fxml"));
-        }
-        catch (IOException e){
-            e.printStackTrace();
-            System.exit(1);
-        }*/
         root.getChildren().add(this);
         Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         scene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
 
-        //Setting up anchor pane
-        anchorPane = new AnchorPane();
-        anchorPane.setLayoutX(SCREEN_WIDTH/2-300);
-        anchorPane.setLayoutY(SCREEN_HEIGHT/2-300);
-        anchorPane.setStyle("-fx-background-color: #8a8a8a;");
-        anchorPane.setPrefSize(300,300);
 
-        //Setting up contents of menu
-        Label pauseTitle = new Label("Pause Menu");
-        pauseTitle.setStyle("-fx-font-size:50");
-        Button resumeButton = new Button("Resume");
-        resumeButton.setOnMouseClicked(mouseEvent -> unpause());
-        Button quitButton = new Button("Quit");
-        quitButton.setOnMouseClicked(mouseEvent -> System.exit(0));
+        /*===========================================\
+        * pause Menu
+        */
 
-        //Setting up VBox
-        pauseGameVBox = new VBox(5);
-        anchorPane.getChildren().add(pauseGameVBox);
-        pauseGameVBox.setAlignment(Pos.CENTER);
-        pauseGameVBox.getChildren().add(pauseTitle);
-        pauseGameVBox.getChildren().add(resumeButton);
-        pauseGameVBox.getChildren().add(quitButton);
-        root.getChildren().add(anchorPane);
-        anchorPane.setVisible(false);
+        //pauseMenu = new Menu(300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+        //pauseMenu.setStyle("-fx-background-color: #224D72;");
 
+        pauseMenu = createPauseMenu();
+        root.getChildren().add(pauseMenu);
+        pauseMenu.setVisible(false);
+        //pauseMenu.hide();
+        /*===================================*/
         stage.setScene(scene);
 
         init(); //Setup game loop
@@ -97,24 +77,66 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel(0);
-        this.pauseMenu = new Menu(100,100,100,100);
+        //this.pauseMenu = new Menu(100,100,100,100);
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
     }
 
+    private AnchorPane createPauseMenu(){
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setLayoutX(SCREEN_WIDTH/2-150);
+        anchorPane.setLayoutY(SCREEN_HEIGHT/2-150);
+        anchorPane.setStyle("-fx-background-color: #224D72;");
+        anchorPane.setPrefSize(300,300);
+
+        //Setting up contents of menu
+        Label pauseTitle = new Label("pause Menu");
+        pauseTitle.setId("pauseMenuTitle");
+        Button resumeButton = new Button("Resume");
+        resumeButton.setOnMouseClicked(mouseEvent -> {
+            //pauseMenu.hide();
+            anchorPane.setVisible(false);
+            unpause();
+        });
+        Button returnToMainMenuButton = new Button("Return to Main Menu");
+        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
+            stage.setScene(Main.getMainScene()); //Buggy
+        });
+        Button exitGameButton = new Button("Exit Game");
+        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
+
+        //Setting up VBox
+        VBox pauseGameVBox = new VBox(5);
+        pauseGameVBox.setAlignment(Pos.CENTER);
+        pauseGameVBox.getChildren().add(pauseTitle);
+        pauseGameVBox.getChildren().add(resumeButton);
+        pauseGameVBox.getChildren().add(returnToMainMenuButton);
+        pauseGameVBox.getChildren().add(exitGameButton);
+
+        anchorPane.getChildren().add(pauseGameVBox);
+        return anchorPane;
+    }
+
     public static int getNextRandomInt(int bounds) {
         return random.nextInt(bounds);
     }
 
-
-    public void stop() {
-        this.animationTimer.stop();
-    }
-    public void start() {
+    public void start(){
         this.animationTimer.start();
     }
+
+    private void pause(){
+        this.animationTimer.stop();
+        Handler.timeline.pause();
+    }
+
+    private void unpause(){
+        this.animationTimer.start();
+        Handler.timeline.play();
+    }
+
     public KeyInput getKeyInput() {
         return this.keyInput;
     }
@@ -144,23 +166,27 @@ public class Game extends Canvas {
                 }
                 frames++;
                 render(); //Draw everything to the screen. This is uncapped and varies based on the hardware.
-
             }
         };
     }
 
 
     private void tick() {
-        if (keyInput.getKeyPress("pause") || keyInput.getKeyPress("quit")){
-            pause();
+        if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
+            this.pause();
+            //pauseMenu.show();
+            pauseMenu.setVisible(true);
             System.out.println("Toggle game pause");
         }
-        if (!isPaused){
-            Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
-            if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
-                this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
-                        this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
-            }
+        if (keyInput.getKeyPressDebounced("inventory")){
+            this.pause();
+            //ShowInventoryMenu();
+            System.out.println("Open inventory");
+        }
+        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
+        if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
+            this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
+                    this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
     }
 
@@ -171,7 +197,6 @@ public class Game extends Canvas {
         graphicsContext.translate(-this.camera.getX(), -this.camera.getY());
 
         Handler.render(graphicsContext, this.camera.getX(), this.camera.getY());
-        pauseMenu.render(graphicsContext, this.camera.getX(), this.camera.getY());
 
         //Translate back
         graphicsContext.translate(this.camera.getX(), this.camera.getY());
@@ -190,15 +215,6 @@ public class Game extends Canvas {
         return this.map;
     }
 
-    private void pause(){
-        isPaused = true;
-        Handler.timeline.pause();
-        anchorPane.setVisible(true);
-    }
-
-    private void unpause(){
-        isPaused = false;
-        anchorPane.setVisible(false);
-        Handler.timeline.play();
-    }
+    private void ShowInventoryMenu(){;}
+    private void HideInventoryMenu(){;}
 }

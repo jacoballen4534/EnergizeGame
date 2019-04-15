@@ -1,33 +1,18 @@
 package model;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import sample.Game;
+import javafx.scene.layout.AnchorPane;
 
-public class Menu {
-    private int width, height;
-    private int xPos, yPos;
-    private boolean visible;
+public class Menu extends AnchorPane {
 
     public Menu(int width, int height, int xPos, int yPos) {
-        this.width = width;
-        this.height = height;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.visible = false;
+        super();
+        this.setPrefSize(width,height);
+        this.setLayoutX(xPos-width/2);
+        this.setLayoutY(yPos-height/2);
+        //this.setVisible(true);
     }
 
-    public void show(){visible=true;}
-    public void hide(){visible=false;}
-
-    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
-        if (visible){
-            graphicsContext.setFill(Color.WHITE);
-            graphicsContext.setFont(Font.font("Serif",100));
-            graphicsContext.fillText("PAUSED",cameraX+ Game.SCREEN_WIDTH/2,
-                    cameraY+Game.SCREEN_HEIGHT/2);
-        }
-    }
+    public void show(){super.setVisible(true);} //Doesn't modify visible property for some reason
+    public void hide(){super.setVisible(false);} //Doesn't modify visible property for some reason
 
 }

@@ -1,11 +1,7 @@
 package model;
 
-import com.sun.prism.Graphics;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-import model.Map;
 import sample.Game;
 
 public class HUD{
@@ -23,25 +19,28 @@ public class HUD{
     private HUDBar healthBar;
     private HUDBar energyBar;
     private int width, height;
+    private int barWidth, barHeight;
     private Coordinate HUDCoord;
     //Relative coordinates to HUD box
-    private Coordinate healthCoord = new Coordinate(20,20);
-    private Coordinate energyCoord = new Coordinate(20,45);
+    private Coordinate healthCoord = new Coordinate(20,10);
+    private Coordinate energyCoord = new Coordinate(20,60);
 
     public HUD( int playerID, int maxHealth, int maxEnergy, int width, int height,
                 int xIndent, int yIndent) {
         this.playerID = playerID;
         this.width = width;
         this.height = height;
+        this.barWidth = (int)(0.8*this.width);
+        this.barHeight = (int)(0.3*this.height);
         int topOfHUD = Game.SCREEN_HEIGHT-yIndent-(height*this.playerID);
         HUDCoord = new Coordinate(xIndent,topOfHUD);
         this.healthBar = new HUDBar(xIndent+healthCoord.x,
                 topOfHUD + healthCoord.y,
-                null,0,0,(int)(0.8*width),(int)(0.3*height),
+                null,0,0,barWidth,barHeight,
                 maxHealth,maxHealth,Color.RED,Color.BLACK);
         this.energyBar = new HUDBar(xIndent + energyCoord.x,
                 topOfHUD + energyCoord.y,
-                null,0,0,(int)(0.8*width),(int)(0.3*height),
+                null,0,0,barWidth,barHeight,
                 maxEnergy,maxEnergy,Color.MEDIUMTURQUOISE,Color.BLACK);
 
     }
@@ -64,16 +63,16 @@ public class HUD{
         healthBar.setCurrVal(health);
     }
 
+    public void setEnergy(int energy){
+        energyBar.setCurrVal(energy);
+    }
+
     public int getEnergy(){
         return energyBar.getCurrVal();
     }
 
     public float getEnergyPercent(){
         return energyBar.getValPercent();
-    }
-
-    public void setEnergy(int energy){
-        energyBar.setCurrVal(energy);
     }
 
     public void tick(double cameraX, double cameraY){

@@ -66,7 +66,7 @@ public class highScoreController implements Initializable {
             String line = scanner.nextLine();
             if (!line.startsWith("//")) { //Ignore comments
                 if (!openedBlock) {
-                    if (line.equalsIgnoreCase("<begin>")) {//Start new structure
+                    if (line.equalsIgnoreCase("<begin>")) {//start new structure
                         blockOfData = new ArrayList<>();
                         openedBlock = true;
                     }

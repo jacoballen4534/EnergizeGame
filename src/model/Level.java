@@ -147,7 +147,7 @@ public class Level {
 
                     case GRUNT:
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE, game.getProtagonist(), this.levelWidth));
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth,game.getProtagonist(), true));
                         break;
 
                     default:
