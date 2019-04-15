@@ -1,6 +1,5 @@
 package sample;
 
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import com.sun.jndi.toolkit.url.Uri;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
@@ -84,33 +83,6 @@ public class  BricknBallGame {
 
 //      Create and add the ball
         this.addBall(platform.getLocation().getX(), platform.getLocation().getY() - Platform.getSize().getY() - Ball.getRadus());
-
-
-
-
-
-
-//      To import blender / maya files
-        ObjModelImporter importer = new ObjModelImporter();
-        URL url = getClass().getResource("../ObjectModels/rv_lamp_post_4.obj");
-        importer.read(url);
-
-        Group lampGroup = new Group();
-        for (MeshView view : (importer).getImport()) {
-            lampGroup.getChildren().add(view);
-        }
-        lampGroup.setTranslateX(windowWidth/4);
-        lampGroup.setTranslateY(windowHeight/2);
-        lampGroup.setScaleX(10);
-        lampGroup.setScaleY(10);
-        lampGroup.setScaleZ(10);
-        root.getChildren().add(lampGroup);
-
-
-
-        root.getChildren().add(loadObjectModel(getClass().getResource("../ObjectModels/rv_lamp_post_4.obj"), new Point2D(windowWidth/4, windowHeight/2), 10));
-        root.getChildren().add(loadObjectModel(getClass().getResource("../ObjectModels/Bigmax_White_OBJ.obj"), new Point2D(windowWidth/2, windowHeight/2), 5));
-
 
 
 //      Create and add the bricks
@@ -204,22 +176,6 @@ public class  BricknBallGame {
     }
 
 
-    private Group loadObjectModel (URL url, Point2D location, double scale) {
-        //      To import blender / maya files
-        ObjModelImporter importer = new ObjModelImporter();
-        importer.read(url);
-
-        Group group = new Group();
-        for (MeshView view : (importer).getImport()) {
-            group.getChildren().add(view);
-        }
-        group.setTranslateX(location.getX());
-        group.setTranslateY(location.getY());
-        group.setScaleX(scale);
-        group.setScaleY(scale);
-        group.setScaleZ(scale);
-        return group;
-    }
 
 
     private void restart() {
