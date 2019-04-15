@@ -21,15 +21,18 @@ public class mainMenuController implements Initializable {
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
 
+    public boolean gameActive = false;
     private Label focussedLabel = null;
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
+        gameActive = true;
         Game game = new Game();
         game.start();
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
+    private EventHandler ResumeClicked = event -> System.out.println("Resumes current game");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -153,11 +156,13 @@ public class mainMenuController implements Initializable {
     private void ShowNewGameMenu(){
         //Remove previous submenu
         HideCurrentSubMenu();
+        int labelPos = 0;
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Quick Play",0, QuickPlayClicked);
-        CreateSubmenuLabel(subMenu,"Custom Play",1,CustomPlayClicked);
+        if (gameActive) CreateSubmenuLabel(subMenu,"Resume",labelPos++,ResumeClicked);
+        CreateSubmenuLabel(subMenu,"Quick Play",labelPos++, QuickPlayClicked);
+        CreateSubmenuLabel(subMenu,"Custom Play",labelPos++,CustomPlayClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(1,subMenu);
         //System.out.println(subMenu.getChildren());
