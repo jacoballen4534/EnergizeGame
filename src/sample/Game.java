@@ -33,7 +33,7 @@ public class Game extends Canvas {
 
     //For handling UI
     private Group root;
-    private AnchorPane pauseMenu;
+    private Menu pauseMenu;
     private Menu inventoryMenu;
 
     private Camera camera;
@@ -63,13 +63,38 @@ public class Game extends Canvas {
         * pause Menu
         */
 
-        //pauseMenu = new Menu(300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-        //pauseMenu.setStyle("-fx-background-color: #224D72;");
+        pauseMenu = new Menu("pauseMenu",300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+        inventoryMenu = new Menu("inventoryMenu",500,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
-        pauseMenu = createPauseMenu();
+        //Pause menu controls
+        Label pauseTitle = new Label("pause Menu");
+        pauseTitle.setId("pauseMenuTitle");
+
+        Button resumeButton = new Button("Resume");
+        resumeButton.setOnMouseClicked(mouseEvent -> {
+            pauseMenu.hide();
+            unpause();
+        });
+        resumeButton.setPrefSize(250,50);
+        Button returnToMainMenuButton = new Button("Quit to Title Screen");
+        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
+            stage.setScene(Main.getMainScene()); //Buggy
+        });
+        returnToMainMenuButton.setPrefSize(250,50);
+        Button exitGameButton = new Button("Quit to Desktop");
+        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
+        exitGameButton.setPrefSize(250,50);
+
+        //Setting up VBox
+        VBox pauseGameVBox = new VBox(10,pauseTitle,resumeButton,returnToMainMenuButton,exitGameButton);
+        pauseGameVBox.setAlignment(Pos.CENTER);
+
+        pauseMenu.getChildren().add(pauseGameVBox);
+
+        //pauseMenu = createPauseMenu();
         root.getChildren().add(pauseMenu);
-        pauseMenu.setVisible(false);
-        //pauseMenu.hide();
+        root.getChildren().add(inventoryMenu);
+        pauseMenu.hide();
         /*===================================*/
         stage.setScene(scene);
 
@@ -94,41 +119,9 @@ public class Game extends Canvas {
         }
     }
 
-    private AnchorPane createPauseMenu(){
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setLayoutX(SCREEN_WIDTH/2-150);
-        anchorPane.setLayoutY(SCREEN_HEIGHT/2-150);
-        anchorPane.setStyle("-fx-background-color: #224D72;");
-        anchorPane.setPrefSize(300,300);
-
-        //Setting up contents of menu
-        Label pauseTitle = new Label("pause Menu");
-        pauseTitle.setId("pauseMenuTitle");
-        Button resumeButton = new Button("Resume");
-        resumeButton.setOnMouseClicked(mouseEvent -> {
-            //pauseMenu.hide();
-            anchorPane.setVisible(false);
-            unpause();
-        });
-        Button returnToMainMenuButton = new Button("Return to Main Menu");
-        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
-            stage.setScene(Main.getMainScene()); //Buggy
-        });
-        Button exitGameButton = new Button("Exit Game");
-        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
-
-        //Setting up VBox
-        VBox pauseGameVBox = new VBox(5);
-        pauseGameVBox.setAlignment(Pos.CENTER);
-        pauseGameVBox.getChildren().add(pauseTitle);
-        pauseGameVBox.getChildren().add(resumeButton);
-        pauseGameVBox.getChildren().add(returnToMainMenuButton);
-        pauseGameVBox.getChildren().add(exitGameButton);
-
-        anchorPane.getChildren().add(pauseGameVBox);
-        return anchorPane;
+    public static int getNextRandomInt(int bounds) {
+        return random.nextInt(bounds);
     }
-
 
     public void start(){
         this.animationTimer.start();
@@ -181,8 +174,8 @@ public class Game extends Canvas {
     private void tick() {
         if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
             this.pause();
-            //pauseMenu.show();
-            pauseMenu.setVisible(true);
+            pauseMenu.show();
+            //pauseMenu.setVisible(true);
             System.out.println("Toggle game pause");
         }
         if (keyInput.getKeyPressDebounced("inventory")){
