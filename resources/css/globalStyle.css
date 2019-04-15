@@ -6,11 +6,19 @@
     -fx-font-family: beon;
     -fx-font-size: 20;
 }
-.label-heading{
-    -fx-text-fill: #e8e8e8;
+.label#pauseMenuTitle{
+    -fx-text-fill: #ffc700;
     -fx-font-family: beon;
-    -fx-font-size: 35;
+    -fx-font-size: 50;
     -fx-font-weight: bold;
+}
+.label#mainMenuTitle{
+    -fx-text-fill:#74d5ff/*#7cafc2*/;
+    /*-fx-font-family: beon;*/
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 200;
+    -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
 }
 .menulabel{
     -fx-text-fill: #ffc700;
@@ -40,14 +48,6 @@
 .submenu-label:hover{
     -fx-text-fill: #ff0000;
 }
-.label#mainMenuTitle{
-    -fx-text-fill:#74d5ff/*#7cafc2*/;
-    /*-fx-font-family: beon;*/
-    -fx-text-alignment:center;
-    -fx-label-padding: 0 0 0 0;
-    -fx-font-size: 200;
-    -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
-}
 .title-highscore{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
     -fx-font-family: beon;
@@ -56,7 +56,6 @@
     -fx-font-size: 150;
     -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
 }
-/*Unused*/
 .button{
     -fx-background-color: #ffc700;/*#AB4642;*/
     -fx-text-fill: #000000;

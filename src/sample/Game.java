@@ -1,19 +1,18 @@
 package sample;
 
 import javafx.animation.*;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import model.*;
 
-import java.awt.geom.Rectangle2D;
-import java.io.*;
-import java.net.URLDecoder;
 import java.util.Random;
 
 public class Game extends Canvas {
@@ -29,12 +28,18 @@ public class Game extends Canvas {
     private long previousTime = System.nanoTime();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
+    private boolean isPaused = false;
+    private boolean pauseButtonDown = false;
+
+    //For handling UI
+    private Group root;
+    private AnchorPane pauseMenu;
+    private Menu inventoryMenu;
 
     private Camera camera;
     private Protagonist protagonist = null;
     private Map map;
     private Stage stage;
-    private HUD hud;
     public static final int SCALE = 1; //To scale the full game
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
@@ -42,15 +47,29 @@ public class Game extends Canvas {
     private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
     private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
 
-
     public Game() {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         stage = Main.getStage();
         stage.setTitle("Tutorial Room");
-        Group root = new Group();
+        root = new Group();
         root.getChildren().add(this);
         Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
+        scene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
+
+
+        /*===========================================\
+        * pause Menu
+        */
+
+        //pauseMenu = new Menu(300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+        //pauseMenu.setStyle("-fx-background-color: #224D72;");
+
+        pauseMenu = createPauseMenu();
+        root.getChildren().add(pauseMenu);
+        pauseMenu.setVisible(false);
+        //pauseMenu.hide();
+        /*===================================*/
         stage.setScene(scene);
 
         stage.show();
@@ -58,30 +77,72 @@ public class Game extends Canvas {
         this.camera = new Camera(0,0);
         this.map = new Map(this);
         this.map.loadLevel();
-        this.hud = new HUD(this.map);
         init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
-        Handler.setHUD(this.hud);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
         Handler.setGame(this);
     }
 
     public static int getNextRandomInt(int bounds, boolean mapGen) {
-        if(mapGen) {
+        if (mapGen) {
             return randomLevel.nextInt(bounds);
         } else {
             return randomMovement.nextInt(bounds);
         }
     }
 
-    public void stop() {
-        this.animationTimer.stop();
+    private AnchorPane createPauseMenu(){
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.setLayoutX(SCREEN_WIDTH/2-150);
+        anchorPane.setLayoutY(SCREEN_HEIGHT/2-150);
+        anchorPane.setStyle("-fx-background-color: #224D72;");
+        anchorPane.setPrefSize(300,300);
+
+        //Setting up contents of menu
+        Label pauseTitle = new Label("pause Menu");
+        pauseTitle.setId("pauseMenuTitle");
+        Button resumeButton = new Button("Resume");
+        resumeButton.setOnMouseClicked(mouseEvent -> {
+            //pauseMenu.hide();
+            anchorPane.setVisible(false);
+            unpause();
+        });
+        Button returnToMainMenuButton = new Button("Return to Main Menu");
+        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
+            stage.setScene(Main.getMainScene()); //Buggy
+        });
+        Button exitGameButton = new Button("Exit Game");
+        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
+
+        //Setting up VBox
+        VBox pauseGameVBox = new VBox(5);
+        pauseGameVBox.setAlignment(Pos.CENTER);
+        pauseGameVBox.getChildren().add(pauseTitle);
+        pauseGameVBox.getChildren().add(resumeButton);
+        pauseGameVBox.getChildren().add(returnToMainMenuButton);
+        pauseGameVBox.getChildren().add(exitGameButton);
+
+        anchorPane.getChildren().add(pauseGameVBox);
+        return anchorPane;
     }
-    public void start() {
+
+
+    public void start(){
         this.animationTimer.start();
     }
+
+    private void pause(){
+        this.animationTimer.stop();
+        Handler.timeline.pause();
+    }
+
+    private void unpause(){
+        this.animationTimer.start();
+        Handler.timeline.play();
+    }
+
     public KeyInput getKeyInput() {
         return this.keyInput;
     }
@@ -117,6 +178,17 @@ public class Game extends Canvas {
 
 
     private void tick() {
+        if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
+            this.pause();
+            //pauseMenu.show();
+            pauseMenu.setVisible(true);
+            System.out.println("Toggle game pause");
+        }
+        if (keyInput.getKeyPressDebounced("inventory")){
+            this.pause();
+            //ShowInventoryMenu();
+            System.out.println("Open inventory");
+        }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
@@ -150,4 +222,6 @@ public class Game extends Canvas {
         return this.map;
     }
 
+    private void ShowInventoryMenu(){;}
+    private void HideInventoryMenu(){;}
 }

@@ -15,8 +15,9 @@ public class Grunt extends Enemy {
     private AnimationsState attackState;
     private AnimationsState alertState;
 
-    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, Character target, int levelWidth) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, target, levelWidth);
+    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
+                 Character target, boolean enabled) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,target,enabled);
         //TODO: Add borders and additional sprite sheets
         this.attackState = new AnimationsState(9,54,16,1,17, 0,0);
         this.dieState = new AnimationsState(0,0,15,0,14, 1,0); //Doesnt need a border

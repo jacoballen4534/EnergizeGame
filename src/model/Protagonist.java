@@ -1,6 +1,7 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.GraphicsContext;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,13 +12,19 @@ public class Protagonist extends Character {
     private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
     private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
+    private boolean isAttacking = false; //Attempt to debounce attacking
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState runningState;
     private AnimationsState idleState;
     private AnimationsState attackState;
     private AnimationsState gotHitState;
 
-    //    public Inventory inventory;
+    private int currEnergy;
+    private int maxEnergy;
+    private HUD hud;
+
+    private Item equippedItem;
+    private Inventory inventory;
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
@@ -31,6 +38,18 @@ public class Protagonist extends Character {
         this.attackState = new AnimationsState(45,48,17,5,6,6,0);
         this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
 
+        //Set health
+        this.currHealth = 100;
+        this.currEnergy = 100;
+        this.maxHealth = this.currHealth;
+        this.maxEnergy = this.currEnergy;
+        this.hud = new HUD(this.id, this.maxHealth,this.maxEnergy,300,100,50,50);
+        hud.setHealth(this.currHealth);
+        hud.setEnergy(this.currEnergy);
+
+        inventory = new Inventory(10);
+        equippedItem = null;
+
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
 
@@ -39,6 +58,8 @@ public class Protagonist extends Character {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
         Handler.attack(this);
+        hud.setEnergy(currEnergy);
+        currEnergy -= 10;
     }
 
     @Override
@@ -66,6 +87,8 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                //hud.setEnergy(hud.getEnergy()-10);
+                this.isAttacking = false;
             }
         }else if (this.playGotAttackedAnimation) {
             this.animationsState.copy(this.gotHitState);
@@ -92,70 +115,63 @@ public class Protagonist extends Character {
             this.velocityX = 0;
             this.velocityY = 0;
         } else {
-            if (keyInput.getKeyPressed("up")) this.velocityY = -5;
-            else if (!keyInput.getKeyPressed("down")) this.velocityY = 0;
 
-            if (keyInput.getKeyPressed("down")) this.velocityY = 5;
-            else if (!keyInput.getKeyPressed("up")) this.velocityY = 0;
+            if (keyInput.getKeyPressed("up")){
+                this.velocityY = -5;
+            } else if (keyInput.getKeyPressed("down")){
+                this.velocityY = 5;
+            } else this.velocityY=0;
 
             if (keyInput.getKeyPressed("right")) {
                 this.velocityX = 5;
-                if (!this.buttonAlreadyDown) {
+                if (!this.buttonAlreadyDown) { //TODO: Add to up/down
                     this.updateSprite();
                     this.buttonAlreadyDown = true;
                 }
-
-            } else if (!keyInput.getKeyPressed("left")) {
-                this.velocityX = 0;
-                if (this.buttonAlreadyDown) {
-                    this.updateSprite();
-                    this.buttonAlreadyDown = false;
-                }
-            }
-
-            if (keyInput.getKeyPressed("left")) {
+            } else if (keyInput.getKeyPressed("left")) {
                 this.velocityX = -5;
-                if (!this.buttonAlreadyDown) {
-                    this.updateSprite();
-                    this.buttonAlreadyDown = true;
-                }
-            } else if (!keyInput.getKeyPressed("right")) {
-                this.velocityX = 0;
                 if (this.buttonAlreadyDown) {
                     this.updateSprite();
                     this.buttonAlreadyDown = false;
                 }
-            }
+            } else this.velocityX=0;
         }
 
-        if (keyInput.getKeyPressed("attack")){
-            this.attack();
+        if (keyInput.getKeyPressDebounced("attack")){
+            if (hud.getEnergyPercent() > 0.5){
+                this.attack();
+            } else {
+                System.out.println("Not enough energy");
+            }
         }
 
         if (keyInput.getKeyPressed("jump")){
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
-        if (keyInput.getKeyPressed("useItem")){
-            System.out.println("Using an item");
+        if (keyInput.getKeyPressDebounced("useItem")){
+            useItem();
         }
 
-        if (keyInput.getKeyPressed("useSpecial")){
-            System.out.println("Azarath, metrion, zinthos!"); //Outdated reference
+        if (keyInput.getKeyPressDebounced("block")){
+            System.out.println("An impenetrable defence");
         }
 
-        if (keyInput.getKeyPressed("cheatKey")){
+        if (keyInput.getKeyPressDebounced("useSpecial")){
+            if (useSpecial()) {
+                System.out.println("Azarath, metrion, zinthos!");//Outdated reference
+            }
+            else System.out.println("Insufficient energy");
+        }
+
+        if (keyInput.getKeyPressDebounced("cheatKey")){
             System.out.println("Wow, cheating in 2019?");
+            currEnergy = maxEnergy;
+            hud.setEnergy(currEnergy);
         }
 
-        if (keyInput.getKeyPressed("pause")){
-            //Set a pause game flag true
-        }
-
-        if (keyInput.getKeyPressed("quit")) {
-            System.exit(0);
-        }
         super.tick(cameraX,cameraY); //Check collisions and update x and y
+        hud.tick(cameraX, cameraY); //Update health and energy displays
 
     }
 
@@ -164,16 +180,46 @@ public class Protagonist extends Character {
         return super.getBounds();
     }
 
-    protected void GetHit(){
-        System.out.println("I got hit!");
-        this.playGotAttackedAnimation = true;
-        if (this.currHealth <= 0) { //loose life
-            this.lives --;
-            if (this.lives <= 0) { //died
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
-            }
+
+
+    @Override
+    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+        super.render(graphicsContext, cameraX, cameraY);
+        hud.render(graphicsContext, cameraX, cameraY);
+    }
+
+    public HUD getHud() {
+        return hud;
+    }
+
+    public boolean pickUpItem(Item item){
+        if (!this.inventory.isFull()){
+            this.inventory.addItem(item);
+            return true;
+        }
+        return false;
+    }
+
+    public void useItem(){
+        if (equippedItem != null) {
+            System.out.println("Using an item");
+            equippedItem.useItem();
+        } else {
+            System.out.println("You dont have an item to use");
         }
     }
 
+    public void setEquippedItem(Item item){
+        equippedItem = item;
+    }
+
+    public boolean useSpecial(){
+        if (currEnergy == maxEnergy){
+            currEnergy -= maxEnergy;
+            hud.setEnergy(currEnergy);
+            return true;
+        }
+        else return false;
+    }
 }
 

@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import sample.Game;
 
@@ -22,6 +23,7 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
+    private static boolean timelineIsPaused = false;
     private static HUD hud;
     private static Game game;
     private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
@@ -64,9 +66,9 @@ public class Handler { //This class will hold all the game objects and is respon
         map = _map;
     }
 
-    public static void setHUD (HUD _hud) {
-        hud = _hud;
-    }
+//    public static void setHUD (HUD _hud) {
+//        hud = _hud;
+//    }
 
     public static void setGame (Game _game) {
         game = _game;
@@ -88,6 +90,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void render(GraphicsContext graphicsContext, double cameraX, double cameraY){
+
         //Render all floor tiles first, then objects
         for (Floor floor : floors) {
             floor.render(graphicsContext,cameraX,cameraY);
@@ -97,16 +100,20 @@ public class Handler { //This class will hold all the game objects and is respon
             wall.render(graphicsContext,cameraX,cameraY);
         });
 
-        for (Protagonist player: players) {
-            player.render(graphicsContext,cameraX,cameraY);
+        for (Door door : doors) {
+            door.render(graphicsContext,cameraX,cameraY);
+        }
+
+        for (Item pickup : pickups) {
+//            pickup.render(graphicsContext,cameraX,cameraY); //TODO: Implement pickup items.
         }
 
         for (Enemy enemy : enemies){
             enemy.render(graphicsContext,cameraX,cameraY);
         }
 
-        for (Door door : doors) {
-            door.render(graphicsContext,cameraX,cameraY);
+        for (Protagonist player: players) {
+            player.render(graphicsContext,cameraX,cameraY);
         }
 
         for (Item pickup : pickups) {
@@ -165,6 +172,20 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
+    public static void pauseUnpauseTimeline(){
+        if (timelineIsPaused){
+            timeline.play();
+        }
+        else{
+            timeline.pause();
+        }
+        timelineIsPaused = !timelineIsPaused;
+    }
+
+    public static void pauseTimeline(){timeline.pause();}
+
+    public static void unpauseTimeline(){timeline.play();}
+
     public static void clearAllObjects() {
         walls.clear();
         enemies.clear();
@@ -176,7 +197,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-//            if (protagonist.getBounds().intersects(enemy.getBounds())){
+//            if (protagonist.getBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
                 enemy.getHit(); //TODO: Pass in damage
 //            }
         }

@@ -8,13 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import sample.Game;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -24,13 +21,18 @@ public class mainMenuController implements Initializable {
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
 
+    public boolean gameActive = false;
     private Label focussedLabel = null;
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
+        focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+        UpdateMenu(focussedLabel);
+        gameActive = true;
         Game game = new Game();
         game.start();
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
+    private EventHandler ResumeClicked = event -> System.out.println("Resumes current game");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -67,8 +69,6 @@ public class mainMenuController implements Initializable {
 
     @FXML private void CreditsClicked() throws IOException {
         ChangeStageName("Credits");
-        //focussedLabel = UpdateFocussedLabel(focussedLabel, "credits");
-        //UpdateMenu(focussedLabel);
         mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/credits.fxml")));
     }
 
@@ -156,11 +156,13 @@ public class mainMenuController implements Initializable {
     private void ShowNewGameMenu(){
         //Remove previous submenu
         HideCurrentSubMenu();
+        int labelPos = 0;
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateSubmenuLabel(subMenu,"Quick Play",0, QuickPlayClicked);
-        CreateSubmenuLabel(subMenu,"Custom Play",1,CustomPlayClicked);
+        if (gameActive) CreateSubmenuLabel(subMenu,"Resume",labelPos++,ResumeClicked);
+        CreateSubmenuLabel(subMenu,"Quick Play",labelPos++, QuickPlayClicked);
+        CreateSubmenuLabel(subMenu,"Custom Play",labelPos++,CustomPlayClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(1,subMenu);
         //System.out.println(subMenu.getChildren());

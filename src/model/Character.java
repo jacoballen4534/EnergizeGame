@@ -23,7 +23,6 @@ public abstract class Character extends GameObject{
         this.levelWidth = levelWidth;
     }
 
-
     @Override
     protected void updateSprite() {
 
@@ -58,7 +57,7 @@ public abstract class Character extends GameObject{
 
     protected void getHit() {
         if (!this.playGotAttackedAnimation) {
-            System.out.println("Grunt got hit");
+            System.out.println("Character got hit");
             this.currentAnimationCol = 0;//To start the animation from the start.
             this.playGotAttackedAnimation = true;
             this.currHealth--;

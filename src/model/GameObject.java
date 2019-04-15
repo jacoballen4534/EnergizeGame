@@ -45,6 +45,7 @@ public abstract class GameObject {
     }
 
     public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
+
     protected Rectangle getBounds() {
         return new Rectangle((int)this.x, (int)this.y,
                 (int)(this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder()),

@@ -1,17 +1,14 @@
 package model;
 
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.util.Pair;
 
 import javax.xml.crypto.dsig.keyinfo.KeyName;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
 import java.util.*;
 import java.util.Map;
+import java.util.HashMap;
 
 public class KeyInput{
 
@@ -25,7 +22,9 @@ public class KeyInput{
             put("right",KeyCode.D);
             put("attack",KeyCode.J);
             put("useItem",KeyCode.K);
-            put("useSpecial",KeyCode.L);
+            put("block",KeyCode.L);
+            put("useSpecial",KeyCode.U);
+            put("inventory", KeyCode.I);
             put("cheatKey",KeyCode.C);
             put("jump",KeyCode.SPACE);
             put("pause",KeyCode.P);
@@ -49,6 +48,7 @@ public class KeyInput{
         this.scene.setOnKeyReleased(keyEvent -> {
             if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are released
                 keyBinds.put(keyEvent.getCode(), false);
+                //keyBinds.remove(keyEvent.getCode());
             }
         });
     }
@@ -56,6 +56,18 @@ public class KeyInput{
     public boolean getKeyPressed(String keyName){
         if (keyMap.containsKey(keyName) && keyBinds.containsKey(keyMap.get(keyName))) { //Check that they action has a key associated with it.
             return keyBinds.get(keyMap.get(keyName));
+        } else {
+            return false;
+        }
+    }
+
+    //From here: https://stackoverflow.com/questions/37472273/detect-single-key-press-in-javafx
+    public boolean getKeyPressDebounced(String keyName){
+        Boolean isActive = keyBinds.get(keyMap.get(keyName));
+
+        if (isActive != null && isActive) {
+            keyBinds.put(keyMap.get(keyName), false);
+            return true;
         } else {
             return false;
         }

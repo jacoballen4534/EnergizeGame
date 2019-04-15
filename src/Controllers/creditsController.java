@@ -30,4 +30,8 @@ public class creditsController implements Initializable {
         stage.setTitle(newStageName);
     }
 
+    private void testButtonPressed(){
+        System.out.println("MY NAME IS JEFF");
+    }
+
 }
