@@ -135,6 +135,7 @@ public class Game extends Canvas {
 
     public void unpause(){
         this.stage.setScene(this.gameScene);
+        this.previousTime = System.nanoTime(); // Reset the previous to now, so it doesnt make up for all the ticks that where missed in pause state.
         this.animationTimer.start();
         Handler.timeline.play();
     }
