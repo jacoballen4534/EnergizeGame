@@ -7,52 +7,57 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Pair;
 
+import javax.xml.crypto.dsig.keyinfo.KeyName;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map;
 
 public class KeyInput{
 
-    //TODO: Can put this in the handler instead of protagonist
     private Scene scene;
-    public HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
-
-    // Using this to make it easier to custom add key bindings later
-    public boolean up = false, down = false,
-            left = false, right = false,
-            pause = false, quit = false;
+    private HashMap<KeyCode, Boolean> keyBinds = new HashMap<>();
+    private HashMap<String, KeyCode> keyMap = new HashMap<String, KeyCode>(){ //TODO: Read custom keybinds in, convert to keycodes and set
+        {
+            put("up",KeyCode.W);
+            put("left",KeyCode.A);
+            put("down",KeyCode.S);
+            put("right",KeyCode.D);
+            put("attack",KeyCode.J);
+            put("useItem",KeyCode.K);
+            put("useSpecial",KeyCode.L);
+            put("cheatKey",KeyCode.C);
+            put("jump",KeyCode.SPACE);
+            put("pause",KeyCode.P);
+            put("quit",KeyCode.ESCAPE);
+        }
+    };
 
     public KeyInput(Scene scene) {
         this.scene = scene;
-        keyBinds.put(KeyCode.W, false);//up
-        keyBinds.put(KeyCode.A, false);//left
-        keyBinds.put(KeyCode.S, false);//down
-        keyBinds.put(KeyCode.D, false);//right
-        keyBinds.put(KeyCode.P, false); //Pause
-        keyBinds.put(KeyCode.ESCAPE, false); //Exit game
+
+        for (Object key: keyMap.keySet()){
+            keyBinds.put(keyMap.get(key),false);
+        }
 
         this.scene.setOnKeyPressed(keyEvent -> {
             if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
                 keyBinds.put(keyEvent.getCode(), true);
-                updateActions();
             }
         });
 
         this.scene.setOnKeyReleased(keyEvent -> {
-            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are pressed
+            if (keyBinds.containsKey(keyEvent.getCode())) { //One of the correct keys are released
                 keyBinds.put(keyEvent.getCode(), false);
-                updateActions();
             }
         });
     }
 
-    private void updateActions() {
-        this.up = keyBinds.get(KeyCode.W);
-        this.down = keyBinds.get(KeyCode.S);
-        this.left = keyBinds.get(KeyCode.A);
-        this.right = keyBinds.get(KeyCode.D);
-        this.pause = keyBinds.get(KeyCode.P);
-        this.quit = keyBinds.get(KeyCode.ESCAPE);
+    public boolean getKeyPressed(String keyName){
+        if (keyMap.containsKey(keyName) && keyBinds.containsKey(keyMap.get(keyName))) { //Check that they action has a key associated with it.
+            return keyBinds.get(keyMap.get(keyName));
+        } else {
+            return false;
+        }
     }
 }

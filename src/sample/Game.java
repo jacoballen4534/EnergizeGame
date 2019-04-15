@@ -14,6 +14,7 @@ import model.*;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.Random;
 
 public class Game extends Canvas {
 
@@ -33,10 +34,14 @@ public class Game extends Canvas {
     private Protagonist protagonist = null;
     private Map map;
     private Stage stage;
+    private HUD hud;
     public static final int SCALE = 1; //To scale the full game
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
+    private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
+    private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
+
 
     public Game() {
         //Setup the canvas
@@ -48,19 +53,28 @@ public class Game extends Canvas {
         Scene scene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         stage.setScene(scene);
 
-        init(); //Setup game loop
         stage.show();
         this.keyInput = new KeyInput(scene); //Keyboard inputs
         this.camera = new Camera(0,0);
         this.map = new Map(this);
-        this.map.loadLevel(0);
-        Handler.setCamera(camera);
+        this.map.loadLevel();
+        this.hud = new HUD(this.map);
+        init(); //Setup game loop
+        Handler.setCamera(this.camera);
         Handler.setMap(this.map);
+        Handler.setHUD(this.hud);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
-
+        Handler.setGame(this);
     }
 
+    public static int getNextRandomInt(int bounds, boolean mapGen) {
+        if(mapGen) {
+            return randomLevel.nextInt(bounds);
+        } else {
+            return randomMovement.nextInt(bounds);
+        }
+    }
 
     public void stop() {
         this.animationTimer.stop();
@@ -71,7 +85,6 @@ public class Game extends Canvas {
     public KeyInput getKeyInput() {
         return this.keyInput;
     }
-
 
     private void init() {
         Stage stage1 = this.stage; //Need to make a local copy to use inside the handle method
@@ -98,19 +111,17 @@ public class Game extends Canvas {
                 }
                 frames++;
                 render(); //Draw everything to the screen. This is uncapped and varies based on the hardware.
-
             }
         };
     }
 
 
     private void tick() {
-        Handler.tick(this.camera.getX(), this.camera.getY());
+        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
-
     }
 
     private void render() {
@@ -128,8 +139,12 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
+        Handler.setProtagonist(protagonist);
     }
 
+    public Protagonist getProtagonist () {
+        return this.protagonist;
+    }
 
     public Map getMap() {
         return this.map;

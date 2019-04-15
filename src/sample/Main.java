@@ -8,6 +8,12 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import java.io.BufferedInputStream;
 import java.lang.String;
 
 import java.io.InputStream;
@@ -26,12 +32,18 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         //Play background music
-        //String musicFile = "/music/mainMenuTheme.mp3";
-        //Media media = new Media(this.getClass().getResource(musicFile).toURI().toString());
-        /*Media media = new Media(
-                new File("resources/music/mainMenuTheme.mp3").toURI().toString());
-        MediaPlayer player = new MediaPlayer(media);
-        player.setAutoPlay(true);*/
+        //String musicFile = "resources/music/theme.wav"; //Must be a .wav!
+        InputStream musicSrc = this.getClass().getResourceAsStream("/music/theme.wav");
+        InputStream music = new BufferedInputStream(musicSrc);
+        AudioInputStream audioInput = AudioSystem.getAudioInputStream(music);//AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
+        Clip clip = AudioSystem.getClip();
+        clip.open(audioInput);
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(-5.0f);
+
+        clip.start();
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
