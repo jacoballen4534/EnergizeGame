@@ -119,10 +119,6 @@ public class Game extends Canvas {
         }
     }
 
-    public static int getNextRandomInt(int bounds) {
-        return random.nextInt(bounds);
-    }
-
     public void start(){
         this.animationTimer.start();
     }
