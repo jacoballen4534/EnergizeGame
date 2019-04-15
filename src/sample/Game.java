@@ -44,7 +44,8 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random random = new Random(1);//used for enemy movement and map generation.
+    private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
+    private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
 
     public Game() {
         //Setup the canvas
@@ -71,19 +72,25 @@ public class Game extends Canvas {
         /*===================================*/
         stage.setScene(scene);
 
-        init(); //Setup game loop
         stage.show();
         this.keyInput = new KeyInput(scene); //Keyboard inputs
         this.camera = new Camera(0,0);
         this.map = new Map(this);
-        this.map.loadLevel(0);
-        //this.pauseMenu = new Menu(100,100,100,100);
+        this.map.loadLevel();
+        init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
         Handler.timeline.setCycleCount(Animation.INDEFINITE);
         Handler.timeline.play();
+        Handler.setGame(this);
     }
 
+    public static int getNextRandomInt(int bounds, boolean mapGen) {
+        if(mapGen) {
+            return randomLevel.nextInt(bounds);
+        } else {
+            return randomMovement.nextInt(bounds);
+        }
     private AnchorPane createPauseMenu(){
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setLayoutX(SCREEN_WIDTH/2-150);
@@ -118,9 +125,6 @@ public class Game extends Canvas {
         anchorPane.getChildren().add(pauseGameVBox);
         return anchorPane;
     }
-
-    public static int getNextRandomInt(int bounds) {
-        return random.nextInt(bounds);
     }
 
     public void start(){
@@ -205,6 +209,7 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
+        Handler.setProtagonist(protagonist);
     }
 
     public Protagonist getProtagonist () {

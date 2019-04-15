@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
     private String name;
-    protected int currHealth;
+    protected int currHealth = 3;
     protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
@@ -45,16 +45,23 @@ public abstract class Character extends GameObject{
     }
 
     abstract void updateAnimationState();
+
     protected void attack() {
-        this.currentAnimationCol = 0; //To start the animation from the start.
-        this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
+        if (!this.playAttackAnimation) { //Only restart the animation the first time. Can only attack once previous attack has finished
+            this.currentAnimationCol = 0; //To start the animation from the start.
+            this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
+        }
     }
 
     abstract void playSound();
 
     protected void getHit() {
-        this.currentAnimationCol = 0;//To start the animation from the start.
-        this.playGotAttackedAnimation = true;
+        if (!this.playGotAttackedAnimation) {
+            System.out.println("Grunt got hit");
+            this.currentAnimationCol = 0;//To start the animation from the start.
+            this.playGotAttackedAnimation = true;
+            this.currHealth--;
+        }
     }
 
     /*protected void updateTarget(Character target) {
@@ -62,16 +69,41 @@ public abstract class Character extends GameObject{
     }*/
 
     public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
-        //Turn around if protagonist has collided with something
-        this.x += this.velocityX;
-        if (Handler.checkCollision(this, cameraX, cameraY)) {
-            this.x += this.velocityX * -1.02;
+        //Move 1 pixel at a time until reaching the destination or colliding with something.
+        //If this slows down the game, revert to old version below.
+        double directionX = this.velocityX / Math.abs(this.velocityX);
+        double directionY = this.velocityY / Math.abs(this.velocityY);
+
+        for (int x = 0; x < Math.abs(this.velocityX); x++) {
+            this.x += directionX;
+            if (Handler.checkCollision(this, cameraX, cameraY)) {
+                this.x -= directionX;
+                break;
+            }
         }
 
-        this.y += this.velocityY;
-        if (Handler.checkCollision(this, cameraX, cameraY)) {
-            this.y += this.velocityY * -1;
+        for (int y = 0; y < Math.abs(this.velocityY); y++) {
+            this.y += directionY;
+            if (Handler.checkCollision(this, cameraX, cameraY)) {
+                this.y -= directionY;
+                break;
+            }
         }
+
+        //Turn around if protagonist has collided with something
+//        if (this.x != 0) { //Dont need to move or check collisions if it inst moving in that direction.
+//            this.x += this.velocityX;
+//            if (Handler.checkCollision(this, cameraX, cameraY)) {
+//                this.x += this.velocityX * -1.02;
+//            }
+//        }
+//
+//        if (this.y != 0) { //Dont need to move or check collisions if it inst moving in that direction.
+//            this.y += this.velocityY;
+//            if (Handler.checkCollision(this, cameraX, cameraY)) {
+//                this.y += this.velocityY * -1;
+//            }
+//        }
     }
 
 
@@ -85,7 +117,7 @@ public abstract class Character extends GameObject{
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth - this.animationsState.getLeftBorder(),
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
-            //this.renderBoundingBox(graphicsContext);
+//            this.renderBoundingBox(graphicsContext);
         }
     }
 
@@ -110,5 +142,9 @@ public abstract class Character extends GameObject{
 
     public int getLevelWidth() {
         return this.levelWidth;
+    }
+
+    public void updateLevelWidth(int newLevelWidth) {
+        this.levelWidth = newLevelWidth;
     }
 }

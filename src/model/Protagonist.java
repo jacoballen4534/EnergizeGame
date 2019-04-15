@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Protagonist extends Character {
-    private static int nextID; //Unique id for all characters, this will be used for multilayer
+    private static int nextID = 0; //Unique id for all characters, this will be used for multilayer
     protected int id;
     private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
@@ -17,6 +17,7 @@ public class Protagonist extends Character {
     private AnimationsState runningState;
     private AnimationsState idleState;
     private AnimationsState attackState;
+    private AnimationsState gotHitState;
 
     private int currEnergy;
     private int maxEnergy;
@@ -27,13 +28,15 @@ public class Protagonist extends Character {
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multiplayer)
+        this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
         //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
-        this.attackState = new AnimationsState(45,48,17,5,6,6,0); //After attack button is setup
+//        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
+        this.attackState = new AnimationsState(45,48,17,5,6,6,0);
+        this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
 
         //Set health
         this.currHealth = 100;
@@ -52,12 +55,12 @@ public class Protagonist extends Character {
 
     @Override
     protected void attack() {
+        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
-        //TODO: Actually attack.
-        this.playAttackAnimation = true;
-        currEnergy -= 10;
+        Handler.attack(this); //Check energy before calling attack, update hud in handler?
         hud.setEnergy(currEnergy);
-
+        Handler.attack(this);
+        currEnergy -= 10;
     }
 
     @Override
@@ -67,6 +70,7 @@ public class Protagonist extends Character {
 
     @Override
     protected void getHit() {
+        this.animationsState.copy(this.gotHitState);
         super.getHit();
         if (this.currHealth <= 0) { //died
             this.playGotAttackedAnimation = false;
@@ -81,11 +85,21 @@ public class Protagonist extends Character {
         //After die animation last frame, fade out ...Game over
         if (this.playAttackAnimation) { //Attacking
             //Update attack animation
-            this.animationsState.copy(attackState);
+            this.animationsState.copy(this.attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
                 //hud.setEnergy(hud.getEnergy()-10);
                 this.isAttacking = false;
+            }
+        }else if (this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.gotHitState);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+            }
+        } else if (this.playDieAnimation) {
+//            this.animationsState.copy(this.dieAnimation);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                Handler.removePlayer(this);
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -98,40 +112,41 @@ public class Protagonist extends Character {
     public void tick(double cameraX, double cameraY, KeyInput keyInput) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
+        if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) { //If the player is in an animation, disable movement
+            this.velocityX = 0;
+            this.velocityY = 0;
+        } else {
 
         if (keyInput.getKeyPress("up")){
             this.velocityY = -5;
-            System.out.println("UP");
         }
         else if (keyInput.getKeyPress("down")){
             this.velocityY = 5;
-            System.out.println("DOWN");
         }
         else this.velocityY=0;
 
         if (keyInput.getKeyPress("right")){
             this.velocityX = 5;
-            System.out.println("RIGHT");
-        }
+                if (!this.buttonAlreadyDown) { //TODO: Add to up/down
+                    this.updateSprite();
+                    this.buttonAlreadyDown = true;
+                }
         else if (keyInput.getKeyPress("left")) {
             this.velocityX = -5;
-            System.out.println("LEFT");
+                if (this.buttonAlreadyDown) {
+                    this.updateSprite();
+                    this.buttonAlreadyDown = false;
+                }
         }
         else this.velocityX=0;
-
+        }
         if (keyInput.getKeyPressDebounced("attack")){
             if (hud.getEnergyPercent() > 0.5){
-                if (!this.isAttacking) {
                     this.attack();
-                    this.isAttacking = true;
                 }
             }
-            else{
-                System.out.println("Not enough energy!");
-            }
-        }
 
-        if (keyInput.getKeyPressDebounced("jump")){
+        if (keyInput.getKeyPressed("jump")){
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
