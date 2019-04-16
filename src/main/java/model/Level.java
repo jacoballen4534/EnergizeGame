@@ -347,7 +347,7 @@ public class Level {
 
                     case WALL:
                         Handler.addWall(col + row * this.levelWidth, new Wall(col,row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH,
-                                Tile_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE, 0,2));
+                                Tile_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE, 2));
 //                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
                         break;
                     case PROTAGONIST:
