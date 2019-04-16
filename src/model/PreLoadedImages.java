@@ -16,7 +16,7 @@ public class PreLoadedImages {
     static {
         try {
             tutorialRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/TutorialRoom.png"));
-            doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/DoorCrop.png"));
+            doorSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Doors.png"));
             tileSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Tileset.png"));
             gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GruntSpriteSheet.png"));
             protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));

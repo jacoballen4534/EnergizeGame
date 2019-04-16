@@ -66,9 +66,6 @@ public class Handler { //This class will hold all the game objects and is respon
         map = _map;
     }
 
-//    public static void setHUD (HUD _hud) {
-//        hud = _hud;
-//    }
     public static void clearForNewGame() {
         clearAllObjects();
         players.clear();
@@ -128,7 +125,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
 
 
-    public static void updateEnemyTarget (Character target) {
+    public static void updateEnemyTarget (Protagonist target) {
         for (Enemy enemy : enemies) {
             enemy.updateTarget(target);
         }
@@ -201,16 +198,16 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-//            if (protagonist.getBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
-                enemy.getHit(); //TODO: Pass in damage
-//            }
+            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
+                enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
+            }
         }
     }
 
     public static void attack(Enemy enemy) {
         for (Protagonist player: players){
             if (enemy.getBounds().intersects(player.getBounds())){
-                player.getHit(); //Pass in damage
+                player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
         }
     }

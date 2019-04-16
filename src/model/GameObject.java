@@ -59,6 +59,20 @@ public abstract class GameObject {
                 (int)(this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()));
     }
 
+    protected void renderAttackBoundingBox(GraphicsContext graphicsContext) {
+        graphicsContext.setFill(new Color(0.9, 0.2, 0.2, 0.5));
+
+        if (this.spriteDirection == 1) {
+            graphicsContext.fillRect((int) this.x, (int) (this.y - 10),
+                    (int) (this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder() + 48),
+                    (int) (this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()) + 20);
+        } else {
+            graphicsContext.fillRect((int) this.x - 48, (int) (this.y - 10),
+                    (int) (this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder() + 48),
+                    (int) (this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()) + 20);
+        }
+    }
+
     protected void updateSprite() { //Updates to the next sprite for the appropriate animation.
     }
 

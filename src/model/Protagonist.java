@@ -19,6 +19,10 @@ public class Protagonist extends Character {
     private AnimationsState attackState;
     private AnimationsState gotHitState;
 
+    private final int PROTAGONIST_MAXHEALTH = 100;
+    private final int PROTAGONIST_MAXENERGY = 100;
+    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;
+
     private int currEnergy;
     private int maxEnergy;
     private HUD hud;
@@ -35,20 +39,22 @@ public class Protagonist extends Character {
         this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
 //        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
-        this.attackState = new AnimationsState(45,48,17,5,6,6,0);
+        this.attackState = new AnimationsState(45,45,17,5,6,6,0);
         this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
 
         //Set health
-        this.currHealth = 100;
-        this.currEnergy = 100;
-        this.maxHealth = this.currHealth;
-        this.maxEnergy = this.currEnergy;
+        this.currHealth = PROTAGONIST_MAXHEALTH;
+        this.currEnergy = 0; //Start with 0 energy and build it up
+        this.maxHealth = PROTAGONIST_MAXHEALTH;
+        this.maxEnergy = PROTAGONIST_MAXENERGY;
         this.hud = new HUD(this.id, this.maxHealth,this.maxEnergy,300,100,50,50);
         hud.setHealth(this.currHealth);
         hud.setEnergy(this.currEnergy);
 
         inventory = new Inventory(10);
         equippedItem = null;
+
+        this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
     }
@@ -58,8 +64,6 @@ public class Protagonist extends Character {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
         Handler.attack(this);
-        currEnergy -= 10;
-        hud.setEnergy(currEnergy);
     }
 
     @Override
@@ -68,9 +72,9 @@ public class Protagonist extends Character {
     }
 
     @Override
-    protected void getHit() {
+    protected void getHit(int damage) {
         this.animationsState.copy(this.gotHitState);
-        super.getHit();
+        super.getHit(damage);
         if (this.currHealth <= 0) { //died
             this.playGotAttackedAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
@@ -87,7 +91,6 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
-                //hud.setEnergy(hud.getEnergy()-10);
                 this.isAttacking = false;
             }
         }else if (this.playGotAttackedAnimation) {
@@ -124,25 +127,25 @@ public class Protagonist extends Character {
 
             if (keyInput.getKeyPressed("right")) {
                 this.velocityX = 5;
-                if (!this.buttonAlreadyDown) { //TODO: Add to up/down
+                //Update the sprite / bounding box before moving, to make sure the new animation bounding box isn't inside a wall.
+                if (!this.buttonAlreadyDown) {
                     this.updateSprite();
                     this.buttonAlreadyDown = true;
                 }
             } else if (keyInput.getKeyPressed("left")) {
                 this.velocityX = -5;
-                if (this.buttonAlreadyDown) {
+                //Update the sprite / bounding box before moving, to make sure the new animation bounding box isn't inside a wall.
+                if (!this.buttonAlreadyDown) {
                     this.updateSprite();
-                    this.buttonAlreadyDown = false;
+                    this.buttonAlreadyDown = true;
                 }
-            } else this.velocityX=0;
+            } else {
+                this.velocityX = 0;
+                this.buttonAlreadyDown = false;
+            }
         }
 
         if (keyInput.getKeyPressDebounced("attack")){
-            /*if (hud.getEnergyPercent() > 0.5){
-                this.attack();
-            } else {
-                System.out.println("Not enough energy");
-            }*/
             this.attack();
         }
 
@@ -182,11 +185,13 @@ public class Protagonist extends Character {
     }
 
 
-
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
         super.render(graphicsContext, cameraX, cameraY);
         hud.render(graphicsContext, cameraX, cameraY);
+//        if (playAttackAnimation) {
+//            this.renderAttackBoundingBox(graphicsContext);
+//        }
     }
 
     public HUD getHud() {
@@ -214,9 +219,17 @@ public class Protagonist extends Character {
         equippedItem = item;
     }
 
+    public void addEnergy(int amount) {
+        this.currEnergy += amount;
+        if (this.currEnergy > maxEnergy) { //Cant go over max
+            this.currEnergy = maxEnergy;
+        }
+        this.hud.setEnergy(this.currEnergy);
+    }
+
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
-            currEnergy -= maxEnergy;
+            currEnergy = 0; //Use all energy
             hud.setEnergy(currEnergy);
             return true;
         }
