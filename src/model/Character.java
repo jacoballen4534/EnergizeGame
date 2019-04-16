@@ -3,24 +3,28 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Character extends GameObject{
     private String name;
-    protected int currHealth = 3;
+    protected int currHealth;
     protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
     //To play each animation once.
-   protected boolean playGotAttackedAnimation = false;
-   protected boolean playAttackAnimation = false;
-   protected boolean playDieAnimation = false;
-   private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
+    protected boolean playGotAttackedAnimation = false;
+    protected boolean playAttackAnimation = false;
+    protected boolean playDieAnimation = false;
+    private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
+    protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
+
 
 
     public Character(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int rederHeight, int levelWidth) {
         super(xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight, renderWidth, rederHeight);
         this.levelWidth = levelWidth;
+
     }
 
     @Override
@@ -55,18 +59,36 @@ public abstract class Character extends GameObject{
 
     abstract void playSound();
 
-    protected void getHit() {
+    protected void getHit(int damage) {
         if (!this.playGotAttackedAnimation) {
             System.out.println("Character got hit");
             this.currentAnimationCol = 0;//To start the animation from the start.
             this.playGotAttackedAnimation = true;
-            this.currHealth--;
+            this.currHealth -= damage;
+            if (this.currHealth < 0) this.currHealth = 0;
+        }
+    }
+
+
+    protected Rectangle getAttackBounds() {
+        if (this.spriteDirection == 1) {
+            return new Rectangle((int) this.x, (int) (this.y - 10),
+                    (int) (this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder() + 40),
+                    (int) (this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()) + 20);
+        } else {
+            return new Rectangle((int) this.x - 48, (int) (this.y - 10),
+                    (int) (this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder() + 48),
+                    (int) (this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder()) + 20);
         }
     }
 
     /*protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy
     }*/
+
+    protected int getAttackDamage() { //To vary the amount of damage dealt with better weapons
+        return this.attackDamage;
+    }
 
     public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
         //Move 1 pixel at a time until reaching the destination or colliding with something.
@@ -117,7 +139,7 @@ public abstract class Character extends GameObject{
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth - this.animationsState.getLeftBorder(),
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
-//            this.renderBoundingBox(graphicsContext);
+            this.renderBoundingBox(graphicsContext);
         }
     }
 

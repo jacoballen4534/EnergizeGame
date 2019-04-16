@@ -53,8 +53,10 @@ public class Level {
     private final int CAMP_FIRE_SPRITE_WIDTH = 64;
     private final int CAMP_FIRE_SPRITE_HEIGHT = 64;
 
-    private final int DOOR_SPRITE_WIDTH = 72;
-    private final int DOOR_SPRITE_HEIGHT = 96;
+    private final int DOOR_SPRITE_WIDTH = 70;
+    private final int DOOR_SPRITE_HEIGHT = 80;
+    private final int DOOR_RENDER_WIDTH = 64;
+    private final int DOOR_RENDER_HEIGHT = 90;
 
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
@@ -362,29 +364,25 @@ public class Level {
                     case DOOR_UP:
                         Point2D upDoorLocation = this.doorMap.get(TileType.DOOR_UP);
                         Handler.addDoor(new Door((int)upDoorLocation.getX(), (int)upDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
-                                this.levelNumber - this.mapWidth,TileType.DOOR_UP));
+                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber - this.mapWidth,TileType.DOOR_UP));
                         break;
 
                     case DOOR_RIGHT:
                         Point2D rightDoorLocation = this.doorMap.get(TileType.DOOR_RIGHT);
                         Handler.addDoor(new Door((int)rightDoorLocation.getX(), (int)rightDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
-                                this.levelNumber + 1,TileType.DOOR_RIGHT));
+                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber + 1,TileType.DOOR_RIGHT));
                         break;
-
+//
                     case DOOR_DOWN:
                         Point2D downDoorLocation = this.doorMap.get(TileType.DOOR_DOWN);
                         Handler.addDoor(new Door((int)downDoorLocation.getX(), (int)downDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
-                                this.levelNumber + this.mapWidth,TileType.DOOR_DOWN));
+                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber + this.mapWidth,TileType.DOOR_DOWN));
                         break;
 
                     case DOOR_LEFT:
                         Point2D leftDoorLocation = this.doorMap.get(TileType.DOOR_LEFT);
                         Handler.addDoor(new Door((int)leftDoorLocation.getX(), (int)leftDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
-                                this.levelNumber - 1,TileType.DOOR_LEFT));
+                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber - 1,TileType.DOOR_LEFT));
                         break;
 
                     case FLOOR: //This is just here so if we add tiles with different textures, we can differentiate and create floor with different spreadsheet row/col
@@ -396,7 +394,7 @@ public class Level {
 
                     case GRUNT:
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth,game.getProtagonist(), true));
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
                         break;
 
                     default:
