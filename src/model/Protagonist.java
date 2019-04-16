@@ -2,6 +2,7 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,15 +14,18 @@ public class Protagonist extends Character {
     //private KeyInput keyInput; //The keyboard inputs to move the character.
     private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     private boolean isAttacking = false; //Attempt to debounce attacking
+    private boolean playBlockingAnimation = false; //To add shield effect
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState runningState;
     private AnimationsState idleState;
     private AnimationsState attackState;
     private AnimationsState gotHitState;
+    private AnimationsState blockingState;
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
     private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;
+    private final int BLOCK_COST = 5;
 
     private int currEnergy;
     private int maxEnergy;
@@ -41,6 +45,7 @@ public class Protagonist extends Character {
 //        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
         this.attackState = new AnimationsState(45,45,17,5,6,6,0);
         this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
+        this.blockingState = new AnimationsState(0,0,0,0,6,12,1);
 
         //Set health
         this.currHealth = PROTAGONIST_MAXHEALTH;
@@ -66,6 +71,22 @@ public class Protagonist extends Character {
         Handler.attack(this);
     }
 
+    private void block() {
+        if (!this.playBlockingAnimation) { //May take this out
+            if (this.currEnergy > BLOCK_COST) { //Only block if you have enough health
+                this.currEnergy -= BLOCK_COST;
+                this.hud.setEnergy(this.currEnergy);
+
+                this.animationsState.copy(this.blockingState);
+                System.out.println("An impenetrable defence");
+                this.currentAnimationCol = 1; //To start the animation from the start.
+                this.playBlockingAnimation = true;
+            } else {
+                System.out.println("Not enough energy to block");
+            }
+        }
+    }
+
     @Override
     void playSound() {
         System.out.println("Beep");
@@ -73,11 +94,13 @@ public class Protagonist extends Character {
 
     @Override
     protected void getHit(int damage) {
-        this.animationsState.copy(this.gotHitState);
-        super.getHit(damage);
-        if (this.currHealth <= 0) { //died
-            this.playGotAttackedAnimation = false;
-            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+        if (!this.playBlockingAnimation) { //Take no damage / dont play animation when blocking
+            this.animationsState.copy(this.gotHitState);
+            super.getHit(damage);
+            if (this.currHealth <= 0) { //died
+                this.playGotAttackedAnimation = false;
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            }
         }
     }
 
@@ -86,14 +109,19 @@ public class Protagonist extends Character {
         //Determine what state the player is in, and update the animation accordingly.
         //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
         //After die animation last frame, fade out ...Game over
-        if (this.playAttackAnimation) { //Attacking
+        if (this.playBlockingAnimation){
+            this.animationsState.copy(this.blockingState);
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.playBlockingAnimation = false;
+            }
+        }else if (this.playAttackAnimation) { //Attacking
             //Update attack animation
             this.animationsState.copy(this.attackState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
                 this.isAttacking = false;
             }
-        }else if (this.playGotAttackedAnimation) {
+        } else if (this.playGotAttackedAnimation) {
             this.animationsState.copy(this.gotHitState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false; //Once the animation has finished, set this to false to only play the animation once
@@ -114,7 +142,7 @@ public class Protagonist extends Character {
     public void tick(double cameraX, double cameraY, KeyInput keyInput) {
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
-        if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) { //If the player is in an animation, disable movement
+        if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation || this.playBlockingAnimation) { //If the player is in an animation, disable movement
             this.velocityX = 0;
             this.velocityY = 0;
         } else {
@@ -157,15 +185,14 @@ public class Protagonist extends Character {
             useItem();
         }
 
-        if (keyInput.getKeyPressDebounced("block")){
-            System.out.println("An impenetrable defence");
+        if (keyInput.getKeyPressed("block")){
+            this.block();
         }
 
         if (keyInput.getKeyPressDebounced("useSpecial")){
             if (useSpecial()) {
                 System.out.println("Azarath, metrion, zinthos!");//Outdated reference
-            }
-            else System.out.println("Insufficient energy");
+            }  else System.out.println("Insufficient energy");
         }
 
         if (keyInput.getKeyPressDebounced("cheatKey")){
@@ -188,6 +215,12 @@ public class Protagonist extends Character {
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
         super.render(graphicsContext, cameraX, cameraY);
+        if (this.playBlockingAnimation) {
+            graphicsContext.setFill(new Color(1,0.56, 0.31,0.5));
+            double characterHeight = this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder();
+            double characterWidth = this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder();
+            graphicsContext.fillOval((int)(this.x + characterWidth/2), this.y, characterWidth, characterHeight);
+        }
         hud.render(graphicsContext, cameraX, cameraY);
 //        if (playAttackAnimation) {
 //            this.renderAttackBoundingBox(graphicsContext);
@@ -232,8 +265,9 @@ public class Protagonist extends Character {
             currEnergy = 0; //Use all energy
             hud.setEnergy(currEnergy);
             return true;
+        } else {
+            return false;
         }
-        else return false;
     }
 }
 
