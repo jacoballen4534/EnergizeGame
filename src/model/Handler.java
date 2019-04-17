@@ -198,7 +198,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
+            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){
                 enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
             }
         }
@@ -217,7 +217,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
 
-    public static void udateCharacterLevelWidth(int newLevelWidth) {
+    public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
         }

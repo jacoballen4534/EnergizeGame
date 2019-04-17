@@ -70,12 +70,9 @@ public class Grunt extends Enemy {
             int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
             int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
 
-//            this.velocityX = 0;
-//            this.velocityY = 0;
-
             //Give a 30% chance of changing each direction
             if (Game.getNextRandomInt(100, false) > 69) {
-                int nextDirection = level.nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
+                int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
                 switch (nextDirection) {
                     case 1: //up
                         this.velocityY = -3;
@@ -89,6 +86,11 @@ public class Grunt extends Enemy {
                     case 4://left
                         this.velocityX = -3;
                         break;
+                    case 5: //The path has not been found yet, so just move randomly
+                        this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                        this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+
+
                 }
             }
         }
