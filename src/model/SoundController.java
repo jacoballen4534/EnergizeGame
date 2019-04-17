@@ -22,7 +22,10 @@ public class SoundController {
         put("getHit",null);
         put("buttonClicked",null);
         put("gameOver",null);
-        put("bossKill",null);
+        put("bossDeath",null);
+        put("gameVictory", null);
+        put("gruntDeath",null);
+        put("magicAbility",null);
     }};
 
     public static boolean PlayAudio(String audioName){
