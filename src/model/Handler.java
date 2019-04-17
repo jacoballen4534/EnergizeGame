@@ -80,7 +80,7 @@ public class Handler { //This class will hold all the game objects and is respon
             player.tick(cameraX, cameraY, keyInput);
         }
         for (Enemy enemy : enemies) {
-            enemy.tick(cameraX, cameraY);
+            enemy.tick(cameraX, cameraY, map.getCurrentLevel());
         }
 
         if (enemies.isEmpty()) {
@@ -198,7 +198,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
+            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){
                 enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
             }
         }
@@ -217,7 +217,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
 
-    public static void udateCharacterLevelWidth(int newLevelWidth) {
+    public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
         }
@@ -231,7 +231,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
 
 
-    public static boolean checkCollision (Character character, double cameraX, double cameraY) {
+    public static boolean checkCollision (Character character) {
 //        //TODO:Implement items and inventory first
 //        for (Item pickup : pickups) {
 //            if (pickups.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(pickup.getBounds())) {
@@ -240,7 +240,7 @@ public class Handler { //This class will hold all the game objects and is respon
 //        }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (door.inCameraBounds(cameraX, cameraY) && protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+            if (protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
                 if (door.isOpen()) {
                     //Need to make this thread safe as we are changing things on the main thread. So use runLater
                     Platform.runLater(() -> {
