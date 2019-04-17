@@ -45,8 +45,10 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
-    private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
+    private static final long LEVEL_SEED = 12345678910L;
+    private static final long MOVEMENT_SEED = 12345678911L;
+    private static Random randomLevel = new Random(LEVEL_SEED);//used for map generation.
+    private static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
 
     public Game() {
         //Setup the canvas
@@ -102,7 +104,10 @@ public class Game extends Canvas {
         stage.show();
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
-        this.map = new Map(this);
+//        for (int i = 0; i < 10; i++) { //This creates the same map each time
+            Game.reSeed();
+            this.map = new Map(this);
+//        }
         this.map.loadLevel();
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -112,16 +117,22 @@ public class Game extends Canvas {
         Handler.setGame(this);
     }
 
+    public static void reSeed() {
+        randomLevel.setSeed(LEVEL_SEED);
+        randomMovement.setSeed(MOVEMENT_SEED);
+        System.out.println(getNextMapInt());
+    }
+
     public void hidePauseMenu () {
         this.pauseMenu.hide();
     }
 
-    public static int getNextRandomInt(int bounds, boolean mapGen) {
-        if (mapGen) {
-            return randomLevel.nextInt(bounds);
-        } else {
-            return randomMovement.nextInt(bounds);
-        }
+    public static int getNextRandomInt() {
+        return randomMovement.nextInt(100);
+    }
+
+    public static int getNextMapInt() {
+        return randomLevel.nextInt(100);
     }
 
     public void start(){

@@ -68,12 +68,14 @@ public class Grunt extends Enemy {
             this.velocityY = 0;
         } else {
             //Give a 5% chance of changing each direction
-            if (Game.getNextRandomInt(100, false) > 94) { //Use 94 as it is from 0 to 99
-                this.velocityX = (Game.getNextRandomInt(3, false) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
+            int oddsOfChangeXDirection = Game.getNextRandomInt();
+            if (oddsOfChangeXDirection > 94) { //5% chance of changing direction
+                this.velocityX = ((Game.getNextRandomInt() % 3) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
             }
 
-            if (Game.getNextRandomInt(100, false) > 94) {
-                this.velocityY = (Game.getNextRandomInt(3, false) - 1) * 3;
+            int oddsOfChangeYDirection = Game.getNextRandomInt();
+            if (oddsOfChangeYDirection > 94) {
+                this.velocityY = ((Game.getNextRandomInt()  % 3) - 1) * 3;
             }
         }
         

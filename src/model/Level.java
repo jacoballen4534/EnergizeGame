@@ -38,7 +38,9 @@ public class Level {
     private Point2D currentPoint;
     private Point2D nextPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
-    private ArrayList<Point2D> floorLocation = new ArrayList<>();
+    private ArrayList<Point2D> floorLocation = new ArrayList<>(); //Keep track of all floor location placed. Everything else must be door or wall
+
+    private ArrayList<>
 
 
     //////////////Macros, Actual size of different sprites///////////
@@ -84,12 +86,14 @@ public class Level {
         if ((wallArrangement & (0b1 << 2)) != 0) { //Add right door
             //Put door on right wall at random height. leave 1 tile above for the horizontal walls,
             // and 2 tiles below as the door takes up 2 vertical tiles (want the bottom to be above the lower wall.
-            this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, Game.getNextRandomInt(this.levelHeight -3 , true) + 1));
+            int row = (Game.getNextMapInt() % (this.levelHeight - 3)) + 1;
+            this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, row));
         }
 
         if ((wallArrangement & (0b1 << 1)) != 0) { //Add bottom door
             //Put door 1 tile above the bottom wall at random width. leave 1 tile on either side,
-            this.doorMap.put(TileType.DOOR_DOWN, new Point2D(Game.getNextRandomInt(this.levelWidth - 2, true) + 1, this.levelHeight - 2));
+            int col = (Game.getNextMapInt() % (this.levelWidth - 2)) + 1;
+            this.doorMap.put(TileType.DOOR_DOWN, new Point2D(col, this.levelHeight - 2));
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -179,52 +183,54 @@ public class Level {
         this.debugDrawFloor();
 
 
-//        for (int row = 0; row < this.levelHeight; row ++) {
-//            ArrayList<TileType> column = new ArrayList<>();
-//            for (int col = 0; col < this.levelWidth; col++) {
-//                if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
-//                    column.add(TileType.WALL);
-//                } else if (row == this.levelHeight/2 && col == this.levelWidth/2) {
-//                    column.add(TileType.ITEM); //Make this a chest
-//                } else {
-//                    column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
-//                }
-//            }
-//            this.tiles.add(column);
-//        }
+        //Find paths between tiles
 
 
     }
-    private void debugDrawFloor() {
+
+    private void findPaths() {
+
+    }
+
+
+
+    public void debugDrawFloor() {
+        System.out.print("\n\nXXXXXXXXXXXXXXXXXXXX\n");
+
+        int numberOfFloows = 0;
         for (int row = 0; row < this.levelHeight; row ++) {
             for (int col = 0; col < this.levelWidth; col++) {
                 switch (this.tiles.get(row).get(col)) {
                     case WALL:
-                        System.out.print("W");
+                        System.out.print((char)27 + "[31m" + "W");
                         break;
                     case FLOOR:
-                        System.out.print("F");
+                        System.out.print((char)27 + "[0m" + "F");
+                        numberOfFloows++;
                         break;
                     default:
-                        System.out.print("D");
+                        System.out.print((char)27 + "[33m" + "D");
                         break;
                 }
             }
             System.out.println("");
         }
-        System.out.print("\n\nXXXXXXXXXXXXXXXXXXXX\n\n");
+        System.out.println("Number of floors: " + numberOfFloows);
     }
 
     private Point2D nextLocation (Point2D currentPoint) {
 
         //Pick a random direction to step.
-        switch (Game.getNextRandomInt(4, true)) {
+        int odds = (Game.getNextMapInt() % 4);
+        switch (odds) {
             case 0: //25 %chance of moving in x direction
-                this.nextXDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
+                int nextXDir = Game.getNextMapInt();
+                this.nextXDirection = nextXDir <= 49 ? 1 : -1;
                 this.nextYDirection = 0;
                 break;
             case 1: //25% chance of moving in y direction
-                this.nextYDirection = Game.getNextRandomInt(2, true) == 0 ? 1 : -1;
+                int nextYDir = Game.getNextMapInt();
+                this.nextYDirection = nextYDir <= 49 ? 1 : -1;
                 this.nextXDirection = 0;
                 break;
                 // 50% chance of staying in the same direction
@@ -410,4 +416,8 @@ public class Level {
     }
 
 
+    class Node {
+        private HashMap<Integer, Inventory> distanceFromStart = new HashMap<>();
+        private
+    }
 }
