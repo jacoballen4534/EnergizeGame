@@ -57,8 +57,6 @@ public abstract class Character extends GameObject{
         }
     }
 
-    abstract void playSound();
-
     protected void getHit(int damage) {
         if (!this.playGotAttackedAnimation) {
             System.out.println("Character got hit");

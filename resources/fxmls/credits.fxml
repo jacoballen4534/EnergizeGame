@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane fx:id="creditsPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.creditsController">
+<AnchorPane fx:id="creditsPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.creditsController">
     <children>
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="662.0" onMouseClicked="#creditsBackButtonPressed" prefHeight="76.0" prefWidth="166.0" text="EXIT" textAlignment="CENTER">
          <font>

@@ -67,11 +67,6 @@ public class Protagonist extends Character {
     }
 
     @Override
-    void playSound() {
-        System.out.println("Beep");
-    }
-
-    @Override
     protected void getHit(int damage) {
         this.animationsState.copy(this.gotHitState);
         super.getHit(damage);
@@ -119,20 +114,20 @@ public class Protagonist extends Character {
             this.velocityY = 0;
         } else {
 
-            if (keyInput.getKeyPressed("up")){
+            if (keyInput.getKeyPress("up")){
                 this.velocityY = -5;
-            } else if (keyInput.getKeyPressed("down")){
+            } else if (keyInput.getKeyPress("down")){
                 this.velocityY = 5;
             } else this.velocityY=0;
 
-            if (keyInput.getKeyPressed("right")) {
+            if (keyInput.getKeyPress("right")) {
                 this.velocityX = 5;
                 //Update the sprite / bounding box before moving, to make sure the new animation bounding box isn't inside a wall.
                 if (!this.buttonAlreadyDown) {
                     this.updateSprite();
                     this.buttonAlreadyDown = true;
                 }
-            } else if (keyInput.getKeyPressed("left")) {
+            } else if (keyInput.getKeyPress("left")) {
                 this.velocityX = -5;
                 //Update the sprite / bounding box before moving, to make sure the new animation bounding box isn't inside a wall.
                 if (!this.buttonAlreadyDown) {
@@ -149,7 +144,7 @@ public class Protagonist extends Character {
             this.attack();
         }
 
-        if (keyInput.getKeyPressed("jump")){
+        if (keyInput.getKeyPressDebounced("jump")){
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
@@ -221,7 +216,7 @@ public class Protagonist extends Character {
 
     public void addEnergy(int amount) {
         this.currEnergy += amount;
-        if (this.currEnergy > maxEnergy) { //Cant go over max
+        if (this.currEnergy > maxEnergy) { //Can't go over max
             this.currEnergy = maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);

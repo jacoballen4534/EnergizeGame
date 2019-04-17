@@ -99,11 +99,6 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    void playSound() {
-
-    }
-
-    @Override
     protected void getHit(int damage) {
         this.animationsState.copy(this.getHitState);
         super.getHit(damage);
