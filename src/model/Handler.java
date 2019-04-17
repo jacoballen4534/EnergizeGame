@@ -206,7 +206,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Enemy enemy) {
         for (Protagonist player: players){
-            if (enemy.getBounds().intersects(player.getBounds())){
+            if (enemy.getAttackBounds().intersects(player.getBounds())){
                 player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
         }

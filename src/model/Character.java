@@ -80,6 +80,7 @@ public abstract class Character extends GameObject{
         }
     }
 
+
     /*protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy
     }*/
@@ -139,6 +140,7 @@ public abstract class Character extends GameObject{
             }
             this.renderBoundingBox(graphicsContext);
         }
+//        this.renderAttackBoundingBox(graphicsContext);
     }
 
     /////////////////////////////////////////

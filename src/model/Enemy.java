@@ -2,6 +2,7 @@ package model;
 
 import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Enemy extends Character{
@@ -18,9 +19,14 @@ public abstract class Enemy extends Character{
         this.target = target;
     }
 
-    protected void tick(double cameraX, double cameraY, Level level) {
+    protected void tick(double cameraX, double cameraY, Level level) { //To provide a method to allow level to be passed in
+
+    }
+
+    protected void tick(double cameraX, double cameraY) {
         super.tick(cameraX,cameraY);
     }
+
 
     abstract void isPlayerInSight();
     abstract void findPlayer();

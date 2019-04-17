@@ -61,18 +61,25 @@ public class Protagonist extends Character {
 
     @Override
     protected void attack() {
-        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
-        super.attack();
-        Handler.attack(this);
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
+            super.attack();
+            Handler.attack(this);
+        }
     }
+
+
 
     @Override
     protected void getHit(int damage) {
-        this.animationsState.copy(this.gotHitState);
-        super.getHit(damage);
-        if (this.currHealth <= 0) { //died
-            this.playGotAttackedAnimation = false;
-            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.gotHitState);
+            super.getHit(damage);
+            this.hud.setHealth(this.currHealth);
+            if (this.currHealth <= 0) { //died
+                this.playGotAttackedAnimation = false;
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            }
         }
     }
 

@@ -100,6 +100,10 @@ public class Grunt extends Enemy {
                 }
             }
         }
+        if (this.getAttackBounds().intersects(target.getBounds())) {
+            this.attack();
+        }
+
         super.tick(cameraX,cameraY);
 
     }
@@ -116,22 +120,27 @@ public class Grunt extends Enemy {
 
     @Override
     protected void attack() {
-        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
-        super.attack();
-        Handler.attack(this);
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
+            super.attack();
+            Handler.attack(this); //TODO: Wait untill plart way through this animaiton before actually hitting
+        }
     }
 
     @Override
     protected void getHit(int damage) {
-        this.animationsState.copy(this.getHitState);
-        super.getHit(damage);
-        if (this.currHealth <= 0) { //died
-            if (!this.playDieAnimation) {
-                //Make bounding box 0
-                this.target.addEnergy(10);
+        if (!this.playDieAnimation && !this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.getHitState);
+            this.playAttackAnimation = false;//getting hit interrupts an enemy attack
+            super.getHit(damage);
+            if (this.currHealth <= 0) { //died
+                if (!this.playDieAnimation) {
+                    //Make bounding box 0
+                    this.target.addEnergy(10);
+                }
+                this.playGotAttackedAnimation = false;
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
             }
-            this.playGotAttackedAnimation = false;
-            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }
 
