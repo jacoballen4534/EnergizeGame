@@ -67,16 +67,31 @@ public class Grunt extends Enemy {
             this.velocityX = 0;
             this.velocityY = 0;
         } else {
-            //Give a 5% chance of changing each direction
-            if (Game.getNextRandomInt(100, false) > 94) { //Use 94 as it is from 0 to 99
-                this.velocityX = (Game.getNextRandomInt(3, false) - 1) * 3; //Random number 0,1 or 2. Shift and scale to get either -5,0,5
-            }
+            int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
+            int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
 
-            if (Game.getNextRandomInt(100, false) > 94) {
-                this.velocityY = (Game.getNextRandomInt(3, false) - 1) * 3;
+//            this.velocityX = 0;
+//            this.velocityY = 0;
+
+            //Give a 30% chance of changing each direction
+            if (Game.getNextRandomInt(100, false) > 69) {
+                int nextDirection = level.nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
+                switch (nextDirection) {
+                    case 1: //up
+                        this.velocityY = -3;
+                        break;
+                    case 2://right
+                        this.velocityX = 3;
+                        break;
+                    case 3://down
+                        this.velocityY = 3;
+                        break;
+                    case 4://left
+                        this.velocityX = -3;
+                        break;
+                }
             }
         }
-        
         super.tick(cameraX,cameraY);
 
     }

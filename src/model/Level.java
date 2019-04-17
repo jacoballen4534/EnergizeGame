@@ -28,6 +28,7 @@ enum TileType {
 
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
+    private ArrayList<ArrayList<TileType>> pathFindingTiles = new ArrayList<>(); //This is only walls and floors
     private int levelNumber; //Used for doors, to go to the correct room
     private final int levelWidth;
     private final int levelHeight;
@@ -182,7 +183,7 @@ public class Level {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        this.debugDrawFloor();
+        this.ConvertToPathFindingTiles();
         this.setupNodes();
         this.calculateFloydWarshall();
 
@@ -202,25 +203,25 @@ public class Level {
         for (int row = 1; row < levelHeight - 1; row ++) {
             for (int col = 1; col < levelWidth - 1; col++) {
                 //Only add neighbors if it is a floor
-                if (this.tiles.get(row).get(col) == TileType.FLOOR && this.tiles.get(row - 1).get(col) != TileType.DOOR_UP &&
-                        this.tiles.get(row + 1).get(col) == TileType.FLOOR) { //Valid tile to be on
+                if (this.pathFindingTiles.get(row).get(col) == TileType.FLOOR && this.tiles.get(row - 1).get(col) != TileType.DOOR_UP &&
+                        this.pathFindingTiles.get(row + 1).get(col) == TileType.FLOOR) { //Valid tile to be on
 
-                    if (row > 1 && tiles.get(row - 1).get(col) == TileType.FLOOR) { //Check above
+                    if (row > 1 && pathFindingTiles.get(row - 1).get(col) == TileType.FLOOR) { //Check above
                         nodes[row][col].addNighbor(col + (row - 1) * levelWidth);
                     }
 
                     //Can only go left or right if there are 2 tiles below as there is the bottom wall, and the characters are 2 blocks tall
                     if (row < levelHeight - 2) {
-                        if (col < levelWidth - 2 && tiles.get(row).get(col + 1) == TileType.FLOOR && tiles.get(row + 1).get(col + 1) == TileType.FLOOR) { //check right
+                        if (col < levelWidth - 2 && pathFindingTiles.get(row).get(col + 1) == TileType.FLOOR && pathFindingTiles.get(row + 1).get(col + 1) == TileType.FLOOR) { //check right
                             nodes[row][col].addNighbor((col + 1) + row * levelWidth);
                         }
 
-                        if (col > 1 && tiles.get(row).get(col - 1) == TileType.FLOOR && tiles.get(row + 1).get(col - 1) == TileType.FLOOR) { //check left
+                        if (col > 1 && pathFindingTiles.get(row).get(col - 1) == TileType.FLOOR && pathFindingTiles.get(row + 1).get(col - 1) == TileType.FLOOR) { //check left
                             nodes[row][col].addNighbor((col - 1) + row * levelWidth);
                         }
                     }
 
-                    if (row < levelHeight - 3 && tiles.get(row + 2).get(col) == TileType.FLOOR) { //Check below
+                    if (row < levelHeight - 3 && pathFindingTiles.get(row + 2).get(col) == TileType.FLOOR) { //Check below
                         nodes[row][col].addNighbor(col + (row + 1) * levelWidth);
                     }
                 }
@@ -236,18 +237,18 @@ public class Level {
             }
         }
 
-        for (int row = 0; row < levelHeight; row ++) {
-            for (int col = 0; col < levelWidth; col++) {
-                if (nodes[row][col].getNeighbors().isEmpty()) {
-                    System.out.print((char)27 + "[31m" + "W");
-                } else {
-//                    System.out.print((char)27 + "[0m" + "F");
-                    System.out.print((char)27 + "[0m" + nodes[row][col].getId());
-                }
-                System.out.print("\t");
-            }
-            System.out.println("");
-        }
+//        for (int row = 0; row < levelHeight; row ++) { //Print all nodes
+//            for (int col = 0; col < levelWidth; col++) {
+//                if (nodes[row][col].getNeighbors().isEmpty()) {
+//                    System.out.print((char)27 + "[31m" + "W");
+//                } else {
+////                    System.out.print((char)27 + "[0m" + "F");
+//                    System.out.print((char)27 + "[0m" + nodes[row][col].getId());
+//                }
+//                System.out.print("\t");
+//            }
+//            System.out.println("");
+//        }
     }
 
     private void calculateFloydWarshall() {
@@ -289,18 +290,19 @@ public class Level {
                 }
             }
         }
-        System.out.println("All Path's Found");
+//        System.out.println("All Path's Found");
     }
 
 
-    public void findPath(int startingId, int desinationId) {
+    public void findAndPrintPath(int startingId, int destinationId) {
         Node startingNode = getNodeFromId(startingId);
-        Node desinationNode = getNodeFromId(desinationId);
-//    public ArrayList<Node> findPath(int startingNode, int desinationNode) {
+        Node desinationNode = getNodeFromId(destinationId);
+//    public ArrayList<Node> findPath(int startingNode, int destinationNode) {
         ArrayList<Node> path = new ArrayList<>();
-        if (next[startingId][desinationId] == null) {
+        if (next[startingId][destinationId] == null) {
 //            return path;
-            System.out.println("There is no path from " + startingId + " to " + desinationId);
+            System.out.println("There is no path from " + startingId + " to " + destinationId);
+            return;
         }
         path.add(startingNode);
         while (!startingNode.equals(desinationNode)) {
@@ -310,11 +312,12 @@ public class Level {
 
         for (Node node : path) {
             System.out.print(node.getId());
-            if (node.getId() != desinationId) {
+            if (node.getId() != destinationId) {
                 System.out.print(" -> ");
+            } else {
+                System.out.println("");
             }
         }
-
 
         for (int row = 0; row < levelHeight; row ++) {
             for (int col = 0; col < levelWidth; col++) {
@@ -322,17 +325,37 @@ public class Level {
                     System.out.print((char)27 + "[31m" + "W");
                 } else {
                     if (path.contains(nodes[row][col])) {
-                        System.out.print((char) 27 + "[34m" + "F");
+//                        System.out.print((char) 27 + "[34m" + "F");
+                        System.out.print((char) 27 + "[34m" + nodes[row][col].getId());
                     } else {
-                      System.out.print((char)27 + "[0m" + "F");
-//                        System.out.print((char) 27 + "[0m" + nodes[row][col].getId());
+//                      System.out.print((char)27 + "[0m" + "F");
+                        System.out.print((char) 27 + "[0m" + nodes[row][col].getId());
                     }
                 }
-//                System.out.print("\t");
+                System.out.print("\t");
             }
             System.out.println("");
         }
+    }
 
+    public int nextDirection(int startingId, int destinationId) {
+        if (next[startingId][destinationId] == null) {
+//            return path;
+            System.out.println("There is no path from " + startingId + " to " + destinationId);
+            return 0;
+        } else {
+            int nextNodeId = next[startingId][destinationId].getId();
+
+            if (nextNodeId == startingId + 1) { //right
+                return 2;
+            } else if (nextNodeId > startingId) { //down
+                return 3;
+            } else if (nextNodeId == startingId - 1) { //left
+                return 4;
+            } else { //up
+                return 1;
+            }
+        }
     }
 
     private Node getNodeFromId(int id) {
@@ -346,24 +369,33 @@ public class Level {
         return null;
     }
 
-    private void debugDrawFloor() {
+    private void ConvertToPathFindingTiles() { //Convert all tiles to wall or floor. And print it out for debugging
+//        System.out.println("\n\n");
         for (int row = 0; row < this.levelHeight; row ++) {
+            ArrayList<TileType> pathFindingCol = new ArrayList<>();
             for (int col = 0; col < this.levelWidth; col++) {
                 switch (this.tiles.get(row).get(col)) {
+                    case CAMP_FIRE:
                     case WALL:
-                        System.out.print("W");
+                        pathFindingCol.add(TileType.WALL);
+//                        System.out.print("W");
                         break;
-                    case FLOOR:
-                        System.out.print("F");
+                    case DOOR_UP:
+                    case DOOR_RIGHT:
+                    case DOOR_DOWN:
+                    case DOOR_LEFT:
+//                        System.out.print("D");
+                        pathFindingCol.add(TileType.WALL);
                         break;
                     default:
-                        System.out.print("D");
+//                        System.out.print("F");
+                        pathFindingCol.add(TileType.FLOOR);
                         break;
                 }
             }
-            System.out.println("");
+//            System.out.println("");
+            this.pathFindingTiles.add(pathFindingCol);
         }
-        System.out.print("\n\nXXXXXXXXXXXXXXXXXXXX\n\n");
     }
 
     private Point2D nextLocation (Point2D currentPoint) {
@@ -481,10 +513,9 @@ public class Level {
             }
             this.tiles.add(column);
         }
-        this.debugDrawFloor();
+        this.ConvertToPathFindingTiles();
         this.setupNodes();
         this.calculateFloydWarshall();
-        this.findPath(831,429);
         System.out.println("Done tutorial Room");
     }
 
