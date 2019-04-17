@@ -62,7 +62,7 @@ public class Grunt extends Enemy {
         }
     }
 
-    public void tick(double cameraX, double cameraY) {
+    protected void tick(double cameraX, double cameraY, Level level) {
         if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) {
             this.velocityX = 0;
             this.velocityY = 0;

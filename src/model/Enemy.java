@@ -18,6 +18,10 @@ public abstract class Enemy extends Character{
         this.target = target;
     }
 
+    protected void tick(double cameraX, double cameraY, Level level) {
+        super.tick(cameraX,cameraY);
+    }
+
     abstract void isPlayerInSight();
     abstract void findPlayer();
 

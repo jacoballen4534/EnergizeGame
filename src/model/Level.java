@@ -29,8 +29,8 @@ enum TileType {
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
     private int levelNumber; //Used for doors, to go to the correct room
-    private int levelWidth;
-    private int levelHeight;
+    private final int levelWidth;
+    private final int levelHeight;
     private int mapWidth;//Used to calculate the level number of neighboring levels
     private HashMap<TileType, Point2D> doorMap; //Store the doors and their location.
     //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
@@ -39,6 +39,10 @@ public class Level {
     private Point2D nextPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>();
+    private Node[][] nodes; //2d array of all nodes
+    private double[][] dist;
+    private Node[][] next;
+
 
 
     //////////////Macros, Actual size of different sprites///////////
@@ -64,6 +68,8 @@ public class Level {
 
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
+        this.levelWidth = image.getWidth();
+        this.levelHeight = image.getHeight();
         this.levelNumber = levelNumber;
         this.doorMap = new HashMap<>();
         this.mapWidth = mapWidth;
@@ -177,24 +183,169 @@ public class Level {
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         this.debugDrawFloor();
+        this.setupNodes();
+        this.calculateFloydWarshall();
+
+        //Find paths between tiles
+    }
+
+    private void setupNodes() {
+        this.nodes = new Node[levelHeight][levelWidth];
+        //////////////////Initialize all nodes /////////////////////////////
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                nodes[row][col] = new Node(col + row * levelWidth);
+            }
+        }
+        //////////////////////////////////////////////////////////////////
+
+        for (int row = 1; row < levelHeight - 1; row ++) {
+            for (int col = 1; col < levelWidth - 1; col++) {
+                //Only add neighbors if it is a floor
+                if (this.tiles.get(row).get(col) == TileType.FLOOR && this.tiles.get(row - 1).get(col) != TileType.DOOR_UP &&
+                        this.tiles.get(row + 1).get(col) == TileType.FLOOR) { //Valid tile to be on
+
+                    if (row > 1 && tiles.get(row - 1).get(col) == TileType.FLOOR) { //Check above
+                        nodes[row][col].addNighbor(col + (row - 1) * levelWidth);
+                    }
+
+                    //Can only go left or right if there are 2 tiles below as there is the bottom wall, and the characters are 2 blocks tall
+                    if (row < levelHeight - 2) {
+                        if (col < levelWidth - 2 && tiles.get(row).get(col + 1) == TileType.FLOOR && tiles.get(row + 1).get(col + 1) == TileType.FLOOR) { //check right
+                            nodes[row][col].addNighbor((col + 1) + row * levelWidth);
+                        }
+
+                        if (col > 1 && tiles.get(row).get(col - 1) == TileType.FLOOR && tiles.get(row + 1).get(col - 1) == TileType.FLOOR) { //check left
+                            nodes[row][col].addNighbor((col - 1) + row * levelWidth);
+                        }
+                    }
+
+                    if (row < levelHeight - 3 && tiles.get(row + 2).get(col) == TileType.FLOOR) { //Check below
+                        nodes[row][col].addNighbor(col + (row + 1) * levelWidth);
+                    }
+                }
+            }
+        }
+
+        //Replace all int neighbors with actual references.
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                for (int neighborId : nodes[row][col].getNeighbors()) {
+                    nodes[row][col].addNodeNighbor(getNodeFromId(neighborId));
+                }
+            }
+        }
+
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                if (nodes[row][col].getNeighbors().isEmpty()) {
+                    System.out.print((char)27 + "[31m" + "W");
+                } else {
+//                    System.out.print((char)27 + "[0m" + "F");
+                    System.out.print((char)27 + "[0m" + nodes[row][col].getId());
+                }
+                System.out.print("\t");
+            }
+            System.out.println("");
+        }
+    }
+
+    private void calculateFloydWarshall() {
+        int V = levelHeight * levelWidth;
+        this.dist = new double[V][V];
+        this.next = new Node[V][V];
+
+        ///////////////////////////////// Initialize ///////////////////////////////////
+        for (int bigRow = 0; bigRow < V; bigRow++) {
+            for (int bigCol = 0; bigCol < V; bigCol++) {
+                dist[bigRow][bigCol] = Double.POSITIVE_INFINITY;
+                next[bigRow][bigCol] = null;
+            }
+        }
+        /////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////// Set Initial weights and connections ///////////////////
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                //For each vertex v
+                dist[nodes[row][col].getId()][nodes[row][col].getId()] = 0; //dist[v][v] = 0;
+                next[nodes[row][col].getId()][nodes[row][col].getId()] = nodes[row][col]; //next[v][v] = 0;
+                for (Node nodeNeighbor : nodes[row][col].getNodeNeighbors()) { //for each edge(u,v)
+                    dist[nodes[row][col].getId()][nodeNeighbor.getId()] = 1; //dist[u][v] = w(u,v) <- this is all 1 for our case
+                    next[nodes[row][col].getId()][nodeNeighbor.getId()] = nodeNeighbor; // next[u][v] = v;
+                }
+            }
+        }
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        /////////////// introduce node k between i,j to try to improve path //////////////////
+        for (int k = 0; k < V; k++) {
+            for (int i = 0; i < V; i++) {
+                for (int j = 0; j < V; j++) {
+                    if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                        dist[i][j] = dist[i][k] + dist[k][j];
+                        next[i][j] = next[i][k];
+                    }
+                }
+            }
+        }
+        System.out.println("All Path's Found");
+    }
 
 
-//        for (int row = 0; row < this.levelHeight; row ++) {
-//            ArrayList<TileType> column = new ArrayList<>();
-//            for (int col = 0; col < this.levelWidth; col++) {
-//                if (row == 0 || row == this.levelHeight-1 || col == 0 || col == this.levelWidth-1) {
-//                    column.add(TileType.WALL);
-//                } else if (row == this.levelHeight/2 && col == this.levelWidth/2) {
-//                    column.add(TileType.ITEM); //Make this a chest
-//                } else {
-//                    column.add(TileType.FLOOR); //CHANGED TO FLOOR TO TEST, will be all walls, then carve out floors
-//                }
-//            }
-//            this.tiles.add(column);
-//        }
+    public void findPath(int startingId, int desinationId) {
+        Node startingNode = getNodeFromId(startingId);
+        Node desinationNode = getNodeFromId(desinationId);
+//    public ArrayList<Node> findPath(int startingNode, int desinationNode) {
+        ArrayList<Node> path = new ArrayList<>();
+        if (next[startingId][desinationId] == null) {
+//            return path;
+            System.out.println("There is no path from " + startingId + " to " + desinationId);
+        }
+        path.add(startingNode);
+        while (!startingNode.equals(desinationNode)) {
+            startingNode = next[startingNode.getId()][desinationNode.getId()];
+            path.add(startingNode);
+        }
 
+        for (Node node : path) {
+            System.out.print(node.getId());
+            if (node.getId() != desinationId) {
+                System.out.print(" -> ");
+            }
+        }
+
+
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                if (nodes[row][col].getNeighbors().isEmpty()) {
+                    System.out.print((char)27 + "[31m" + "W");
+                } else {
+                    if (path.contains(nodes[row][col])) {
+                        System.out.print((char) 27 + "[34m" + "F");
+                    } else {
+                      System.out.print((char)27 + "[0m" + "F");
+//                        System.out.print((char) 27 + "[0m" + nodes[row][col].getId());
+                    }
+                }
+//                System.out.print("\t");
+            }
+            System.out.println("");
+        }
 
     }
+
+    private Node getNodeFromId(int id) {
+        for (int row = 0; row < levelHeight; row ++) {
+            for (int col = 0; col < levelWidth; col++) {
+                if (nodes[row][col].getId() == id) {
+                    return nodes[row][col];
+                }
+            }
+        }
+        return null;
+    }
+
     private void debugDrawFloor() {
         for (int row = 0; row < this.levelHeight; row ++) {
             for (int col = 0; col < this.levelWidth; col++) {
@@ -297,8 +448,6 @@ public class Level {
     }
 
     private void ProcessImage(BufferedImage image) {
-        this.levelWidth = image.getWidth();
-        this.levelHeight = image.getHeight();
         for (int row = 0; row < this.levelHeight; row++) {
             ArrayList<TileType> column = new ArrayList<>();
             for (int col = 0; col < this.levelWidth; col++) {
@@ -332,6 +481,11 @@ public class Level {
             }
             this.tiles.add(column);
         }
+        this.debugDrawFloor();
+        this.setupNodes();
+        this.calculateFloydWarshall();
+        this.findPath(831,429);
+        System.out.println("Done tutorial Room");
     }
 
     public void loadLevel(Game game) {
@@ -408,6 +562,4 @@ public class Level {
         Handler.updateEnemyTarget(game.getProtagonist()); //As enemies can be added before protagonist making their target null. So add at the end.
         Handler.udateCharacterLevelWidth(this.levelWidth);
     }
-
-
 }

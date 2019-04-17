@@ -90,7 +90,7 @@ public abstract class Character extends GameObject{
         return this.attackDamage;
     }
 
-    public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
+    protected void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
         //Move 1 pixel at a time until reaching the destination or colliding with something.
         //If this slows down the game, revert to old version below.
         double directionX = this.velocityX / Math.abs(this.velocityX);
@@ -98,7 +98,7 @@ public abstract class Character extends GameObject{
 
         for (int x = 0; x < Math.abs(this.velocityX); x++) {
             this.x += directionX;
-            if (Handler.checkCollision(this, cameraX, cameraY)) {
+            if (Handler.checkCollision(this)) {
                 this.x -= directionX;
                 break;
             }
@@ -106,7 +106,7 @@ public abstract class Character extends GameObject{
 
         for (int y = 0; y < Math.abs(this.velocityY); y++) {
             this.y += directionY;
-            if (Handler.checkCollision(this, cameraX, cameraY)) {
+            if (Handler.checkCollision(this)) {
                 this.y -= directionY;
                 break;
             }
