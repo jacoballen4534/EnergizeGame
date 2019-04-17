@@ -87,10 +87,16 @@ public class Grunt extends Enemy {
                         this.velocityX = -3;
                         break;
                     case 5: //The path has not been found yet, so just move randomly
-                        this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
-                        this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
-
-
+                        if (Game.getNextRandomInt(100, false) > 59) {
+                            this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                        } else {
+                            this.velocityX = 0;
+                        }
+                        if (Game.getNextRandomInt(100, false) > 59) {
+                            this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                        } else {
+                            this.velocityY = 0;
+                        }
                 }
             }
         }
