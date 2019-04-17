@@ -1,5 +1,6 @@
 package sample;
 
+import Controllers.mainMenuController;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -48,9 +49,13 @@ public class Game extends Canvas {
     private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
     private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
 
-    public Game() {
+    private mainMenuController controller;
+
+    public Game(mainMenuController menuController) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
+        this.controller = menuController;
+        controller.setGameActive(true);
         Handler.clearForNewGame();
         this.stage = Main.getStage();
         this.stage.setTitle("Tutorial Room");
