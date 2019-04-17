@@ -14,11 +14,13 @@ public class Grunt extends Enemy {
     private AnimationsState dieState;
     private AnimationsState attackState;
     private AnimationsState alertState;
+    private final int GRUNT_BASE_ATTACK_DAMAGE = 10;
+    private final int GRUNT_MAXHEALTH = 100;
 
-    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
-                 Character target, boolean enabled) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,target,enabled);
+    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth, boolean enabled) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
         //TODO: Add borders and additional sprite sheets
+        //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
         this.attackState = new AnimationsState(9,54,16,1,17, 0,0);
         this.dieState = new AnimationsState(0,0,15,0,14, 1,0); //Doesnt need a border
         this.walkState = new AnimationsState(0,72,15,0,12, 2,0);
@@ -27,7 +29,12 @@ public class Grunt extends Enemy {
 //        this.getHitState = new AnimationsState(45,45,15,0,7, 4,0);
         this.alertState = new AnimationsState(0,63,15,0,3, 4,0);
 
-        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
+        //////////////////////////// SET UP HEALTH / DAMAGE //////////////////////////////
+        this.attackDamage = GRUNT_BASE_ATTACK_DAMAGE;
+        this.currHealth = GRUNT_MAXHEALTH;
+
+        //Initialise image for first animation
+        this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
     }
 
     @Override
@@ -37,7 +44,6 @@ public class Grunt extends Enemy {
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
                 Handler.removeEnemy(this);
-                //Remove from handler.
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
             this.animationsState.copy(this.getHitState);
@@ -98,18 +104,26 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    protected void getHit() {
+    protected void getHit(int damage) {
         this.animationsState.copy(this.getHitState);
-        super.getHit();
+        super.getHit(damage);
         if (this.currHealth <= 0) { //died
-            this.playDieAnimation = false;
+            if (!this.playDieAnimation) {
+                //Make bounding box 0
+                this.target.addEnergy(10);
+            }
+            this.playGotAttackedAnimation = false;
             this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }
 
     @Override
     public Rectangle getBounds() {
-        return super.getBounds();
+        if (this.playDieAnimation) {
+            return new Rectangle(0,0,0,0);
+        } else {
+            return super.getBounds();
+        }
     }
 
 }
