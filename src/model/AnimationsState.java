@@ -34,6 +34,10 @@ public class AnimationsState {
         return animationCol >= this.animationMaxCol; //play around with if this should be max col -1.
     }
 
+    public int getResetCol() {
+        return this.resetCol;
+    }
+
     public int updateAnimationSprite(int animationCol) {
         if (animationCol < this.resetCol) { //If the animation doesnt start at col 0. Need to move to the first frame.
             animationCol = this.resetCol;
