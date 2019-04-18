@@ -53,7 +53,7 @@ public class Grunt extends Enemy {
         } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
             if (this.currentAnimationCol == GRUNT_APPLY_DAMEAGE_COL) {
-                Handler.attack(this); //TODO: Wait untill plart way through this animaiton before actually hitting
+                Handler.attack(this); //Wait until part way through this animation before actually hitting
             } else if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false;
                 this.attackTimer = 0;
@@ -73,8 +73,12 @@ public class Grunt extends Enemy {
             int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
             int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
 
+//            if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
+//                level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
+//            }
+
             //Give a 30% chance of changing each direction
-            if (Game.getNextRandomInt(100, false) > 69) {
+            if (Game.getNextRandomInt(100, false) > 49) {
                 int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
                 switch (nextDirection) {
                     case 1: //up

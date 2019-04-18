@@ -2,7 +2,7 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,13 +17,15 @@ public class Protagonist extends Character {
     private boolean playBlockingAnimation = false; //To add shield effect
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     private AnimationsState idleState;
-    private AnimationsState attackState;
-    private AnimationsState gotHitState;
+    private AnimationsState blockingState;
+    private long lastBlockTimer, blockCooldown, blockTimer = 0;
+
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 100;
+    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;
     private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
+    private final int PROTAGONIST_BLOCK_COOLDOWN = 00;
     private final int BLOCK_COST = 5;
 
     private int currEnergy;
@@ -32,6 +34,8 @@ public class Protagonist extends Character {
 
     private Item equippedItem;
     private Inventory inventory;
+    private Image shield;
+
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
@@ -44,8 +48,9 @@ public class Protagonist extends Character {
 //        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
         this.attackState = new AnimationsState(45,45,17,5,6,6,0);
         this.gotHitState = new AnimationsState(45,45,17,5,6,9,0); //Place holder till get hit sprite
+        this.blockingState = new AnimationsState(45,45,17,5,6,12,1);
         this.attackCooldown = PROTAGONIST_ATTACK_COOLDOWN;
-        this.blockingState = new AnimationsState(0,0,0,0,6,12,1);
+        this.blockCooldown = PROTAGONIST_BLOCK_COOLDOWN;
 
 
         //Set health
@@ -57,6 +62,7 @@ public class Protagonist extends Character {
         hud.setHealth(this.currHealth);
         hud.setEnergy(this.currEnergy);
 
+        this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
         inventory = new Inventory(10);
         equippedItem = null;
 
@@ -68,12 +74,15 @@ public class Protagonist extends Character {
     @Override
     protected void attack() {
         if(super.canAttack()) {
-            Handler.attack(this); //TODO: Wait untill plart way through this animaiton before actually hitting
+            Handler.attack(this);
         }
     }
 
     private void block() {
-        if (!this.playBlockingAnimation) { //May take this out
+        this.blockTimer += System.currentTimeMillis() - this.lastBlockTimer;
+        this.lastBlockTimer = System.currentTimeMillis();
+
+        if (!this.playBlockingAnimation &&  (this.blockTimer >= this.blockCooldown)) { //May take this out
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough health
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
@@ -88,14 +97,11 @@ public class Protagonist extends Character {
         }
     }
 
-    @Override
-    void playSound() {
-        System.out.println("Beep");
-    }
+
 
     @Override
     protected void getHit(int damage) {
-        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation) { //Cant get hit while attacking but there is a cooldpwn
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && !this.playBlockingAnimation) { //Cant get hit while attacking but there is a cool down
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
@@ -115,6 +121,7 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.blockingState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playBlockingAnimation = false;
+                this.blockTimer = 0;
             }
         }else if (this.playAttackAnimation) { //Attacking
             //Update attack animation
@@ -188,7 +195,7 @@ public class Protagonist extends Character {
             useItem();
         }
 
-        if (keyInput.getKeyPressed("block")){
+        if (keyInput.getKeyPress("block")){
             this.block();
         }
 
@@ -221,10 +228,19 @@ public class Protagonist extends Character {
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
         super.render(graphicsContext, cameraX, cameraY);
         if (this.playBlockingAnimation) {
-            graphicsContext.setFill(new Color(1,0.56, 0.31,0.5));
+//            graphicsContext.setFill(new Color(1,0.56, 0.31,0.5));
             double characterHeight = this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder();
             double characterWidth = this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder();
-            graphicsContext.fillOval((int)(this.x + characterWidth/2), this.y, characterWidth, characterHeight);
+
+            if (this.spriteDirection == 1) {
+                graphicsContext.drawImage(this.shield, this.x - 15, this.y + this.animationsState.getTopBorder()/3d , characterWidth * 2, characterHeight * 1.1);
+//                graphicsContext.fillOval(this.x, this.y + this.animationsState.getTopBorder()/2 , characterWidth * 1.5, characterHeight);
+            } else {
+                graphicsContext.drawImage(this.shield,this.x + characterWidth + 15, this.y + this.animationsState.getTopBorder()/3, -characterWidth * 2, characterHeight * 1.1);
+            }
+
+
+
         }
         hud.render(graphicsContext, cameraX, cameraY);
 //        if (playAttackAnimation) {

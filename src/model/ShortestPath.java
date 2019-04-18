@@ -205,7 +205,7 @@ public class ShortestPath {
 
 
     ///////////Unused for now/////////////
-    public void findAndPrintPath(int startingId, int destinationId, Node[][] nodes_) { //Findis the complete path between two points and prints it out. also draws the map with path on it.
+    public void findAndPrintPath(int startingId, int destinationId) { //Findis the complete path between two points and prints it out. also draws the map with path on it.
         Node startingNode = getNodeFromId(startingId);
         Node destinationNode = getNodeFromId(destinationId);
 //    public ArrayList<Node> findPath(int startingNode, int destinationNode) {
@@ -232,15 +232,15 @@ public class ShortestPath {
 
         for (int row = 0; row < levelHeight; row ++) {
             for (int col = 0; col < levelWidth; col++) {
-                if (nodes_[row][col].getNeighbors().isEmpty()) {
+                if (nodes[row][col].getNeighbors().isEmpty()) {
                     System.out.print((char)27 + "[31m" + "W");
                 } else {
-                    if (path.contains(nodes_[row][col])) {
+                    if (path.contains(nodes[row][col])) {
 //                        System.out.print((char) 27 + "[34m" + "F");
-                        System.out.print((char) 27 + "[34m" + nodes_[row][col].getId());
+                        System.out.print((char) 27 + "[34m" + nodes[row][col].getId());
                     } else {
 //                      System.out.print((char)27 + "[0m" + "F");
-                        System.out.print((char) 27 + "[0m" + nodes_[row][col].getId());
+                        System.out.print((char) 27 + "[0m" + nodes[row][col].getId());
                     }
                 }
                 System.out.print("\t");
