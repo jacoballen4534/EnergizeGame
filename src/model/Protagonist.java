@@ -23,7 +23,7 @@ public class Protagonist extends Character {
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;
+    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
     private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
     private final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
     private final int BLOCK_COST = 5;
