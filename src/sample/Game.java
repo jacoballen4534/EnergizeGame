@@ -187,7 +187,7 @@ public class Game extends Canvas {
         }
         if (keyInput.getKeyPressDebounced("inventory")){
             this.pause();
-            //ShowInventoryMenu();
+//            ShowInventoryMenu();
             System.out.println("Open inventory");
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);

@@ -11,7 +11,6 @@ public class Grunt extends Enemy {
     private AnimationsState idleState;
     private AnimationsState dieState;
 
-    private AnimationsState alertState;
     private final int GRUNT_BASE_ATTACK_DAMAGE = 10;
     private final int GRUNT_MAXHEALTH = 100;
     private final int GRUNT_ATTACK_COOLDOWN = 2000;
@@ -21,13 +20,13 @@ public class Grunt extends Enemy {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
         //TODO: Add borders and additional sprite sheets
         //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
+//        this.attackState = new AnimationsState(9,63,15,0,17, 0,0);
         this.attackState = new AnimationsState(9,54,16,0,17, 0,0);
-        this.dieState = new AnimationsState(0,0,15,0,14, 1,0); //Doesnt need a border
+        this.dieState = new AnimationsState(9,63,15,0,14, 1,0); //Doesnt need a border
         this.runningState = new AnimationsState(0,72,15,0,12, 2,0);
         this.idleState = new AnimationsState(0,63,15,0,10, 3,0);
         this.gotHitState = new AnimationsState(0,45,15,0,7, 4,0);
 //        this.gotHitState = new AnimationsState(45,45,15,0,7, 4,0);
-        this.alertState = new AnimationsState(0,63,15,0,3, 4,0);
         this.attackCooldown = GRUNT_ATTACK_COOLDOWN;
 
         //////////////////////////// SET UP HEALTH / DAMAGE //////////////////////////////
@@ -91,16 +90,23 @@ public class Grunt extends Enemy {
                         this.velocityX = -3;
                         break;
                     case 5: //The path has not been found yet, so just move randomly
-                        if (Game.getNextRandomInt(100, false) > 59) {
+                        if (Game.getNextRandomInt(100, false) > 69) {
                             this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
                         } else {
                             this.velocityX = 0;
                         }
-                        if (Game.getNextRandomInt(100, false) > 59) {
+                        if (Game.getNextRandomInt(100, false) > 69) {
                             this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
                         } else {
                             this.velocityY = 0;
                         }
+                }
+            } else { //Give a tiny chance of getting a random direction to avoid getting stuck
+                if (Game.getNextRandomInt(100, false) > 97) {
+                    this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                }
+                if (Game.getNextRandomInt(100, false) > 97) {
+                    this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
                 }
             }
         }
@@ -124,21 +130,18 @@ public class Grunt extends Enemy {
 
     @Override
     protected void attack() {
-       if(super.canAttack()) {
-        }
+       super.canAttack();
     }
 
     @Override
     protected void getHit(int damage) {
         if (!this.playDieAnimation && !this.playGotAttackedAnimation) {
-            this.animationsState.copy(this.gotHitState);
             this.playAttackAnimation = false;//getting hit interrupts an enemy attack
+            this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             if (this.currHealth <= 0) { //died
-                if (!this.playDieAnimation) {
-                    //Make bounding box 0
-                    this.target.addEnergy(10);
-                }
+                //Make bounding box 0
+                this.target.addEnergy(10);
                 this.playGotAttackedAnimation = false;
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
             }

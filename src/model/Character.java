@@ -74,6 +74,7 @@ public abstract class Character extends GameObject{
 
     protected void getHit(int damage) {
         System.out.println("Character got hit");
+        this.animationsState.copy(this.gotHitState); //Set the state to update the bounding boxes
         this.currentAnimationCol = animationsState.getResetCol();//To start the animation from the start.
         this.playGotAttackedAnimation = true;
         this.currHealth -= damage;
