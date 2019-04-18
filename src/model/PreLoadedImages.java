@@ -12,6 +12,7 @@ public class PreLoadedImages {
     public static BufferedImage gruntSpriteSheet;
     public static BufferedImage protagonistSpriteSheet;
     public static BufferedImage campFireSpriteSheet;
+    public static BufferedImage shieldSpriteSheet;
 
     static {
         try {
@@ -21,6 +22,7 @@ public class PreLoadedImages {
             gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GruntSpriteSheet.png"));
             protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
             campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
+            shieldSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Shield.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
