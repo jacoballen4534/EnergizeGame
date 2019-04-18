@@ -145,6 +145,7 @@ public class Protagonist extends Character {
         }
 
         if (keyInput.getKeyPressDebounced("jump")){
+            SoundController.PlayAudio("itemPickup");
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 

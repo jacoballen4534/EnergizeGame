@@ -26,6 +26,7 @@ public class SoundController {
         put("gameVictory", null);
         put("gruntDeath",null);
         put("magicAbility",null);
+        put("itemPickup","/sound/pickup.wav");
     }};
 
     public static boolean PlayAudio(String audioName){
