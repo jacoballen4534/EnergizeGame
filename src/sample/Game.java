@@ -8,12 +8,16 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.*;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
+
+import static model.Utilities.readFile;
 
 public class Game extends Canvas {
 
@@ -45,10 +49,9 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static final long LEVEL_SEED = 12345678910L;
-    private static final long MOVEMENT_SEED = 12345678911L;
-    private static Random randomLevel = new Random(LEVEL_SEED);//used for map generation.
-    private static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
+    private static long MOVEMENT_SEED = 12345678911L;
+    public static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
+    public static long seed = 1L;
 
     public Game() {
         //Setup the canvas
@@ -105,7 +108,20 @@ public class Game extends Canvas {
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
 //        for (int i = 0; i < 10; i++) { //This creates the same map each time
-            Game.reSeed();
+        try {
+            ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/Seed.txt");
+            for (ArrayList<Pair<String, String>> block : seeds) {
+               if (block.get(0).getKey().equalsIgnoreCase("movementseed")) {
+                    MOVEMENT_SEED = Long.parseLong(block.get(0).getValue());
+                    System.out.println("movementSeed set to: " + block.get(0).getValue());
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+            randomMovement.setSeed(MOVEMENT_SEED);
             this.map = new Map(this);
 //        }
         this.map.loadLevel();
@@ -117,12 +133,6 @@ public class Game extends Canvas {
         Handler.setGame(this);
     }
 
-    public static void reSeed() {
-        randomLevel.setSeed(LEVEL_SEED);
-        randomMovement.setSeed(MOVEMENT_SEED);
-        System.out.println(getNextMapInt());
-    }
-
     public void hidePauseMenu () {
         this.pauseMenu.hide();
     }
@@ -131,9 +141,6 @@ public class Game extends Canvas {
         return randomMovement.nextInt(100);
     }
 
-    public static int getNextMapInt() {
-        return randomLevel.nextInt(100);
-    }
 
     public void start(){
         this.animationTimer.start();

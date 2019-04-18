@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -40,9 +41,6 @@ public class Level {
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>(); //Keep track of all floor location placed. Everything else must be door or wall
 
-    private ArrayList<>
-
-
     //////////////Macros, Actual size of different sprites///////////
     private final int Tile_SPRITE_WIDTH = 32;
     private final int Tile_SPRITE_HEIGHT = 32;
@@ -74,7 +72,7 @@ public class Level {
 
 
     //Makes a random level. Needs the current row, col and map width to find what level each door should map to
-    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight) { //Pass in top and left door, if they exist
+    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight, Random randomGenerator) { //Pass in top and left door, if they exist
         //////////////////////////////////// DOOR SETUP /////////////////////////////////////////////////////////////
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
@@ -82,17 +80,19 @@ public class Level {
         this.doorMap = doorMap; //This puts the up and left door in, if there is one
         this.mapWidth = mapWidth;
 
+        System.out.println("Level number: " + levelNumber + " First random double = \t" + randomGenerator.nextDouble());
+
         // Place right and down door in a random location along the respective border, if there is one.
         if ((wallArrangement & (0b1 << 2)) != 0) { //Add right door
             //Put door on right wall at random height. leave 1 tile above for the horizontal walls,
             // and 2 tiles below as the door takes up 2 vertical tiles (want the bottom to be above the lower wall.
-            int row = (Game.getNextMapInt() % (this.levelHeight - 3)) + 1;
+            int row = (int)(randomGenerator.nextDouble() * (this.levelHeight - 3)) + 1;
             this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, row));
         }
 
         if ((wallArrangement & (0b1 << 1)) != 0) { //Add bottom door
             //Put door 1 tile above the bottom wall at random width. leave 1 tile on either side,
-            int col = (Game.getNextMapInt() % (this.levelWidth - 2)) + 1;
+            int col = (int)(randomGenerator.nextDouble() * (this.levelWidth - 2)) + 1;
             this.doorMap.put(TileType.DOOR_DOWN, new Point2D(col, this.levelHeight - 2));
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ public class Level {
             this.updateReachableDoors(currentPoint);
 
             //Pick next location
-            this.currentPoint = this.nextLocation(this.currentPoint);
+            this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator);
         }
 
 
@@ -180,7 +180,7 @@ public class Level {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        this.debugDrawFloor();
+//        this.debugDrawFloor();
 
 
         //Find paths between tiles
@@ -218,20 +218,30 @@ public class Level {
         System.out.println("Number of floors: " + numberOfFloows);
     }
 
-    private Point2D nextLocation (Point2D currentPoint) {
+    private Point2D nextLocation (Point2D currentPoint, Random nextLocationRandomGenerator) {
 
         //Pick a random direction to step.
-        int odds = (Game.getNextMapInt() % 4);
+        int odds = (int)(nextLocationRandomGenerator.nextDouble() *  4);
         switch (odds) {
             case 0: //25 %chance of moving in x direction
-                int nextXDir = Game.getNextMapInt();
-                this.nextXDirection = nextXDir <= 49 ? 1 : -1;
-                this.nextYDirection = 0;
+                int nextXDir = (int)(nextLocationRandomGenerator.nextDouble() * 100);
+                if (nextXDir < 33) {
+                    this.nextXDirection = 1;
+                } else if (nextXDir < 66) {
+                    this.nextXDirection = -1;
+                } else {
+                    this.nextYDirection = 0;
+                }
                 break;
             case 1: //25% chance of moving in y direction
-                int nextYDir = Game.getNextMapInt();
-                this.nextYDirection = nextYDir <= 49 ? 1 : -1;
-                this.nextXDirection = 0;
+                int nextYDir = (int)(nextLocationRandomGenerator.nextDouble() * 100);
+                if (nextYDir < 33) {
+                    this.nextYDirection = 1;
+                } else if (nextYDir < 66) {
+                    this.nextYDirection = -1;
+                } else {
+                    this.nextYDirection = 0;
+                }
                 break;
                 // 50% chance of staying in the same direction
         }
@@ -243,8 +253,7 @@ public class Level {
                  nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
             nextPosition = currentPoint.add(-this.nextXDirection, -this.nextYDirection);
         }
-
-
+        
         return nextPosition;
     }
 
@@ -415,9 +424,4 @@ public class Level {
         Handler.udateCharacterLevelWidth(this.levelWidth);
     }
 
-
-    class Node {
-        private HashMap<Integer, Inventory> distanceFromStart = new HashMap<>();
-        private
-    }
 }
