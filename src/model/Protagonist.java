@@ -14,14 +14,12 @@ public class Protagonist extends Character {
     private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     private boolean isAttacking = false; //Attempt to debounce attacking
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
-    private AnimationsState runningState;
     private AnimationsState idleState;
-    private AnimationsState attackState;
-    private AnimationsState gotHitState;
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 100;//For testing it is at 100.
+    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;//For testing it is at 100.
+    private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
 
     private int currEnergy;
     private int maxEnergy;
@@ -40,7 +38,9 @@ public class Protagonist extends Character {
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
 //        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
         this.attackState = new AnimationsState(45,45,17,5,6,6,0);
-        this.gotHitState = new AnimationsState(0,0,0,0,6,9,0); //Place holder till get hit sprite
+        this.gotHitState = new AnimationsState(45,45,17,5,6,9,0); //Place holder till get hit sprite
+        this.attackCooldown = PROTAGONIST_ATTACK_COOLDOWN;
+
 
         //Set health
         this.currHealth = PROTAGONIST_MAXHEALTH;
@@ -61,18 +61,22 @@ public class Protagonist extends Character {
 
     @Override
     protected void attack() {
-        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
-        super.attack();
-        Handler.attack(this);
+        if(super.canAttack()) {
+            Handler.attack(this); //TODO: Wait untill plart way through this animaiton before actually hitting
+        }
     }
+
 
     @Override
     protected void getHit(int damage) {
-        this.animationsState.copy(this.gotHitState);
-        super.getHit(damage);
-        if (this.currHealth <= 0) { //died
-            this.playGotAttackedAnimation = false;
-            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation) { //Cant get hit while attacking but there is a cooldpwn
+            this.animationsState.copy(this.gotHitState);
+            super.getHit(damage);
+            this.hud.setHealth(this.currHealth);
+            if (this.currHealth <= 0) { //died
+                this.playGotAttackedAnimation = false;
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            }
         }
     }
 
@@ -87,6 +91,7 @@ public class Protagonist extends Character {
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false; //Once the animation has finished, set this to false to only play the animation once
                 this.isAttacking = false;
+                this.attackTimer = 0;
             }
         }else if (this.playGotAttackedAnimation) {
             this.animationsState.copy(this.gotHitState);

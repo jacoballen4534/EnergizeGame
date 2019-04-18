@@ -8,26 +8,27 @@ import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
 
-    private AnimationsState walkState;
     private AnimationsState idleState;
-    private AnimationsState getHitState;
     private AnimationsState dieState;
-    private AnimationsState attackState;
+
     private AnimationsState alertState;
     private final int GRUNT_BASE_ATTACK_DAMAGE = 10;
     private final int GRUNT_MAXHEALTH = 100;
+    private final int GRUNT_ATTACK_COOLDOWN = 2000;
+    private final int GRUNT_APPLY_DAMEAGE_COL = 7;//To apply damage part way through the attack animation
 
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth, boolean enabled) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
         //TODO: Add borders and additional sprite sheets
         //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
-        this.attackState = new AnimationsState(9,54,16,1,17, 0,0);
+        this.attackState = new AnimationsState(9,54,16,0,17, 0,0);
         this.dieState = new AnimationsState(0,0,15,0,14, 1,0); //Doesnt need a border
-        this.walkState = new AnimationsState(0,72,15,0,12, 2,0);
+        this.runningState = new AnimationsState(0,72,15,0,12, 2,0);
         this.idleState = new AnimationsState(0,63,15,0,10, 3,0);
-        this.getHitState = new AnimationsState(0,45,15,0,7, 4,0);
-//        this.getHitState = new AnimationsState(45,45,15,0,7, 4,0);
+        this.gotHitState = new AnimationsState(0,45,15,0,7, 4,0);
+//        this.gotHitState = new AnimationsState(45,45,15,0,7, 4,0);
         this.alertState = new AnimationsState(0,63,15,0,3, 4,0);
+        this.attackCooldown = GRUNT_ATTACK_COOLDOWN;
 
         //////////////////////////// SET UP HEALTH / DAMAGE //////////////////////////////
         this.attackDamage = GRUNT_BASE_ATTACK_DAMAGE;
@@ -46,19 +47,22 @@ public class Grunt extends Enemy {
                 Handler.removeEnemy(this);
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
-            this.animationsState.copy(this.getHitState);
+            this.animationsState.copy(this.gotHitState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false;
             }
         } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
-            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+            if (this.currentAnimationCol == GRUNT_APPLY_DAMEAGE_COL) {
+                Handler.attack(this); //TODO: Wait untill plart way through this animaiton before actually hitting
+            } else if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false;
+                this.attackTimer = 0;
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
         } else { //Walking
-            this.animationsState.copy(walkState);
+            this.animationsState.copy(runningState);
         }
     }
 
@@ -100,6 +104,10 @@ public class Grunt extends Enemy {
                 }
             }
         }
+        if (this.getAttackBounds().intersects(target.getBounds())) {
+            this.attack();
+        }
+
         super.tick(cameraX,cameraY);
 
     }
@@ -116,22 +124,24 @@ public class Grunt extends Enemy {
 
     @Override
     protected void attack() {
-        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
-        super.attack();
-        Handler.attack(this);
+       if(super.canAttack()) {
+        }
     }
 
     @Override
     protected void getHit(int damage) {
-        this.animationsState.copy(this.getHitState);
-        super.getHit(damage);
-        if (this.currHealth <= 0) { //died
-            if (!this.playDieAnimation) {
-                //Make bounding box 0
-                this.target.addEnergy(10);
+        if (!this.playDieAnimation && !this.playGotAttackedAnimation) {
+            this.animationsState.copy(this.gotHitState);
+            this.playAttackAnimation = false;//getting hit interrupts an enemy attack
+            super.getHit(damage);
+            if (this.currHealth <= 0) { //died
+                if (!this.playDieAnimation) {
+                    //Make bounding box 0
+                    this.target.addEnergy(10);
+                }
+                this.playGotAttackedAnimation = false;
+                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
             }
-            this.playGotAttackedAnimation = false;
-            this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
         }
     }
 
