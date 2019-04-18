@@ -13,11 +13,16 @@ public abstract class Character extends GameObject{
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
     //To play each animation once.
+    protected AnimationsState attackState;
+    protected AnimationsState gotHitState;
+    protected AnimationsState runningState;
+
     protected boolean playGotAttackedAnimation = false;
     protected boolean playAttackAnimation = false;
     protected boolean playDieAnimation = false;
     private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
     protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
+    protected long lastAttackTimer, attackCooldown, attackTimer = 0;
 
 
 
@@ -50,23 +55,31 @@ public abstract class Character extends GameObject{
 
     abstract void updateAnimationState();
 
-    protected void attack() {
-        if (!this.playAttackAnimation) { //Only restart the animation the first time. Can only attack once previous attack has finished
-            this.currentAnimationCol = 0; //To start the animation from the start.
+    protected boolean canAttack() {
+        this.attackTimer += System.currentTimeMillis() - this.lastAttackTimer;
+        this.lastAttackTimer = System.currentTimeMillis();
+
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && (this.attackTimer >= this.attackCooldown)) {
+            this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
+            this.currentAnimationCol = animationsState.getResetCol(); //To start the animation from the start.
             this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
+            return true;
         }
+        return false;
     }
 
-    abstract void playSound();
+    protected void attack(){
+
+    }
 
     protected void getHit(int damage) {
-        if (!this.playGotAttackedAnimation) {
-            System.out.println("Character got hit");
-            this.currentAnimationCol = 0;//To start the animation from the start.
-            this.playGotAttackedAnimation = true;
-            this.currHealth -= damage;
-            if (this.currHealth < 0) this.currHealth = 0;
-        }
+        System.out.println("Character got hit");
+        this.animationsState.copy(this.gotHitState); //Set the state to update the bounding boxes
+        this.currentAnimationCol = animationsState.getResetCol();//To start the animation from the start.
+        this.playGotAttackedAnimation = true;
+        this.currHealth -= damage;
+        if (this.currHealth < 0) this.currHealth = 0;
+
     }
 
 
@@ -82,6 +95,7 @@ public abstract class Character extends GameObject{
         }
     }
 
+
     /*protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy
     }*/
@@ -90,7 +104,7 @@ public abstract class Character extends GameObject{
         return this.attackDamage;
     }
 
-    public void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
+    protected void tick(double cameraX, double cameraY) {//Update x and y separately to allow sliding
         //Move 1 pixel at a time until reaching the destination or colliding with something.
         //If this slows down the game, revert to old version below.
         double directionX = this.velocityX / Math.abs(this.velocityX);
@@ -98,7 +112,7 @@ public abstract class Character extends GameObject{
 
         for (int x = 0; x < Math.abs(this.velocityX); x++) {
             this.x += directionX;
-            if (Handler.checkCollision(this, cameraX, cameraY)) {
+            if (Handler.checkCollision(this)) {
                 this.x -= directionX;
                 break;
             }
@@ -106,7 +120,7 @@ public abstract class Character extends GameObject{
 
         for (int y = 0; y < Math.abs(this.velocityY); y++) {
             this.y += directionY;
-            if (Handler.checkCollision(this, cameraX, cameraY)) {
+            if (Handler.checkCollision(this)) {
                 this.y -= directionY;
                 break;
             }
@@ -141,6 +155,7 @@ public abstract class Character extends GameObject{
             }
             this.renderBoundingBox(graphicsContext);
         }
+//        this.renderAttackBoundingBox(graphicsContext);
     }
 
     /////////////////////////////////////////

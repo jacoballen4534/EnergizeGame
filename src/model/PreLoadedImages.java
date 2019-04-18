@@ -9,7 +9,7 @@ public class PreLoadedImages {
     public static BufferedImage tutorialRoom;
     public static BufferedImage doorSpriteSheet;
     public static BufferedImage tileSpriteSheet;
-    public static BufferedImage gruntSpriteSheet;;
+    public static BufferedImage gruntSpriteSheet;
     public static BufferedImage protagonistSpriteSheet;
     public static BufferedImage campFireSpriteSheet;
 

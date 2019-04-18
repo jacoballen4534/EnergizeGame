@@ -1,5 +1,6 @@
 package sample;
 
+import FXMLControllers.mainMenuController;
 import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -8,7 +9,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
@@ -48,9 +48,13 @@ public class Game extends Canvas {
     private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
     private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
 
-    public Game() {
+    private mainMenuController controller;
+
+    public Game(mainMenuController menuController) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
+        this.controller = menuController;
+        controller.setGameActive(true);
         Handler.clearForNewGame();
         this.stage = Main.getStage();
         this.stage.setTitle("Tutorial Room");
@@ -183,7 +187,7 @@ public class Game extends Canvas {
         }
         if (keyInput.getKeyPressDebounced("inventory")){
             this.pause();
-            //ShowInventoryMenu();
+//            ShowInventoryMenu();
             System.out.println("Open inventory");
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="highScorePane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.highScoreController">
+<AnchorPane fx:id="highScorePane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.highScoreController">
     <children>
         <Label fx:id="highScoreTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="-30.0" prefHeight="40.0" styleClass="title-highscore" text="High Scores" textAlignment="CENTER" textFill="WHITE">
             <font>
