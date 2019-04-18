@@ -36,7 +36,7 @@ public class Protagonist extends Character {
         //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
-        this.idleState = new AnimationsState(45,48,17, 5, 3, 0, 0);
+        this.idleState = new AnimationsState(45,45,17, 5, 3, 0, 0);
         this.runningState = new AnimationsState(52,38,20,5, 6, 1, 1);
 //        this.attackState = new AnimationsState(45,0,0,5,6,6,0);
         this.attackState = new AnimationsState(45,45,17,5,6,6,0);
@@ -167,6 +167,8 @@ public class Protagonist extends Character {
             System.out.println("Wow, cheating in 2019?");
             currEnergy = maxEnergy;
             hud.setEnergy(currEnergy);
+            currHealth = maxHealth;
+            hud.setHealth(currHealth);
         }
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y

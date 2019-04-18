@@ -22,6 +22,7 @@ public class ShortestPath {
             ConvertToPathFindingTiles(tiles);
             setupNodes(tiles);
             calculateFloydWarshall();
+            System.out.println("All paths found");
         }).start();
     }
 
@@ -87,7 +88,7 @@ public class ShortestPath {
                 }
             }
         } else {
-            System.out.println("Still calculating paths");
+            System.out.println("Calculating paths");
             return 5;//Not ready yet
         }
     }
