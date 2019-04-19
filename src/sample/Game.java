@@ -51,7 +51,7 @@ public class Game extends Canvas {
     public static final int SCREEN_HEIGHT = 768;
     private static long MOVEMENT_SEED = 12345678911L;
     public static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
-    public static long seed = 1L;
+
 
     public Game() {
         //Setup the canvas
@@ -107,6 +107,9 @@ public class Game extends Canvas {
         stage.show();
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
+
+        //////////////////// Make the map /////////////////////////////////////
+        long MAP_SEED = 0;
 //        for (int i = 0; i < 10; i++) { //This creates the same map each time
         try {
             ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/Seed.txt");
@@ -114,15 +117,16 @@ public class Game extends Canvas {
                if (block.get(0).getKey().equalsIgnoreCase("movementseed")) {
                     MOVEMENT_SEED = Long.parseLong(block.get(0).getValue());
                     System.out.println("movementSeed set to: " + block.get(0).getValue());
-                }
+                } else if (block.get(0).getKey().equalsIgnoreCase("mapseed")) {
+                   MAP_SEED = Long.parseLong(block.get(0).getValue());
+                   System.out.println("MapSeed set to: " + block.get(0).getValue());
+               }
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-            randomMovement.setSeed(MOVEMENT_SEED);
-            this.map = new Map(this);
+        randomMovement.setSeed(MOVEMENT_SEED);
+        this.map = new Map(this, MAP_SEED);
 //        }
         this.map.loadLevel();
         init(); //Setup game loop

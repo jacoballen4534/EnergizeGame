@@ -4,10 +4,8 @@ import javafx.geometry.Point2D;
 import sample.Game;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map;
-import java.util.Random;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -33,13 +31,15 @@ public class Level {
     private int levelWidth;
     private int levelHeight;
     private int mapWidth;//Used to calculate the level number of neighboring levels
-    private HashMap<TileType, Point2D> doorMap; //Store the doors and their location.
+    private TreeMap<TileType, Point2D> doorMap; //Store the doors and their location.
     //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
     private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
     private Point2D currentPoint;
     private Point2D nextPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>(); //Keep track of all floor location placed. Everything else must be door or wall
+    private final Random randomGenerator;
+    private double numberOfRandomBools = 0;
 
     //////////////Macros, Actual size of different sprites///////////
     private final int Tile_SPRITE_WIDTH = 32;
@@ -65,37 +65,23 @@ public class Level {
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
         this.levelNumber = levelNumber;
-        this.doorMap = new HashMap<>();
+        this.randomGenerator = new Random(0); //Unused but set to allow final declaration
+        this.doorMap = new TreeMap<>();
         this.mapWidth = mapWidth;
         ProcessImage(image);
     }
 
 
     //Makes a random level. Needs the current row, col and map width to find what level each door should map to
-    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight, Random randomGenerator) { //Pass in top and left door, if they exist
+    public Level(int levelNumber, int mapWidth, TreeMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight, float baseSeed) { //Pass in top and left door, if they exist
         //////////////////////////////////// DOOR SETUP /////////////////////////////////////////////////////////////
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
         this.levelNumber = levelNumber;
-        this.doorMap = doorMap; //This puts the up and left door in, if there is one
+        this.doorMap = doorMap;
         this.mapWidth = mapWidth;
-
-        System.out.println("Level number: " + levelNumber + " First random double = \t" + randomGenerator.nextDouble());
-
-        // Place right and down door in a random location along the respective border, if there is one.
-        if ((wallArrangement & (0b1 << 2)) != 0) { //Add right door
-            //Put door on right wall at random height. leave 1 tile above for the horizontal walls,
-            // and 2 tiles below as the door takes up 2 vertical tiles (want the bottom to be above the lower wall.
-            int row = (int)(randomGenerator.nextDouble() * (this.levelHeight - 3)) + 1;
-            this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(this.levelWidth-1, row));
-        }
-
-        if ((wallArrangement & (0b1 << 1)) != 0) { //Add bottom door
-            //Put door 1 tile above the bottom wall at random width. leave 1 tile on either side,
-            int col = (int)(randomGenerator.nextDouble() * (this.levelWidth - 2)) + 1;
-            this.doorMap.put(TileType.DOOR_DOWN, new Point2D(col, this.levelHeight - 2));
-        }
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.out.println("Level: " + levelNumber + "\tSeed: " + (long)(baseSeed * this.levelNumber));
+        this.randomGenerator = new Random((long)(baseSeed * this.levelNumber));
 
 
         //////////////////////////////////// INITIALIZE WALLS ///////////////////////////////////////////////////////
@@ -115,19 +101,19 @@ public class Level {
             switch (door.getKey()){
                 case DOOR_UP:
                     this.topDoorReachable = false;
-                    this.currentPoint = door.getValue().add(0, +1);
+                    this.currentPoint = new Point2D(door.getValue().getX(), door.getValue().getY() + 1);
                     break;
                 case DOOR_RIGHT:
                     this.rightDoorReachable = false;
-                    this.currentPoint = door.getValue().add(-1, 0);
+                    this.currentPoint = new Point2D(door.getValue().getX() - 1, door.getValue().getY());
                     break;
                 case DOOR_DOWN:
-                    this.currentPoint = door.getValue().add(0, -2);
+                    this.currentPoint = new Point2D(door.getValue().getX(), door.getValue().getY() - 2);
                     this.bottomDoorReachable = false;
                     break;
                 case DOOR_LEFT:
                     this.leftDoorReachable = false;
-                    this.currentPoint = door.getValue().add(+1, 0);
+                    this.currentPoint = new Point2D(door.getValue().getX() + 1, door.getValue().getY());
                     break;
             }
         }
@@ -142,35 +128,30 @@ public class Level {
             this.updateReachableDoors(currentPoint);
 
             //Pick next location
-            this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator);
+            this.numberOfRandomBools += 2;
+            this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator.nextBoolean(), randomGenerator.nextBoolean());
         }
 
 
         //If a door is still unreachable, make a path to it.
 
-        int steps = 1; //Converge from each door towards the centre. Converging at the same time will allow different paths to connect, making the full map connected earlie.
-        while (!this.topDoorReachable || !this.rightDoorReachable || !this.bottomDoorReachable || !this.leftDoorReachable) {
+        //Converge from each door towards the centre. Converging at the same time will allow different paths to connect, making the full map connected earlie.
+        for (int steps = 1; steps < this.levelHeight - 4; steps++) {
             if (!this.topDoorReachable) {
-                this.nextPoint = doorMap.get(TileType.DOOR_UP).add(0, steps);
-                this.topDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelHeight - 4);
-                this.placeFloor(this.nextPoint, false);
-            }
-            if (!this.rightDoorReachable) {
-                this.nextPoint = doorMap.get(TileType.DOOR_RIGHT).add(-steps, 0);
-                this.rightDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelWidth - 3);
-                this.placeFloor(this.nextPoint, true);
+                this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_UP).getX(), doorMap.get(TileType.DOOR_UP).getY() + steps), false);
             }
             if (!this.bottomDoorReachable) {
-                this.nextPoint = doorMap.get(TileType.DOOR_DOWN).add(0, -steps - 1);
-                this.bottomDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelHeight - 4);
-                this.placeFloor(this.nextPoint, true);
+                this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_DOWN).getX(), doorMap.get(TileType.DOOR_DOWN).getY() - steps - 1), true);
             }
+        }
+
+        for (int steps = 1; steps < this.levelWidth - 3; steps++) {
             if (!this.leftDoorReachable) {
-                this.nextPoint = doorMap.get(TileType.DOOR_LEFT).add(steps, 0);
-                this.leftDoorReachable = ((this.tiles.get((int)this.nextPoint.getY()).get((int)this.nextPoint.getX()) == TileType.FLOOR) || steps > this.levelWidth - 3);
-                this.placeFloor(this.nextPoint, true);
+                this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_LEFT).getX() + steps, doorMap.get(TileType.DOOR_LEFT).getY()), true);
             }
-            steps++;
+            if (!this.rightDoorReachable) {
+                this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_RIGHT).getX() - steps, doorMap.get(TileType.DOOR_RIGHT).getY()), true);
+            }
         }
 
 
@@ -181,11 +162,6 @@ public class Level {
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 //        this.debugDrawFloor();
-
-
-        //Find paths between tiles
-
-
     }
 
     private void findPaths() {
@@ -195,7 +171,9 @@ public class Level {
 
 
     public void debugDrawFloor() {
-        System.out.print("\n\nXXXXXXXXXXXXXXXXXXXX\n");
+        System.out.println("\n\nLevel number: " + this.levelNumber + " Number of random bools: " + numberOfRandomBools);
+
+        System.out.println("--------------------");
 
         int numberOfFloows = 0;
         for (int row = 0; row < this.levelHeight; row ++) {
@@ -218,58 +196,79 @@ public class Level {
         System.out.println("Number of floors: " + numberOfFloows);
     }
 
+    /* //With chance of keeping direction
     private Point2D nextLocation (Point2D currentPoint, Random nextLocationRandomGenerator) {
 
         //Pick a random direction to step.
         int odds = (int)(nextLocationRandomGenerator.nextDouble() *  4);
+
         switch (odds) {
             case 0: //25 %chance of moving in x direction
-                int nextXDir = (int)(nextLocationRandomGenerator.nextDouble() * 100);
-                if (nextXDir < 33) {
+                if (nextLocationRandomGenerator.nextBoolean()) {
                     this.nextXDirection = 1;
-                } else if (nextXDir < 66) {
-                    this.nextXDirection = -1;
                 } else {
-                    this.nextYDirection = 0;
+                    this.nextXDirection = -1;
                 }
+                nextYDirection = 0; //To not move diagonally.
                 break;
             case 1: //25% chance of moving in y direction
-                int nextYDir = (int)(nextLocationRandomGenerator.nextDouble() * 100);
-                if (nextYDir < 33) {
+                if (nextLocationRandomGenerator.nextBoolean()) {
                     this.nextYDirection = 1;
-                } else if (nextYDir < 66) {
-                    this.nextYDirection = -1;
                 } else {
-                    this.nextYDirection = 0;
+                    this.nextYDirection = -1;
                 }
+                nextXDirection = 0; //To not move diagonally.
+
                 break;
                 // 50% chance of staying in the same direction
         }
 
-        Point2D nextPosition = currentPoint.add(this.nextXDirection, this.nextYDirection);
+        Point2D nextPosition = new Point2D(currentPoint.getX() + nextXDirection, currentPoint.getY() + nextYDirection);
 
         //If this new position is out of bounds, move back in the opposite direction 2 steps
         if (nextPosition.getX() < 1 || nextPosition.getX() > this.levelWidth - 2 ||
                  nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
-            nextPosition = currentPoint.add(-this.nextXDirection, -this.nextYDirection);
+            nextPosition = new Point2D(currentPoint.getX() - nextXDirection, currentPoint.getY() - nextYDirection);
         }
         
+        return nextPosition;
+    }*/
+
+    private Point2D nextLocation (Point2D currentPoint, boolean horizontal, boolean increase) {
+
+        if (horizontal) {
+            this.nextXDirection = increase ? 1 : -1;
+            nextYDirection = 0; //To not move diagonally.
+        } else {
+            this.nextYDirection = increase ? 1 : -2;
+            nextXDirection = 0; //To not move diagonally.
+        }
+
+        Point2D nextPosition = new Point2D(currentPoint.getX() + nextXDirection, currentPoint.getY() + nextYDirection);
+
+        //If this new position is out of bounds, move back in the opposite direction 2 steps
+        if (nextPosition.getX() < 1 || nextPosition.getX() > this.levelWidth - 2 ||
+                nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
+            nextPosition = new Point2D(currentPoint.getX() - nextXDirection, currentPoint.getY() - nextYDirection);
+        }
         return nextPosition;
     }
 
 
+
     private void placeFloor(Point2D location, boolean doubleTile) { //Double tile indicates if the tile underneath should be added also.
         // This is sometimes needed due the protagonist being 2 tiles tall
-        this.tiles.get((int)location.getY()).set((int)location.getX(), TileType.FLOOR);
-        if (!this.floorLocation.contains(location)) {
-            this.floorLocation.add(location);
-        }
+        int row = (int)location.getY();
+        int col = (int)location.getX();
 
-        if (doubleTile) {
-            this.tiles.get((int) location.getY() + 1).set((int) location.getX(), TileType.FLOOR);
-            if (!this.floorLocation.contains(location.add(0, 1))) {
-                this.floorLocation.add(location.add(0, 1));
-            }
+        if (this.tiles.get(row).get(col) != TileType.FLOOR) { //Only place floor if it is not already a floor.
+            this.floorLocation.add(new Point2D(col, row));
+        }
+        this.tiles.get(row).set(col, TileType.FLOOR);
+
+        if (doubleTile && this.tiles.get(row + 1).get(col) != TileType.FLOOR) {
+            this.tiles.get(row + 1).set(col, TileType.FLOOR);
+            this.floorLocation.add(new Point2D(col, row + 1));
         }
     }
 
@@ -277,16 +276,20 @@ public class Level {
         //Only update doors that are still unreachable.
         //Check if the new location is next to a door
         if (!this.topDoorReachable) {
-            this.topDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_UP).add(0,1));
+            this.topDoorReachable = (newLocation.getX() == this.doorMap.get(TileType.DOOR_UP).getX() &&
+                    newLocation.getY() == this.doorMap.get(TileType.DOOR_UP).getY() + 1);
         }
         if (!this.rightDoorReachable) {
-            this.rightDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_RIGHT).add(-1,0));
+            this.rightDoorReachable = (newLocation.getX() == this.doorMap.get(TileType.DOOR_RIGHT).getX() - 1 &&
+                    newLocation.getY() == this.doorMap.get(TileType.DOOR_RIGHT).getY());
         }
         if (!this.bottomDoorReachable) {
-            this.bottomDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_DOWN).add(0,-2));
+             this.bottomDoorReachable = (newLocation.getX() == this.doorMap.get(TileType.DOOR_DOWN).getX() &&
+                    newLocation.getY() == this.doorMap.get(TileType.DOOR_DOWN).getY() - 2);
         }
         if (!this.leftDoorReachable) {
-            this.leftDoorReachable = newLocation.equals(this.doorMap.get(TileType.DOOR_LEFT).add(1,0));
+             this.leftDoorReachable = (newLocation.getX() == this.doorMap.get(TileType.DOOR_LEFT).getX() + 1 &&
+                    newLocation.getY() == this.doorMap.get(TileType.DOOR_LEFT).getY());
         }
     }
 
@@ -307,7 +310,7 @@ public class Level {
         return this.levelHeight;
     }
 
-    public HashMap<TileType,Point2D> getDoors () {
+    public TreeMap<TileType,Point2D> getDoors () {
         return this.doorMap;
     }
 

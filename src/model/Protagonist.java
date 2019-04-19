@@ -21,7 +21,7 @@ public class Protagonist extends Character {
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 10;
+    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 100;
 
     private int currEnergy;
     private int maxEnergy;

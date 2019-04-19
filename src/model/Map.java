@@ -1,101 +1,95 @@
 package model;
 
 import javafx.geometry.Point2D;
-import javafx.util.Pair;
 import sample.Game;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
-
-import static model.Utilities.readFile;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class Map {
     //Holds all the levels.
-    private HashMap<Integer, Level> levels = new HashMap<>();
+    private ConcurrentHashMap<Integer, Level> levels = new ConcurrentHashMap<>();
     //May need to put this into a level class so we dont need to get the floor each time.
     private Level currentLevel;
     private Game game; //To add the protagonist to.
     private int tutorialRow;
     private final int MAP_WIDTH = 10;
-    private final int MAP_HEIGHT = 10;
+    private final int MAP_HEIGHT = 11;
     private final int LEVEL_WIDTH = 20;
     private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
     private long MAP_SEED;
-    private ArrayList<Random> randomGenerators = new ArrayList<>();
-
+    private ArrayList<ArrayList<TreeMap<TileType, Point2D>>> allDoorLocations = new ArrayList<>(); //2d array list of door locations. in col,row form
 
     //Hold the layout of the different levels that makes up the map, Can be used for mini-map.
     //Using bitwise operations to indicate which side shares a wall with another level (need a door). Or 0 if it is not a level
     // 4 bits in the form Top,Right,Bottom,Left.
-    private ArrayList<ArrayList<Integer>> levelLayout = new ArrayList<>();
+    private ArrayList<ArrayList<Boolean>> levelLayout = new ArrayList<>();
 
-    public Map(Game game){
+
+    public Map(Game game, long MAP_SEED){
         this.game = game;
+        this.MAP_SEED = MAP_SEED;
+//        this.MAP_SEED = MAP_SEED;
+
         //Generate a random layout of levels.
-        try {
-            ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/Seed.txt");
-            for (ArrayList<Pair<String, String>> block : seeds) {
-                if (block.get(0).getKey().equalsIgnoreCase("mapseed")) {
-                    MAP_SEED = Long.parseLong(block.get(0).getValue());
-                    System.out.println("MapSeed set to: " + block.get(0).getValue());
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        for (int row = 0; row < MAP_HEIGHT; row++) {
-            for (int col = 0; col < MAP_WIDTH; col++) {
-                randomGenerators.add(new Random(MAP_SEED + (col + row * MAP_WIDTH)));
-            }
-        }
-        Random mapRandomGenerator = new Random(MAP_SEED + (MAP_HEIGHT * MAP_WIDTH));
+        this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, new Random(this.MAP_SEED));
 
 
-        this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, mapRandomGenerator);
+//        for (int row = 0; row < MAP_HEIGHT; row ++) {
+//            for (int col = 0; col < MAP_WIDTH; col ++) {
+//                System.out.print("\nLevel " + (col + row * MAP_WIDTH) + ": ");
+//                for (java.util.Map.Entry<TileType, Point2D> entry : allDoorLocations.get(row).get(col).entrySet()) {
+//                    System.out.print(entry.getKey() + " -> " + entry.getValue() + " ");
+//                }
+//            }
+//            System.out.println();
+//        }
 
-        //Add the tutorial room first so it's the adjacent level can align its door.
-        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
-        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
-        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
 
-         //For each level in the map, generate a random level.
+
+
+
+
+
+        //For each level in the map, generate a random level.
         //As we create levels from top to bottom, left to right. The current level needs to align its top and left door
         //with the existing corresponding level. This allows the doors to in random positions along the boundary but still alight in the adjacent rooms.
-        for (int row = 0; row < levelLayout.size(); row ++) {
-            for (int col = 1; col < levelLayout.get(row).size(); col++) {
-                int wallArrangement = levelLayout.get(row).get(col);
-                if (wallArrangement != 0) { //Make sure there is a level in this location
-                    HashMap<TileType, Point2D> currentLevelDoors = new HashMap<>();
-
-                    //If there is a level above, get the location of its bottom door. To align this levels top door
-                    if ((wallArrangement & (0b1 << 3)) != 0) { //Has level above
-                        Point2D connectingLevelAboveDoorLocation = this.levels.get(col + (row - 1) * MAP_WIDTH).getDoors().get(TileType.DOOR_DOWN);
-                        currentLevelDoors.put(TileType.DOOR_UP, new Point2D(connectingLevelAboveDoorLocation.getX(), 0));
-                    }
-
-                    //If there is a level to the left, get the location of its right door. To align this levels left door
-                    if ((wallArrangement & (0b1)) != 0) { //Has level to left
-                        Point2D connectingLevelToLeftDoorLocation = this.levels.get(col -1 + row * MAP_WIDTH).getDoors().get(TileType.DOOR_RIGHT);
-                        currentLevelDoors.put(TileType.DOOR_LEFT, new Point2D(0, connectingLevelToLeftDoorLocation.getY()));
-                    }
-
-
-                    //Pass in these doors to the new level
-                    this.currentLevel = new Level( col + row * MAP_WIDTH, MAP_WIDTH, levelLayout.get(row).get(col), currentLevelDoors, LEVEL_WIDTH, LEVEL_HEIGHT, randomGenerators.get(col + row * MAP_WIDTH)); //Set to current level to garnette there is something to load
-                    this.levels.put(col + row * MAP_WIDTH, this.currentLevel);
+        for (int row = 0; row < MAP_HEIGHT; row ++) {
+            for (int col = 1; col < MAP_WIDTH; col++) {
+                if (levelLayout.get(row).get(col)) { //Make sure there is a level in this location
+                    final int levelNumber = col + row * MAP_WIDTH;
+                    this.levels.put (levelNumber, new Level(levelNumber, MAP_WIDTH, this.allDoorLocations.get(row).get(col), LEVEL_WIDTH, LEVEL_HEIGHT, this.MAP_SEED)); //Set to current level to garnette there is something to load
+//                    this.levels.put (levelNumber, new Level( levelNumber, MAP_WIDTH, allDoorLocations.get(row).get(col), LEVEL_WIDTH, LEVEL_HEIGHT, new Random(col + row * MAP_WIDTH))); //Set to current level to garnette there is something to load
                 }
             }
         }
 //        this.currentLevel.debugDrawFloor();
-        this.currentLevel = levels.get(tutorialLevelNumber);
+//        this.currentLevel = levels.get(tutorialLevelNumber);
+        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
+        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
+        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
+
+
+        for (int row = 0; row < MAP_HEIGHT; row ++) {
+            for (int col = 1; col < MAP_WIDTH; col++) {
+                if (levelLayout.get(row).get(col)) { //Make sure there is a level in this location
+                    this.levels.get(col + row * MAP_WIDTH).debugDrawFloor();
+                }
+            }
+        }
+
+
+
+
+
 
     }
+
+
 
     public Level getLevel(int levelNumber) {
         if (this.levels.size() >= levelNumber) {
@@ -133,106 +127,112 @@ public class Map {
 
     //This generates where all the different levels will be and how they connect
     private void generateLevelLayout(int rows, int cols, int maxTunnels, int maxTunnelLength, Random randomGenerator) {
-        ArrayList<ArrayList<Integer>> directions = new ArrayList<>(); //A list of directions to randomly pick from. form x,y
-        directions.add(new ArrayList<>(Arrays.asList(-1, 0))); //left
-        directions.add(new ArrayList<>(Arrays.asList(1, 0))); //right
-        directions.add(new ArrayList<>(Arrays.asList(0, -1))); //up
-        directions.add(new ArrayList<>(Arrays.asList(0, 1))); //down
+        ArrayList<Point2D> directions = new ArrayList<>(); //A list of directions to randomly pick from. form x,y
+        directions.add(new Point2D(-1, 0)); //left
+        directions.add(new Point2D(1, 0)); //right
+        directions.add(new Point2D(0, -1)); //up
+        directions.add(new Point2D(0, 1)); //down
 
-        int currentRow = (int)(randomGenerator.nextDouble() * (rows - 1)) + 1; //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
-        System.out.println("Random height for starting door" + currentRow);
-        this.tutorialRow = currentRow - 1; //Return this to know where the tutorial room is. -1 as currentRow includes a buffer at the top
-        int currentCol = 2;
+        this.levelLayout.clear();
+
+        int currentRow = (int)(randomGenerator.nextDouble() * rows); //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
+        System.out.println("Random height for starting door " + currentRow);
+        this.tutorialRow = currentRow; //Return this to know where the tutorial room is.
+        int currentCol = 1; //This is where the first room after tutorial room is.
         int randomTunnelLength;
         int currentTunnelLength;
-        ArrayList<Integer> lastDirection = directions.get(2); //Initialize us pointing up so the next direction will have to be to the right, as this is how we leave the tutorial room
-        ArrayList<Integer> randomDirection;
-        ArrayList<ArrayList<Integer>> levelBuilder = new ArrayList<>(); //1 indicates a room, 0 is empty
+        int lastDirectionIndex = 2; //Initialize us pointing up so the next direction will have to be to the right, as this is how we leave the tutorial room
+        int nextDirectionIndex;
 
-//        Initialize the map with no rooms apart from tutorial room
-        for (int row = 0; row < rows + 2; row++) { //Add a 1 row buffer above and below for easier boundary checks later.
-            ArrayList<Integer> column = new ArrayList<>();
-            for (int col = 0; col < cols + 2; col++) { //Add 1 col buffer for tutorial room to be on its own, then another border buffer.
-                if (col == 1 && row == currentRow) {
-                    column.add(1); //Put the tutorial room in the first column at random height.
+//      Initialize the map with no rooms apart from tutorial room
+        for (int row = 0; row < rows; row++) {
+            ArrayList<Boolean> column = new ArrayList<>();
+            for (int col = 0; col < cols; col++) {
+                if (col == 0 && row == currentRow) {
+                    column.add(true); //Put the tutorial room in the first column at random height.
                 } else {
-                    column.add(0);
+                    column.add(false);
                 }
             }
-            levelBuilder.add(column);
+            levelLayout.add(column);
         }
 
         while (maxTunnels > 0) {
 
             //Make sure you dont keep going in the same direction as you just went, and dont backtrack over an existing path
-            do {
-                int directionIndex = (int)(randomGenerator.nextDouble() * 4);
-                randomDirection = directions.get(directionIndex); //Pick a new direction
+            if (lastDirectionIndex < 2) { //Last direction was vertical so pick random horizontal
+                nextDirectionIndex = randomGenerator.nextBoolean() ? 2 : 3;
+            } else {
+                nextDirectionIndex = randomGenerator.nextBoolean() ? 0 : 1;
             }
-            while (randomDirection.get(0).equals(lastDirection.get(0) * -1) && randomDirection.get(1).equals(lastDirection.get(1) * -1) ||
-                    randomDirection.get(0).equals(lastDirection.get(0)) && randomDirection.get(1).equals(lastDirection.get(1)));
 
             randomTunnelLength = (int)(randomGenerator.nextDouble() * maxTunnelLength) + 1; //Add 1 as it was from 0<length.
             currentTunnelLength = 0;
 
             while (currentTunnelLength < randomTunnelLength) { //add floors until we reach the desired length, or hit an edge.
 
-                //Check if we are on the boundary and trying to go offscreen. Use Col = 2 as bounday so the tutoial room can only have an exit on its right
-                if (currentRow == 1 && randomDirection.get(1).equals(-1) || currentCol == 2 && randomDirection.get(0).equals(-1) ||
-                        currentRow == rows - 1 && randomDirection.get(1).equals(1) ||
-                        currentCol == cols - 1 && randomDirection.get(0).equals(1)) {
+                //Check if we are on the boundary and trying to go offscreen. Use Col = 1 as boundary so the tutorial room is the only room in col 0 with exit on its right
+                if (currentRow == 0 && nextDirectionIndex == 2 || currentCol == 1 && nextDirectionIndex == 0  ||
+                        currentRow == rows - 1 && nextDirectionIndex == 3 || currentCol == cols - 1 && nextDirectionIndex == 1 ) {
                     break;
                 } else {
 //                    System.out.println("row: " + currentRow + " col: " + currentCol);
-                    levelBuilder.get(currentRow).set(currentCol, 1); //If this is not out of bounds, set it to a level.
-                    currentRow += randomDirection.get(1);
-                    currentCol += randomDirection.get(0);
+                    levelLayout.get(currentRow).set(currentCol, true); //If this is not out of bounds, set it to a level.
+                    currentRow += directions.get(nextDirectionIndex).getY();
+                    currentCol += directions.get(nextDirectionIndex).getX();
                     currentTunnelLength++;
                 }
             }
 
             if (currentTunnelLength > 0) { //Make sure we added some levels to this tunnel.
-                lastDirection = randomDirection;
+                lastDirectionIndex = nextDirectionIndex;
                 maxTunnels--;
             }
         }
 
-//        pass over level layout and determine what type of level it is, Then put it into levelLayout
-        this.levelLayout.clear();
-
         ////////////////FOR DEBUG - Draw map //////////////////////
-        for (int row = 1; row < levelBuilder.size() - 2; row ++) {
-            for (int col = 1; col < levelBuilder.get(row).size() -2; col++) {
-                System.out.print(levelBuilder.get(row).get(col));
+        for (int row = 0; row < rows; row ++) {
+            for (int col = 0; col < cols; col++) {
+                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
             }
             System.out.println();
         }
+        System.out.println();
         ///////////////////////////////////////////////////////////
 
 
-        for (int row = 1; row < levelBuilder.size() - 1; row ++) {
-            ArrayList<Integer> column = new ArrayList<>();
-            for (int col = 1; col < levelBuilder.get(row).size() - 1; col++) {
-                int doorsForLevel = 0b0000; //initialize with no doors. This is the same as there not being a level
-                //Dont need to check for out of bounds as we added a buffer of 0's
+        ///////////////// Add connecting doors /////////////////////
+        for (int row = 0; row < rows; row ++) {
+            ArrayList<TreeMap<TileType, Point2D>> doorLocationsRow = new ArrayList<>();
+            for (int col = 0; col < cols; col++) {
+                TreeMap<TileType, Point2D> currentLevelDoors = new TreeMap<>();
                 //Checking if there are levels around the current level, if there are add a door to connect them
-                if (levelBuilder.get(row).get(col).equals(1)) { //Only check neighbors if it is a level itself.
-                    if (levelBuilder.get(row - 1).get(col).equals(1)) { //Check above
-                        doorsForLevel |= 0b1000;
+                if (levelLayout.get(row).get(col)) { //Only check neighbors if it is a level itself.
+
+                    if (row > 0 && levelLayout.get(row - 1).get(col)) { //Check above, Align door
+                        double adjacentDoorAboveX = allDoorLocations.get(row - 1).get(col).get(TileType.DOOR_DOWN).getX(); //Get the bottom door from room above
+                        currentLevelDoors.put(TileType.DOOR_UP, new Point2D(adjacentDoorAboveX, 0));
                     }
-                    if (levelBuilder.get(row).get(col + 1).equals(1)) { //Check right
-                        doorsForLevel |= 0b0100;
+
+                    if (col < cols-1 && levelLayout.get(row).get(col + 1)) { //Check right. Random door
+                        //Door cant be in the top 2 or bottom 3 rows
+                        int rightDoorY = (int)(randomGenerator.nextDouble() * (LEVEL_HEIGHT - 5)) + 2;
+                        currentLevelDoors.put(TileType.DOOR_RIGHT, new Point2D(LEVEL_WIDTH - 1, rightDoorY));
                     }
-                    if (levelBuilder.get(row + 1).get(col).equals(1)) { //Check below
-                        doorsForLevel |= 0b0010;
+
+                    if (row < rows - 1 && levelLayout.get(row + 1).get(col)) { //Check below. Random door
+                        int BottomDoorX = (int)(randomGenerator.nextDouble() * (LEVEL_WIDTH - 2)) + 1;
+                        currentLevelDoors.put(TileType.DOOR_DOWN, new Point2D(BottomDoorX, LEVEL_HEIGHT - 2));
                     }
-                    if (levelBuilder.get(row).get(col - 1).equals(1)) { //Check left
-                        doorsForLevel |= 0b0001;
+
+                    if (col > 0 && levelLayout.get(row).get(col - 1)) { //Check left. Align door
+                        double adjacentDoorLeftY = doorLocationsRow.get(col - 1).get(TileType.DOOR_RIGHT).getY(); //Get the bottom door from room above
+                        currentLevelDoors.put(TileType.DOOR_LEFT, new Point2D(0, adjacentDoorLeftY));
                     }
                 }
-                column.add(doorsForLevel);
+                doorLocationsRow.add(currentLevelDoors);
             }
-            this.levelLayout.add(column);
+            this.allDoorLocations.add(doorLocationsRow);
         }
     }
 }

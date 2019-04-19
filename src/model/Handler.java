@@ -251,7 +251,7 @@ public class Handler { //This class will hold all the game objects and is respon
                         double nextLevelX, nextLevelY; //This is the non up-scaled value
 
                         //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protagonist there.
-                        HashMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
+                        TreeMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
 
                         switch (door.getDoorType()) { //Check the type of the door we hit. Then move player to the corresponding door,
                             // plus an offset so they dont spawn inside the door.
