@@ -6,11 +6,12 @@ import sample.Game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 
 public class Map {
     //Holds all the levels.
-    private HashMap<Integer, Level> levels = new HashMap<>();
+    private TreeMap<Integer, Level> levels = new TreeMap<>();
     //May need to put this into a level class so we dont need to get the floor each time.
     private Level currentLevel;
     private Game game; //To add the protagonist to.
@@ -42,7 +43,7 @@ public class Map {
             for (int col = 1; col < levelLayout.get(row).size(); col++) {
                 int wallArrangement = levelLayout.get(row).get(col);
                 if (wallArrangement != 0) { //Make sure there is a level in this location
-                    HashMap<TileType, Point2D> currentLevelDoors = new HashMap<>();
+                    TreeMap<TileType, Point2D> currentLevelDoors = new TreeMap<>();
 
                     //If there is a level above, get the location of its bottom door. To align this levels top door
                     if ((wallArrangement & (0b1 << 3)) != 0) { //Has level above

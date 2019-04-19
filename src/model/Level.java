@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -32,7 +33,7 @@ public class Level {
     private final int levelWidth;
     private final int levelHeight;
     private int mapWidth;//Used to calculate the level number of neighboring levels
-    private HashMap<TileType, Point2D> doorMap; //Store the doors and their location.
+    private TreeMap<TileType, Point2D> doorMap; //Store the doors and their location.
     //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
     private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
     private Point2D currentPoint;
@@ -70,14 +71,14 @@ public class Level {
         this.levelWidth = image.getWidth();
         this.levelHeight = image.getHeight();
         this.levelNumber = levelNumber;
-        this.doorMap = new HashMap<>();
+        this.doorMap = new TreeMap<>();
         this.mapWidth = mapWidth;
         ProcessImage(image);
     }
 
 
     //Makes a random level. Needs the current row, col and map width to find what level each door should map to
-    public Level(int levelNumber, int mapWidth, int wallArrangement, HashMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight) { //Pass in top and left door, if they exist
+    public Level(int levelNumber, int mapWidth, int wallArrangement, TreeMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight) { //Pass in top and left door, if they exist
         //////////////////////////////////// DOOR SETUP /////////////////////////////////////////////////////////////
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
@@ -266,7 +267,7 @@ public class Level {
         return this.levelHeight;
     }
 
-    public HashMap<TileType,Point2D> getDoors () {
+    public TreeMap<TileType,Point2D> getDoors () {
         return this.doorMap;
     }
 
