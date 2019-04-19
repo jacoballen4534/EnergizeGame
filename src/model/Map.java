@@ -5,6 +5,7 @@ import sample.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.TreeMap;
 
 
@@ -33,6 +34,11 @@ public class Map {
 
         //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, randomGenerator);
+        //Generate tutorial room first as the shortest path takes a while so start it first
+        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
+        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
+        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
+
 
         //For each level in the map, generate a random level.
         for (int row = 0; row < MAP_HEIGHT; row ++) {
@@ -43,9 +49,7 @@ public class Map {
                 }
             }
         }
-        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
-        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
-        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
+
     }
 
 

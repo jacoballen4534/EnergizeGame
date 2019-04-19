@@ -78,7 +78,7 @@ public class Grunt extends Enemy {
 //            }
 
             //Give a 30% chance of changing each direction
-            if (Game.getNextRandomInt(100, false) > 49) {
+            if (Game.getNextRandomInt() > 49) {
                 int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
                 switch (nextDirection) {
                     case 1: //up
@@ -94,19 +94,19 @@ public class Grunt extends Enemy {
                         this.velocityX = -3;
                         break;
                     case 5: //The path has not been found yet, so just move randomly
-                        if (Game.getNextRandomInt(100, false) > 89) {
-                            this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                        if (Game.getNextRandomInt() > 89) {
+                            this.velocityX = Game.getNextRandomInt() > 49 ? 3 : -3;
                         }
-                        if (Game.getNextRandomInt(100, false) > 89) {
-                            this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                        if (Game.getNextRandomInt() > 89) {
+                            this.velocityY = Game.getNextRandomInt() > 49 ? 3 : -3;
                         }
                 }
             } else { //Give a tiny chance of getting a random direction to avoid getting stuck
-                if (Game.getNextRandomInt(100, false) > 97) {
-                    this.velocityX = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                if (Game.getNextRandomInt() > 97) {
+                    this.velocityX = Game.getNextRandomInt() > 49 ? 3 : -3;
                 }
-                if (Game.getNextRandomInt(100, false) > 97) {
-                    this.velocityY = Game.getNextRandomInt(100, false) > 49 ? 3 : -3;
+                if (Game.getNextRandomInt() > 97) {
+                    this.velocityY = Game.getNextRandomInt() > 49 ? 3 : -3;
                 }
             }
         }

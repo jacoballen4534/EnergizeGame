@@ -1,6 +1,5 @@
 package model;
 
-import Controllers.highScoreController;
 import javafx.util.Pair;
 
 import java.io.FileNotFoundException;
@@ -14,7 +13,7 @@ public class Utilities {
     public static ArrayList<ArrayList<Pair<String, String>>> readFile(String filepath) throws FileNotFoundException {
         ArrayList<ArrayList<Pair<String, String>>> allContent = new ArrayList<>();
         boolean openedBlock = false;
-        InputStream stream = highScoreController.class.getResourceAsStream(filepath);
+        InputStream stream = Utilities.class.getResourceAsStream(filepath);
 //        File file = new File(highScoreController.class.getClassLoader().getResource(filepath).getPath());
         Scanner scanner = new Scanner(stream);
         ArrayList<Pair<String, String>> blockOfData = null;
