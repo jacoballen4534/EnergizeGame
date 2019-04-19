@@ -35,11 +35,8 @@ public class Level {
     //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
     private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
     private Point2D currentPoint;
-    private Point2D nextPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>(); //Keep track of all floor location placed. Everything else must be door or wall
-    private final Random randomGenerator;
-    private double numberOfRandomBools = 0;
 
     //////////////Macros, Actual size of different sprites///////////
     private final int Tile_SPRITE_WIDTH = 32;
@@ -65,7 +62,6 @@ public class Level {
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
         this.levelNumber = levelNumber;
-        this.randomGenerator = new Random(0); //Unused but set to allow final declaration
         this.doorMap = new TreeMap<>();
         this.mapWidth = mapWidth;
         ProcessImage(image);
@@ -73,15 +69,13 @@ public class Level {
 
 
     //Makes a random level. Needs the current row, col and map width to find what level each door should map to
-    public Level(int levelNumber, int mapWidth, TreeMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight, float baseSeed) { //Pass in top and left door, if they exist
+    public Level(int levelNumber, int mapWidth, TreeMap<TileType, Point2D> doorMap, int levelWidth, int levelHeight, Random randomGenerator) { //Pass in top and left door, if they exist
         //////////////////////////////////// DOOR SETUP /////////////////////////////////////////////////////////////
         this.levelWidth = levelWidth;
         this.levelHeight = levelHeight;
         this.levelNumber = levelNumber;
         this.doorMap = doorMap;
         this.mapWidth = mapWidth;
-        System.out.println("Level: " + levelNumber + "\tSeed: " + (long)(baseSeed * this.levelNumber));
-        this.randomGenerator = new Random((long)(baseSeed * this.levelNumber));
 
 
         //////////////////////////////////// INITIALIZE WALLS ///////////////////////////////////////////////////////
@@ -128,13 +122,10 @@ public class Level {
             this.updateReachableDoors(currentPoint);
 
             //Pick next location
-            this.numberOfRandomBools += 2;
             this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator);
         }
 
-
         //If a door is still unreachable, make a path to it.
-
         //Converge from each door towards the centre. Converging at the same time will allow different paths to connect, making the full map connected earlie.
         for (int steps = 1; steps < this.levelHeight - 4; steps++) {
             if (!this.topDoorReachable) {
@@ -161,21 +152,13 @@ public class Level {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        this.debugDrawFloor();
-    }
-
-    private void findPaths() {
-
+        this.debugDrawFloor();
     }
 
 
 
     public void debugDrawFloor() {
-        System.out.println("\n\nLevel number: " + this.levelNumber + " Number of random bools: " + numberOfRandomBools);
-
         System.out.println("--------------------");
-
-        int numberOfFloows = 0;
         for (int row = 0; row < this.levelHeight; row ++) {
             for (int col = 0; col < this.levelWidth; col++) {
                 switch (this.tiles.get(row).get(col)) {
@@ -184,7 +167,6 @@ public class Level {
                         break;
                     case FLOOR:
                         System.out.print((char)27 + "[0m" + "F");
-                        numberOfFloows++;
                         break;
                     default:
                         System.out.print((char)27 + "[33m" + "D");
@@ -193,7 +175,6 @@ public class Level {
             }
             System.out.println("");
         }
-        System.out.println("Number of floors: " + numberOfFloows);
     }
 
     //With chance of keeping direction
@@ -204,21 +185,12 @@ public class Level {
 
         switch (odds) {
             case 0: //25 %chance of moving in x direction
-                if (nextLocationRandomGenerator.nextBoolean()) {
-                    this.nextXDirection = 1;
-                } else {
-                    this.nextXDirection = -1;
-                }
+                this.nextXDirection  = nextLocationRandomGenerator.nextBoolean() ? 1 : -1;
                 nextYDirection = 0; //To not move diagonally.
                 break;
             case 1: //25% chance of moving in y direction
-                if (nextLocationRandomGenerator.nextBoolean()) {
-                    this.nextYDirection = 1;
-                } else {
-                    this.nextYDirection = -1;
-                }
+                this.nextYDirection = nextLocationRandomGenerator.nextBoolean() ? 1 : -1;
                 nextXDirection = 0; //To not move diagonally.
-
                 break;
                 // 50% chance of staying in the same direction
         }
@@ -233,27 +205,6 @@ public class Level {
         
         return nextPosition;
     }
-
-    /*private Point2D nextLocation (Point2D currentPoint, Random randomGenerator) {
-
-        if (randomGenerator) {
-            this.nextXDirection = increase ? 1 : -1;
-            nextYDirection = 0; //To not move diagonally.
-        } else {
-            this.nextYDirection = increase ? 1 : -2;
-            nextXDirection = 0; //To not move diagonally.
-        }
-
-        Point2D nextPosition = new Point2D(currentPoint.getX() + nextXDirection, currentPoint.getY() + nextYDirection);
-
-        //If this new position is out of bounds, move back in the opposite direction 2 steps
-        if (nextPosition.getX() < 1 || nextPosition.getX() > this.levelWidth - 2 ||
-                nextPosition.getY() < 1 || nextPosition.getY() > this.levelHeight - 3) {
-            nextPosition = new Point2D(currentPoint.getX() - nextXDirection, currentPoint.getY() - nextYDirection);
-        }
-        return nextPosition;
-    }*/
-
 
 
     private void placeFloor(Point2D location, boolean doubleTile) { //Double tile indicates if the tile underneath should be added also.

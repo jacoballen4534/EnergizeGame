@@ -21,7 +21,6 @@ public class Map {
     private final int MAP_HEIGHT = 11;
     private final int LEVEL_WIDTH = 20;
     private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
-    private long MAP_SEED;
     private ArrayList<ArrayList<TreeMap<TileType, Point2D>>> allDoorLocations = new ArrayList<>(); //2d array list of door locations. in col,row form
 
     //Hold the layout of the different levels that makes up the map, Can be used for mini-map.
@@ -32,61 +31,23 @@ public class Map {
 
     public Map(Game game, long MAP_SEED){
         this.game = game;
-        this.MAP_SEED = MAP_SEED;
-//        this.MAP_SEED = MAP_SEED;
+        Random randomGenerator = new Random(MAP_SEED);
 
         //Generate a random layout of levels.
-        this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, new Random(this.MAP_SEED));
-
-
-//        for (int row = 0; row < MAP_HEIGHT; row ++) {
-//            for (int col = 0; col < MAP_WIDTH; col ++) {
-//                System.out.print("\nLevel " + (col + row * MAP_WIDTH) + ": ");
-//                for (java.util.Map.Entry<TileType, Point2D> entry : allDoorLocations.get(row).get(col).entrySet()) {
-//                    System.out.print(entry.getKey() + " -> " + entry.getValue() + " ");
-//                }
-//            }
-//            System.out.println();
-//        }
-
-
-
-
-
-
+        this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, randomGenerator);
 
         //For each level in the map, generate a random level.
-        //As we create levels from top to bottom, left to right. The current level needs to align its top and left door
-        //with the existing corresponding level. This allows the doors to in random positions along the boundary but still alight in the adjacent rooms.
         for (int row = 0; row < MAP_HEIGHT; row ++) {
             for (int col = 1; col < MAP_WIDTH; col++) {
                 if (levelLayout.get(row).get(col)) { //Make sure there is a level in this location
                     final int levelNumber = col + row * MAP_WIDTH;
-                    this.levels.put (levelNumber, new Level(levelNumber, MAP_WIDTH, this.allDoorLocations.get(row).get(col), LEVEL_WIDTH, LEVEL_HEIGHT, this.MAP_SEED)); //Set to current level to garnette there is something to load
-//                    this.levels.put (levelNumber, new Level( levelNumber, MAP_WIDTH, allDoorLocations.get(row).get(col), LEVEL_WIDTH, LEVEL_HEIGHT, new Random(col + row * MAP_WIDTH))); //Set to current level to garnette there is something to load
+                    this.levels.put (levelNumber, new Level(levelNumber, MAP_WIDTH, this.allDoorLocations.get(row).get(col), LEVEL_WIDTH, LEVEL_HEIGHT, randomGenerator)); //Set to current level to garnette there is something to load
                 }
             }
         }
-//        this.currentLevel.debugDrawFloor();
-//        this.currentLevel = levels.get(tutorialLevelNumber);
         int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, col is 0
         this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
         this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
-
-
-        for (int row = 0; row < MAP_HEIGHT; row ++) {
-            for (int col = 1; col < MAP_WIDTH; col++) {
-                if (levelLayout.get(row).get(col)) { //Make sure there is a level in this location
-                    this.levels.get(col + row * MAP_WIDTH).debugDrawFloor();
-                }
-            }
-        }
-
-
-
-
-
-
     }
 
 
