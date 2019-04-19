@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.*;
 
 import static model.Utilities.readFile;
+import static model.Utilities.readFileInsideJar;
 
 public class mainMenuController implements Initializable {
 
@@ -59,28 +60,7 @@ public class mainMenuController implements Initializable {
         System.out.println("Active game is: " + isGameActive);
         Resume.managedProperty().bind(Resume.visibleProperty());
         Resume.setVisible(isGameActive);
-        try {
-            ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/MapSeeds.txt", true);
-            for (ArrayList<Pair<String, String>> block : seeds) {
-                if (block.get(0).getValue().equalsIgnoreCase("NaN")) {
-                    saveOne = new Pair<>(block.get(0).getKey(), null);
-                } else {
-                    saveOne = new Pair<>(block.get(0).getKey(), Long.parseLong(block.get(0).getValue()));
-                }
-                if (block.get(1).getValue().equalsIgnoreCase("NaN")) {
-                    saveTwo = new Pair<>(block.get(1).getKey(), null);
-                } else {
-                    saveTwo = new Pair<>(block.get(1).getKey(), Long.parseLong(block.get(1).getValue()));
-                }
-                if (block.get(2).getValue().equalsIgnoreCase("NaN")) {
-                    saveThree = new Pair<>(block.get(2).getKey(), null);
-                } else {
-                    saveThree = new Pair<>(block.get(2).getKey(), Long.parseLong(block.get(2).getValue()));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @FXML private void ResumeClicked() throws IOException{
@@ -97,6 +77,7 @@ public class mainMenuController implements Initializable {
 
     @FXML private void LoadGameClicked() throws IOException {
         //changeStageName("Load Game");
+        this.updateSaveStates();
         focussedLabel = UpdateFocussedLabel(focussedLabel, "loadGame");
         UpdateMenu(focussedLabel);
         //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
@@ -257,6 +238,27 @@ public class mainMenuController implements Initializable {
         //Add submenu to menu
         mainMenuVBox.getChildren().add(loadGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
+    }
+
+    private void updateSaveStates() {
+        ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("mapSeeds.txt", true);
+        for (ArrayList<Pair<String, String>> block : seeds) {
+            if (block.get(0).getValue().equalsIgnoreCase("NaN")) {
+                saveOne = new Pair<>(block.get(0).getKey(), null);
+            } else {
+                saveOne = new Pair<>(block.get(0).getKey(), Long.parseLong(block.get(0).getValue()));
+            }
+            if (block.get(1).getValue().equalsIgnoreCase("NaN")) {
+                saveTwo = new Pair<>(block.get(1).getKey(), null);
+            } else {
+                saveTwo = new Pair<>(block.get(1).getKey(), Long.parseLong(block.get(1).getValue()));
+            }
+            if (block.get(2).getValue().equalsIgnoreCase("NaN")) {
+                saveThree = new Pair<>(block.get(2).getKey(), null);
+            } else {
+                saveThree = new Pair<>(block.get(2).getKey(), Long.parseLong(block.get(2).getValue()));
+            }
+        }
     }
 
     private void ShowOptionsMenu(){

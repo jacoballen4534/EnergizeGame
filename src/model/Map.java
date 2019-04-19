@@ -99,7 +99,6 @@ public class Map {
         this.levelLayout.clear();
 
         int currentRow = (int)(randomGenerator.nextDouble() * rows); //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
-        System.out.println("Random height for starting door " + currentRow);
         this.tutorialRow = currentRow; //Return this to know where the tutorial room is.
         int currentCol = 1; //This is where the first room after tutorial room is.
         int randomTunnelLength;
@@ -154,13 +153,13 @@ public class Map {
         }
 
         ////////////////FOR DEBUG - Draw map //////////////////////
-        for (int row = 0; row < rows; row ++) {
-            for (int col = 0; col < cols; col++) {
-                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
-            }
-            System.out.println();
-        }
-        System.out.println();
+//        for (int row = 0; row < rows; row ++) {
+//            for (int col = 0; col < cols; col++) {
+//                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
+//            }
+//            System.out.println();
+//        }
+//        System.out.println();
         ///////////////////////////////////////////////////////////
 
 

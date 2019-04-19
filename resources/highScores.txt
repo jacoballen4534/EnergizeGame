@@ -1,24 +1,25 @@
 <begin>
-    name:Matt
-    score:42390
+name:_  
+score:0
 <end>
 
 <begin>
-    name:Jacob
-    score:41500
+name:_ 
+score:0
 <end>
 
 <begin>
-    name:Hassaan
-    score:420
+name:_ 
+score:0
 <end>
 
 <begin>
-    name:Sherjeel
-    score:21300
+name:_ 
+score:0
 <end>
 
 <begin>
-    name:Alex
-    score:5000
+name:_ 
+score:0
 <end>
+

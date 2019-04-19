@@ -157,7 +157,7 @@ public class Level {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-        this.debugDrawFloor();
+//        this.debugDrawFloor();
 
         this.shortestPath = new ShortestPath(this.levelWidth,this.levelHeight,this.tiles);
 

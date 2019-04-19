@@ -11,14 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import model.*;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Random;
-
-import static model.Utilities.readFile;
 
 public class Game extends Canvas {
 
@@ -69,6 +64,8 @@ public class Game extends Canvas {
         this.gameScene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
+        Utilities.saveNewHighScore("TestAdd", 1513560);
+        Utilities.saveNewmapSeed("Test-" + randomSeed, randomSeed);
 
         /*===========================================\
         * pause Menu
@@ -83,7 +80,7 @@ public class Game extends Canvas {
 
         Button resumeButton = new Button("Resume");
         resumeButton.setOnMouseClicked(mouseEvent -> {
-            pauseMenu.hide();   
+            pauseMenu.hide();
             unpause();
         });
         resumeButton.setPrefSize(250,50);
@@ -115,11 +112,7 @@ public class Game extends Canvas {
         randomMovement = new Random(randomSeed);
         //////////////////// Make the map /////////////////////////////////////
 
-
-
         this.map = new Map(this, randomSeed);
-
-
         this.map.loadLevel();
         init(); //Setup game loop
         Handler.setCamera(this.camera);

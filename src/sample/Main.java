@@ -4,22 +4,16 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import model.Utilities;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
-import java.io.BufferedInputStream;
+import java.io.*;
 import java.lang.String;
-
-import java.io.InputStream;
-import java.awt.*;
-import java.io.File;
-import java.net.URL;
 
 public class Main extends Application {
     private static Stage stage;
@@ -31,6 +25,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        Utilities.initializeFiles();
 
         //Play background music
         //String musicFile = "resources/music/theme.wav"; //Must be a .wav!
