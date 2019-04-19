@@ -64,12 +64,13 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
 
 
+        inventoryMenu = new Menu("inventoryMenu",500,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
         /*===========================================\
-        * pause Menu
+        * Pause Menu Setup
         */
 
         pauseMenu = new Menu("pauseMenu",300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-        inventoryMenu = new Menu("inventoryMenu",500,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         //Pause menu controls
         Label pauseTitle = new Label("pause Menu");
@@ -186,9 +187,10 @@ public class Game extends Canvas {
             System.out.println("Toggle game pause");
         }
         if (keyInput.getKeyPressDebounced("inventory")){
-            this.pause();
+            //this.pause();
 //            ShowInventoryMenu();
             System.out.println("Open inventory");
+            System.out.println(this.protagonist.getInventory().getItemCount());
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards

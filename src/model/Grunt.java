@@ -129,6 +129,12 @@ public class Grunt extends Enemy {
     }
 
     @Override
+    boolean pickup(Item pickup) {
+        //Intentionally left blank
+        return false;
+    }
+
+    @Override
     protected void attack() {
        super.canAttack();
     }

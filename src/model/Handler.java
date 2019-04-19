@@ -229,12 +229,14 @@ public class Handler { //This class will hold all the game objects and is respon
 
 
     public static boolean checkCollision (Character character) {
-//        //TODO:Implement items and inventory first
-//        for (Item pickup : pickups) {
-//            if (pickups.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(pickup.getBounds())) {
-//                character.pickup(pickup); //Enemies will have a blank method here, while protagonist will be able to pick the item up
-//            }
-//        }
+        //TODO:Implement items and inventory first
+        for (Item pickup : pickups) {
+            if (character.getBounds().intersects(pickup.getBounds())) {
+                if (character.pickup(pickup))
+                    removePickup(pickup);
+                return pickup.isSolid;
+            }
+        }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
             if (protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors

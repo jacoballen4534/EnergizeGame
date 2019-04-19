@@ -54,6 +54,7 @@ public abstract class Character extends GameObject{
     }
 
     abstract void updateAnimationState();
+    abstract boolean pickup(Item pickup);
 
     protected boolean canAttack() {
         this.attackTimer += System.currentTimeMillis() - this.lastAttackTimer;
