@@ -14,7 +14,7 @@ import java.util.*;
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
 
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
-    private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
+    private static TreeMap<Integer, GameObject> walls = new TreeMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     //private static ArrayList<Character> characters = new ArrayList<>();
     private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
     // so the only other player will be in multilayer, where the handler can hold other player on its own also
@@ -251,7 +251,7 @@ public class Handler { //This class will hold all the game objects and is respon
                         double nextLevelX, nextLevelY; //This is the non up-scaled value
 
                         //Get opposite door type from the intersection door, eg if intersects with Door_Right, get Door_Left from next level and set protagonist there.
-                        HashMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
+                        TreeMap<TileType, Point2D> currentLevelDoors = map.getCurrentLevel().getDoors();
 
                         switch (door.getDoorType()) { //Check the type of the door we hit. Then move player to the corresponding door,
                             // plus an offset so they dont spawn inside the door.

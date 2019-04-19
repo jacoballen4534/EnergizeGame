@@ -11,9 +11,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.*;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
+
+import static model.Utilities.readFile;
 
 public class Game extends Canvas {
 
@@ -45,8 +50,9 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
-    private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
+    private static long MOVEMENT_SEED = 12345678911L;
+    public static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
+
 
     private mainMenuController controller;
 
@@ -106,7 +112,27 @@ public class Game extends Canvas {
         stage.show();
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
-        this.map = new Map(this);
+
+        //////////////////// Make the map /////////////////////////////////////
+        long MAP_SEED = 0;
+//        for (int i = 0; i < 10; i++) { //This creates the same map each time
+        try {
+            ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/Seed.txt");
+            for (ArrayList<Pair<String, String>> block : seeds) {
+               if (block.get(0).getKey().equalsIgnoreCase("movementseed")) {
+                    MOVEMENT_SEED = Long.parseLong(block.get(0).getValue());
+                    System.out.println("movementSeed set to: " + block.get(0).getValue());
+                } else if (block.get(0).getKey().equalsIgnoreCase("mapseed")) {
+                   MAP_SEED = Long.parseLong(block.get(0).getValue());
+                   System.out.println("MapSeed set to: " + block.get(0).getValue());
+               }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        randomMovement.setSeed(MOVEMENT_SEED);
+        this.map = new Map(this, MAP_SEED);
+//        }
         this.map.loadLevel();
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -120,13 +146,10 @@ public class Game extends Canvas {
         this.pauseMenu.hide();
     }
 
-    public static int getNextRandomInt(int bounds, boolean mapGen) {
-        if (mapGen) {
-            return randomLevel.nextInt(bounds);
-        } else {
-            return randomMovement.nextInt(bounds);
-        }
+    public static int getNextRandomInt() {
+        return randomMovement.nextInt(100);
     }
+
 
     public void start(){
         this.animationTimer.start();
