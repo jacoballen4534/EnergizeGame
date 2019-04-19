@@ -129,7 +129,7 @@ public class Level {
 
             //Pick next location
             this.numberOfRandomBools += 2;
-            this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator.nextBoolean(), randomGenerator.nextBoolean());
+            this.currentPoint = this.nextLocation(this.currentPoint, randomGenerator);
         }
 
 
@@ -196,7 +196,7 @@ public class Level {
         System.out.println("Number of floors: " + numberOfFloows);
     }
 
-    /* //With chance of keeping direction
+    //With chance of keeping direction
     private Point2D nextLocation (Point2D currentPoint, Random nextLocationRandomGenerator) {
 
         //Pick a random direction to step.
@@ -232,11 +232,11 @@ public class Level {
         }
         
         return nextPosition;
-    }*/
+    }
 
-    private Point2D nextLocation (Point2D currentPoint, boolean horizontal, boolean increase) {
+    /*private Point2D nextLocation (Point2D currentPoint, Random randomGenerator) {
 
-        if (horizontal) {
+        if (randomGenerator) {
             this.nextXDirection = increase ? 1 : -1;
             nextYDirection = 0; //To not move diagonally.
         } else {
@@ -252,7 +252,7 @@ public class Level {
             nextPosition = new Point2D(currentPoint.getX() - nextXDirection, currentPoint.getY() - nextYDirection);
         }
         return nextPosition;
-    }
+    }*/
 
 
 
