@@ -17,6 +17,13 @@ public class Pickup extends Item {
 
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+//        graphicsContext.setFill(Color.BLACK);
+//        graphicsContext.fillRect(this.x,this.y, this.spriteWidth, this.spriteHeight);
+
+        if (this.inCameraBounds(cameraX,cameraY)) {
+            graphicsContext.drawImage(this.jfxImage, this.x, this.y, this.spriteWidth, this.spriteHeight);
+//            this.renderBoundingBox(graphicsContext);
+        }
 
     }
 }

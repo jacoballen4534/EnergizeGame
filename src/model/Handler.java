@@ -106,7 +106,7 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Item pickup : pickups) {
-//            pickup.render(graphicsContext,cameraX,cameraY); //TODO: Implement pickup items.
+            pickup.render(graphicsContext,cameraX,cameraY); //TODO: Implement pickup items.
         }
 
         for (Enemy enemy : enemies){
@@ -117,9 +117,6 @@ public class Handler { //This class will hold all the game objects and is respon
             player.render(graphicsContext,cameraX,cameraY);
         }
 
-        for (Item pickup : pickups) {
-//            pickup.render //TODO: Implement pickup items.
-        }
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
