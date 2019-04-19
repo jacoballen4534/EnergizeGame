@@ -92,10 +92,11 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    protected void attack() {
+    protected boolean attack() {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
         Handler.attack(this);
+        return true; //unused
     }
 
     @Override

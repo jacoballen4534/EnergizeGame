@@ -50,11 +50,13 @@ public abstract class Character extends GameObject{
 
     abstract void updateAnimationState();
 
-    protected void attack() {
+    protected boolean attack() {
         if (!this.playAttackAnimation) { //Only restart the animation the first time. Can only attack once previous attack has finished
             this.currentAnimationCol = 0; //To start the animation from the start.
             this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
+            return true;
         }
+        return false;
     }
 
     protected void getHit(int damage) {

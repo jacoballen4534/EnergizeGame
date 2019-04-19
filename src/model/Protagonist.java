@@ -60,17 +60,19 @@ public class Protagonist extends Character {
     }
 
     @Override
-    protected void attack() {
-        this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
-        super.attack();
-        if (Handler.attack(this)){
-            SoundController.PlayAudio("hitAttack");
-            System.out.println("Hit enemy");
+    protected boolean attack() {
+        if (super.attack()){
+            this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
+            if (Handler.attack(this)){
+                SoundController.PlayAudio("hitAttack");
+                System.out.println("Hit enemy");
+            }
+            else{
+                SoundController.PlayAudio("missAttack");
+                System.out.println("Missed enemy");
+            }
         }
-        else{
-            SoundController.PlayAudio("missAttack");
-            System.out.println("Missed enemy");
-        }
+        return true; //not relevant
     }
 
     @Override
@@ -152,7 +154,6 @@ public class Protagonist extends Character {
         }
 
         if (keyInput.getKeyPressDebounced("jump")){
-            SoundController.PlayAudio("itemPickup");
             System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
         }
 
@@ -167,6 +168,7 @@ public class Protagonist extends Character {
         if (keyInput.getKeyPressDebounced("useSpecial")){
             if (useSpecial()) {
                 System.out.println("Azarath, metrion, zinthos!");//Outdated reference
+                SoundController.PlayAudio("magicAbility");
             }
             else System.out.println("Insufficient energy");
         }
