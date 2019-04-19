@@ -63,7 +63,14 @@ public class Protagonist extends Character {
     protected void attack() {
         this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
         super.attack();
-        Handler.attack(this);
+        if (Handler.attack(this)){
+            SoundController.PlayAudio("hitAttack");
+            System.out.println("Hit enemy");
+        }
+        else{
+            SoundController.PlayAudio("missAttack");
+            System.out.println("Missed enemy");
+        }
     }
 
     @Override
