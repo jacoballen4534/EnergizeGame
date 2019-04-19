@@ -31,7 +31,11 @@ public class AnimationsState {
     }
 
     public boolean isLastFrame(int animationCol) {
-        return animationCol >= this.animationMaxCol; //play around with if this should be max col -1.
+        return animationCol >= this.animationMaxCol - 1; //play around with if this should be max col -1.
+    }
+
+    public int getResetCol() {
+        return this.resetCol-1;
     }
 
     public int updateAnimationSprite(int animationCol) {

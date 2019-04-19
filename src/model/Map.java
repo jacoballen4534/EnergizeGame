@@ -5,14 +5,12 @@ import sample.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class Map {
     //Holds all the levels.
-    private ConcurrentHashMap<Integer, Level> levels = new ConcurrentHashMap<>();
+    private TreeMap<Integer, Level> levels = new TreeMap<>();
     //May need to put this into a level class so we dont need to get the floor each time.
     private Level currentLevel;
     private Game game; //To add the protagonist to.

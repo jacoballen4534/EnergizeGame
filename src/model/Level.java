@@ -6,6 +6,7 @@ import sample.Game;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.Map;
+import java.util.TreeMap;
 
 //These are the different things that can be on the map
 enum TileType {
@@ -28,15 +29,17 @@ enum TileType {
 public class Level {
     private ArrayList<ArrayList<TileType>> tiles = new ArrayList<>();
     private int levelNumber; //Used for doors, to go to the correct room
-    private int levelWidth;
-    private int levelHeight;
+    private final int levelWidth;
+    private final int levelHeight;
     private int mapWidth;//Used to calculate the level number of neighboring levels
     private TreeMap<TileType, Point2D> doorMap; //Store the doors and their location.
     //Make sure all the doors in the level are reachable. Default true and set to false later if that door exists
     private boolean topDoorReachable = true, rightDoorReachable = true, bottomDoorReachable = true, leftDoorReachable = true;
     private Point2D currentPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
-    private ArrayList<Point2D> floorLocation = new ArrayList<>(); //Keep track of all floor location placed. Everything else must be door or wall
+    private ArrayList<Point2D> floorLocation = new ArrayList<>();
+    ShortestPath shortestPath;
+
 
     //////////////Macros, Actual size of different sprites///////////
     private final int Tile_SPRITE_WIDTH = 32;
@@ -61,6 +64,8 @@ public class Level {
 
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
+        this.levelWidth = image.getWidth();
+        this.levelHeight = image.getHeight();
         this.levelNumber = levelNumber;
         this.doorMap = new TreeMap<>();
         this.mapWidth = mapWidth;
@@ -153,9 +158,10 @@ public class Level {
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         this.debugDrawFloor();
+
+        this.shortestPath = new ShortestPath(this.levelWidth,this.levelHeight,this.tiles);
+
     }
-
-
 
     public void debugDrawFloor() {
         System.out.println("--------------------");
@@ -206,6 +212,9 @@ public class Level {
         return nextPosition;
     }
 
+    public ShortestPath getShortestPath() {
+        return this.shortestPath;
+    }
 
     private void placeFloor(Point2D location, boolean doubleTile) { //Double tile indicates if the tile underneath should be added also.
         // This is sometimes needed due the protagonist being 2 tiles tall
@@ -266,8 +275,6 @@ public class Level {
     }
 
     private void ProcessImage(BufferedImage image) {
-        this.levelWidth = image.getWidth();
-        this.levelHeight = image.getHeight();
         for (int row = 0; row < this.levelHeight; row++) {
             ArrayList<TileType> column = new ArrayList<>();
             for (int col = 0; col < this.levelWidth; col++) {
@@ -301,6 +308,7 @@ public class Level {
             }
             this.tiles.add(column);
         }
+        this.shortestPath = new ShortestPath(this.levelWidth,this.levelHeight, this.tiles);
     }
 
     public void loadLevel(Game game) {
@@ -375,7 +383,8 @@ public class Level {
             }
         }
         Handler.updateEnemyTarget(game.getProtagonist()); //As enemies can be added before protagonist making their target null. So add at the end.
-        Handler.udateCharacterLevelWidth(this.levelWidth);
+        Handler.updateCharacterLevelWidth(this.levelWidth);
     }
+
 
 }

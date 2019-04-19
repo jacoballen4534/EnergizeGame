@@ -6,10 +6,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.mainMenuController">
+<AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.mainMenuController">
    <children>
       <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="176.0" prefWidth="400.0">
          <children>
+            <Label fx:id="Resume" onMouseClicked="#ResumeClicked" styleClass="menulabel" text="RESUME" visible="false" />
             <Label fx:id="newGame" onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
             <Label fx:id="loadGame" onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
             <Label fx:id="options" onMouseClicked="#OptionsClicked" styleClass="menulabel" text="OPTIONS" />
@@ -25,6 +26,5 @@
             <Font size="200.0" />
          </font>
       </Label>
-      <VBox fx:id="miniMenuVBox" alignment="CENTER_LEFT" layoutX="600.0" layoutY="184.0" prefHeight="200.0" prefWidth="100.0" />
    </children>
 </AnchorPane>

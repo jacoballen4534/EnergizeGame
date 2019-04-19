@@ -14,7 +14,7 @@ import java.util.*;
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
 
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
-    private static HashMap<Integer, GameObject> walls = new HashMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
+    private static TreeMap<Integer, GameObject> walls = new TreeMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     //private static ArrayList<Character> characters = new ArrayList<>();
     private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
     // so the only other player will be in multilayer, where the handler can hold other player on its own also
@@ -80,7 +80,7 @@ public class Handler { //This class will hold all the game objects and is respon
             player.tick(cameraX, cameraY, keyInput);
         }
         for (Enemy enemy : enemies) {
-            enemy.tick(cameraX, cameraY);
+            enemy.tick(cameraX, cameraY, map.getCurrentLevel());
         }
 
         if (enemies.isEmpty()) {
@@ -198,7 +198,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
-            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){ //TODO: Check if the protagonist is attacking this enemy
+            if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){
                 enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
             }
         }
@@ -206,7 +206,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void attack(Enemy enemy) {
         for (Protagonist player: players){
-            if (enemy.getBounds().intersects(player.getBounds())){
+            if (enemy.getAttackBounds().intersects(player.getBounds())){
                 player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
         }
@@ -217,7 +217,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
 
-    public static void udateCharacterLevelWidth(int newLevelWidth) {
+    public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
         }
@@ -231,7 +231,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
 
 
-    public static boolean checkCollision (Character character, double cameraX, double cameraY) {
+    public static boolean checkCollision (Character character) {
 //        //TODO:Implement items and inventory first
 //        for (Item pickup : pickups) {
 //            if (pickups.inCameraBounds(cameraX,cameraY) && character.getBounds().intersects(pickup.getBounds())) {
@@ -240,7 +240,7 @@ public class Handler { //This class will hold all the game objects and is respon
 //        }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (door.inCameraBounds(cameraX, cameraY) && protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+            if (protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
                 if (door.isOpen()) {
                     //Need to make this thread safe as we are changing things on the main thread. So use runLater
                     Platform.runLater(() -> {

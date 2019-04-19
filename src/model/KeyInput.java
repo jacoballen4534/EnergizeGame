@@ -53,7 +53,7 @@ public class KeyInput{
         });
     }
 
-    public boolean getKeyPressed(String keyName){
+    public boolean getKeyPress(String keyName){
         if (keyMap.containsKey(keyName) && keyBinds.containsKey(keyMap.get(keyName))) { //Check that they action has a key associated with it.
             return keyBinds.get(keyMap.get(keyName));
         } else {

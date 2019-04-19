@@ -62,7 +62,7 @@ public class HUDBar extends GameObject{
     }
 
     @Override
-    public void tick(double cameraX, double cameraY) {
+    protected void tick(double cameraX, double cameraY) {
         super.tick(cameraX, cameraY);
         valPercent = (float)currVal/maxVal;
     }

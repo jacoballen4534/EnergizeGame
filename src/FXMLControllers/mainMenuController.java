@@ -1,4 +1,4 @@
-package Controllers;
+package FXMLControllers;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,30 +18,43 @@ import java.util.*;
 
 public class mainMenuController implements Initializable {
 
+    //Macros
+    private final int newGamePos = 2;
+    private final int loadGamePos = 3;
+    private final int optionsPos = 4;
+    private final int highscorePos = 5;
+    private final int creditsPos = 6;
+
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
-    private Game game;
+    @FXML private Label Resume;
 
-    public boolean gameActive = false;
+    private static Game game;
+    private static boolean isGameActive = false;
+
     private Label focussedLabel = null;
-    private Label resumeLabel;
+
+    //Hard coding events for dynamic buttons, might refactor out later
     private EventHandler QuickPlayClicked = event -> {
         System.out.println("Starts a new quick play game");
-        gameActive = true;
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
-        this.game = new Game();
+        this.game = new Game(this);
         this.game.start();
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
-    private EventHandler ResumeClicked = event -> {
-        this.game.hidePauseMenu();
-        this.game.unpause();
-    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("///////////////INITIALISE/////////////////");
+        System.out.println("Active game is: " + isGameActive);
+        Resume.managedProperty().bind(Resume.visibleProperty());
+        Resume.setVisible(isGameActive);
+    }
+
+    @FXML private void ResumeClicked() throws IOException{
+        this.game.hidePauseMenu(); //Consider removing for design reasons
+        this.game.unpause();
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -119,11 +132,6 @@ public class mainMenuController implements Initializable {
         return currFocussedLabel;
     }
 
-    private void AddMenuOption(int pos, Label menuLabel){
-        menuLabel.getStyleClass().setAll("menulabel");
-        mainMenuVBox.getChildren().add(pos, menuLabel);
-    }
-
     private VBox CreateSubMenu(){
         VBox subMenu = new VBox();
         subMenu.getStyleClass().setAll("submenu");
@@ -140,9 +148,6 @@ public class mainMenuController implements Initializable {
 
     //TODO refactor switch statement to be less hardcoded
     private void UpdateMenu(Label currFocussedLabel){
-        if (gameActive) {
-            CreateMenuLabel(mainMenuVBox,"Resume","menulabel",0,ResumeClicked);
-        }
         if (currFocussedLabel == null){
             //FadeOutCurrentMenu();
             HideCurrentSubMenu();
@@ -175,11 +180,10 @@ public class mainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        //if (gameActive) CreateMenuLabel(subMenu,"Resume",labelPos++,ResumeClicked);
         CreateMenuLabel(subMenu,"Quick Play","submenu-label",labelPos++, QuickPlayClicked);
         CreateMenuLabel(subMenu,"Custom Play","submenu-label",labelPos++,CustomPlayClicked);
         //Add submenu to menu
-        mainMenuVBox.getChildren().add(1,subMenu);
+        mainMenuVBox.getChildren().add(newGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
@@ -199,20 +203,7 @@ public class mainMenuController implements Initializable {
             System.out.println("Loads third game save");
         });
         //Add submenu to menu
-        mainMenuVBox.getChildren().add(2,subMenu);
-        //System.out.println(subMenu.getChildren());
-    }
-
-    private void ShowHighScoresMenu(){
-        //Remove previous submenu
-        HideCurrentSubMenu();
-        //Create submenu
-        VBox subMenu = CreateSubMenu();
-        //Create labels
-        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
-        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
-        //Add submenu to menu
-        mainMenuVBox.getChildren().add(4,subMenu);
+        mainMenuVBox.getChildren().add(loadGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
@@ -225,7 +216,20 @@ public class mainMenuController implements Initializable {
         CreateMenuLabel(subMenu,"Change Keybindings","submenu-label",0,null);
         CreateMenuLabel(subMenu,"Change volume","submenu-label",1,null);
         //Add submenu to menu
-        mainMenuVBox.getChildren().add(3,subMenu);
+        mainMenuVBox.getChildren().add(optionsPos,subMenu);
+        //System.out.println(subMenu.getChildren());
+    }
+
+    private void ShowHighScoresMenu(){
+        //Remove previous submenu
+        HideCurrentSubMenu();
+        //Create submenu
+        VBox subMenu = CreateSubMenu();
+        //Create labels
+        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
+        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
+        //Add submenu to menu
+        mainMenuVBox.getChildren().add(highscorePos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
@@ -239,13 +243,19 @@ public class mainMenuController implements Initializable {
         CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
         CreateMenuLabel(subMenu,"Even more stuff","submenu-label",1,null);
         //Add submenu to menu
-        mainMenuVBox.getChildren().add(5,subMenu);
+        mainMenuVBox.getChildren().add(creditsPos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
     private void HideCurrentSubMenu(){
         VBox subMenu = (VBox)getNodeByID("subMenuVBox");
         mainMenuVBox.getChildren().remove(subMenu);
+    }
+
+    public void setGameActive(boolean gameActive){
+         if (isGameActive == gameActive) return;
+         Resume.setVisible(gameActive);
+         isGameActive = gameActive;
     }
 
     /* DEPRECATED */

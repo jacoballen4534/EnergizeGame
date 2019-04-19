@@ -2,6 +2,7 @@
     -fx-background-image:url("/bg/titleScreenBG.png");
 }
 .anchorpane#pauseMenu{
+    -fx-background-image:url("/bg/titleScreenBG.png");
     -fx-background-color: #224D72;
 }
 .label{
