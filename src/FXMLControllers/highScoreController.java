@@ -26,7 +26,7 @@ public class highScoreController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("/highScores.txt");
+            ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("/highScores.txt", false);
             List<Pair<String, Integer>> scores = new ArrayList<>();
 
             //Put each score into list of pairs in the form of <Name,Score>

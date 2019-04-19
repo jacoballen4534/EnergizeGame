@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Utilities {
 
     //Array of arrays to make it more generic for better reusability.
-    public static ArrayList<ArrayList<Pair<String, String>>> readFile(String filepath) throws FileNotFoundException {
+    public static ArrayList<ArrayList<Pair<String, String>>> readFile(String filepath, boolean keepFormat) throws FileNotFoundException {
         ArrayList<ArrayList<Pair<String, String>>> allContent = new ArrayList<>();
         boolean openedBlock = false;
         InputStream stream = Utilities.class.getResourceAsStream(filepath);
@@ -37,9 +37,13 @@ public class Utilities {
                     } else {
                         // Split and add to lineItem
                         String[] tokens = line.split(":");
-                        blockOfData.add(new Pair<>(
-                                tokens[0].replaceAll("[^A-Za-z0-9]+", "").toLowerCase(),
-                                tokens[1].replaceAll("[^A-Za-z0-9]+", "")));
+                        if (keepFormat) {
+                            blockOfData.add(new Pair<>(tokens[0],tokens[1]));
+                        } else {
+                            blockOfData.add(new Pair<>(
+                                    tokens[0].replaceAll("[^A-Za-z0-9]+", "").toLowerCase(),
+                                    tokens[1].replaceAll("[^A-Za-z0-9]+", "")));
+                        }
                     }
                 }
             }

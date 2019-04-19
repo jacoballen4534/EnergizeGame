@@ -1,7 +1,0 @@
-<begin>
-    mapSeed:12345678910
-<end>
-<begin>
-    movementSeed:12345678910
-<end>
-

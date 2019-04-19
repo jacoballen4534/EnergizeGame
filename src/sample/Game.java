@@ -50,13 +50,13 @@ public class Game extends Canvas {
     public static final int PIXEL_UPSCALE = 64 * Game.SCALE; //Place each tile, 1 tile width form the next.
     public static final int SCREEN_WIDTH = 1024;
     public static final int SCREEN_HEIGHT = 768;
-    private static long MOVEMENT_SEED = 12345678911L;
-    public static Random randomMovement = new Random(MOVEMENT_SEED);//used for enemy movement.
+    private static Random randomMovement;//used for enemy movement.
+    private static long randomSeed;
 
 
     private mainMenuController controller;
 
-    public Game(mainMenuController menuController) {
+    public Game(mainMenuController menuController, long _randomSeed) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         this.controller = menuController;
@@ -68,7 +68,7 @@ public class Game extends Canvas {
         this.root.getChildren().add(this);
         this.gameScene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
-
+        randomSeed = _randomSeed;
 
         /*===========================================\
         * pause Menu
@@ -83,7 +83,7 @@ public class Game extends Canvas {
 
         Button resumeButton = new Button("Resume");
         resumeButton.setOnMouseClicked(mouseEvent -> {
-            pauseMenu.hide();
+            pauseMenu.hide();   
             unpause();
         });
         resumeButton.setPrefSize(250,50);
@@ -112,27 +112,14 @@ public class Game extends Canvas {
         stage.show();
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
-
+        randomMovement = new Random(randomSeed);
         //////////////////// Make the map /////////////////////////////////////
-        long MAP_SEED = 0;
-//        for (int i = 0; i < 10; i++) { //This creates the same map each time
-        try {
-            ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("/Seed.txt");
-            for (ArrayList<Pair<String, String>> block : seeds) {
-               if (block.get(0).getKey().equalsIgnoreCase("movementseed")) {
-                    MOVEMENT_SEED = Long.parseLong(block.get(0).getValue());
-                    System.out.println("movementSeed set to: " + block.get(0).getValue());
-                } else if (block.get(0).getKey().equalsIgnoreCase("mapseed")) {
-                   MAP_SEED = Long.parseLong(block.get(0).getValue());
-                   System.out.println("MapSeed set to: " + block.get(0).getValue());
-               }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        randomMovement.setSeed(MOVEMENT_SEED);
-        this.map = new Map(this, MAP_SEED);
-//        }
+
+
+
+        this.map = new Map(this, randomSeed);
+
+
         this.map.loadLevel();
         init(); //Setup game loop
         Handler.setCamera(this.camera);
