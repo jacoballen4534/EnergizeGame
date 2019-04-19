@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class Enemy extends Character{
     protected Protagonist target; //For path finding.
-    private boolean enabled;
+    private boolean enabled; //For controlling the AI
 
     public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
                  boolean enabled) {
