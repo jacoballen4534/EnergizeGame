@@ -39,6 +39,7 @@ public class Level {
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>();
     ShortestPath shortestPath;
+    private int numberOfDoors = 0;
 
 
     //////////////Macros, Actual size of different sprites///////////
@@ -101,18 +102,22 @@ public class Level {
                 case DOOR_UP:
                     this.topDoorReachable = false;
                     this.currentPoint = new Point2D(door.getValue().getX(), door.getValue().getY() + 1);
+                    this.numberOfDoors++;
                     break;
                 case DOOR_RIGHT:
                     this.rightDoorReachable = false;
                     this.currentPoint = new Point2D(door.getValue().getX() - 1, door.getValue().getY());
+                    this.numberOfDoors++;
                     break;
                 case DOOR_DOWN:
                     this.currentPoint = new Point2D(door.getValue().getX(), door.getValue().getY() - 2);
                     this.bottomDoorReachable = false;
+                    this.numberOfDoors++;
                     break;
                 case DOOR_LEFT:
                     this.leftDoorReachable = false;
                     this.currentPoint = new Point2D(door.getValue().getX() + 1, door.getValue().getY());
+                    this.numberOfDoors++;
                     break;
             }
         }
@@ -122,6 +127,13 @@ public class Level {
 
             //place floor and add to floor list
             this.placeFloor(currentPoint, true);
+            if ((randomGenerator.nextDouble() * 100) < 2) { //Randomly event
+                if (numberOfDoors == 1) { // Place chests at dead ends
+                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.ITEM);
+                } else {
+                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.GRUNT);
+                }
+            }
 
             //check if a door is now reachable - update reachable boolean accordingly
             this.updateReachableDoors(currentPoint);
