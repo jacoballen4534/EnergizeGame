@@ -1,0 +1,5 @@
+<begin>
+Game Save 1 Name:150021
+No Map Saved In This Slot:NaN
+No Map Saved In This Slot:NaN
+<end>

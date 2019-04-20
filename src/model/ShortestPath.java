@@ -69,7 +69,7 @@ public class ShortestPath {
     }
 
     public int nextDirection(int startingId, int destinationId) {
-        if (this.pathsThreadComplete) {
+        if (startingId >= 0 && startingId < next.length && destinationId >= 0 && destinationId < next.length && this.pathsThreadComplete) {
             if (next[startingId][destinationId] == null) {
 //            return path;
                 System.out.println("There is no path from " + startingId + " to " + destinationId);
