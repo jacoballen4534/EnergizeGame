@@ -62,6 +62,8 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
+    private final int BOSS_SPRITE_WIDTH = 384;
+    private final int BOSS_SPRITE_HEIGHT = 384;
 
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
@@ -361,7 +363,7 @@ public class Level {
                         Handler.addDoor(new Door((int)rightDoorLocation.getX(), (int)rightDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
                                 DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber + 1,TileType.DOOR_RIGHT));
                         break;
-//
+
                     case DOOR_DOWN:
                         Point2D downDoorLocation = this.doorMap.get(TileType.DOOR_DOWN);
                         Handler.addDoor(new Door((int)downDoorLocation.getX(), (int)downDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
@@ -382,8 +384,10 @@ public class Level {
                         continue;
 
                     case GRUNT:
-                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+//                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
+//                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH, BOSS_SPRITE_HEIGHT, BOSS_SPRITE_WIDTH * Game.SCALE,
+                                BOSS_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
                         break;
 
                     default:
