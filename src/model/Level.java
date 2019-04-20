@@ -302,8 +302,7 @@ public class Level {
                     column.add(TileType.ENERGY_PICKUP);
                 } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple = Scroll (Fire)
                     column.add(TileType.SCROLL);
-                }
-                else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
+                } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
                     column.add(TileType.GRUNT);
                 } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
                     column.add(TileType.BOMBER);
@@ -334,8 +333,8 @@ public class Level {
                     case WALL:
                         Handler.addWall(col + row * this.levelWidth, new Wall(col,row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH,
                                 Tile_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE, 0,2));
-//                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
-                        break;
+                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
+//                        break;
                     case PROTAGONIST:
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
                                 PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE),

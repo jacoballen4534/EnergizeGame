@@ -234,7 +234,6 @@ public class Handler { //This class will hold all the game objects and is respon
             if (character.getBounds().intersects(pickup.getBounds())) {
                 if (character.pickup(pickup))
                     removePickup(pickup);
-                return pickup.isSolid;
             }
         }
 
