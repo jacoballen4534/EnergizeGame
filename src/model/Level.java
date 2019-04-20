@@ -62,8 +62,9 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
-    private final int BOSS_SPRITE_WIDTH = 384;
-    private final int BOSS_SPRITE_HEIGHT = 384;
+    private final int BOSS_SPRITE_WIDTH = 128;
+    private final int BOSS_SPRITE_HEIGHT = 128;
+    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
 
 
     public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
@@ -386,8 +387,8 @@ public class Level {
                     case GRUNT:
 //                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
 //                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
-                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH, BOSS_SPRITE_HEIGHT, BOSS_SPRITE_WIDTH * Game.SCALE,
-                                BOSS_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
+                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
                         break;
 
                     default:

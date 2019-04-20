@@ -53,6 +53,9 @@ public abstract class Enemy extends Character{
         }
     }
 
+    protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can overwride
+        super.render(graphicsContext, cameraX, cameraY);
+    }
     protected void tick(double cameraX, double cameraY, Level level) {
             int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
             int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
@@ -99,7 +102,12 @@ public abstract class Enemy extends Character{
     @Override
     protected void getHit(int damage) {
         if (!this.playDieAnimation && !this.playGotAttackedAnimation) {
-            this.playAttackAnimation = false;//getting hit interrupts an enemy attack
+
+            //getting hit interrupts an enemy attack. To not make it interrupt and continue after getting hit, dont set these. Dont not be able to take damage while attacking, check above
+            this.playAttackAnimation = false;
+            this.playSpecialAttackAnimation = false;
+
+
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             if (this.currHealth <= 0) { //died

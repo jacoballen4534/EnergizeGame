@@ -101,7 +101,11 @@ public class Protagonist extends Character {
 
     @Override
     protected void getHit(int damage) {
-        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && !this.playBlockingAnimation) { //Cant get hit while attacking but there is a cool down
+        if (!this.playDieAnimation && !this.playGotAttackedAnimation && !this.playBlockingAnimation) { //Cant get hit while attacking but there is a cool down
+
+            //getting hit interrupts an enemy attack. To not make it interrupt and continue after getting hit, dont set these. Dont not be able to take damage while attacking, check above
+//            this.playAttackAnimation = false;
+
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
