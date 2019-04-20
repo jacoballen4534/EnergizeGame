@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
@@ -33,8 +34,10 @@ public class Game extends Canvas {
 
     //For handling UI
     private Group root;
-    private Menu pauseMenu;
-    private Menu inventoryMenu;
+    private PauseMenu pauseMenu;
+    //private InventoryMenu inventoryMenu;
+    //private OptionsMenu optionsMenu;
+    //private ConfirmationMenu confirmationMenu;
 
     private Scene gameScene;
     private Camera camera;
@@ -64,42 +67,15 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
 
 
-        inventoryMenu = new Menu("inventoryMenu",500,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
         /*===========================================\
-        * Pause Menu Setup
+        * Pause Menu Setup - consider moving to dedicated method
         */
 
-        pauseMenu = new Menu("pauseMenu",300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-        //Pause menu controls
-        Label pauseTitle = new Label("pause Menu");
-        pauseTitle.setId("pauseMenuTitle");
-
-        Button resumeButton = new Button("Resume");
-        resumeButton.setOnMouseClicked(mouseEvent -> {
-            pauseMenu.hide();
-            unpause();
-        });
-        resumeButton.setPrefSize(250,50);
-        Button returnToMainMenuButton = new Button("Quit to Title Screen");
-        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
-            stage.setScene(Main.getMainScene()); //Buggy
-        });
-        returnToMainMenuButton.setPrefSize(250,50);
-        Button exitGameButton = new Button("Quit to Desktop");
-        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
-        exitGameButton.setPrefSize(250,50);
-
-        //Setting up VBox
-        VBox pauseGameVBox = new VBox(10,pauseTitle,resumeButton,returnToMainMenuButton,exitGameButton);
-        pauseGameVBox.setAlignment(Pos.CENTER);
-
-        pauseMenu.getChildren().add(pauseGameVBox);
-
-        //pauseMenu = createPauseMenu();
+        pauseMenu = CreatePauseMenu(pauseMenu); //Another idea for refactoring
         root.getChildren().add(pauseMenu);
-        root.getChildren().add(inventoryMenu);
+        //root.getChildren().add(inventoryMenu);
+        //root.getChildren().add(optionsMenu);
+        //root.getChildren().add(confirmationMenu);
         pauseMenu.hide();
         /*===================================*/
         stage.setScene(this.gameScene);
@@ -225,6 +201,30 @@ public class Game extends Canvas {
         return this.map;
     }
 
-    private void ShowInventoryMenu(){;}
-    private void HideInventoryMenu(){;}
+    private PauseMenu CreatePauseMenu(PauseMenu pauseMenu){
+        int nodePos = 0;
+        pauseMenu = new PauseMenu("pauseMenu",300,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+        pauseMenu.AddLabel(nodePos++,"Pause Menu","pauseMenuTitle");
+        pauseMenu.AddButton(nodePos++,"Resume","resumeButton",250,50,mouseEvent->{
+            this.pauseMenu.hide();
+            unpause();
+        });
+        pauseMenu.AddButton(nodePos++,"Inventory","inventoryButton",250,50,mouseEvent->{
+            System.out.println("Open inventory");
+        });
+        pauseMenu.AddButton(nodePos++,"Save Game","saveButton",250,50,mouseEvent->{
+            System.out.println("Launch save game dialog");
+        });
+        pauseMenu.AddButton(nodePos++,"Options","optionsButton",250,50,mouseEvent->{
+            System.out.println("Launch options dialog");
+        });
+        pauseMenu.AddButton(nodePos++,"Quit to Title Screen","quitToTitleButton",250,50,mouseEvent->{
+            stage.setScene(Main.getMainScene());
+        });
+        pauseMenu.AddButton(nodePos++,"Quit to Desktop","quitToDesktopButton",250,50,mouseEvent->{
+            System.exit(0); //Maybe add a confirmation before exit
+        });
+
+        return pauseMenu;
+    }
 }
