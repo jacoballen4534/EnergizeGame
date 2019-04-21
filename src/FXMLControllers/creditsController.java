@@ -21,7 +21,7 @@ public class creditsController implements Initializable {
     }
     public void creditsBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
-        creditsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(mainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
+        creditsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
 

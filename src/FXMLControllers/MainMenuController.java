@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-public class mainMenuController implements Initializable {
+import static sample.FXMLUtils.*;
+
+public class MainMenuController implements Initializable {
 
     //Macros
     private final int newGamePos = 2;
@@ -101,21 +103,8 @@ public class mainMenuController implements Initializable {
         stage.setTitle(newStageName);
     }
 
-    private Node getNodeByID(String id){
-        ObservableList<Node> menuLabels = ((VBox)(mainMenuPane.getChildren().get(0))).getChildren();
-        Iterator<Node> it = menuLabels.iterator();
-        while (it.hasNext()) {
-            Node node = it.next();
-            if (node.getId().equals(id)){
-                //System.out.println("Found node: " + id);
-                return node;
-            }
-        }
-        return null;
-    }
-
     private Label UpdateFocussedLabel(Label currFocussedLabel, String id){
-        Label newLabel = (Label)getNodeByID(id);
+        Label newLabel = (Label)getNodeByID(id,this.mainMenuVBox);
         if (currFocussedLabel != null){
             currFocussedLabel.getStyleClass().setAll("menulabel");
         }
@@ -132,19 +121,6 @@ public class mainMenuController implements Initializable {
         return currFocussedLabel;
     }
 
-    private VBox CreateSubMenu(){
-        VBox subMenu = new VBox();
-        subMenu.getStyleClass().setAll("submenu");
-        subMenu.setId("subMenuVBox");
-        return subMenu;
-    }
-    private void CreateMenuLabel(VBox menu, String labelText, String styleClass, int position, EventHandler mouseOnClick){
-        Label label = new Label(labelText);
-        label.setId(labelText);
-        label.getStyleClass().setAll(styleClass);
-        if (mouseOnClick != null) label.setOnMouseClicked(mouseOnClick);
-        menu.getChildren().add(position,label);
-    }
 
     //TODO refactor switch statement to be less hardcoded
     private void UpdateMenu(Label currFocussedLabel){
@@ -248,7 +224,7 @@ public class mainMenuController implements Initializable {
     }
 
     private void HideCurrentSubMenu(){
-        VBox subMenu = (VBox)getNodeByID("subMenuVBox");
+        VBox subMenu = (VBox)getNodeByID("subMenuVBox",mainMenuVBox);
         mainMenuVBox.getChildren().remove(subMenu);
     }
 

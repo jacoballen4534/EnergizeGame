@@ -5,6 +5,15 @@
     -fx-background-image:url("/bg/pauseScreenBG.png");
     /*-fx-background-color: #224D72;*/
 }
+.anchorpane#inventoryMenu{
+    -fx-background-color: #ff00ff;
+}
+.anchorpane#confirmationMenu{
+    -fx-background-color: #aa0000;
+}
+.anchorpane#optionsMenu{
+    -fx-background-color: #00aaff;
+}
 .label{
     -fx-text-fill: #e8e8e8;
     -fx-font-family: beon;
@@ -15,6 +24,7 @@
     -fx-font-family: beon;
     -fx-font-size: 50;
     -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
@@ -45,9 +55,15 @@
     -fx-padding: 0 0 0 30;
 }
 .submenu-label{
-    -fx-text-fill: #00ffff;
+    -fx-text-fill: #11d725;
     -fx-font-family: beon;
     -fx-font-size: 25;
+    /*
+    11d7d7 - Dark turqoise?
+    11D725 - A sort of green
+    00ffff - Literally turqoise
+    ffe200 - Brighter yellow
+    */
 }
 .submenu-label:hover{
     -fx-text-fill: #ff0000;
@@ -63,10 +79,14 @@
 .button{
     -fx-background-color: #ff8800; /*#AB4642;*/
     -fx-text-fill: #000000;
+    -fx-font-style: italic;
     -fx-font-size: 20;
     -fx-background-radius: 4;
 }
 .button:hover{
+    -fx-text-fill: #ffffff;
+    -fx-font-style: oblique;
+    /*-fx-font-weight: bold;*/
     -fx-background-color: #0288D1;
 }
 .button-blue{

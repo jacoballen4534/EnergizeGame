@@ -1,16 +1,11 @@
 package sample;
 
-import FXMLControllers.mainMenuController;
+import FXMLControllers.MainMenuController;
 import javafx.animation.*;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
 
@@ -34,10 +29,14 @@ public class Game extends Canvas {
 
     //For handling UI
     private Group root;
+    private InGameMenuController inGameMenuController;
     private PauseMenu pauseMenu;
     //private InventoryMenu inventoryMenu;
     //private OptionsMenu optionsMenu;
-    //private ConfirmationMenu confirmationMenu;
+    private ConfirmationMenu confirmationMenu;
+
+    //Constants for UI
+
 
     private Scene gameScene;
     private Camera camera;
@@ -51,12 +50,12 @@ public class Game extends Canvas {
     private static Random randomLevel = new Random(System.nanoTime());//used for map generation.
     private static Random randomMovement = new Random(System.nanoTime());//used for enemy movement.
 
-    private mainMenuController controller;
+    private MainMenuController controller;
 
-    public Game(mainMenuController menuController) {
+    public Game(MainMenuController mainMenuController) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
-        this.controller = menuController;
+        this.controller = mainMenuController;
         controller.setGameActive(true);
         Handler.clearForNewGame();
         this.stage = Main.getStage();
@@ -67,17 +66,12 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
 
 
-        /*===========================================\
-        * Pause Menu Setup - consider moving to dedicated method
+        /*
+        * Menu Setup
         */
+        inGameMenuController = new InGameMenuController(()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController.AddToRoot(root);
 
-        pauseMenu = CreatePauseMenu(pauseMenu); //Another idea for refactoring
-        root.getChildren().add(pauseMenu);
-        //root.getChildren().add(inventoryMenu);
-        //root.getChildren().add(optionsMenu);
-        //root.getChildren().add(confirmationMenu);
-        pauseMenu.hide();
-        /*===================================*/
         stage.setScene(this.gameScene);
 
         stage.show();
@@ -158,8 +152,8 @@ public class Game extends Canvas {
     private void tick() {
         if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
             this.pause();
-            pauseMenu.show();
-            //pauseMenu.setVisible(true);
+            inGameMenuController.showPauseMenu();
+            //pauseMenu.show();
             System.out.println("Toggle game pause");
         }
         if (keyInput.getKeyPressDebounced("inventory")){
@@ -201,30 +195,4 @@ public class Game extends Canvas {
         return this.map;
     }
 
-    private PauseMenu CreatePauseMenu(PauseMenu pauseMenu){
-        int nodePos = 0;
-        pauseMenu = new PauseMenu("pauseMenu",300,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-        pauseMenu.AddLabel(nodePos++,"Pause Menu","pauseMenuTitle");
-        pauseMenu.AddButton(nodePos++,"Resume","resumeButton",250,50,mouseEvent->{
-            this.pauseMenu.hide();
-            unpause();
-        });
-        pauseMenu.AddButton(nodePos++,"Inventory","inventoryButton",250,50,mouseEvent->{
-            System.out.println("Open inventory");
-        });
-        pauseMenu.AddButton(nodePos++,"Save Game","saveButton",250,50,mouseEvent->{
-            System.out.println("Launch save game dialog");
-        });
-        pauseMenu.AddButton(nodePos++,"Options","optionsButton",250,50,mouseEvent->{
-            System.out.println("Launch options dialog");
-        });
-        pauseMenu.AddButton(nodePos++,"Quit to Title Screen","quitToTitleButton",250,50,mouseEvent->{
-            stage.setScene(Main.getMainScene());
-        });
-        pauseMenu.AddButton(nodePos++,"Quit to Desktop","quitToDesktopButton",250,50,mouseEvent->{
-            System.exit(0); //Maybe add a confirmation before exit
-        });
-
-        return pauseMenu;
-    }
 }
