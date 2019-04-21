@@ -57,13 +57,15 @@ public abstract class Enemy extends Character{
         super.render(graphicsContext, cameraX, cameraY);
     }
     protected void tick(double cameraX, double cameraY, Level level) {
-            int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
-            int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
+        int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
+        int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
 
 //            if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
 //                level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
 //            }
 
+        //Only move if protagonist is close enough
+        if(Math.sqrt((this.x - target.getX()) * (this.x - target.getX()) + (this.y - target.getY()) * (this.y - target.getY())) < this.alertRadius) {
             //Give a 50% chance of changing of getting a path update
             if (Game.getNextRandomInt() < 50) {
                 int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
@@ -96,7 +98,11 @@ public abstract class Enemy extends Character{
                     this.velocityY = Game.getNextRandomInt() > 49 ? 3 : -3;
                 }
             }
-        super.tick(cameraX,cameraY);
+            super.tick(cameraX, cameraY);
+        } else {
+            this.velocityX = 0;
+            this.velocityY = 0;
+        }
     }
 
     @Override
@@ -104,8 +110,8 @@ public abstract class Enemy extends Character{
         if (!this.playDieAnimation && !this.playGotAttackedAnimation) {
 
             //getting hit interrupts an enemy attack. To not make it interrupt and continue after getting hit, dont set these. Dont not be able to take damage while attacking, check above
-            this.playAttackAnimation = false;
-            this.playSpecialAttackAnimation = false;
+//            this.playAttackAnimation = false;
+//            this.playSpecialAttackAnimation = false;
 
 
             this.animationsState.copy(this.gotHitState);

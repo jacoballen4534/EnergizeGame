@@ -30,6 +30,7 @@ public class Grunt extends Enemy {
         this.attackDamage = GRUNT_BASE_ATTACK_DAMAGE;
         this.currHealth = GRUNT_MAXHEALTH;
         this.APPLY_DAMEAGE_COL = 7; //To apply damage part way through the attack animation
+        this.alertRadius = 500;
 
         //Initialise image for first animation
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);

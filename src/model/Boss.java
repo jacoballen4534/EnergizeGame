@@ -44,6 +44,7 @@ public class Boss extends Enemy {
         this.attackCooldown = BOSS_ATTACK_COOLDOWN;
         this.APPLY_DAMEAGE_COL = 4;
         this.EnemyMovementSpeed = 2;
+        this.alertRadius = 420;
 
         //////////////////////////// SET UP HEALTH / DAMAGE //////////////////////////////
         this.attackDamage = BOSS_BASE_ATTACK_DAMAGE;

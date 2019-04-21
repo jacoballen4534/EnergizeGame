@@ -26,6 +26,7 @@ public abstract class Character extends GameObject{
     private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
     protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
     protected long lastAttackTimer, attackCooldown, attackTimer = 0;
+    protected int alertRadius;
 
 
 
@@ -76,7 +77,6 @@ public abstract class Character extends GameObject{
     }
 
     protected void getHit(int damage) {
-        System.out.println("Character got hit");
         this.animationsState.copy(this.gotHitState); //Set the state to update the bounding boxes
         this.currentAnimationCol = animationsState.getResetCol();//To start the animation from the start.
         this.playGotAttackedAnimation = true;

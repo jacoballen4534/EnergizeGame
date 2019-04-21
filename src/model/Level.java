@@ -153,18 +153,22 @@ public class Level {
         for (int steps = 1; steps < this.levelHeight - 4; steps++) {
             if (!this.topDoorReachable) {
                 this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_UP).getX(), doorMap.get(TileType.DOOR_UP).getY() + steps), false);
+                this.addHorizontalStep(steps, TileType.DOOR_UP);
             }
             if (!this.bottomDoorReachable) {
                 this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_DOWN).getX(), doorMap.get(TileType.DOOR_DOWN).getY() - steps - 1), true);
+                this.addHorizontalStep(steps, TileType.DOOR_DOWN);
             }
         }
 
         for (int steps = 1; steps < this.levelWidth - 3; steps++) {
             if (!this.leftDoorReachable) {
                 this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_LEFT).getX() + steps, doorMap.get(TileType.DOOR_LEFT).getY()), true);
+                this.addVerticalStep(steps, TileType.DOOR_LEFT);
             }
             if (!this.rightDoorReachable) {
                 this.placeFloor(new Point2D(doorMap.get(TileType.DOOR_RIGHT).getX() - steps, doorMap.get(TileType.DOOR_RIGHT).getY()), true);
+                this.addVerticalStep(steps, TileType.DOOR_RIGHT);
             }
         }
 
@@ -178,7 +182,24 @@ public class Level {
 //        this.debugDrawFloor();
 
         this.shortestPath = new ShortestPath(this.levelWidth,this.levelHeight,this.tiles);
+    }
 
+    private void addHorizontalStep(int steps, TileType door) {
+        if (doorMap.get(door).getX() + steps < this.levelWidth - 1) {
+            this.placeFloor(new Point2D(doorMap.get(door).getX() + steps, this.levelHeight / 2), true);
+        }
+        if (doorMap.get(door).getX() - steps > 0) {
+            this.placeFloor(new Point2D(doorMap.get(door).getX() - steps, this.levelHeight / 2), true);
+        }
+    }
+
+    private void addVerticalStep(int steps, TileType door) {
+        if (doorMap.get(door).getY() + steps < this.levelHeight - 1) {
+            this.placeFloor(new Point2D(this.levelWidth/2, doorMap.get(door).getY() + steps), false);
+        }
+        if (doorMap.get(door).getY() - steps > 0) {
+            this.placeFloor(new Point2D(this.levelWidth/2, doorMap.get(door).getY() - steps), false);
+        }
     }
 
     public void debugDrawFloor() {
@@ -320,6 +341,8 @@ public class Level {
                     column.add(TileType.CAMP_FIRE);
                 } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
                     column.add(TileType.ITEM);
+                } else if (red == 192 && green == 0 && blue == 192) { //TODO: Specify what type of item each is.
+                    column.add(TileType.ITEM);
                 } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
                     column.add(TileType.GRUNT);
                 } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
@@ -353,8 +376,12 @@ public class Level {
                     case WALL:
                         Handler.addWall(col + row * this.levelWidth, new Wall(col,row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH,
                                 Tile_SPRITE_HEIGHT,CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_HEIGHT * Game.SCALE, 0,2));
-//                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
-                        break;
+                        continue; //Continue if wall is a solid sprite, otherwise consider break to draw tile underneath.
+
+                    case NULLTILE:
+                        Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, Game.PIXEL_UPSCALE, Game.PIXEL_UPSCALE, false));
+                        continue;
+
                     case PROTAGONIST:
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
                                 PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
