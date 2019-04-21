@@ -16,7 +16,6 @@ public class Protagonist extends Character {
     private boolean isAttacking = false; //Attempt to debounce attacking
     private boolean playBlockingAnimation = false; //To add shield effect
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
-    private AnimationsState idleState;
     private AnimationsState blockingState;
     private long lastBlockTimer, blockCooldown, blockTimer = 0;
 

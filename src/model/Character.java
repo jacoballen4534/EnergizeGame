@@ -2,6 +2,7 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,6 +17,7 @@ public abstract class Character extends GameObject{
     protected AnimationsState attackState;
     protected AnimationsState gotHitState;
     protected AnimationsState runningState;
+    protected AnimationsState idleState;
 
     protected boolean playGotAttackedAnimation = false;
     protected boolean playAttackAnimation = false;
@@ -154,9 +156,17 @@ public abstract class Character extends GameObject{
                 graphicsContext.drawImage(this.jfxImage, this.x + this.spriteWidth - this.animationsState.getLeftBorder(),
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
-            this.renderBoundingBox(graphicsContext);
+//            this.renderBoundingBox(graphicsContext);
         }
 //        this.renderAttackBoundingBox(graphicsContext);
+    }
+
+    protected void renderBoundingBox(GraphicsContext graphicsContext) {
+        graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
+
+        graphicsContext.fillRect(this.x, this.y,
+                this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
+                this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
     }
 
     /////////////////////////////////////////

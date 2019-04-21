@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 public abstract class Enemy extends Character{
     protected Protagonist target; //For path finding.
     private boolean enabled;
-    protected AnimationsState idleState;
     protected AnimationsState dieState;
     protected int APPLY_DAMEAGE_COL;
     protected int EnemyMovementSpeed;
@@ -42,7 +41,8 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(this.attackState);
             if (this.currentAnimationCol == APPLY_DAMEAGE_COL) {
                 Handler.attack(this); //Wait until part way through this animation before actually hitting
-            } else if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+            }
+            if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playAttackAnimation = false;
                 this.attackTimer = 0;
             }

@@ -385,10 +385,10 @@ public class Level {
                         continue;
 
                     case GRUNT:
-//                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-//                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
-                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
-                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
+                        Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+//                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
+//                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
                         break;
 
                     default:
