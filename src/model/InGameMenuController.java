@@ -3,6 +3,7 @@ package model;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
 
 import static sample.FXMLUtils.CreateButton;
@@ -27,20 +28,20 @@ public class InGameMenuController {
     private static final int OPTIONS_MENU_WIDTH = 300;
     private static final int OPTIONS_MENU_HEIGHT = 300;
 
-    private static final int CONFIRMATION_MENU_WIDTH = 100;
-    private static final int CONFIRMATION_MENU_HEIGHT = 100;
+    private static final int CONFIRMATION_MENU_WIDTH = 250;
+    private static final int CONFIRMATION_MENU_HEIGHT = 150;
 
     //Event macros
     //--Pause Menu
     private EventHandler resumeEvent;// = mouseEvent->this.pauseMenu.hide();
     private EventHandler inventoryEvent = mouseEvent ->{
-        this.pauseMenu.hide();
+        //this.pauseMenu.hide();
         this.inventoryMenu.show();
     };
     private EventHandler saveEvent = mouseEvent->System.out.println("Shows save game menu");
     private EventHandler optionsEvent = mouseEvent->System.out.println("Shows options menu");
     private EventHandler quitToTitleEvent = mouseEvent->this.exitToTitleConfirmation.show();
-    private EventHandler quitToDesktopEvent = mouseEvent->System.exit(0);//this.exitToDesktopConfirmation.show();
+    private EventHandler quitToDesktopEvent = mouseEvent->this.exitToDesktopConfirmation.show();
 
     //Menus
     private PauseMenu pauseMenu;
@@ -51,17 +52,21 @@ public class InGameMenuController {
     private OptionsMenu optionsMenu;
 
     public InGameMenuController(Runnable unpauseGame, EventHandler returnToTitleScreen) {
+
+        this.inventoryMenu = new InventoryMenu("inventoryMenu",INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,
+                SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
         this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
         this.pauseMenu = CreatePauseMenu(pauseMenu);
-        this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "exitToTitleConfirm",
+        this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "confirmationMenu",
                 returnToTitleScreen);
         this.exitToDesktopConfirmation = CreateConfirmationMenu("Are you sure about that?",
-                "exitToDesktopConfirm", event->System.exit(0));
+                "confirmationMenu", event->System.exit(0));
 
         //Hide all menus
         this.pauseMenu.hide();
         this.exitToTitleConfirmation.hide();
-        //this.exitToDesktopConfirmation.hide();
+        this.exitToDesktopConfirmation.hide();
     }
 
     private void ShowMenu(String menuID){
@@ -76,9 +81,19 @@ public class InGameMenuController {
         pauseMenu.show();
     }
 
-    public void AddToRoot(Group root){
+    public void hidePauseMenu(){
+        pauseMenu.hide();
+        exitToTitleConfirmation.hide();
+    }
+
+    public void showInventoryMenu(){
+        pauseMenu.hide();
+        inventoryMenu.show();
+    }
+
+    public void AddMenusToRoot(Group root){
         root.getChildren().add(pauseMenu);
-        //root.getChildren().add(inventoryMenu);
+        root.getChildren().add(inventoryMenu);
         //root.getChildren().add(saveGameMenu);
         //root.getChildren().add(optionsMenu);
         root.getChildren().add(exitToTitleConfirmation);
@@ -88,7 +103,7 @@ public class InGameMenuController {
     private ConfirmationMenu CreateConfirmationMenu(String title, String ID,
                                                     EventHandler confirmationAction){
         ConfirmationMenu confirmationMenu = new ConfirmationMenu(title,ID,
-                CONFIRMATION_MENU_WIDTH,CONFIRMATION_MENU_HEIGHT,SCREEN_WIDTH,SCREEN_HEIGHT,confirmationAction);
+                CONFIRMATION_MENU_WIDTH,CONFIRMATION_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,confirmationAction);
         return confirmationMenu;
     }
 
@@ -96,8 +111,10 @@ public class InGameMenuController {
         int nodePos = 1;
         pauseMenu = new PauseMenu("pauseMenu",PAUSE_MENU_WIDTH,PAUSE_MENU_HEIGHT,
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-        pauseMenu.SetLabelAsTitle(CreateLabel("Pause menu","pauseMenuTitle",PAUSE_MENU_WIDTH,50,
-                TextAlignment.CENTER,true));
+
+        Label titleLabel = CreateLabel("Pause menu","pauseMenuTitle",PAUSE_MENU_WIDTH,100,
+                TextAlignment.CENTER,true);
+        pauseMenu.SetLabelAsTitle(titleLabel);
 
         Button resumeButton = CreateButton("Resume","resumeButton",
                 PAUSE_MENU_BTN_WIDTH,PAUSE_MENU_BTN_HEIGHT,resumeEvent);

@@ -2,7 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
@@ -33,6 +39,41 @@
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="36.0" prefWidth="206.0" text="I AM A TEST" textAlignment="CENTER" />
             <Button layoutX="13.0" layoutY="115.0" mnemonicParsing="false" onAction="#creditsBackButtonPressed" prefHeight="31.0" prefWidth="219.0" text="HELLO WORLD" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="452.0" layoutY="254.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #a90f89;">
+         <children>
+            <VBox alignment="CENTER" layoutX="14.0" layoutY="41.0" prefHeight="200.0" prefWidth="332.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="Inventory" textAlignment="CENTER">
+                     <font>
+                        <Font size="50.0" />
+                     </font></Label>
+                  <HBox alignment="CENTER" prefHeight="380.0" prefWidth="500.0">
+                     <children>
+                        <VBox prefHeight="380.0" prefWidth="274.0">
+                           <children>
+                              <Label text="Equipped">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fitHeight="205.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../sprites/fireScroll.png" />
+                                 </image></ImageView>
+                           </children>
+                        </VBox>
+                        <TableView prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="101.0" text="C1" />
+                            <TableColumn prefWidth="98.0" text="C2" />
+                          </columns>
+                        </TableView>
+                     </children></HBox>
+                  <Button mnemonicParsing="false" text="Close" />
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
     </children>

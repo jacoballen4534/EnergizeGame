@@ -24,7 +24,8 @@ public class FXMLUtils {
     public static Label CreateLabel(String text, String id, int prefWidth, int prefHeight,
                                     TextAlignment alignment, boolean doWrapText){
         Label label = new Label(text);
-        label.setPrefSize(prefWidth,prefHeight);
+        //label.setPrefSize(prefWidth,prefHeight);
+        label.setPrefWidth(prefWidth);
         label.setTextAlignment(alignment);
         label.setWrapText(doWrapText);
         label.setId(id);

@@ -70,7 +70,7 @@ public class Game extends Canvas {
         * Menu Setup
         */
         inGameMenuController = new InGameMenuController(()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
-        inGameMenuController.AddToRoot(root);
+        inGameMenuController.AddMenusToRoot(root);
 
         stage.setScene(this.gameScene);
 
@@ -88,7 +88,7 @@ public class Game extends Canvas {
     }
 
     public void hidePauseMenu () {
-        this.pauseMenu.hide();
+        this.inGameMenuController.hidePauseMenu();
     }
 
     public static int getNextRandomInt(int bounds, boolean mapGen) {
@@ -153,12 +153,11 @@ public class Game extends Canvas {
         if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
             this.pause();
             inGameMenuController.showPauseMenu();
-            //pauseMenu.show();
             System.out.println("Toggle game pause");
         }
         if (keyInput.getKeyPressDebounced("inventory")){
-            //this.pause();
-//            ShowInventoryMenu();
+            this.pause();
+            inGameMenuController.showInventoryMenu();
             System.out.println("Open inventory");
             System.out.println(this.protagonist.getInventory().getItemCount());
         }
