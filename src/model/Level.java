@@ -23,7 +23,8 @@ enum TileType {
     ITEM,
     GRUNT,
     BOMBER,
-    ARCHER
+    ARCHER,
+    BOSS
 }
 
 public class Level {
@@ -40,7 +41,8 @@ public class Level {
     private ArrayList<Point2D> floorLocation = new ArrayList<>();
     ShortestPath shortestPath;
     private int numberOfDoors = 0;
-
+    private boolean bossEntrance = false;
+    private boolean bossLevel = false;
 
     //////////////Macros, Actual size of different sprites///////////
     private final int Tile_SPRITE_WIDTH = 32;
@@ -62,14 +64,18 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
+    private final int BOSS_SPRITE_WIDTH = 128;
+    private final int BOSS_SPRITE_HEIGHT = 128;
+    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
 
 
-    public Level(BufferedImage image, int levelNumber, int mapWidth) { //Makes a level from an image
+    public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();
         this.levelHeight = image.getHeight();
         this.levelNumber = levelNumber;
         this.doorMap = new TreeMap<>();
         this.mapWidth = mapWidth;
+        this.bossLevel = bossLevel;
         ProcessImage(image);
     }
 
@@ -127,7 +133,7 @@ public class Level {
 
             //place floor and add to floor list
             this.placeFloor(currentPoint, true);
-            if ((randomGenerator.nextDouble() * 100) < 2) { //Randomly event
+            if ((randomGenerator.nextDouble() * 100) < 0) { //Randomly event
                 if (numberOfDoors == 1) { // Place chests at dead ends
                     this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.ITEM);
                 } else {
@@ -266,6 +272,9 @@ public class Level {
     }
 
 
+    public void setBossEntrance() {
+        this.bossEntrance = true;
+    }
     public ArrayList<ArrayList<TileType>> getTiles() {
         return this.tiles;
     }
@@ -304,6 +313,9 @@ public class Level {
                 } else if (red == 0 && green == 255 && blue == 0) { //Green = Door //Add different blue if we want to have non right doors
                     column.add(TileType.DOOR_RIGHT);
                     this.doorMap.put(TileType.DOOR_RIGHT, new Point2D(col, row));
+                } else if (red == 0 && green == 255 && blue == 1) {
+                    column.add(TileType.DOOR_LEFT);
+                    this.doorMap.put(TileType.DOOR_LEFT, new Point2D(col, row));
                 } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / random chance of some other background but not solid.
                     column.add(TileType.CAMP_FIRE);
                 } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
@@ -314,6 +326,8 @@ public class Level {
                     column.add(TileType.BOMBER);
                 } else if (red == 255 && green == 0 && blue == 3) { // Red = Enemy, (Blue = 3) = Archer
                     column.add(TileType.ARCHER);
+                } else if (red == 255 && green == 0 && blue == 4) { // Red = Enemy, (Blue = 4) = BOSS
+                    column.add(TileType.BOSS);
                 } else {
                     column.add(TileType.NULLTILE);
                 }
@@ -358,10 +372,15 @@ public class Level {
 
                     case DOOR_RIGHT:
                         Point2D rightDoorLocation = this.doorMap.get(TileType.DOOR_RIGHT);
-                        Handler.addDoor(new Door((int)rightDoorLocation.getX(), (int)rightDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber + 1,TileType.DOOR_RIGHT));
+                        if (this.bossEntrance) {
+                            Handler.addDoor(new Door((int) rightDoorLocation.getX(), (int) rightDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
+                                    DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, 8055, TileType.DOOR_RIGHT));
+                        } else {
+                            Handler.addDoor(new Door((int) rightDoorLocation.getX(), (int) rightDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
+                                    DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber + 1, TileType.DOOR_RIGHT));
+                        }
                         break;
-//
+
                     case DOOR_DOWN:
                         Point2D downDoorLocation = this.doorMap.get(TileType.DOOR_DOWN);
                         Handler.addDoor(new Door((int)downDoorLocation.getX(), (int)downDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
@@ -370,8 +389,13 @@ public class Level {
 
                     case DOOR_LEFT:
                         Point2D leftDoorLocation = this.doorMap.get(TileType.DOOR_LEFT);
-                        Handler.addDoor(new Door((int)leftDoorLocation.getX(), (int)leftDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
-                                DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber - 1,TileType.DOOR_LEFT));
+                        if (this.bossLevel) {
+                            Handler.addDoor(new Door((int) leftDoorLocation.getX(), (int) leftDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
+                                    DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, game.getMap().getTutorialLevelNumber(), TileType.DOOR_LEFT));
+                        } else {
+                            Handler.addDoor(new Door((int) leftDoorLocation.getX(), (int) leftDoorLocation.getY(), PreLoadedImages.doorSpriteSheet,
+                                    DOOR_SPRITE_WIDTH, DOOR_SPRITE_HEIGHT, DOOR_RENDER_WIDTH, DOOR_RENDER_HEIGHT, this.levelNumber - 1, TileType.DOOR_LEFT));
+                        }
                         break;
 
                     case FLOOR: //This is just here so if we add tiles with different textures, we can differentiate and create floor with different spreadsheet row/col
@@ -385,7 +409,10 @@ public class Level {
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
                                 GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
                         break;
-
+                    case BOSS:
+                        Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
+                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
+                        break;
                     default:
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
                         continue;

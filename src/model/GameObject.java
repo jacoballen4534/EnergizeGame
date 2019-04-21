@@ -44,7 +44,7 @@ public abstract class GameObject {
     protected void tick(double cameraX, double cameraY){
     }
 
-    public abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
+    protected abstract void render(GraphicsContext graphicsContext, double cameraX, double cameraY);
 
     protected Rectangle getBounds() {
         return new Rectangle((int)this.x, (int)this.y,

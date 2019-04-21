@@ -2,6 +2,7 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,10 +17,12 @@ public abstract class Character extends GameObject{
     protected AnimationsState attackState;
     protected AnimationsState gotHitState;
     protected AnimationsState runningState;
+    protected AnimationsState idleState;
 
     protected boolean playGotAttackedAnimation = false;
     protected boolean playAttackAnimation = false;
     protected boolean playDieAnimation = false;
+    protected boolean playSpecialAttackAnimation = false;
     private int levelWidth; //This is in pixels, Used to check tiles in a 2 tile radius
     protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
     protected long lastAttackTimer, attackCooldown, attackTimer = 0;
@@ -59,7 +62,7 @@ public abstract class Character extends GameObject{
         this.attackTimer += System.currentTimeMillis() - this.lastAttackTimer;
         this.lastAttackTimer = System.currentTimeMillis();
 
-        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && (this.attackTimer >= this.attackCooldown)) {
+        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && !this.playSpecialAttackAnimation && (this.attackTimer >= this.attackCooldown)) {
             this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
             this.currentAnimationCol = animationsState.getResetCol(); //To start the animation from the start.
             this.playAttackAnimation = true; //Indicate to start playing the attack animation once.
@@ -144,7 +147,7 @@ public abstract class Character extends GameObject{
 
 
     @Override
-    public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
+    protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
 
         if (this.inCameraBounds(cameraX,cameraY)) {
             if (this.spriteDirection == 1) { //facing right
@@ -156,6 +159,14 @@ public abstract class Character extends GameObject{
 //            this.renderBoundingBox(graphicsContext);
         }
 //        this.renderAttackBoundingBox(graphicsContext);
+    }
+
+    protected void renderBoundingBox(GraphicsContext graphicsContext) {
+        graphicsContext.setFill(new Color(0.5, 0.5, 0.5, 0.5));
+
+        graphicsContext.fillRect(this.x, this.y,
+                this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
+                this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
     }
 
     /////////////////////////////////////////

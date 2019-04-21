@@ -7,12 +7,14 @@ import java.io.IOException;
 public class PreLoadedImages {
     //Load all of the images on startup, static and available everywhere.
     public static BufferedImage tutorialRoom;
+    public static BufferedImage bossRoom;
     public static BufferedImage doorSpriteSheet;
     public static BufferedImage tileSpriteSheet;
     public static BufferedImage gruntSpriteSheet;
     public static BufferedImage protagonistSpriteSheet;
     public static BufferedImage campFireSpriteSheet;
     public static BufferedImage shieldSpriteSheet;
+    public static BufferedImage bossSpriteSheet;
 
     static {
         try {
@@ -23,6 +25,8 @@ public class PreLoadedImages {
             protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
             campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
             shieldSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Shield.png"));
+            bossSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossSpriteSheetx3.png"));
+            bossRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossRoom.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package model;
 import javafx.geometry.Point2D;
 import sample.Game;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -21,6 +22,9 @@ public class Map {
     private final int LEVEL_WIDTH = 20;
     private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
     private ArrayList<ArrayList<TreeMap<TileType, Point2D>>> allDoorLocations = new ArrayList<>(); //2d array list of door locations. in col,row form
+    private Level bossLevel; //This has level number of 8055
+    private int bossEntranceLevelNumber;// This is the room that goes to boss level.
+    private int tutorialLevelNumber;
 
     //Hold the layout of the different levels that makes up the map, Can be used for mini-map.
     //Using bitwise operations to indicate which side shares a wall with another level (need a door). Or 0 if it is not a level
@@ -35,10 +39,11 @@ public class Map {
         //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, randomGenerator);
         //Generate tutorial room first as the shortest path takes a while so start it first
-        int tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
-        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH);
+        this.tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
+        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH, false);
         this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
-
+        this.bossLevel = new Level(PreLoadedImages.bossRoom, 8055, MAP_WIDTH, true);
+        this.levels.put(8055, this.bossLevel);
 
         //For each level in the map, generate a random level.
         for (int row = 0; row < MAP_HEIGHT; row ++) {
@@ -50,6 +55,8 @@ public class Map {
             }
         }
 
+        this.levels.get(bossEntranceLevelNumber).setBossEntrance(); //Indicate that this is the boss level entrance so the door goes to 8055
+
     }
 
 
@@ -60,6 +67,10 @@ public class Map {
             this.currentLevel = this.levels.get(levelNumber);
         }
         return this.currentLevel;
+    }
+
+    public int getTutorialLevelNumber() {
+        return this.tutorialLevelNumber;
     }
 
     public void loadLevel(int levelNumber) {
@@ -153,13 +164,13 @@ public class Map {
         }
 
         ////////////////FOR DEBUG - Draw map //////////////////////
-//        for (int row = 0; row < rows; row ++) {
-//            for (int col = 0; col < cols; col++) {
-//                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
-//            }
-//            System.out.println();
-//        }
-//        System.out.println();
+        for (int row = 0; row < rows; row ++) {
+            for (int col = 0; col < cols; col++) {
+                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
+            }
+            System.out.println();
+        }
+        System.out.println();
         ///////////////////////////////////////////////////////////
 
 
@@ -195,6 +206,17 @@ public class Map {
                 doorLocationsRow.add(currentLevelDoors);
             }
             this.allDoorLocations.add(doorLocationsRow);
+        }
+        //Add a door to the highest room the furthest to the right, to go to the boss room.
+        for (int col = cols-1; col >= 0; col --) {
+            for (int row = 0; row < rows; row ++) {
+                if (levelLayout.get(row).get(col)) { //This will enter at he highest row on the furthest col with a room in it.
+                    this.bossEntranceLevelNumber = col + row * this.MAP_WIDTH;
+                    int rightDoorY = (int)(randomGenerator.nextDouble() * (LEVEL_HEIGHT - 5)) + 2;
+                    this.allDoorLocations.get(row).get(col).put(TileType.DOOR_RIGHT,  new Point2D(LEVEL_WIDTH - 1, rightDoorY));
+                    return;
+                }
+            }
         }
     }
 }
