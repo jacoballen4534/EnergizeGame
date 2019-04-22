@@ -16,12 +16,11 @@ import javafx.util.Callback;
 import static sample.FXMLUtils.CreateButton;
 import static sample.FXMLUtils.CreateLabel;
 
-public class InventoryMenu extends Menu {
+public class InventoryMenu extends PauseMenu {
 
     //For showing the inventory itself
     private TableView<InventoryMenuItem> inventoryView;
 
-    private VBox parentVBox;
     private VBox childVBox;
     private HBox hbox;
     private Button closeButton;
@@ -41,11 +40,6 @@ public class InventoryMenu extends Menu {
     //Create the layout and elements in the menu
     //Starts at top-level VBox and moves downwards
     private void CreateLayout(int width, int height){
-
-        //Top-level VBox
-        parentVBox = new VBox(10);
-        parentVBox.setPrefSize(width, height);
-        parentVBox.setAlignment(Pos.CENTER);
 
         //Title and exit button
         title = CreateLabel("INVENTORY","inventoryMenuTitle",width,150, TextAlignment.CENTER,false);
@@ -70,12 +64,11 @@ public class InventoryMenu extends Menu {
 
         childVBox.getChildren().addAll(equippedLabel,equippedItemIcon);
         hbox.getChildren().addAll(childVBox,inventoryView);
-        parentVBox.getChildren().addAll(title,hbox,closeButton);
-        this.getChildren().add(parentVBox);
+        this.vbox.getChildren().addAll(title,hbox,closeButton);
 
     }
 
-    private TableView CreateTable(){
+    public TableView CreateTable(){
 
         inventoryView = new TableView<InventoryMenuItem>();
         inventoryView.setEditable(false);

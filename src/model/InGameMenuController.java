@@ -4,6 +4,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.text.TextAlignment;
 
@@ -67,6 +68,8 @@ public class InGameMenuController {
         this.optionsMenu.hide();
         this.pauseMenu.show();
     };
+    private EventHandler changeVolumeEvent = event -> System.out.println("Change volume");
+    private EventHandler changeKeybindingsEvent = event -> System.out.println("Change keybindings");
     //--Confirmation Menu(s)--//
     private EventHandler returnToTitleEvent;
     private EventHandler returnToDesktopEvent = event -> System.exit(0);
@@ -88,14 +91,10 @@ public class InGameMenuController {
         this.pauseMenu = CreatePauseMenu(pauseMenu);
         //this.inventoryMenu = CreateInventoryMenu(inventoryMenu);
         this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
-        //this.optionsMenu = CreateOptionsMenu(optionsMenu);
+        this.optionsMenu = CreateOptionsMenu(optionsMenu);
 
         this.inventoryMenu = new InventoryMenu("inventoryMenu",INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-        //this.saveGameMenu = new SaveGameMenu("saveMenu",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-        this.optionsMenu =  new OptionsMenu("optionsMenu",OPTIONS_MENU_WIDTH,OPTIONS_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "confirmationMenu",
                 returnToTitleEvent);
@@ -106,14 +105,6 @@ public class InGameMenuController {
         this.pauseMenu.hide();
         this.exitToTitleConfirmation.hide();
         this.exitToDesktopConfirmation.hide();
-    }
-
-    private void ShowMenu(String menuID){
-        //Implement and make public
-    }
-
-    private void HideMenu(String menuID){
-        //Implement and make public
     }
 
     public void showPauseMenu(){
@@ -211,6 +202,33 @@ public class InGameMenuController {
         inventoryMenu = new InventoryMenu("inventoryMenu",
                 INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
+        TableView table = inventoryMenu.CreateTable();
+
         return inventoryMenu;
+    }
+
+    private OptionsMenu CreateOptionsMenu(OptionsMenu optionsMenu){
+
+        int nodePos = 1;
+
+        optionsMenu = new OptionsMenu("optionsMenu",OPTIONS_MENU_WIDTH,OPTIONS_MENU_HEIGHT,
+                SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
+        Label title = CreateLabel("OPTIONS","optionsMenuTitle",
+                OPTIONS_MENU_WIDTH,OPTIONS_MENU_HEIGHT/3,TextAlignment.CENTER,false);
+        optionsMenu.SetLabelAsTitle(title);
+
+        Button changeVolume = CreateButton("Change volume","changeVolumeButton",
+                OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,changeVolumeEvent);
+        Button changeKeybindings = CreateButton("Change keybindings","changeKeybindingsButton",
+                OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,changeKeybindingsEvent);
+        Button closeOptionsMenu = CreateButton("Close","closeOptionsMenu",
+                OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,closeOptionsMenuEvent);
+
+        optionsMenu.AddNodeToVBox(nodePos++,changeVolume);
+        optionsMenu.AddNodeToVBox(nodePos++,changeKeybindings);
+        optionsMenu.AddNodeToVBox(nodePos++,closeOptionsMenu);
+
+        return optionsMenu;
     }
 }
