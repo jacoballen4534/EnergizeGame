@@ -2,79 +2,38 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane fx:id="creditsPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.creditsController">
     <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="662.0" onMouseClicked="#creditsBackButtonPressed" prefHeight="76.0" prefWidth="166.0" text="EXIT" textAlignment="CENTER">
+      <VBox alignment="TOP_CENTER" layoutX="436.0" layoutY="438.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+                <Label fx:id="creditsTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Credits">
+                    <font>
+                        <Font name="Cantarell Thin" size="60.0" />
+                    </font>
+                </Label>
+            <HBox alignment="CENTER" prefHeight="446.0" prefWidth="1035.0" spacing="50.0">
+               <children>
+                  <ImageView fx:id="logoImage" fitHeight="446.0" fitWidth="446.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label text="Nocturnal Tutelage Studios proudly presents Energize, a game made in collaboration with the JavaFX docs and StackOverflow.&#10;&#10;Created for COMPSYS 302 by Jacob Allen and Matt Eden.&#10;" wrapText="true">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onMouseClicked="#creditsBackButtonPressed" text="Return to Title Screen" />
+         </children>
+      </VBox>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="844.0" layoutY="662.0" onMouseClicked="#creditsBackButtonPressed" prefHeight="76.0" prefWidth="166.0" text="EXIT" textAlignment="CENTER">
          <font>
             <Font name="Cantarell Thin" size="72.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="267.0" layoutY="175.0" prefHeight="37.0" prefWidth="490.0" text="Nocturnal Tutelage Studios" textAlignment="CENTER">
-         <font>
-            <Font name="Serif Italic" size="24.0" />
-         </font>
-      </Label>
-      <TextFlow layoutX="404.0" layoutY="223.0" prefHeight="200.0" prefWidth="211.0">
-         <children>
-            <Label text="Lead Programmer: Jacob Allen" />
-            <Label text="Co-Programmer: Matt Eden" />
-         </children>
-      </TextFlow>
-          <Label fx:id="creditsTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="424.0" layoutY="99.0" prefHeight="40.0" text="Credits">
-              <font>
-                  <Font name="Cantarell Thin" size="60.0" />
-              </font>
-          </Label>
-      <AnchorPane layoutX="116.0" layoutY="263.0" prefHeight="200.0" prefWidth="244.0" style="-fx-background-color: #605050;">
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="36.0" prefWidth="206.0" text="I AM A TEST" textAlignment="CENTER" />
-            <Button layoutX="13.0" layoutY="115.0" mnemonicParsing="false" onAction="#creditsBackButtonPressed" prefHeight="31.0" prefWidth="219.0" text="HELLO WORLD" />
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="452.0" layoutY="254.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #a90f89;">
-         <children>
-            <VBox alignment="CENTER" layoutX="14.0" layoutY="41.0" prefHeight="200.0" prefWidth="332.0" style="-fx-alignment: center;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label text="Inventory" textAlignment="CENTER">
-                     <font>
-                        <Font size="50.0" />
-                     </font></Label>
-                  <HBox alignment="CENTER" prefHeight="380.0" prefWidth="500.0">
-                     <children>
-                        <VBox prefHeight="380.0" prefWidth="274.0">
-                           <children>
-                              <Label text="Equipped">
-                                 <font>
-                                    <Font size="40.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fitHeight="205.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../sprites/fireScroll.png" />
-                                 </image></ImageView>
-                           </children>
-                        </VBox>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
-                          <columns>
-                            <TableColumn prefWidth="101.0" text="C1" />
-                            <TableColumn prefWidth="98.0" text="C2" />
-                          </columns>
-                        </TableView>
-                     </children></HBox>
-                  <Button mnemonicParsing="false" text="Close" />
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
     </children>
 </AnchorPane>

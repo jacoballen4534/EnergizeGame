@@ -6,7 +6,7 @@
     /*-fx-background-color: #224D72;*/
 }
 .anchorpane#inventoryMenu{
-    -fx-background-image:url("/bg/pauseScreenBG.png");
+    -fx-background-image:url("/bg/inventoryScreenBG.png");
 }
 .anchorpane#confirmationMenu{
     -fx-background-color: #aa0000;
@@ -21,9 +21,14 @@
     -fx-alignment: center;
 }
 .label{
-    -fx-text-fill: #00ffff; /*#e8e8e8;*/
+    -fx-text-fill: #e8e8e8;
     /*-fx-font-family: beon;*/
     -fx-font-size: 30;
+}
+.label#creditsInfo{
+    -fx-text-fill: #e8e8e8;
+    -fx-font-family: Serif;
+    -fx-font-size: 20;
 }
 .label#pauseMenuTitle{
     -fx-text-fill: #ffc700;
@@ -33,7 +38,7 @@
     -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .label#inventoryMenuTitle{
-    -fx-text-fill: #ffc700;
+    -fx-text-fill: #ffffff;
     -fx-font-family: beon;
     -fx-font-size: 50;
     -fx-font-weight: bold;
@@ -59,6 +64,14 @@
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
     -fx-font-size: 200;
+    -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
+}
+.label#creditsTitle{
+    -fx-text-fill:#7cafc2;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 100;
     -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
 }
 .menulabel{

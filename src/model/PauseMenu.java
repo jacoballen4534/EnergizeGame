@@ -17,8 +17,8 @@ public class PauseMenu extends Menu {
     public PauseMenu(String ID, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
         this.vbox = new VBox(10);
-        this.vbox.setAlignment(Pos.CENTER);
         this.vbox.setPrefSize(width,height);
+        this.vbox.setAlignment(Pos.CENTER);
         this.getChildren().add(vbox);
     }
 

@@ -3,6 +3,7 @@ package model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -28,6 +29,7 @@ public class InventoryMenu extends PauseMenu {
         innerVBox = new VBox(10);
         hbox = new HBox(width/5);
         innerVBox.setPrefWidth(hbox.getWidth()/2);
+        innerVBox.setAlignment(Pos.CENTER);
     }
 
     public void setEquippedItemIcon(ImageView equippedItemIcon) {
