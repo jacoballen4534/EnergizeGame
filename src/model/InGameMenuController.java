@@ -181,13 +181,13 @@ public class InGameMenuController {
         saveGameMenu = new SaveGameMenu("saveMenu",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         Label saveTitle = CreateLabel("Save Game","saveMenuTitle",
-                SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/2,TextAlignment.CENTER,false);
+                SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/3,TextAlignment.CENTER,false);
         saveGameMenu.SetLabelAsTitle(saveTitle);
 
         Button saveButton = CreateButton("Save","saveButton",
-                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/4, saveGameEvent);
+                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/5, saveGameEvent);
         Button cancelButton = CreateButton("Cancel","cancelButton",
-                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/4,closeSaveMenuEvent);
+                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/5,closeSaveMenuEvent);
 
         saveGameMenu.AddNodeToHBox(hboxNodePos++,saveButton);
         saveGameMenu.AddNodeToHBox(hboxNodePos++,cancelButton);

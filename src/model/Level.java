@@ -372,15 +372,15 @@ public class Level {
                         break;
 
                     case HEALTH_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
                         break;
 
                     case ENERGY_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
                         break;
 
                     case SCROLL:
-                        Handler.addPickup(new Scroll(col,row,PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                        Handler.addPickup(new Scroll(col,row,PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
                         break;
 
                     case GRUNT:

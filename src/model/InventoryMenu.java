@@ -1,6 +1,5 @@
 package model;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -18,7 +17,7 @@ import javafx.scene.Node;
 public class InventoryMenu extends PauseMenu {
 
     //For showing the inventory itself
-    private TableView<InventoryMenuItem> inventoryView;
+    private TableView<Item> inventoryView;
 
     private VBox innerVBox;
     private HBox hbox;
@@ -59,24 +58,24 @@ public class InventoryMenu extends PauseMenu {
 
     public TableView CreateTable(){
 
-        inventoryView = new TableView<InventoryMenuItem>();
+        inventoryView = new TableView<Item>();
         inventoryView.setEditable(false);
         inventoryView.setId("inventory");
         inventoryView.setPrefWidth(250);
 
         //Create table column
-        TableColumn<InventoryMenuItem, Image> itemList = new TableColumn<InventoryMenuItem, Image>("Items");
+        TableColumn<Item, Image> itemList = new TableColumn<Item, Image>("Items");
         itemList.setCellValueFactory(new PropertyValueFactory("icon"));
         itemList.setPrefWidth(inventoryView.getPrefWidth()/2);
 
-        TableColumn<InventoryMenuItem, String> nameList = new TableColumn<InventoryMenuItem, String>("Names");
+        TableColumn<Item, String> nameList = new TableColumn<Item, String>("Names");
         nameList.setCellValueFactory(new PropertyValueFactory("name"));
         nameList.setPrefWidth(inventoryView.getPrefWidth()/2);
 
-        itemList.setCellFactory(new Callback<TableColumn<InventoryMenuItem, Image>, TableCell<InventoryMenuItem, Image>>() {
+        itemList.setCellFactory(new Callback<TableColumn<Item, Image>, TableCell<Item, Image>>() {
             @Override
-            public TableCell<InventoryMenuItem, Image> call(TableColumn<InventoryMenuItem, Image> inventoryMenuItemImageTableColumn) {
-                TableCell<InventoryMenuItem,Image> cell = new TableCell<InventoryMenuItem,Image>(){
+            public TableCell<Item, Image> call(TableColumn<Item, Image> itemImageTableColumn) {
+                TableCell<Item,Image> cell = new TableCell<Item,Image>(){
                     @Override
                     public void updateItem(Image icon, boolean empty){
                         if (icon!=null){
@@ -104,10 +103,9 @@ public class InventoryMenu extends PauseMenu {
         inventoryView.getColumns().addAll(itemList,nameList);
 
         //Add rows to table view - should be taken from player inventory
-        ObservableList<InventoryMenuItem> items = FXCollections.observableArrayList();
+        ObservableList<Item> items = FXCollections.observableArrayList();
         for (int i=0;i<3;i++){
-            InventoryMenuItem testItem = new InventoryMenuItem(new SimpleStringProperty("test"),
-                    new SimpleStringProperty("ipsum dolor sit amet"));
+            Item testItem = new Pickup(0,0,PreLoadedImages.healthPickupSprite,32,32);
             items.add(testItem);
         }
 

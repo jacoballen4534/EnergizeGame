@@ -25,6 +25,10 @@ public class SaveGameMenu extends PauseMenu {
         //CreateMenuLayout(width,height);
     }
 
+    public String getTextInput(){
+        return txtInput.getCharacters().toString();
+    }
+
     private void CreateMenuLayout(int width, int height){
 
         title = CreateLabel("Save Game","saveMenuTitle",width,height/2, TextAlignment.CENTER,false);
