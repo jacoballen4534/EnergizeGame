@@ -6,12 +6,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.Node;
 
 import static sample.FXMLUtils.getNodeByID;
 
 public class PauseMenu extends Menu {
 
-    private VBox vbox;
+    protected VBox vbox;
 
     public PauseMenu(String ID, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
@@ -21,8 +22,8 @@ public class PauseMenu extends Menu {
         this.getChildren().add(vbox);
     }
 
-    public void AddButtonToVBox(int pos, Button button){
-        this.vbox.getChildren().add(pos,button);
+    public void AddNodeToVBox(int pos, Node node){
+        this.vbox.getChildren().add(pos,node);
     }
 
     public void RemoveNodeById(String id){

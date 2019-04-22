@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -24,12 +25,18 @@ public class FXMLUtils {
     public static Label CreateLabel(String text, String id, int prefWidth, int prefHeight,
                                     TextAlignment alignment, boolean doWrapText){
         Label label = new Label(text);
-        //label.setPrefSize(prefWidth,prefHeight);
-        label.setPrefWidth(prefWidth);
+        label.setPrefSize(prefWidth,prefHeight);
         label.setTextAlignment(alignment);
         label.setWrapText(doWrapText);
         label.setId(id);
         return label;
+    }
+
+    public static TextField CreateTextField(String text, String id, int prefWidth, int prefHeight){
+        TextField textField = new TextField(text);
+        textField.setId(id);
+        textField.setPrefSize(prefWidth,prefHeight);
+        return textField;
     }
 
     public static javafx.scene.Node getNodeByID(String id, Pane container){
