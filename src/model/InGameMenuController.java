@@ -1,13 +1,17 @@
 package model;
 
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
 import static sample.FXMLUtils.*;
@@ -63,7 +67,18 @@ public class InGameMenuController {
         this.pauseMenu.show();
     };
     //--Save Menu--//
-    private EventHandler saveGameEvent = mouseEvent -> System.out.println("Saves the current map(s)");
+    private EventHandler saveGameEvent = mouseEvent -> {
+
+        //Not 100% sure if this is the only way to get the name.
+        ObservableList<Node> children = this.saveGameMenu.getChildren();
+        VBox vBox = (VBox)children.get(0);
+        ObservableList<Node> vboxChild = vBox.getChildren();
+        TextField field = (TextField)vboxChild.get(1);
+
+
+        System.out.println(field.getText());
+        System.out.println("Saves the current map(s)");
+    };
     private EventHandler closeSaveMenuEvent = mouseEvent->{
         this.saveGameMenu.hide();
         this.pauseMenu.show();
@@ -147,7 +162,7 @@ public class InGameMenuController {
                 PAUSE_MENU_BTN_WIDTH,PAUSE_MENU_BTN_HEIGHT,resumeEvent);
         Button inventoryButton = CreateButton("Inventory","inventoryButton",
                 PAUSE_MENU_BTN_WIDTH,PAUSE_MENU_BTN_HEIGHT, inventoryMenuEvent);
-        Button saveButton = CreateButton("Save Game","saveButton",
+        Button saveButton = CreateButton("Save Map","saveButton",
                 PAUSE_MENU_BTN_WIDTH,PAUSE_MENU_BTN_HEIGHT, saveMenuEvent);
         Button optionsButton = CreateButton("Options","optionsButton",
                 PAUSE_MENU_BTN_WIDTH,PAUSE_MENU_BTN_HEIGHT, optionsMenuEvent);
@@ -180,8 +195,8 @@ public class InGameMenuController {
 
         saveGameMenu = new SaveGameMenu("saveMenu",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
-        Label saveTitle = CreateLabel("Save Game","saveMenuTitle",
-                SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/3,TextAlignment.CENTER,false);
+        Label saveTitle = CreateLabel("Save Map","saveMenuTitle",
+                SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/2,TextAlignment.CENTER,false);
         saveGameMenu.SetLabelAsTitle(saveTitle);
 
         Button saveButton = CreateButton("Save","saveButton",
@@ -192,7 +207,7 @@ public class InGameMenuController {
         saveGameMenu.AddNodeToHBox(hboxNodePos++,saveButton);
         saveGameMenu.AddNodeToHBox(hboxNodePos++,cancelButton);
 
-        TextField saveNameInput = CreateTextField("Enter Name","saveNameTextField",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/4);
+        TextField saveNameInput = CreateTextField("Enter Map Name","saveNameTextField",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/4);
 
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveNameInput);
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveGameMenu.getHBox());

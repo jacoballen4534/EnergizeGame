@@ -31,7 +31,7 @@ public class SaveGameMenu extends PauseMenu {
 
     private void CreateMenuLayout(int width, int height){
 
-        title = CreateLabel("Save Game","saveMenuTitle",width,height/2, TextAlignment.CENTER,false);
+        title = CreateLabel("Save Map","saveMenuTitle",width,height/2, TextAlignment.CENTER,false);
 
         txtInput = new TextField("Enter Name");
         txtInput.setPrefSize(width,height/4);
