@@ -249,9 +249,17 @@ public class ShortestPath {
         }
     }
 
-
-//    @Override
-//    public Object call() throws Exception {
-//        return this;
-//    }
+    public int shortestPathLength(int startingId, int destinationId) { //Number of times from start to end for improved proximity
+        Node startingNode = getNodeFromId(startingId);
+        Node destinationNode = getNodeFromId(destinationId);
+        int length = 0;
+        if (next[startingId][destinationId] == null) {
+            return -1;//No path yet
+        }
+        while (!startingNode.equals(destinationNode)) {
+            startingNode = next[startingNode.getId()][destinationNode.getId()];
+            length++;
+        }
+       return length;
+    }
 }

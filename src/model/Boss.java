@@ -79,6 +79,11 @@ public class Boss extends Enemy {
     }
 
     @Override
+    protected boolean proximity(Level level) { //Circle proximity
+        return (Math.sqrt((this.x - target.getX()) * (this.x - target.getX()) + (this.y - target.getY()) * (this.y - target.getY())) < this.alertRadius);
+    }
+
+    @Override
     boolean pickup(Item pickup) {
         return false;
     }

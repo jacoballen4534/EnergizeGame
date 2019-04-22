@@ -56,16 +56,21 @@ public abstract class Enemy extends Character{
     protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can overwride
         super.render(graphicsContext, cameraX, cameraY);
     }
+
+    protected boolean proximity(Level level) {
+        return false;
+    }
+
     protected void tick(double cameraX, double cameraY, Level level) {
         int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
         int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
 
-//            if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
-//                level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
-//            }
+//        if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
+//            level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
+//        }
 
         //Only move if protagonist is close enough
-        if(Math.sqrt((this.x - target.getX()) * (this.x - target.getX()) + (this.y - target.getY()) * (this.y - target.getY())) < this.alertRadius) {
+        if (this.proximity(level)) {
             //Give a 50% chance of changing of getting a path update
             if (Game.getNextRandomInt() < 50) {
                 int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
