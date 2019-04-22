@@ -18,7 +18,6 @@ public class PauseMenu extends Menu {
         this.vbox = new VBox(10);
         this.vbox.setAlignment(Pos.CENTER);
         this.vbox.setPrefSize(width,height);
-        //this.vbox.setFillWidth(true); //default is true?
         this.getChildren().add(vbox);
     }
 

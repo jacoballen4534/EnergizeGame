@@ -60,11 +60,11 @@ public class InventoryMenu extends Menu {
         inventoryView = CreateTable();
 
         //VBox adjacent to table
-        childVBox = new VBox(100);
+        childVBox = new VBox(10);
         childVBox.setPrefWidth(hbox.getWidth()/2);
         childVBox.setAlignment(Pos.CENTER_LEFT);
 
-        equippedLabel = CreateLabel("WIP","itemEquippedLabel",200,200,TextAlignment.LEFT,false);
+        equippedLabel = CreateLabel("Equipped","itemEquippedLabel",200,200,TextAlignment.LEFT,true);
         equippedItemIcon = new ImageView(new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png")));
         equippedItemIcon.setFitWidth(childVBox.getWidth());
 

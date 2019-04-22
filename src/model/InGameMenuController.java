@@ -22,8 +22,8 @@ public class InGameMenuController {
     private static final int INVENTORY_MENU_WIDTH = 500;
     private static final int INVENTORY_MENU_HEIGHT = 500;
 
-    private static final int SAVE_MENU_WIDTH = 500;
-    private static final int SAVE_MENU_HEIGHT = 500;
+    private static final int SAVE_MENU_WIDTH = 300;
+    private static final int SAVE_MENU_HEIGHT = 150;
 
     private static final int OPTIONS_MENU_WIDTH = 300;
     private static final int OPTIONS_MENU_HEIGHT = 300;
@@ -38,10 +38,34 @@ public class InGameMenuController {
         //this.pauseMenu.hide();
         this.inventoryMenu.show();
     };
-    private EventHandler saveEvent = mouseEvent->System.out.println("Shows save game menu");
-    private EventHandler optionsEvent = mouseEvent->System.out.println("Shows options menu");
+    private EventHandler saveEvent = mouseEvent->{
+        System.out.println("Shows save game menu");
+        //this.pauseMenu.hide();
+        this.saveGameMenu.show();
+    };
+    private EventHandler optionsEvent = mouseEvent->{
+        System.out.println("Shows options menu");
+        this.optionsMenu.show();
+    };
     private EventHandler quitToTitleEvent = mouseEvent->this.exitToTitleConfirmation.show();
     private EventHandler quitToDesktopEvent = mouseEvent->this.exitToDesktopConfirmation.show();
+    //--Inventory Menu
+    private EventHandler closeInventoryMenuEvent = mouseEvent->{
+        this.inventoryMenu.hide();
+        this.pauseMenu.show();
+    };
+
+    //--Save Menu
+    private EventHandler closeSaveMenuEvent = mouseEvent->{
+        this.saveGameMenu.hide();
+        this.pauseMenu.show();
+    };
+
+    //--Options Menu
+    private EventHandler closeOptionsMenuEvent = mouseEvent->{
+        this.optionsMenu.hide();
+        this.pauseMenu.show();
+    };
 
     //Menus
     private PauseMenu pauseMenu;
@@ -53,11 +77,21 @@ public class InGameMenuController {
 
     public InGameMenuController(Runnable unpauseGame, EventHandler returnToTitleScreen) {
 
+        this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
+
+        //Generate menu layouts
+        this.pauseMenu = CreatePauseMenu(pauseMenu);
+        //this.inventoryMenu = CreateInventoryMenu(inventoryMenu);
+        //this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
+        //this.optionsMenu = CreateOptionsMenu(optionsMenu);
+
         this.inventoryMenu = new InventoryMenu("inventoryMenu",INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
-        this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
-        this.pauseMenu = CreatePauseMenu(pauseMenu);
+        this.saveGameMenu = new SaveGameMenu("saveMenu",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
+        this.optionsMenu =  new OptionsMenu("optionsMenu",OPTIONS_MENU_WIDTH,OPTIONS_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
         this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "confirmationMenu",
                 returnToTitleScreen);
         this.exitToDesktopConfirmation = CreateConfirmationMenu("Are you sure about that?",
@@ -94,8 +128,8 @@ public class InGameMenuController {
     public void AddMenusToRoot(Group root){
         root.getChildren().add(pauseMenu);
         root.getChildren().add(inventoryMenu);
-        //root.getChildren().add(saveGameMenu);
-        //root.getChildren().add(optionsMenu);
+        root.getChildren().add(saveGameMenu);
+        root.getChildren().add(optionsMenu);
         root.getChildren().add(exitToTitleConfirmation);
         root.getChildren().add(exitToDesktopConfirmation);
     }
@@ -108,7 +142,9 @@ public class InGameMenuController {
     }
 
     private PauseMenu CreatePauseMenu(PauseMenu pauseMenu){
+
         int nodePos = 1;
+
         pauseMenu = new PauseMenu("pauseMenu",PAUSE_MENU_WIDTH,PAUSE_MENU_HEIGHT,
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 

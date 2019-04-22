@@ -14,6 +14,12 @@
 .anchorpane#optionsMenu{
     -fx-background-color: #00aaff;
 }
+.anchorpane#saveMenu{
+    -fx-background-color: #00aaff;
+}
+.vbox{
+    -fx-alignment: center;
+}
 .label{
     -fx-text-fill: #00ffff; /*#e8e8e8;*/
     /*-fx-font-family: beon;*/
@@ -27,6 +33,20 @@
     -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .label#inventoryMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+}
+.label#saveMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+}
+.label#optionsMenuTitle{
     -fx-text-fill: #ffc700;
     -fx-font-family: beon;
     -fx-font-size: 50;
