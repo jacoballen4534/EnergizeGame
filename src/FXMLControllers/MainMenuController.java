@@ -46,7 +46,6 @@ public class MainMenuController implements Initializable {
 
     //Hard coding events for dynamic buttons, might refactor out later
     private EventHandler QuickPlayClicked = event -> {
-        System.out.println("Starts a new quick play game");
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
         game = new Game(this, System.currentTimeMillis());
@@ -56,8 +55,8 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("///////////////INITIALISE/////////////////");
-        System.out.println("Active game is: " + isGameActive);
+//        System.out.println("///////////////INITIALISE/////////////////");
+//        System.out.println("Active game is: " + isGameActive);
         Resume.managedProperty().bind(Resume.visibleProperty());
         Resume.setVisible(isGameActive);
     }

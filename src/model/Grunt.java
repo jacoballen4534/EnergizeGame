@@ -57,7 +57,6 @@ public class Grunt extends Enemy {
     protected boolean proximity(Level level) { //Number of tiles to target. This will stop enemy's on the far side of walls being activated until the path is short enough.
         int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
         int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
-        System.out.println("Tiles to target = " + level.shortestPath.shortestPathLength(currentNodeId,targetNodeId));
         return level.shortestPath.shortestPathLength(currentNodeId,targetNodeId) < this.alertRadius;
     }
 

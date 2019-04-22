@@ -76,9 +76,12 @@ public class InGameMenuController {
         ObservableList<Node> vboxChild = vBox.getChildren();
         TextField field = (TextField)vboxChild.get(1);
         Utilities.saveNewMapSeed(field.getText(), Game.getRandomSeed());
-
         System.out.println("The current map has been saved");
+
+        this.saveGameMenu.hide();
+        this.pauseMenu.show();
     };
+
     private EventHandler closeSaveMenuEvent = mouseEvent->{
         this.saveGameMenu.hide();
         this.pauseMenu.show();
