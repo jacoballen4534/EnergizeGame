@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 
 import static sample.FXMLUtils.*;
@@ -32,6 +34,9 @@ public class InGameMenuController {
 
     private static final int CONFIRMATION_MENU_WIDTH = 250;
     private static final int CONFIRMATION_MENU_HEIGHT = 150;
+
+    private static final int CLOSE_MENU_BTN_WIDTH = 125;
+    private static final int CLOSE_MENU_BTN_HEIGHT = 100;
 
     //==Event macros==//
     //--Pause Menu--
@@ -89,12 +94,9 @@ public class InGameMenuController {
 
         //Generate menu layouts
         this.pauseMenu = CreatePauseMenu(pauseMenu);
-        //this.inventoryMenu = CreateInventoryMenu(inventoryMenu);
+        this.inventoryMenu = CreateInventoryMenu(inventoryMenu);
         this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
         this.optionsMenu = CreateOptionsMenu(optionsMenu);
-
-        this.inventoryMenu = new InventoryMenu("inventoryMenu",INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,
-                SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "confirmationMenu",
                 returnToTitleEvent);
@@ -199,10 +201,43 @@ public class InGameMenuController {
     }
 
     private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu){
+
+        int hBoxNodePos = 0;
+        int innerVBoxNodePos = 0;
+        int outerVBoxNodePos = 1;
+
+        //Create the menu
         inventoryMenu = new InventoryMenu("inventoryMenu",
                 INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
+        //Create and set the title of the menu
+        Label inventoryTitle = CreateLabel("Inventory","inventoryMenuTitle",
+                INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT/4,TextAlignment.CENTER,false);
+        inventoryMenu.SetLabelAsTitle(inventoryTitle);
+
+        //Create the table of items
         TableView table = inventoryMenu.CreateTable();
+
+        //Label for equipped item icon
+        Label equippedLabel = CreateLabel("Equipped","itemEquippedLabel",200,200,TextAlignment.LEFT,true);
+
+        //Create the imageview for the equipped item
+        Image img = new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png"));
+        ImageView equippedItemIcon = CreateImageView(img,100,100);
+        inventoryMenu.setEquippedItemIcon(equippedItemIcon);
+
+        //Button to close the inventory menu and return to pause screen
+        Button closeMenu = CreateButton("Close","closeInventoryMenu",
+                CLOSE_MENU_BTN_WIDTH,CLOSE_MENU_BTN_HEIGHT,closeInventoryMenuEvent);
+
+        inventoryMenu.AddNodeToInnerVBox(innerVBoxNodePos++,equippedLabel);
+        inventoryMenu.AddNodeToInnerVBox(innerVBoxNodePos++,equippedItemIcon);
+
+        inventoryMenu.AddNodeToVBox(outerVBoxNodePos++,inventoryMenu.getHbox());
+        inventoryMenu.AddNodeToVBox(outerVBoxNodePos++,closeMenu);
+
+        inventoryMenu.AddNodeToHBox(hBoxNodePos++,inventoryMenu.getInnerVBox());
+        inventoryMenu.AddNodeToHBox(hBoxNodePos++,table);
 
         return inventoryMenu;
     }

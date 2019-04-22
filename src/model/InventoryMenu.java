@@ -3,69 +3,56 @@ package model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
-import static sample.FXMLUtils.CreateButton;
-import static sample.FXMLUtils.CreateLabel;
+import javafx.scene.Node;
+
 
 public class InventoryMenu extends PauseMenu {
 
     //For showing the inventory itself
     private TableView<InventoryMenuItem> inventoryView;
 
-    private VBox childVBox;
+    private VBox innerVBox;
     private HBox hbox;
-    private Button closeButton;
-    private Label title;
-    private Label equippedLabel;
     private ImageView equippedItemIcon;
 
     public InventoryMenu(String ID, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
-        CreateLayout(width,height);
+        innerVBox = new VBox(10);
+        hbox = new HBox(width/5);
+        innerVBox.setPrefWidth(hbox.getWidth()/2);
     }
 
-    public void setEquippedItemIcon(Image itemIcon){
+    public void setEquippedItemIcon(ImageView equippedItemIcon) {
+        this.equippedItemIcon = equippedItemIcon;
+    }
+
+    public void setEquippedItemIconImage(Image itemIcon){
         equippedItemIcon.setImage(itemIcon);
     }
 
-    //Create the layout and elements in the menu
-    //Starts at top-level VBox and moves downwards
-    private void CreateLayout(int width, int height){
+    //Should refactor if I have getters as well
+    public void AddNodeToInnerVBox(int pos, Node node){
+        this.innerVBox.getChildren().add(pos,node);
+    }
 
-        //Title and exit button
-        title = CreateLabel("INVENTORY","inventoryMenuTitle",width,150, TextAlignment.CENTER,false);
-        closeButton = CreateButton("Close","inventoryCloseButton",125,100,event->this.hide());
+    public void AddNodeToHBox(int pos, Node node){
+        this.hbox.getChildren().add(pos,node);
+    }
 
-        //HBox within the VBox
-        hbox = new HBox(150);
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setPrefWidth(width);
+    public HBox getHbox() {
+        return hbox;
+    }
 
-        //Table to hold and display all the inventory items
-        inventoryView = CreateTable();
-
-        //VBox adjacent to table
-        childVBox = new VBox(10);
-        childVBox.setPrefWidth(hbox.getWidth()/2);
-        childVBox.setAlignment(Pos.CENTER_LEFT);
-
-        equippedLabel = CreateLabel("Equipped","itemEquippedLabel",200,200,TextAlignment.LEFT,true);
-        equippedItemIcon = new ImageView(new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png")));
-        equippedItemIcon.setFitWidth(childVBox.getWidth());
-
-        childVBox.getChildren().addAll(equippedLabel,equippedItemIcon);
-        hbox.getChildren().addAll(childVBox,inventoryView);
-        this.vbox.getChildren().addAll(title,hbox,closeButton);
-
+    public VBox getInnerVBox() {
+        return innerVBox;
     }
 
     public TableView CreateTable(){
