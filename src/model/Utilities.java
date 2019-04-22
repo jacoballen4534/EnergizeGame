@@ -165,7 +165,11 @@ public class Utilities {
             //Shift the current saved seeds down 1 row
             seeds.get(0).set(2, seeds.get(0).get(1));
             seeds.get(0).set(1, seeds.get(0).get(0));
-            seeds.get(0).set(0, new Pair<>(name, Long.toString(seed)));
+            if (name.length() > 0) {
+                seeds.get(0).set(0, new Pair<>(name, Long.toString(seed)));
+            } else {
+                seeds.get(0).set(0, new Pair<>("Unnamed map", Long.toString(seed)));
+            }
 
             toWrite = prepareBlockToWrite(seeds);
 

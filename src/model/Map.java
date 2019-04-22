@@ -22,7 +22,7 @@ public class Map {
     private final int LEVEL_WIDTH = 20;
     private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
     private ArrayList<ArrayList<TreeMap<TileType, Point2D>>> allDoorLocations = new ArrayList<>(); //2d array list of door locations. in col,row form
-    private Level bossLevel; //This has level number of 8055
+    private static Level bossLevel; //This has level number of 8055
     private int bossEntranceLevelNumber;// This is the room that goes to boss level.
     private int tutorialLevelNumber;
 
@@ -42,8 +42,8 @@ public class Map {
         this.tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
         this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH, false);
         this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
-        this.bossLevel = new Level(PreLoadedImages.bossRoom, 8055, MAP_WIDTH, true);
-        this.levels.put(8055, this.bossLevel);
+        bossLevel = new Level(PreLoadedImages.bossRoom, 8055, MAP_WIDTH, true);
+        this.levels.put(8055, bossLevel);
 
         //For each level in the map, generate a random level.
         for (int row = 0; row < MAP_HEIGHT; row ++) {
@@ -218,5 +218,9 @@ public class Map {
                 }
             }
         }
+    }
+
+    public static Level getBossLevel() {
+        return bossLevel;
     }
 }

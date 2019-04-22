@@ -112,19 +112,6 @@ public class MainMenuController implements Initializable {
         stage.setTitle(newStageName);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     private Label UpdateFocussedLabel(Label currFocussedLabel, String id){
         Label newLabel = (Label)getNodeByID(id,this.mainMenuVBox);
         if (currFocussedLabel != null){
@@ -142,20 +129,6 @@ public class MainMenuController implements Initializable {
         System.out.println(currFocussedLabel);
         return currFocussedLabel;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //TODO refactor switch statement to be less hardcoded
     private void UpdateMenu(Label currFocussedLabel){

@@ -170,6 +170,10 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
+    public static void loadBossRoom() {
+        map.loadLevel(8055);//Load boss level
+    }
+
     public static void pauseUnpauseTimeline(){
         if (timelineIsPaused){
             timeline.play();
@@ -242,8 +246,6 @@ public class Handler { //This class will hold all the game objects and is respon
                 if (door.isOpen()) {
                     //Need to make this thread safe as we are changing things on the main thread. So use runLater
                     Platform.runLater(() -> {
-                        //TODO: Slow down camera pan speed.
-                        //Pan out
 
                         map.loadLevel(door.getNextLevel());
                         double nextLevelX, nextLevelY; //This is the non up-scaled value
@@ -278,7 +280,6 @@ public class Handler { //This class will hold all the game objects and is respon
                         protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
                         protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
 
-                        //Pan in
                     });
                     return false;
                 } else {

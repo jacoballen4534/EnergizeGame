@@ -1,11 +1,15 @@
 package model;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.TreeMap;
 import java.util.spi.CalendarDataProvider;
 
 public class Protagonist extends Character {
@@ -231,6 +235,15 @@ public class Protagonist extends Character {
             hud.setEnergy(currEnergy);
             currHealth = maxHealth;
             hud.setHealth(currHealth);
+
+            //TODO: Give the player a bunch of items and spells
+            Platform.runLater(() -> { //Teleports the player to the boss room
+                Level bossLevel = Map.getBossLevel();
+                Handler.loadBossRoom();
+
+                this.x = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
+                this.y = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
+            });
         }
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
@@ -243,8 +256,8 @@ public class Protagonist extends Character {
         return super.getBounds();
     }
 
-    public String updateTimer(GraphicsContext graphicsContext, double cameraX, double cameraY) {//This gets called each second
-        return this.hud.updateTimer(graphicsContext, cameraX, cameraY);
+    public String updateTimer() {//This gets called each second
+        return this.hud.updateTimer();
     }
 
 

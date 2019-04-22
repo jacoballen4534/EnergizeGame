@@ -22,7 +22,7 @@ public class HUD{
     private int playerID;
     private HUDBar healthBar;
     private HUDBar energyBar;
-    private int minutes = 5;
+    private int minutes = 0;
     private int seconds = 0;
     private int width, height;
     private int barWidth, barHeight;
@@ -73,18 +73,25 @@ public class HUD{
         energyBar.setCurrVal(energy);
     }
 
-    public String updateTimer(GraphicsContext graphicsContext, double cameraX, double cameraY){
-        if (this.seconds > 0) {
-            this.seconds--;
+    public String updateTimer(){
+        String toReturn = "";
+        if (this.seconds < 59) {
+            this.seconds++;
         } else {
-            this.seconds = 59;
-            if (this.minutes >= 0) {
-                this.minutes--;
-            } else {
-                //TIMER DONE.
-            }
+            this.seconds = 0;
+            this.minutes++;
         }
-        return (this.minutes + ":" + this.seconds + " remaining");
+
+        if (this.seconds < 10) {
+            toReturn += "0";
+        }
+        toReturn += this.seconds;
+
+        if (this.minutes > 0) {
+            toReturn = this.minutes + ":" + toReturn;
+        }
+
+       return toReturn;
     }
 
     public int getEnergy(){
