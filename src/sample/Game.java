@@ -154,13 +154,15 @@ public class Game extends Canvas {
     private void init() {
         Stage stage1 = this.stage; //Need to make a local copy to use inside the handle method
         String stageName = stage1.getTitle(); //To keep the base name
+        GraphicsContext graphicsContext = this.getGraphicsContext2D();
         this.animationTimer = new AnimationTimer() {
             @Override
             public void handle(long now) { //This gets called 60 times per second
                 time += now - previousTime;
                 //Every second, display how many ticks have occurred and frames have been rendered.
                 if (time >= 1000000000.0f) {
-                    stage1.setTitle(stageName + " | " + frames + " FPS | " + updates + " UPS");
+                    String timeRemaining = protagonist.updateTimer(graphicsContext, camera.getX(), camera.getY());
+                    stage1.setTitle(stageName + " | " + frames + " FPS | " + updates + " UPS | Time Remaining " + timeRemaining);
                     time = 0;
                     frames = 0;
                     updates = 0;

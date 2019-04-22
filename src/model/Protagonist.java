@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.spi.CalendarDataProvider;
 
 public class Protagonist extends Character {
     private static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -224,6 +225,10 @@ public class Protagonist extends Character {
     @Override
     public Rectangle getBounds() {
         return super.getBounds();
+    }
+
+    public String updateTimer(GraphicsContext graphicsContext, double cameraX, double cameraY) {//This gets called each second
+        return this.hud.updateTimer(graphicsContext, cameraX, cameraY);
     }
 
 

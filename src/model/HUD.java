@@ -1,9 +1,12 @@
 package model;
 
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sample.Game;
+
+import java.util.Date;
 
 public class HUD{
 
@@ -19,6 +22,8 @@ public class HUD{
     private int playerID;
     private HUDBar healthBar;
     private HUDBar energyBar;
+    private int minutes = 5;
+    private int seconds = 0;
     private int width, height;
     private int barWidth, barHeight;
     private Coordinate HUDCoord;
@@ -68,12 +73,30 @@ public class HUD{
         energyBar.setCurrVal(energy);
     }
 
+    public String updateTimer(GraphicsContext graphicsContext, double cameraX, double cameraY){
+        if (this.seconds > 0) {
+            this.seconds--;
+        } else {
+            this.seconds = 59;
+            if (this.minutes >= 0) {
+                this.minutes--;
+            } else {
+                //TIMER DONE.
+            }
+        }
+        return (this.minutes + ":" + this.seconds + " remaining");
+    }
+
     public int getEnergy(){
         return energyBar.getCurrVal();
     }
 
     public float getEnergyPercent(){
         return energyBar.getValPercent();
+    }
+
+    private void updateTime() {
+
     }
 
     public void tick(double cameraX, double cameraY){
