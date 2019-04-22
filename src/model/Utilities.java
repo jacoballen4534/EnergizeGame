@@ -156,7 +156,7 @@ public class Utilities {
     }
 
 
-    public static void saveNewmapSeed(String name, long seed) {
+    public static void saveNewMapSeed(String name, long seed) {
         //Need to read the old scores, to write them back after adding
         String toWrite = "";
         try {

@@ -65,7 +65,7 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
-        Utilities.saveNewmapSeed("Test-" + randomSeed, randomSeed);
+        Utilities.saveNewMapSeed("Test-" + randomSeed, randomSeed);
 
         /*===========================================\
         * pause Menu
