@@ -20,7 +20,9 @@ enum TileType {
     DOOR_LEFT,
     ENEMY,
     NULLTILE,
-    ITEM,
+    HEALTH_PICKUP,
+    ENERGY_PICKUP,
+    SCROLL,
     GRUNT,
     BOMBER,
     ARCHER,
@@ -64,10 +66,14 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
+    private final int PICKUP_SPRITE_WIDTH = 32;
+    private final int PICKUP_SPRITE_HEIGHT = 32;
     private final int BOSS_SPRITE_WIDTH = 128;
     private final int BOSS_SPRITE_HEIGHT = 128;
     public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
 
+    private final int SCROLL_SPRITE_WIDTH = 16;
+    private final int SCROLL_SPRITE_HEIGHT = 16;
 
     public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();
@@ -339,10 +345,12 @@ public class Level {
                     this.doorMap.put(TileType.DOOR_LEFT, new Point2D(col, row));
                 } else if (red == 255 && green == 165 && blue == 0) { //Orange = Campfire / random chance of some other background but not solid.
                     column.add(TileType.CAMP_FIRE);
-                } else if (red == 128 && green == 0 && blue == 128) { //Purple = Item
-                    column.add(TileType.ITEM);
-                } else if (red == 192 && green == 0 && blue == 192) { //TODO: Specify what type of item each is.
-                    column.add(TileType.ITEM);
+                } else if (red == 128 && green == 0 && blue == 128) { //Purple = Health pickup
+                    column.add(TileType.HEALTH_PICKUP);
+                } else if (red == 192 && green == 0 && blue == 192) { //Lighter Purple = Energy pickup
+                    column.add(TileType.ENERGY_PICKUP);
+                } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple = Scroll (Fire)
+                    column.add(TileType.SCROLL);
                 } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
                     column.add(TileType.GRUNT);
                 } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
@@ -428,9 +436,17 @@ public class Level {
                     case FLOOR: //This is just here so if we add tiles with different textures, we can differentiate and create floor with different spreadsheet row/col
                         break;
 
-                    case ITEM:
-                        Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, false));
-                        continue;
+                    case HEALTH_PICKUP:
+                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        break;
+
+                    case ENERGY_PICKUP:
+                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        break;
+
+                    case SCROLL:
+                        Handler.addPickup(new Scroll(col,row,PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                        break;
 
                     case GRUNT:
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,

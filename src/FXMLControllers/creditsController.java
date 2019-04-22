@@ -3,6 +3,8 @@ package FXMLControllers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -13,15 +15,16 @@ import java.util.ResourceBundle;
 public class creditsController implements Initializable {
 
     @FXML private AnchorPane creditsPane;
-
+    @FXML private ImageView logoImage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        //Set image for imageView
+        logoImage.setImage(new Image(this.getClass().getResourceAsStream("/Images/NocturnalTutelageStudiosLogo.png")));
     }
     public void creditsBackButtonPressed() throws IOException {
         changeStageName("Main Menu");
-        creditsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(mainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
+        creditsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
 

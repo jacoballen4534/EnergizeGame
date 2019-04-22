@@ -14,7 +14,7 @@ public class Menu extends AnchorPane {
         this.setVisible(false);
     }
 
-    public void show(){super.setVisible(true);} //Doesn't modify visible property for some reason
-    public void hide(){super.setVisible(false);} //Doesn't modify visible property for some reason
+    public void show(){this.setVisible(true);}
+    public void hide(){this.setVisible(false);}
 
 }
