@@ -10,13 +10,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
+import static model.Utilities.readFile;
 import static sample.FXMLUtils.*;
+
 
 public class MainMenuController implements Initializable {
 
@@ -26,6 +29,11 @@ public class MainMenuController implements Initializable {
     private final int optionsPos = 4;
     private final int highscorePos = 5;
     private final int creditsPos = 6;
+
+    private Pair<String, Long> saveOne;
+    private Pair<String, Long> saveTwo;
+    private Pair<String, Long> saveThree;
+
 
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
@@ -41,8 +49,8 @@ public class MainMenuController implements Initializable {
         System.out.println("Starts a new quick play game");
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
-        this.game = new Game(this);
-        this.game.start();
+        game = new Game(this, System.currentTimeMillis());
+        game.start();
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
 
@@ -55,8 +63,8 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void ResumeClicked() throws IOException{
-        this.game.hidePauseMenu(); //Consider removing for design reasons
-        this.game.unpause();
+        game.hidePauseMenu(); //Consider removing for design reasons
+        game.unpause();
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -68,6 +76,7 @@ public class MainMenuController implements Initializable {
 
     @FXML private void LoadGameClicked() throws IOException {
         //changeStageName("Load Game");
+        this.updateSaveStates();
         focussedLabel = UpdateFocussedLabel(focussedLabel, "loadGame");
         UpdateMenu(focussedLabel);
         //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
@@ -103,6 +112,19 @@ public class MainMenuController implements Initializable {
         stage.setTitle(newStageName);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     private Label UpdateFocussedLabel(Label currFocussedLabel, String id){
         Label newLabel = (Label)getNodeByID(id,this.mainMenuVBox);
         if (currFocussedLabel != null){
@@ -120,6 +142,19 @@ public class MainMenuController implements Initializable {
         System.out.println(currFocussedLabel);
         return currFocussedLabel;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     //TODO refactor switch statement to be less hardcoded
@@ -169,18 +204,60 @@ public class MainMenuController implements Initializable {
         //Create submenu
         VBox subMenu = CreateSubMenu();
         //Create labels
-        CreateMenuLabel(subMenu,"Game Save 1","submenu-label",0, event -> {
-            System.out.println("Loads the first game save");
+        CreateMenuLabel(subMenu,saveOne.getKey(),"submenu-label",0, event -> {
+            if (saveOne.getValue() != null) {
+                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+                UpdateMenu(focussedLabel);
+                game = new Game(this, saveOne.getValue());
+                game.start();
+            } else {
+                System.out.println("No map saved here");
+            }
         });
-        CreateMenuLabel(subMenu,"Game Save 2","submenu-label",1, event -> {
-            System.out.println("Loads second game save");
+        CreateMenuLabel(subMenu,saveTwo.getKey(),"submenu-label",1, event -> {
+            if (saveTwo.getValue() != null) {
+                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+                UpdateMenu(focussedLabel);
+                game = new Game(this, saveTwo.getValue());
+                game.start();
+            } else {
+                System.out.println("No map saved here");
+            }
         });
-        CreateMenuLabel(subMenu,"Game Save 3","submenu-label",2, event -> {
-            System.out.println("Loads third game save");
+        CreateMenuLabel(subMenu,saveThree.getKey(),"submenu-label",2, event -> {
+            if (saveThree.getValue() != null) {
+                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+                UpdateMenu(focussedLabel);
+                game = new Game(this, saveThree.getValue());
+                game.start();
+            } else {
+                System.out.println("No map saved here");
+            }
         });
         //Add submenu to menu
         mainMenuVBox.getChildren().add(loadGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
+    }
+
+    private void updateSaveStates() {
+        ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("mapSeeds.txt", true);
+        for (ArrayList<Pair<String, String>> block : seeds) {
+            if (block.get(0).getValue().equalsIgnoreCase("NaN")) {
+                saveOne = new Pair<>(block.get(0).getKey(), null);
+            } else {
+                saveOne = new Pair<>(block.get(0).getKey(), Long.parseLong(block.get(0).getValue()));
+            }
+            if (block.get(1).getValue().equalsIgnoreCase("NaN")) {
+                saveTwo = new Pair<>(block.get(1).getKey(), null);
+            } else {
+                saveTwo = new Pair<>(block.get(1).getKey(), Long.parseLong(block.get(1).getValue()));
+            }
+            if (block.get(2).getValue().equalsIgnoreCase("NaN")) {
+                saveThree = new Pair<>(block.get(2).getKey(), null);
+            } else {
+                saveThree = new Pair<>(block.get(2).getKey(), Long.parseLong(block.get(2).getValue()));
+            }
+        }
     }
 
     private void ShowOptionsMenu(){

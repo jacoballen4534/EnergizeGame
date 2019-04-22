@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import sample.Game;
 
 import static sample.FXMLUtils.*;
 import static sample.Game.SCREEN_HEIGHT;
@@ -74,10 +75,9 @@ public class InGameMenuController {
         VBox vBox = (VBox)children.get(0);
         ObservableList<Node> vboxChild = vBox.getChildren();
         TextField field = (TextField)vboxChild.get(1);
+        Utilities.saveNewMapSeed(field.getText(), Game.getRandomSeed());
 
-
-        System.out.println(field.getText());
-        System.out.println("Saves the current map(s)");
+        System.out.println("The current map has been saved");
     };
     private EventHandler closeSaveMenuEvent = mouseEvent->{
         this.saveGameMenu.hide();

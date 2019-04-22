@@ -52,10 +52,10 @@ public class Game extends Canvas {
 
     private MainMenuController controller;
 
-    public Game(mainMenuController menuController, long _randomSeed) {
+    public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
-        this.controller = mainMenuController;
+        this.controller = menuController;
         controller.setGameActive(true);
         Handler.clearForNewGame();
         this.stage = Main.getStage();
@@ -66,7 +66,6 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
-        Utilities.saveNewMapSeed("Test-" + randomSeed, randomSeed);
 
         /*===========================================\
         * pause Menu
@@ -198,4 +197,7 @@ public class Game extends Canvas {
         return this.map;
     }
 
+    public static long getRandomSeed() {
+        return randomSeed;
+    }
 }

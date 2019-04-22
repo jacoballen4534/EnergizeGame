@@ -139,9 +139,9 @@ public class Level {
 
             //place floor and add to floor list
             this.placeFloor(currentPoint, true);
-            if ((randomGenerator.nextDouble() * 100) < 0) { //Randomly event
+            if ((randomGenerator.nextDouble() * 100) < 0) { //Randomly event //TODO: Sort out what will spawn in the levels
                 if (numberOfDoors == 1) { // Place chests at dead ends
-                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.ITEM);
+                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.SCROLL);
                 } else {
                     this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.GRUNT);
                 }
