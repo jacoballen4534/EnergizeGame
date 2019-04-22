@@ -63,7 +63,7 @@ public class Protagonist extends Character {
         hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
-        inventory = new Inventory(10);
+        this.inventory = new Inventory(3);
         equippedItem = null;
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
@@ -78,12 +78,30 @@ public class Protagonist extends Character {
         }
     }
 
+    @Override
+    boolean pickup(Item pickup) {
+        if (!inventory.isFull()){
+            inventory.addItem(pickup);
+            return true;
+        }
+        return false;
+    }
+
+    /*
+    void pickup(Pickup pickup){
+        //Use pickup immediately
+    }
+
+    void pickup(Scroll scroll){
+        //Add scroll to inventory
+    }*/
+
     private void block() {
         this.blockTimer += System.currentTimeMillis() - this.lastBlockTimer;
         this.lastBlockTimer = System.currentTimeMillis();
 
         if (!this.playBlockingAnimation &&  (this.blockTimer >= this.blockCooldown)) { //May take this out
-            if (this.currEnergy > BLOCK_COST) { //Only block if you have enough health
+            if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
 
@@ -96,8 +114,6 @@ public class Protagonist extends Character {
             }
         }
     }
-
-
 
     @Override
     protected void getHit(int damage) {
@@ -263,6 +279,7 @@ public class Protagonist extends Character {
     public boolean pickUpItem(Item item){
         if (!this.inventory.isFull()){
             this.inventory.addItem(item);
+            System.out.println("Picked up item");
             return true;
         }
         return false;
@@ -297,6 +314,10 @@ public class Protagonist extends Character {
         } else {
             return false;
         }
+    }
+
+    public Inventory getInventory() {
+        return inventory;
     }
 }
 

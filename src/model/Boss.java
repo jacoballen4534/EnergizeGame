@@ -78,6 +78,11 @@ public class Boss extends Enemy {
        }
     }
 
+    @Override
+    boolean pickup(Item pickup) {
+        return false;
+    }
+
     protected int getAttackDamage() { //To vary the amount of damage dealt with better weapons
         if (this.playSpecialAttackAnimation) {
             return this.BOSS_SPECIAL_ATTACK_DAMAGE;

@@ -1,15 +1,11 @@
 package sample;
 
-import FXMLControllers.mainMenuController;
+import FXMLControllers.MainMenuController;
 import javafx.animation.*;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
 
@@ -33,8 +29,14 @@ public class Game extends Canvas {
 
     //For handling UI
     private Group root;
-    private Menu pauseMenu;
-    private Menu inventoryMenu;
+    private InGameMenuController inGameMenuController;
+    private PauseMenu pauseMenu;
+    //private InventoryMenu inventoryMenu;
+    //private OptionsMenu optionsMenu;
+    private ConfirmationMenu confirmationMenu;
+
+    //Constants for UI
+
 
     private Scene gameScene;
     private Camera camera;
@@ -48,10 +50,9 @@ public class Game extends Canvas {
     private static Random randomMovement;//used for enemy movement.
     private static long randomSeed;
 
+    private MainMenuController controller;
 
-    private mainMenuController controller;
-
-    public Game(mainMenuController menuController, long _randomSeed) {
+    public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
         super(Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT);
         this.controller = menuController;
@@ -65,45 +66,13 @@ public class Game extends Canvas {
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
-        Utilities.saveNewMapSeed("Test-" + randomSeed, randomSeed);
 
         /*===========================================\
         * pause Menu
         */
+        inGameMenuController = new InGameMenuController(()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController.AddMenusToRoot(root);
 
-        pauseMenu = new Menu("pauseMenu",300,300,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-        inventoryMenu = new Menu("inventoryMenu",500,500,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-        //Pause menu controls
-        Label pauseTitle = new Label("pause Menu");
-        pauseTitle.setId("pauseMenuTitle");
-
-        Button resumeButton = new Button("Resume");
-        resumeButton.setOnMouseClicked(mouseEvent -> {
-            pauseMenu.hide();
-            unpause();
-        });
-        resumeButton.setPrefSize(250,50);
-        Button returnToMainMenuButton = new Button("Quit to Title Screen");
-        returnToMainMenuButton.setOnMouseClicked(mouseEvent -> {
-            stage.setScene(Main.getMainScene()); //Buggy
-        });
-        returnToMainMenuButton.setPrefSize(250,50);
-        Button exitGameButton = new Button("Quit to Desktop");
-        exitGameButton.setOnMouseClicked(mouseEvent -> System.exit(0));
-        exitGameButton.setPrefSize(250,50);
-
-        //Setting up VBox
-        VBox pauseGameVBox = new VBox(10,pauseTitle,resumeButton,returnToMainMenuButton,exitGameButton);
-        pauseGameVBox.setAlignment(Pos.CENTER);
-
-        pauseMenu.getChildren().add(pauseGameVBox);
-
-        //pauseMenu = createPauseMenu();
-        root.getChildren().add(pauseMenu);
-        root.getChildren().add(inventoryMenu);
-        pauseMenu.hide();
-        /*===================================*/
         stage.setScene(this.gameScene);
 
         stage.show();
@@ -123,7 +92,7 @@ public class Game extends Canvas {
     }
 
     public void hidePauseMenu () {
-        this.pauseMenu.hide();
+        this.inGameMenuController.hidePauseMenu();
     }
 
     public static int getNextRandomInt() {
@@ -186,14 +155,14 @@ public class Game extends Canvas {
     private void tick() {
         if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
             this.pause();
-            pauseMenu.show();
-            //pauseMenu.setVisible(true);
+            inGameMenuController.showPauseMenu();
             System.out.println("Toggle game pause");
         }
         if (keyInput.getKeyPressDebounced("inventory")){
             this.pause();
-//            ShowInventoryMenu();
+            inGameMenuController.showInventoryMenu();
             System.out.println("Open inventory");
+            System.out.println(this.protagonist.getInventory().getItemCount());
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
@@ -228,6 +197,7 @@ public class Game extends Canvas {
         return this.map;
     }
 
-    private void ShowInventoryMenu(){;}
-    private void HideInventoryMenu(){;}
+    public static long getRandomSeed() {
+        return randomSeed;
+    }
 }

@@ -9,10 +9,10 @@ import java.awt.image.BufferedImage;
 
 public abstract class Enemy extends Character{
     protected Protagonist target; //For path finding.
-    private boolean enabled;
     protected AnimationsState dieState;
     protected int APPLY_DAMEAGE_COL;
     protected int EnemyMovementSpeed;
+    private boolean enabled;
 
     public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
                  boolean enabled) {
