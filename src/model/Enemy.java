@@ -15,6 +15,8 @@ public abstract class Enemy extends Character{
     private boolean enabled;
     protected long freezeStartTime, freezeDuration;
     protected long windSpellStartTime, windSpellDuration;
+    protected boolean priorToFreezeAttackState;
+    protected int priorToFreezeCol;
 
 
     public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
@@ -57,6 +59,9 @@ public abstract class Enemy extends Character{
     }
 
     public void freeze(long duration) {
+        this.priorToFreezeAttackState = this.playAttackAnimation;
+        this.priorToFreezeCol = this.currentAnimationCol;
+        this.playAttackAnimation = false;
         this.freezeDuration = duration;
         this.freezeStartTime = System.currentTimeMillis();
         this.frozen = true;
@@ -77,10 +82,12 @@ public abstract class Enemy extends Character{
     }
 
     private void updateSpellEffect() {
-        if (System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will ware off even if the player is in the pause menu
+        if (this.frozen && System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will ware off even if the player is in the pause menu
             this.frozen = false; //TODO: Add ice sprite to show frozen (fire for fire scroll also)
+            this.playAttackAnimation = priorToFreezeAttackState;
+            this.currentAnimationCol = this.priorToFreezeCol;
         }
-        if (System.currentTimeMillis() - this.windSpellStartTime > this.windSpellDuration) {
+        if (this.blownAway && System.currentTimeMillis() - this.windSpellStartTime > this.windSpellDuration) {
             this.blownAway = false;
         }
     }

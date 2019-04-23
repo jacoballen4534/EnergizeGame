@@ -18,8 +18,11 @@ public class Inventory{
     }
 
     public void addItem(Item item){
-        System.out.println(items.add(item));
-        System.out.println(items.size());
+        if (this.equippedItem == null) {
+            this.equippedItem = item;
+        } else {
+            items.add(item);
+        }
     }
 
     public Item getEquippedItem() {
