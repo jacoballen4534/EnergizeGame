@@ -20,7 +20,6 @@ public class Camera {
         if (this.x >= levelWidth - windowWidth) this.x = levelWidth - windowWidth;
         if (this.y <= 0) this.y = 0;
         if (this.y >= levelHeight - windowHeight) this.y = levelHeight - windowHeight;
-
     }
 
 

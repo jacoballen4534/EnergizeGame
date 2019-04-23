@@ -131,6 +131,7 @@ public class Protagonist extends Character {
             this.hud.setHealth(this.currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
+                this.playAttackAnimation = false;
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
             }
         }
@@ -163,6 +164,7 @@ public class Protagonist extends Character {
         } else if (this.playDieAnimation) {
 //            this.animationsState.copy(this.dieAnimation);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.keepRendering = false;
                 Handler.removePlayer(this);
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle

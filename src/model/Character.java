@@ -27,6 +27,7 @@ public abstract class Character extends GameObject{
     protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
     protected long lastAttackTimer, attackCooldown, attackTimer = 0;
     protected int alertRadius;
+    protected boolean keepRendering = true;
 
 
 
@@ -150,7 +151,7 @@ public abstract class Character extends GameObject{
     @Override
     protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
 
-        if (this.inCameraBounds(cameraX,cameraY)) {
+        if (this.inCameraBounds(cameraX,cameraY) && this.keepRendering) {
             if (this.spriteDirection == 1) { //facing right
                 graphicsContext.drawImage(this.jfxImage, this.x - this.animationsState.getLeftBorder(), this.y - this.animationsState.getTopBorder(), this.spriteWidth, this.spriteHeight);
             } else {

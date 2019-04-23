@@ -36,10 +36,6 @@ public class Grunt extends Enemy {
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null);
     }
 
-    @Override
-    protected void updateAnimationState() {
-        super.updateAnimationState();
-    }
 
     protected void tick(double cameraX, double cameraY, Level level) {
         if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation) {

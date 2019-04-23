@@ -30,6 +30,7 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(this.dieState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                this.keepRendering = false;
                 Handler.removeEnemy(this);
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
