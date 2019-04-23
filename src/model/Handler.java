@@ -52,9 +52,7 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Enemy enemy : enemies) {
-            if (enemy.inCameraBounds(camera.getX(),camera.getY())) {
-                enemy.updateSprite();
-            }
+            enemy.updateSprite(); //Dont check camera so spells do damage to all.
         }
     }));
 
@@ -208,6 +206,24 @@ public class Handler { //This class will hold all the game objects and is respon
             if (enemy.getAttackBounds().intersects(player.getBounds())){
                 player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
+        }
+    }
+
+    public static void fireScrollAttack(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.getHit(scroll.getDamage());
+        }
+    }
+
+    public static void freezeEnemys(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.freeze(scroll.getFreezeDuration());
+        }
+    }
+
+    public static void blowEnemysAway(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.blowAway(scroll.getWindDuration());
         }
     }
 

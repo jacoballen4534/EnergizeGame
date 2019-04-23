@@ -27,6 +27,9 @@ public abstract class Character extends GameObject{
     protected int attackDamage = 1; //initialize with 1 but set in each constructor. Vary based on enemy type and weapon type
     protected long lastAttackTimer, attackCooldown, attackTimer = 0;
     protected int alertRadius;
+    protected boolean frozen = false;
+    protected boolean blownAway = false; //Probably needs new name
+
 
 
 
@@ -64,7 +67,7 @@ public abstract class Character extends GameObject{
         this.attackTimer += System.currentTimeMillis() - this.lastAttackTimer;
         this.lastAttackTimer = System.currentTimeMillis();
 
-        if (!this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && !this.playSpecialAttackAnimation && (this.attackTimer >= this.attackCooldown)) {
+        if (!this.frozen && !this.blownAway && !this.playAttackAnimation && !this.playDieAnimation && !this.playGotAttackedAnimation && !this.playSpecialAttackAnimation && (this.attackTimer >= this.attackCooldown)) {
             this.animationsState.copy(this.attackState); //Set the state to update the bounding boxes
             this.currentAnimationCol = animationsState.getResetCol(); //To start the animation from the start.
             this.playAttackAnimation = true; //Indicate to start playing the attack animation once.

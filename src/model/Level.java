@@ -22,7 +22,9 @@ enum TileType {
     NULLTILE,
     HEALTH_PICKUP,
     ENERGY_PICKUP,
-    SCROLL,
+    FIRE_SCROLL,
+    ICE_SCROLL,
+    WIND_SCROLL,
     GRUNT,
     BOMBER,
     ARCHER,
@@ -146,7 +148,7 @@ public class Level {
             this.placeFloor(currentPoint, true);
             if ((randomGenerator.nextDouble() * 100) < 0) { //Randomly event //TODO: Sort out what will spawn in the levels
                 if (numberOfDoors == 1) { // Place chests at dead ends
-                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.SCROLL);
+                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.FIRE_SCROLL);
                 } else {
                     this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.GRUNT);
                 }
@@ -354,8 +356,12 @@ public class Level {
                     column.add(TileType.HEALTH_PICKUP);
                 } else if (red == 192 && green == 0 && blue == 192) { //Lighter Purple = Energy pickup
                     column.add(TileType.ENERGY_PICKUP);
-                } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple = Scroll (Fire)
-                    column.add(TileType.SCROLL);
+                } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple (Green = 0) = Scroll (Fire)
+                    column.add(TileType.FIRE_SCROLL);
+                } else if (red == 64 && green == 1 && blue == 64){ //Darker Purple (Green = 1) = Scroll (Ice)
+                    column.add(TileType.ICE_SCROLL);
+                } else if (red == 64 && green == 2 && blue == 64){ //Darker Purple (Green = 2) = Scroll (Wind)
+                    column.add(TileType.WIND_SCROLL);
                 } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
                     column.add(TileType.GRUNT);
                 } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
@@ -451,9 +457,19 @@ public class Level {
                                 PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
                         break;
 
-                    case SCROLL:
-                        Handler.addPickup(new Scroll("Magic Scroll",SCROLL_DESCRIPTION, col,row,
+                    case FIRE_SCROLL:
+                        Handler.addPickup(new Scroll("Fire Scroll",SCROLL_DESCRIPTION, col,row,
                                 PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                        break;
+
+                    case ICE_SCROLL:
+                        Handler.addPickup(new Scroll("Ice Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.iceScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                        break;
+
+                    case WIND_SCROLL:
+                        Handler.addPickup(new Scroll("Wind Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.windScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
                         break;
 
                     case GRUNT:
