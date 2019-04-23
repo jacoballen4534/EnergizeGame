@@ -42,7 +42,7 @@ public class Boss extends Enemy {
         this.specialAttackstatePt1 = new AnimationsState(45 * BOSS_SCALE,57 * BOSS_SCALE,73 * BOSS_SCALE,14 * BOSS_SCALE,9,5,0);
         this.specialAttackstatePt2 = new AnimationsState(21 * BOSS_SCALE,21 * BOSS_SCALE,60 * BOSS_SCALE,14 * BOSS_SCALE,11,6,0);
         this.attackCooldown = BOSS_ATTACK_COOLDOWN;
-        this.APPLY_DAMEAGE_COL = 4;
+        this.APPLY_DAMAGE_COL = 4;
         this.EnemyMovementSpeed = 2;
         this.alertRadius = 420;
 
@@ -188,16 +188,6 @@ public class Boss extends Enemy {
     }
 
     @Override
-    void isPlayerInSight() {
-
-    }
-
-    @Override
-    void findPlayer() {
-
-    }
-
-    @Override
     protected void attack() {
         if (super.canAttack() && Game.getNextRandomInt() < 50) { //50% chance of special move. Will need to decrease this.
             this.playAttackAnimation = false;
@@ -205,5 +195,8 @@ public class Boss extends Enemy {
         }
     }
 
-
+    @Override
+    protected void playDeathSound() {
+        //SoundController.PlayAudio("bossDeath"); //The sound effect isn't actually implemented yet tho
+    }
 }

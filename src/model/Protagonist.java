@@ -27,6 +27,7 @@ public class Protagonist extends Character {
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
+    private final int PROTAGONIST_START_LIVES = 3;
     private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
     private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
     private final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
@@ -62,6 +63,7 @@ public class Protagonist extends Character {
         this.currEnergy = 0; //Start with 0 energy and build it up
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
+        this.lives = PROTAGONIST_START_LIVES;
         this.hud = new HUD(this.id, this.maxHealth,this.maxEnergy,300,100,50,50);
         hud.setHealth(this.currHealth);
         hud.setEnergy(this.currEnergy);
@@ -84,7 +86,7 @@ public class Protagonist extends Character {
             }
             else{
                 SoundController.PlayAudio("missAttack");
-                System.out.println("Missed enemy!")''
+                System.out.println("Missed enemy!");
             }
         }
     }
@@ -93,6 +95,7 @@ public class Protagonist extends Character {
     boolean pickup(Item pickup) {
         if (!inventory.isFull()){
             inventory.addItem(pickup);
+            SoundController.PlayAudio("itemPickup");
             return true;
         }
         return false;
@@ -139,6 +142,7 @@ public class Protagonist extends Character {
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                SoundController.PlayAudio("gameLose");
             }
         }
     }
