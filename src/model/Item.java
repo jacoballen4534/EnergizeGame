@@ -11,9 +11,9 @@ import java.awt.image.BufferedImage;
 public abstract class Item extends GameObject{
 
     //Adding properties for compliance with InventoryMenu table
-    private String name;
-    private String description;
-    private ImageView icon;
+    protected String name;
+    protected String description;
+    protected ImageView icon;
 
     public Item(String name, String description, int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
         super(xLocation, yLocation, sprite, spriteWidth, spriteHeight, spriteWidth, spriteHeight);
@@ -23,13 +23,12 @@ public abstract class Item extends GameObject{
         icon.setFitWidth(50);
         icon.setImage(this.jfxImage);
 
-
         setName(name);
         setDescription(description);
         this.isSolid = false;
     }
 
-    public abstract void useItem();
+    public abstract void useItem(Protagonist user);
 
     public ImageView getIcon(){
         return this.icon;
@@ -54,5 +53,9 @@ public abstract class Item extends GameObject{
 
     public void setIcon(ImageView icon) {
         this.icon = icon;
+    }
+
+    public Image getJFXImage() {
+        return this.jfxImage;
     }
 }

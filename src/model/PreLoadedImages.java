@@ -19,6 +19,7 @@ public class PreLoadedImages {
     public static BufferedImage energyPickupSprite;
     public static BufferedImage fireScrollSprite;
     public static BufferedImage bossSpriteSheet;
+    public static BufferedImage emptyItemSlot;
 
     static {
         try {
@@ -32,6 +33,7 @@ public class PreLoadedImages {
             healthPickupSprite = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/healthKit.png"));
             energyPickupSprite = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/energyKit.png"));
             fireScrollSprite = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/fireScroll.png"));
+            emptyItemSlot = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/emptyItemSlot.png"));
             bossSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossSpriteSheetx3.png"));
             bossRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossRoom.png"));
         } catch (IOException e) {

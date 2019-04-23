@@ -10,6 +10,7 @@ public class Inventory{
 
     private ArrayList<Item> items;
     private int size;
+    private Item equippedItem;
 
     public Inventory(int size){
         items = new ArrayList<>();
@@ -21,8 +22,16 @@ public class Inventory{
         System.out.println(items.size());
     }
 
+    public Item getEquippedItem() {
+        return equippedItem;
+    }
+
+    public void setEquippedItem(Item equippedItem) {
+        this.equippedItem = equippedItem;
+    }
+
     public void removeItem(Item item){
-        items.remove(item);
+        this.items.remove(item);
     }
 
     public ArrayList<Item> getItemList(){

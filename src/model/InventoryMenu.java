@@ -1,6 +1,7 @@
 package model;
 
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -101,9 +102,23 @@ public class InventoryMenu extends PauseMenu {
     }
 
     public void UpdateTable(){
-        if (inventory.getItemCount() == 0) return;
+
+        Image equippedItemIcon;
+        if (inventory.getEquippedItem() != null) {
+            equippedItemIcon = inventory.getEquippedItem().getJFXImage();
+        } else {
+            equippedItemIcon = SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null);
+        }
+
+        this.setEquippedItemIconImage(equippedItemIcon);
 
         if (!inventoryView.getItems().isEmpty()) inventoryView.getItems().clear();
+
+        if (inventory.getItemCount() == 0){
+            return;
+        }
+
+
         ArrayList<Item> items = inventory.getItemList();
         items.forEach(item -> {
             System.out.println(item.getName());

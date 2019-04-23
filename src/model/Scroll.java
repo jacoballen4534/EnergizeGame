@@ -21,7 +21,7 @@ public class Scroll extends Item{
     }
 
     @Override
-    public void useItem() {
+    public void useItem(Protagonist user) {
 
     }
 }

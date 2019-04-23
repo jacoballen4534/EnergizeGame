@@ -1,6 +1,7 @@
 package model;
 
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -273,8 +274,11 @@ public class InGameMenuController {
         Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
-        Image img = new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png"));
-        ImageView equippedItemIcon = CreateImageView(img,50,50);
+        ImageView equippedItemIcon = new ImageView();
+        equippedItemIcon.setFitHeight(50);
+        equippedItemIcon.setFitWidth(50);
+        equippedItemIcon.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null));
+
         inventoryMenu.setEquippedItemIcon(equippedItemIcon);
 
         //Button to close the inventory menu and return to pause screen
