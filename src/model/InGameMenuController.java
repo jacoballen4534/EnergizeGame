@@ -45,11 +45,15 @@ public class InGameMenuController {
     private static final int SAVE_NAME_INPUT_WIDTH = 250;
     private static final int SAVE_NAME_INPUT_HEIGHT = 50;
 
-    private static final int OPTIONS_MENU_WIDTH = 300;
-    private static final int OPTIONS_MENU_HEIGHT = 300;
+    private static final int OPTIONS_MENU_WIDTH = 400;
+    private static final int OPTIONS_MENU_HEIGHT = 400;
 
-    private static final int CONFIRMATION_MENU_WIDTH = 250;
-    private static final int CONFIRMATION_MENU_HEIGHT = 150;
+    private static final int CONFIRMATION_MENU_WIDTH = 300;
+    private static final int CONFIRMATION_MENU_HEIGHT = 100;
+    private static final int CONFIRMATION_TITLE_WIDTH = 250;
+    private static final int CONFIRMATION_TITLE_HEIGHT = 100;
+    private static final int CONFIRMATION_BUTTON_WIDTH = 100;
+    private static final int CONFIRMATION_BUTTON_HEIGHT = 40;
 
     //==Event macros==//
     //--Pause Menu--
@@ -127,8 +131,8 @@ public class InGameMenuController {
 
         this.exitToTitleConfirmation = CreateConfirmationMenu("Are you sure?", "confirmationMenu",
                 returnToTitleEvent);
-        this.exitToDesktopConfirmation = CreateConfirmationMenu("Are you sure about that?",
-                "confirmationMenu", event->System.exit(0));
+        this.exitToDesktopConfirmation = CreateConfirmationMenu("Are you sure?",
+                "confirmationMenu", returnToDesktopEvent);
 
         //Hide all menus
         this.pauseMenu.hide();
@@ -196,8 +200,24 @@ public class InGameMenuController {
 
     private ConfirmationMenu CreateConfirmationMenu(String title, String ID,
                                                     EventHandler confirmationAction){
-        ConfirmationMenu confirmationMenu = new ConfirmationMenu(title,ID,
-                CONFIRMATION_MENU_WIDTH,CONFIRMATION_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2,confirmationAction);
+        ConfirmationMenu confirmationMenu = new ConfirmationMenu(ID,
+                CONFIRMATION_MENU_WIDTH,CONFIRMATION_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
+        Label titleLabel = CreateLabel(title,"confirmationMenuTitle",
+                CONFIRMATION_TITLE_WIDTH,CONFIRMATION_TITLE_HEIGHT,TextAlignment.CENTER,false);
+        confirmationMenu.SetLabelAsTitle(titleLabel);
+
+        Button confirm = CreateButton("Quit","confirmationMenuButton",
+                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,confirmationAction);
+        Button cancel = CreateButton("Cancel","confirmationMenuButton",
+                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> confirmationMenu.hide());
+
+        HBox hbox = confirmationMenu.getHbox();
+
+        hbox.getChildren().addAll(confirm,cancel);
+
+        confirmationMenu.AddNodeToVBox(1,hbox);
+
         return confirmationMenu;
     }
 
