@@ -121,7 +121,7 @@ public class InGameMenuController {
 
         //Generate menu layouts
         this.pauseMenu = CreatePauseMenu(pauseMenu);
-        this.inventoryMenu = CreateInventoryMenu(inventoryMenu, inventory);
+        this.inventoryMenu = CreateInventoryMenu(inventory);
         this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
         this.optionsMenu = CreateOptionsMenu(optionsMenu);
 
@@ -229,7 +229,7 @@ public class InGameMenuController {
         return saveGameMenu;
     }
 
-    private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu, Inventory inventory){
+    private InventoryMenu CreateInventoryMenu(Inventory inventory){
 
         //To keep track of node positions within the menu
         int outerVBoxNodePos = 1;

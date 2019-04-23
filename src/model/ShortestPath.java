@@ -256,6 +256,7 @@ public class ShortestPath {
         if (next[startingId][destinationId] == null) {
             return -1;//No path yet
         }
+        assert startingNode != null;
         while (!startingNode.equals(destinationNode)) {
             startingNode = next[startingNode.getId()][destinationNode.getId()];
             length++;
