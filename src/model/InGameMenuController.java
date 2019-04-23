@@ -144,8 +144,9 @@ public class InGameMenuController {
         exitToTitleConfirmation.hide();
     }
 
-    public void showInventoryMenu(){
+    public void showInventoryMenu(Inventory inventory){
         pauseMenu.hide();
+        inventoryMenu.UpdateTableItems(inventory.getItemList());
         inventoryMenu.show();
     }
 
@@ -229,13 +230,17 @@ public class InGameMenuController {
 
     private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu){
 
-        int hBoxNodePos = 0;
-        int innerVBoxNodePos = 0;
+        //To keep track of node positions within the menu
+        //int hBoxNodePos = 0;
+        //int innerVBoxNodePos = 0;
         int outerVBoxNodePos = 1;
 
         //Create the menu
         inventoryMenu = new InventoryMenu("inventoryMenu",
                 INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
+        VBox innerVbox = inventoryMenu.getInnerVBox();
+        HBox hbox = inventoryMenu.getHbox();
 
         //Create and set the title of the menu
         Label inventoryTitle = CreateLabel("Inventory","inventoryMenuTitle",
@@ -246,25 +251,23 @@ public class InGameMenuController {
         TableView table = inventoryMenu.CreateTable();
 
         //Label for equipped item icon
-        Label equippedLabel = CreateLabel("Equipped","itemEquippedLabel",200,200,TextAlignment.LEFT,true);
+        Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
         Image img = new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png"));
-        ImageView equippedItemIcon = CreateImageView(img,100,100);
+        ImageView equippedItemIcon = CreateImageView(img,50,50);
         inventoryMenu.setEquippedItemIcon(equippedItemIcon);
 
         //Button to close the inventory menu and return to pause screen
         Button closeMenu = CreateButton("Close","closeInventoryMenu",
                 CLOSE_MENU_BTN_WIDTH,CLOSE_MENU_BTN_HEIGHT,closeInventoryMenuEvent);
 
-        inventoryMenu.AddNodeToInnerVBox(innerVBoxNodePos++,equippedLabel);
-        inventoryMenu.AddNodeToInnerVBox(innerVBoxNodePos++,equippedItemIcon);
+        innerVbox.getChildren().addAll(equippedLabel,equippedItemIcon);
+
+        hbox.getChildren().addAll(innerVbox,table);
 
         inventoryMenu.AddNodeToVBox(outerVBoxNodePos++,inventoryMenu.getHbox());
         inventoryMenu.AddNodeToVBox(outerVBoxNodePos++,closeMenu);
-
-        inventoryMenu.AddNodeToHBox(hBoxNodePos++,inventoryMenu.getInnerVBox());
-        inventoryMenu.AddNodeToHBox(hBoxNodePos++,table);
 
         return inventoryMenu;
     }

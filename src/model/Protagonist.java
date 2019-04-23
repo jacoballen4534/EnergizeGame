@@ -83,9 +83,10 @@ public class Protagonist extends Character {
     }
 
     @Override
-    boolean pickup(Item pickup) {
+    boolean pickup(Item item) {
         if (!inventory.isFull()){
-            inventory.addItem(pickup);
+            this.inventory.addItem(item);
+            System.out.println("Picked up item");
             return true;
         }
         return false;
@@ -289,21 +290,12 @@ public class Protagonist extends Character {
         return hud;
     }
 
-    public boolean pickUpItem(Item item){
-        if (!this.inventory.isFull()){
-            this.inventory.addItem(item);
-            System.out.println("Picked up item");
-            return true;
-        }
-        return false;
-    }
-
     public void useItem(){
         if (equippedItem != null) {
             System.out.println("Using an item");
             equippedItem.useItem();
         } else {
-            System.out.println("You dont have an item to use");
+            System.out.println("You don't have an item to use");
         }
     }
 

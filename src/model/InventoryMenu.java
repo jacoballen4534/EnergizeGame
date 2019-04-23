@@ -25,9 +25,9 @@ public class InventoryMenu extends PauseMenu {
 
     public InventoryMenu(String ID, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
-        innerVBox = new VBox(10);
-        hbox = new HBox(width/5);
-        innerVBox.setPrefWidth(hbox.getWidth()/2);
+        innerVBox = new VBox(0);
+        hbox = new HBox(120);
+        innerVBox.setPrefWidth(100);
         innerVBox.setAlignment(Pos.CENTER);
     }
 
@@ -37,15 +37,6 @@ public class InventoryMenu extends PauseMenu {
 
     public void setEquippedItemIconImage(Image itemIcon){
         equippedItemIcon.setImage(itemIcon);
-    }
-
-    //Should refactor these out since I have getters as well
-    public void AddNodeToInnerVBox(int pos, Node node){
-        this.innerVBox.getChildren().add(pos,node);
-    }
-
-    public void AddNodeToHBox(int pos, Node node){
-        this.hbox.getChildren().add(pos,node);
     }
 
     public HBox getHbox() {
@@ -99,16 +90,24 @@ public class InventoryMenu extends PauseMenu {
         inventoryView.getColumns().addAll(itemList,nameList);
 
         //Add rows to table view - should be taken from player inventory
-        ObservableList<Item> items = FXCollections.observableArrayList();
+        /*ObservableList<Item> items = FXCollections.observableArrayList();
         for (int i=0;i<3;i++){
             Item testItem = new Pickup(0,0,PreLoadedImages.healthPickupSprite,32,32);
             testItem.setName("Health Kit");
             items.add(testItem);
         }
 
-        inventoryView.setItems(items);
+        inventoryView.setItems(items);*/
 
         return inventoryView;
 
+    }
+
+    public void AddItemToTable(Item item){
+        inventoryView.getItems().add(item);
+    }
+
+    public void UpdateTableItems(ObservableList<Item> items){
+        inventoryView.setItems(items);
     }
 }

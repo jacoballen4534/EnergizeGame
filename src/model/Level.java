@@ -68,12 +68,17 @@ public class Level {
 
     private final int PICKUP_SPRITE_WIDTH = 32;
     private final int PICKUP_SPRITE_HEIGHT = 32;
-    private final int BOSS_SPRITE_WIDTH = 128;
-    private final int BOSS_SPRITE_HEIGHT = 128;
-    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
 
     private final int SCROLL_SPRITE_WIDTH = 32;
     private final int SCROLL_SPRITE_HEIGHT = 32;
+
+    private final int BOSS_SPRITE_WIDTH = 128;
+    private final int BOSS_SPRITE_HEIGHT = 128;
+    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determined
+
+    private final String HEALTH_KIT_DESCRIPTION = "Can be used to restore some health";
+    private final String ENERGY_KIT_DESCRIPTION = "Can be used to restore some energy";
+    private final String SCROLL_DESCRIPTION = "Can be used to unleash a devastating magical effect";
 
     public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();
@@ -437,15 +442,18 @@ public class Level {
                         break;
 
                     case HEALTH_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup("Health Kit", HEALTH_KIT_DESCRIPTION, col,row,
+                                PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
                         break;
 
                     case ENERGY_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup("Energy Kit", ENERGY_KIT_DESCRIPTION, col,row,
+                                PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
                         break;
 
                     case SCROLL:
-                        Handler.addPickup(new Scroll(col,row,PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                        Handler.addPickup(new Scroll("Magic Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
                         break;
 
                     case GRUNT:

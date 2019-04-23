@@ -24,19 +24,10 @@ public class Game extends Canvas {
     private long previousTime = System.nanoTime();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
-    private boolean isPaused = false;
-    private boolean pauseButtonDown = false;
 
     //For handling UI
     private Group root;
     private InGameMenuController inGameMenuController;
-    private PauseMenu pauseMenu;
-    //private InventoryMenu inventoryMenu;
-    //private OptionsMenu optionsMenu;
-    private ConfirmationMenu confirmationMenu;
-
-    //Constants for UI
-
 
     private Scene gameScene;
     private Camera camera;
@@ -160,7 +151,7 @@ public class Game extends Canvas {
         }
         if (keyInput.getKeyPressDebounced("inventory")){
             this.pause();
-            inGameMenuController.showInventoryMenu();
+            inGameMenuController.showInventoryMenu(this.protagonist.getInventory());
             System.out.println("Open inventory");
             System.out.println(this.protagonist.getInventory().getItemCount());
         }

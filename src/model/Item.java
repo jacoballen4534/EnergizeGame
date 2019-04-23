@@ -14,10 +14,12 @@ public abstract class Item extends GameObject{
     private SimpleStringProperty description = new SimpleStringProperty();
     private SimpleObjectProperty<Image> icon;
 
-    public Item(int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
+    public Item(String name, String description, int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
         super(xLocation, yLocation, sprite, spriteWidth, spriteHeight, spriteWidth, spriteHeight);
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0),null);
         icon = new SimpleObjectProperty<Image>(this.jfxImage);
+        setName(name);
+        setDescription(description);
         this.isSolid = false;
     }
 

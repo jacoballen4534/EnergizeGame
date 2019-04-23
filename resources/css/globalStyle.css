@@ -22,6 +22,11 @@
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
+.label#itemEquippedLabel{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
 .anchorpane#confirmationMenu{
     -fx-background-color: #aa0000;
     /*-fx-background-image:url("/bg/confirmationScreenBG.png");*/

@@ -5,8 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import java.awt.image.BufferedImage;
 
 public class Weapon extends Item {
-    public Weapon(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight) {
-        super(xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight);
+    public Weapon(String name, String description, int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight) {
+        super(name, description, xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight);
     }
 
     @Override
