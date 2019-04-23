@@ -10,7 +10,6 @@ public class Camera {
     }
 
     public void tick(GameObject gameObject, double windowWidth, double windowHeight, int levelWidth, int levelHeight){
-        //TODO: Can use this to pan towards the boss/item of interest when entering a room
         //Update the camera to keep the protagonist in the centre of the screen but *0.05 so it doesnt snap to them
         this.x += ((gameObject.getX() - this.x) - windowWidth/2) * 0.05f;
         this.y += ((gameObject.getY() - this.y) - windowHeight/2) * 0.05f;
