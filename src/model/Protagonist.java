@@ -78,7 +78,14 @@ public class Protagonist extends Character {
     @Override
     protected void attack() {
         if(super.canAttack()) {
-            Handler.attack(this);
+            if (Handler.attack(this)){
+                SoundController.PlayAudio("hitAttack");
+                System.out.println("Hit enemy!");
+            }
+            else{
+                SoundController.PlayAudio("missAttack");
+                System.out.println("Missed enemy!")''
+            }
         }
     }
 
@@ -226,7 +233,9 @@ public class Protagonist extends Character {
         if (keyInput.getKeyPressDebounced("useSpecial")){
             if (useSpecial()) {
                 System.out.println("Azarath, metrion, zinthos!");//Outdated reference
-            }  else System.out.println("Insufficient energy");
+                SoundController.PlayAudio("magicAbility");
+            }
+            else System.out.println("Insufficient energy");
         }
 
         if (keyInput.getKeyPressDebounced("cheatKey")){

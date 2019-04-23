@@ -15,6 +15,8 @@ import javax.sound.sampled.FloatControl;
 import java.io.*;
 import java.lang.String;
 
+import java.io.InputStream;
+
 public class Main extends Application {
     private static Stage stage;
     private static Scene mainScene;
@@ -29,8 +31,8 @@ public class Main extends Application {
         Utilities.initializeFiles();
 
         //Play background music
-        //String musicFile = "resources/music/theme.wav"; //Must be a .wav!
-        InputStream musicSrc = this.getClass().getResourceAsStream("/music/theme.wav");
+        String musicFile = "/music/titleScreenBGM.wav"; //Must be a .wav!
+        InputStream musicSrc = this.getClass().getResourceAsStream(musicFile);
         InputStream music = new BufferedInputStream(musicSrc);
         AudioInputStream audioInput = AudioSystem.getAudioInputStream(music);//AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
         Clip clip = AudioSystem.getClip();

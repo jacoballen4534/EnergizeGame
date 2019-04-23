@@ -197,12 +197,14 @@ public class Handler { //This class will hold all the game objects and is respon
         //Dont clear the protagonist as this gets set once and moved through the rooms
     }
 
-    public static void attack(Protagonist protagonist) {
+    public static boolean attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
             if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){
                 enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
+                return true; //indicates successful attack
             }
         }
+        return false;
     }
 
     public static void attack(Enemy enemy) {
