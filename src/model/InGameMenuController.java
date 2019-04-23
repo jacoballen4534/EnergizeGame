@@ -207,9 +207,9 @@ public class InGameMenuController {
                 CONFIRMATION_TITLE_WIDTH,CONFIRMATION_TITLE_HEIGHT,TextAlignment.CENTER,false);
         confirmationMenu.SetLabelAsTitle(titleLabel);
 
-        Button confirm = CreateButton("Quit","confirmButton",
+        Button confirm = CreateButton("Quit","confirmationMenuButton",
                 CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,confirmationAction);
-        Button cancel = CreateButton("Cancel","cancelButton",
+        Button cancel = CreateButton("Cancel","confirmationMenuButton",
                 CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> confirmationMenu.hide());
 
         HBox hbox = confirmationMenu.getHbox();
