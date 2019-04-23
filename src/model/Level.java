@@ -72,8 +72,8 @@ public class Level {
     private final int BOSS_SPRITE_HEIGHT = 128;
     public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
 
-    private final int SCROLL_SPRITE_WIDTH = 16;
-    private final int SCROLL_SPRITE_HEIGHT = 16;
+    private final int SCROLL_SPRITE_WIDTH = 32;
+    private final int SCROLL_SPRITE_HEIGHT = 32;
 
     public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();

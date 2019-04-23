@@ -1,6 +1,7 @@
 package model;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,6 +20,7 @@ public class PauseMenu extends Menu {
         this.vbox = new VBox(10);
         this.vbox.setPrefSize(width,height);
         this.vbox.setAlignment(Pos.CENTER);
+        this.vbox.setPadding(new Insets(10,10,10,10));
         this.getChildren().add(vbox);
     }
 

@@ -5,20 +5,47 @@
     -fx-background-image:url("/bg/pauseScreenBG.png");
     /*-fx-background-color: #224D72;*/
 }
+.label#pauseMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 45;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+}
 .anchorpane#inventoryMenu{
     -fx-background-image:url("/bg/inventoryScreenBG.png");
 }
+.label#inventoryMenuTitle{
+    -fx-text-fill: #ffffff;
+    -fx-font-family: beon;
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+}
 .anchorpane#confirmationMenu{
     -fx-background-color: #aa0000;
+    /*-fx-background-image:url("/bg/confirmationScreenBG.png");*/
 }
 .anchorpane#optionsMenu{
     -fx-background-color: #00aaff;
+    /*-fx-background-image:url("/bg/optionsScreenBG.png");*/
+}
+.label#optionsMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 50;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .anchorpane#saveMenu{
     -fx-background-image:url("/bg/saveScreenBG.png");
 }
-.vbox{
-    -fx-alignment: center;
+.label#saveMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 40;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #ff00ff, 10, 0.5, 0, 0);
 }
 .label{
     -fx-text-fill: #e8e8e8;
@@ -29,34 +56,6 @@
     -fx-text-fill: #e8e8e8;
     -fx-font-family: Serif;
     -fx-font-size: 20;
-}
-.label#pauseMenuTitle{
-    -fx-text-fill: #ffc700;
-    -fx-font-family: beon;
-    -fx-font-size: 50;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
-}
-.label#inventoryMenuTitle{
-    -fx-text-fill: #ffffff;
-    -fx-font-family: beon;
-    -fx-font-size: 50;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
-}
-.label#saveMenuTitle{
-    -fx-text-fill: #ffc700;
-    -fx-font-family: beon;
-    -fx-font-size: 50;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, #ff00ff, 10, 0.5, 0, 0);
-}
-.label#optionsMenuTitle{
-    -fx-text-fill: #ffc700;
-    -fx-font-family: beon;
-    -fx-font-size: 50;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
@@ -129,13 +128,14 @@
     /*-fx-font-weight: bold;*/
     -fx-background-color: #0288D1;
 }
-.button-blue{
-    -fx-background-color: #7cafc2;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 4;
+.button#saveMenuButton{
+    -fx-font-size: 12;
 }
 
-//Table view stuff ripped from here:https://stackoverflow.com/questions/33938811/styling-a-tableview-in-css-javafx
+/*
+Table view stuff ripped from here:
+https://stackoverflow.com/questions/33938811/styling-a-tableview-in-css-javafx
+*/
 
 .table-view{
    -fx-background-color: transparent;

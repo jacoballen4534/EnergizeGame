@@ -39,7 +39,7 @@ public class InventoryMenu extends PauseMenu {
         equippedItemIcon.setImage(itemIcon);
     }
 
-    //Should refactor if I have getters as well
+    //Should refactor these out since I have getters as well
     public void AddNodeToInnerVBox(int pos, Node node){
         this.innerVBox.getChildren().add(pos,node);
     }
@@ -95,10 +95,6 @@ public class InventoryMenu extends PauseMenu {
             }
         });
 
-        //Remove some columns?
-        //inventoryView.getColumns().remove(0);
-        //inventoryView.getColumns().remove(0);
-
         //Add columns to table view - need to find a way that makes the table only have 1 column
         inventoryView.getColumns().addAll(itemList,nameList);
 
@@ -106,6 +102,7 @@ public class InventoryMenu extends PauseMenu {
         ObservableList<Item> items = FXCollections.observableArrayList();
         for (int i=0;i<3;i++){
             Item testItem = new Pickup(0,0,PreLoadedImages.healthPickupSprite,32,32);
+            testItem.setName("Health Kit");
             items.add(testItem);
         }
 

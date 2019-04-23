@@ -26,22 +26,30 @@ public class InGameMenuController {
     private static final int PAUSE_MENU_HEIGHT = 500;
     private static final int PAUSE_MENU_BTN_WIDTH = 250;
     private static final int PAUSE_MENU_BTN_HEIGHT = 50;
+    private static final int PAUSE_MENU_TITLE_WIDTH = 250;
     private static final int PAUSE_MENU_TITLE_HEIGHT = 130;
 
     private static final int INVENTORY_MENU_WIDTH = 500;
     private static final int INVENTORY_MENU_HEIGHT = 500;
+    private static final int INVENTORY_TITLE_WIDTH = 300;
+    private static final int INVENTORY_TITLE_HEIGHT = 100;
+    private static final int CLOSE_MENU_BTN_WIDTH = 125;
+    private static final int CLOSE_MENU_BTN_HEIGHT = 100;
 
     private static final int SAVE_MENU_WIDTH = 300;
     private static final int SAVE_MENU_HEIGHT = 150;
+    private static final int SAVE_TITLE_WIDTH = 200;
+    private static final int SAVE_TITLE_HEIGHT = 50;
+    private static final int SAVE_BUTTON_WIDTH = 125;
+    private static final int SAVE_BUTTON_HEIGHT = 30;
+    private static final int SAVE_NAME_INPUT_WIDTH = 250;
+    private static final int SAVE_NAME_INPUT_HEIGHT = 50;
 
     private static final int OPTIONS_MENU_WIDTH = 300;
     private static final int OPTIONS_MENU_HEIGHT = 300;
 
     private static final int CONFIRMATION_MENU_WIDTH = 250;
     private static final int CONFIRMATION_MENU_HEIGHT = 150;
-
-    private static final int CLOSE_MENU_BTN_WIDTH = 125;
-    private static final int CLOSE_MENU_BTN_HEIGHT = 100;
 
     //==Event macros==//
     //--Pause Menu--
@@ -157,7 +165,7 @@ public class InGameMenuController {
         pauseMenu = new PauseMenu("pauseMenu",PAUSE_MENU_WIDTH,PAUSE_MENU_HEIGHT,
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
-        Label titleLabel = CreateLabel("Pause menu","pauseMenuTitle",PAUSE_MENU_WIDTH,PAUSE_MENU_TITLE_HEIGHT,
+        Label titleLabel = CreateLabel("Pause menu","pauseMenuTitle",PAUSE_MENU_TITLE_WIDTH,PAUSE_MENU_TITLE_HEIGHT,
                 TextAlignment.CENTER,true);
         pauseMenu.SetLabelAsTitle(titleLabel);
 
@@ -199,18 +207,19 @@ public class InGameMenuController {
         saveGameMenu = new SaveGameMenu("saveMenu",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         Label saveTitle = CreateLabel("Save Map","saveMenuTitle",
-                SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/2,TextAlignment.CENTER,false);
+                SAVE_TITLE_WIDTH,SAVE_TITLE_HEIGHT,TextAlignment.CENTER,false);
         saveGameMenu.SetLabelAsTitle(saveTitle);
 
-        Button saveButton = CreateButton("Save","saveButton",
-                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/5, saveGameEvent);
-        Button cancelButton = CreateButton("Cancel","cancelButton",
-                SAVE_MENU_WIDTH/3,SAVE_MENU_HEIGHT/5,closeSaveMenuEvent);
+        Button saveButton = CreateButton("SAVE","saveMenuButton",
+                SAVE_BUTTON_WIDTH,SAVE_BUTTON_HEIGHT, saveGameEvent);
+        Button cancelButton = CreateButton("CANCEL","saveMenuButton",
+                SAVE_BUTTON_WIDTH,SAVE_BUTTON_HEIGHT,closeSaveMenuEvent);
 
         saveGameMenu.AddNodeToHBox(hboxNodePos++,saveButton);
         saveGameMenu.AddNodeToHBox(hboxNodePos++,cancelButton);
 
-        TextField saveNameInput = CreateTextField("Enter Map Name","saveNameTextField",SAVE_MENU_WIDTH,SAVE_MENU_HEIGHT/4);
+        TextField saveNameInput = CreateTextField("Enter Map Name","saveNameTextField",
+                SAVE_NAME_INPUT_WIDTH,SAVE_NAME_INPUT_HEIGHT);
 
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveNameInput);
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveGameMenu.getHBox());
@@ -230,7 +239,7 @@ public class InGameMenuController {
 
         //Create and set the title of the menu
         Label inventoryTitle = CreateLabel("Inventory","inventoryMenuTitle",
-                INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT/4,TextAlignment.CENTER,false);
+                INVENTORY_TITLE_WIDTH,INVENTORY_TITLE_HEIGHT,TextAlignment.CENTER,false);
         inventoryMenu.SetLabelAsTitle(inventoryTitle);
 
         //Create the table of items
