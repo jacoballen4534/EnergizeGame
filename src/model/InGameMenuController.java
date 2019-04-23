@@ -57,6 +57,7 @@ public class InGameMenuController {
     private EventHandler inventoryMenuEvent = mouseEvent ->{
         this.pauseMenu.hide();
         this.inventoryMenu.show();
+        this.inventoryMenu.UpdateTable();
     };
     private EventHandler saveMenuEvent = mouseEvent->{
         System.out.println("Shows save game menu");
@@ -113,14 +114,14 @@ public class InGameMenuController {
     private SaveGameMenu saveGameMenu;
     private OptionsMenu optionsMenu;
 
-    public InGameMenuController(Runnable unpauseGame, EventHandler returnToTitleScreen) {
+    public InGameMenuController(Inventory inventory, Runnable unpauseGame, EventHandler returnToTitleScreen) {
 
         this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
         this.returnToTitleEvent = returnToTitleScreen;
 
         //Generate menu layouts
         this.pauseMenu = CreatePauseMenu(pauseMenu);
-        this.inventoryMenu = CreateInventoryMenu(inventoryMenu);
+        this.inventoryMenu = CreateInventoryMenu(inventoryMenu, inventory);
         this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
         this.optionsMenu = CreateOptionsMenu(optionsMenu);
 
@@ -144,9 +145,9 @@ public class InGameMenuController {
         exitToTitleConfirmation.hide();
     }
 
-    public void showInventoryMenu(Inventory inventory){
+    public void showInventoryMenu(){
         pauseMenu.hide();
-        inventoryMenu.UpdateTableItems(inventory.getItemList());
+        inventoryMenu.UpdateTable();
         inventoryMenu.show();
     }
 
@@ -228,15 +229,13 @@ public class InGameMenuController {
         return saveGameMenu;
     }
 
-    private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu){
+    private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu, Inventory inventory){
 
         //To keep track of node positions within the menu
-        //int hBoxNodePos = 0;
-        //int innerVBoxNodePos = 0;
         int outerVBoxNodePos = 1;
 
         //Create the menu
-        inventoryMenu = new InventoryMenu("inventoryMenu",
+        inventoryMenu = new InventoryMenu("inventoryMenu", inventory,
                 INVENTORY_MENU_WIDTH,INVENTORY_MENU_HEIGHT,SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         VBox innerVbox = inventoryMenu.getInnerVBox();

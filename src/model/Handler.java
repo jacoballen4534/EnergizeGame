@@ -236,7 +236,9 @@ public class Handler { //This class will hold all the game objects and is respon
         //TODO:Implement items and inventory first
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.pickup(pickup)) {
+                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup)){
+                    System.out.println("can pick up " + pickup.getName());
+                    character.pickup(pickup);
                     removePickup(pickup);
                 }
             }

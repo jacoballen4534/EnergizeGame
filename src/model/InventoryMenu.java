@@ -13,6 +13,8 @@ import javafx.util.Callback;
 
 import javafx.scene.Node;
 
+import java.util.ArrayList;
+
 
 public class InventoryMenu extends PauseMenu {
 
@@ -22,9 +24,11 @@ public class InventoryMenu extends PauseMenu {
     private VBox innerVBox;
     private HBox hbox;
     private ImageView equippedItemIcon;
+    private Inventory inventory;
 
-    public InventoryMenu(String ID, int width, int height, int xPos, int yPos) {
+    public InventoryMenu(String ID, Inventory inventory, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
+        this.inventory = inventory;
         innerVBox = new VBox(0);
         hbox = new HBox(120);
         innerVBox.setPrefWidth(100);
@@ -86,7 +90,7 @@ public class InventoryMenu extends PauseMenu {
             }
         });
 
-        //Add columns to table view - need to find a way that makes the table only have 1 column
+        //Add columns to table view
         inventoryView.getColumns().addAll(itemList,nameList);
 
         //Add rows to table view - should be taken from player inventory
@@ -103,11 +107,13 @@ public class InventoryMenu extends PauseMenu {
 
     }
 
-    public void AddItemToTable(Item item){
-        inventoryView.getItems().add(item);
-    }
-
-    public void UpdateTableItems(ObservableList<Item> items){
-        inventoryView.setItems(items);
+    public void UpdateTable(){
+        if (inventory.getItemCount() == 0) return;
+        if (!inventoryView.getItems().isEmpty()) inventoryView.getItems().clear();
+        ArrayList<Item> items = inventory.getItemList();
+        items.forEach(item -> {
+            System.out.println(item.getName());
+            inventoryView.getItems().add(item);
+        });
     }
 }

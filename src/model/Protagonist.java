@@ -83,23 +83,19 @@ public class Protagonist extends Character {
     }
 
     @Override
-    boolean pickup(Item item) {
+    boolean pickup(Item pickup) {
         if (!inventory.isFull()){
-            this.inventory.addItem(item);
-            System.out.println("Picked up item");
+            if (equippedItem == null){
+                equippedItem = pickup;
+            }
+            else {
+                this.inventory.addItem(pickup);
+                System.out.println("Picked up item");
+            }
             return true;
         }
         return false;
     }
-
-    /*
-    void pickup(Pickup pickup){
-        //Use pickup immediately
-    }
-
-    void pickup(Scroll scroll){
-        //Add scroll to inventory
-    }*/
 
     private void block() {
         this.blockTimer += System.currentTimeMillis() - this.lastBlockTimer;
