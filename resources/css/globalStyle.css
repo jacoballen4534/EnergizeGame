@@ -31,9 +31,14 @@
     -fx-background-color: #aa0000;
     /*-fx-background-image:url("/bg/confirmationScreenBG.png");*/
 }
+.label#confirmationMenuTitle{
+    -fx-text-fill: #ffc700;
+    -fx-font-family: beon;
+    -fx-font-size: 25;
+    -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.5, 0, 0);
+}
 .anchorpane#optionsMenu{
-    -fx-background-color: #00aaff;
-    /*-fx-background-image:url("/bg/optionsScreenBG.png");*/
+    -fx-background-image:url("/bg/optionsScreenBG.png");
 }
 .label#optionsMenuTitle{
     -fx-text-fill: #ffc700;

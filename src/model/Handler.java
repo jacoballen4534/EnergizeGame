@@ -106,7 +106,7 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Item pickup : pickups) {
-            pickup.render(graphicsContext,cameraX,cameraY); //TODO: Implement pickup items.
+            pickup.render(graphicsContext,cameraX,cameraY);
         }
 
         for (Enemy enemy : enemies){
@@ -119,8 +119,6 @@ public class Handler { //This class will hold all the game objects and is respon
 
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
-
-
 
     public static void updateEnemyTarget (Protagonist target) {
         for (Enemy enemy : enemies) {
@@ -217,7 +215,6 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist = _protagonist;
     }
 
-
     public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
@@ -230,13 +227,11 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist.updateLevelWidth(newLevelWidth);
     }
 
-
-
     public static boolean checkCollision (Character character) {
-        //TODO:Implement items and inventory first
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup)){
+                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup)
+                        && !protagonist.getEquippedItem().equals(pickup)){
                     System.out.println("can pick up " + pickup.getName());
                     character.pickup(pickup);
                     removePickup(pickup);
