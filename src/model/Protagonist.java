@@ -87,8 +87,7 @@ public class Protagonist extends Character {
         if (!inventory.isFull()){
             if (equippedItem == null){
                 equippedItem = pickup;
-            }
-            else {
+            } else {
                 this.inventory.addItem(pickup);
                 System.out.println("Picked up item");
             }
@@ -293,6 +292,10 @@ public class Protagonist extends Character {
         } else {
             System.out.println("You don't have an item to use");
         }
+    }
+
+    public Item getEquippedItem() {
+        return this.equippedItem;
     }
 
     public void setEquippedItem(Item item){

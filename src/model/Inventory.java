@@ -12,7 +12,7 @@ public class Inventory{
     private int size;
 
     public Inventory(int size){
-        items = new ArrayList<Item>();
+        items = new ArrayList<>();
         this.size = size;
     }
 
@@ -25,8 +25,8 @@ public class Inventory{
         items.remove(item);
     }
 
-    public ArrayList getItemList(){
-        return items;
+    public ArrayList<Item> getItemList(){
+        return this.items;
     }
 
     public int size(){
