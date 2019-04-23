@@ -95,8 +95,8 @@ public abstract class Enemy extends Character{
 //        }
 
         if (this.blownAway) { //Push enemys away at double speed
-            this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 2 : -2);
-            this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 2 : -2);
+            this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 5 : -5);
+            this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 5 : -5);
             super.tick(cameraX, cameraY);
         } else if (!this.frozen && this.proximity(level)) { //Only move if protagonist is close enough
             //Give a 50% chance of changing of getting a path update

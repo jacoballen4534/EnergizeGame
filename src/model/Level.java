@@ -68,19 +68,19 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
-    private final int PICKUP_SPRITE_WIDTH = 32;
-    private final int PICKUP_SPRITE_HEIGHT = 32;
+    public static final int PICKUP_SPRITE_WIDTH = 32;
+    public static final int PICKUP_SPRITE_HEIGHT = 32;
 
-    private final int SCROLL_SPRITE_WIDTH = 32;
-    private final int SCROLL_SPRITE_HEIGHT = 32;
+    public static final int SCROLL_SPRITE_WIDTH = 32;
+    public static final int SCROLL_SPRITE_HEIGHT = 32;
 
     private final int BOSS_SPRITE_WIDTH = 128;
     private final int BOSS_SPRITE_HEIGHT = 128;
     public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determined
 
-    private final String HEALTH_KIT_DESCRIPTION = "Can be used to restore some health";
-    private final String ENERGY_KIT_DESCRIPTION = "Can be used to restore some energy";
-    private final String SCROLL_DESCRIPTION = "Can be used to unleash a devastating magical effect";
+    public static final String HEALTH_KIT_DESCRIPTION = "Can be used to restore some health";
+    public static final String ENERGY_KIT_DESCRIPTION = "Can be used to restore some energy";
+    public static final String SCROLL_DESCRIPTION = "Can be used to unleash a devastating magical effect";
 
     public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();

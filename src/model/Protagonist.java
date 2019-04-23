@@ -247,6 +247,18 @@ public class Protagonist extends Character {
             hud.setEnergy(currEnergy);
             currHealth = maxHealth;
             hud.setHealth(currHealth);
+            for (int i = 0; i < 3; i++) {
+                this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Scroll("Wind Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.windScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Scroll("Ice Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.iceScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Pickup("Health Kit", Level.HEALTH_KIT_DESCRIPTION, 0,0,
+                        PreLoadedImages.healthPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+                this.inventory.addItem(new Pickup("Energy Kit", Level.ENERGY_KIT_DESCRIPTION, 0,0,
+                        PreLoadedImages.healthPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+            }
 
             //TODO: Give the player a bunch of items and spells
             Platform.runLater(() -> { //Teleports the player to the boss room

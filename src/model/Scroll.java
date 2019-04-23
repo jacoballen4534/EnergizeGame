@@ -13,7 +13,7 @@ public class Scroll extends Item{
         super(name, description,xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight);
         this.damage = 50;
         this.freezeDuration = 5000L; //Freeze enemy's for 5 seconds
-        this.windDuration = 6000L; //Blow enemy's away for 6 seconds
+        this.windDuration = 1500L; //Quickly blow enemy's away
     }
 
     @Override
