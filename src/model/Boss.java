@@ -3,6 +3,7 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ public class Boss extends Enemy {
 
     private final int BOSS_BASE_ATTACK_DAMAGE = 10;//Low damage but cant run away from it. Need to use block
     private final int BOSS_SPECIAL_ATTACK_DAMAGE = 60; //High damage but easy to run away from.
-    private final int BOSS_MAXHEALTH = 100; //TODO: Increase
+    private final int BOSS_MAXHEALTH = 300; //TODO: Increase
     private final int BOSS_ATTACK_COOLDOWN = 3000;
     private AnimationsState specialAttackstatePt1;
     private AnimationsState specialAttackstatePt2;
@@ -22,8 +23,8 @@ public class Boss extends Enemy {
     private boolean specialFirstHalf = true; //Indicate which half of the special move to play,
 
 
-    public Boss(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth, boolean enabled) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
+    public Boss(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth);
 
         //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
 //            this.attackState = new AnimationsState(48,40,220,42,7,0,0);

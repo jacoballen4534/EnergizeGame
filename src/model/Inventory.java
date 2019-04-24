@@ -1,23 +1,44 @@
 package model;
 
-import java.util.ArrayList;
+import javafx.beans.InvalidationListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+
+import java.util.*;
 
 public class Inventory{
 
     private ArrayList<Item> items;
     private int size;
+    private Item equippedItem;
 
     public Inventory(int size){
-        items = new ArrayList<Item>();
+        items = new ArrayList<>();
         this.size = size;
     }
 
     public void addItem(Item item){
-        items.add(item);
+        if (this.equippedItem == null) {
+            this.equippedItem = item;
+        } else {
+            items.add(item);
+        }
+    }
+
+    public Item getEquippedItem() {
+        return equippedItem;
+    }
+
+    public void setEquippedItem(Item equippedItem) {
+        this.equippedItem = equippedItem;
     }
 
     public void removeItem(Item item){
-        items.remove(item);
+        this.items.remove(item);
+    }
+
+    public ArrayList<Item> getItemList(){
+        return this.items;
     }
 
     public int size(){
@@ -30,5 +51,9 @@ public class Inventory{
 
     public boolean isFull(){
         return items.size() == size;
+    }
+
+    public boolean containsItem(Item item){
+        return items.contains(item);
     }
 }

@@ -22,26 +22,35 @@
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
+.label#itemEquippedLabel{
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
 .anchorpane#confirmationMenu{
-    -fx-background-color: #aa0000;
-    /*-fx-background-image:url("/bg/confirmationScreenBG.png");*/
+    -fx-background-image:url("/bg/confirmationScreenBG.png");
+}
+.label#confirmationMenuTitle{
+    -fx-text-fill: #ffffff;
+    -fx-font-family: beon;
+    -fx-font-size: 25;
+    -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.5, 0, 0);
 }
 .anchorpane#optionsMenu{
-    -fx-background-color: #00aaff;
-    /*-fx-background-image:url("/bg/optionsScreenBG.png");*/
+    -fx-background-image:url("/bg/optionsScreenBG.png");
 }
 .label#optionsMenuTitle{
-    -fx-text-fill: #ffc700;
+    -fx-text-fill: #ffffff;
     -fx-font-family: beon;
     -fx-font-size: 50;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ffaa00, 10, 0.5, 0, 0);
 }
 .anchorpane#saveMenu{
     -fx-background-image:url("/bg/saveScreenBG.png");
 }
 .label#saveMenuTitle{
-    -fx-text-fill: #ffc700;
+    -fx-text-fill: #ffffff;
     -fx-font-family: beon;
     -fx-font-size: 40;
     -fx-font-weight: bold;
@@ -130,6 +139,9 @@
 }
 .button#saveMenuButton{
     -fx-font-size: 12;
+}
+.button#confirmationMenuButton{
+    -fx-font-size: 15;
 }
 
 /*

@@ -11,12 +11,15 @@ public abstract class Enemy extends Character{
     protected AnimationsState dieState;
     protected int APPLY_DAMAGE_COL;
     protected int EnemyMovementSpeed;
-    private boolean enabled;
+    protected long freezeStartTime, freezeDuration;
+    protected long windSpellStartTime, windSpellDuration;
+    protected boolean priorToFreezeAttackState;
+    protected int priorToFreezeCol;
+    protected long lastDirectionChangeTime = 0;
 
-    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
-                 boolean enabled) {
+
+    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.enabled = enabled;
     }
 
     protected void updateTarget(Protagonist target) {
@@ -29,6 +32,7 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(this.dieState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                this.keepRendering = false;
                 Handler.removeEnemy(this);
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
@@ -52,6 +56,22 @@ public abstract class Enemy extends Character{
         }
     }
 
+
+    public void freeze(long duration) {
+        this.priorToFreezeAttackState = this.playAttackAnimation;
+        this.priorToFreezeCol = this.currentAnimationCol;
+        this.playAttackAnimation = false;
+        this.freezeDuration = duration;
+        this.freezeStartTime = System.currentTimeMillis();
+        this.frozen = true;
+    }
+
+    public void blowAway(long duration) {
+        this.windSpellDuration = duration;
+        this.windSpellStartTime = System.currentTimeMillis();
+        this.blownAway = true;
+    }
+
     protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can overwride
         super.render(graphicsContext, cameraX, cameraY);
     }
@@ -60,52 +80,67 @@ public abstract class Enemy extends Character{
         return false;
     }
 
+    private void updateSpellEffect() {
+        if (this.frozen && System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will ware off even if the player is in the pause menu
+            this.frozen = false; //TODO: Add ice sprite to show frozen (fire for fire scroll also)
+            this.playAttackAnimation = priorToFreezeAttackState;
+            this.currentAnimationCol = this.priorToFreezeCol;
+        }
+        if (this.blownAway && System.currentTimeMillis() - this.windSpellStartTime > this.windSpellDuration) {
+            this.blownAway = false;
+        }
+    }
+
+
     protected void tick(double cameraX, double cameraY, Level level) {
         int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
         int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
-
+        this.updateSpellEffect();
 //        if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
 //            level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
 //        }
 
-        //Only move if protagonist is close enough
-        if (this.proximity(level)) {
-            //Give a 50% chance of changing of getting a path update
-            if (Game.getNextRandomInt() < 50) {
-                int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
-                switch (nextDirection) {
-                    case 1: //up
-                        this.velocityY = -this.EnemyMovementSpeed;
-                        break;
-                    case 2://right
-                        this.velocityX = this.EnemyMovementSpeed;
-                        break;
-                    case 3://down
-                        this.velocityY = this.EnemyMovementSpeed;
-                        break;
-                    case 4://left
-                        this.velocityX = -this.EnemyMovementSpeed;
-                        break;
-                    case 5: //The path has not been found yet, so just move randomly
-                        if (Game.getNextRandomInt() > 89) {
-                            this.velocityX = Game.getNextRandomInt() > 49 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
-                        }
-                        if (Game.getNextRandomInt() > 89) {
-                            this.velocityY = Game.getNextRandomInt() > 49 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
-                        }
-                }
-            } else { //Give a tiny chance of getting a random direction to avoid getting stuck
-                if (Game.getNextRandomInt() > 97) {
-                    this.velocityX = Game.getNextRandomInt() > 49 ? 3 : -3;
-                }
-                if (Game.getNextRandomInt() > 97) {
-                    this.velocityY = Game.getNextRandomInt() > 49 ? 3 : -3;
-                }
-            }
-            super.tick(cameraX, cameraY);
-        } else {
+        if (this.blownAway) { //Push enemys away at double speed
+            this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 5 : -5);
+            this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 5 : -5);
+        } else if (this.frozen) {
             this.velocityX = 0;
             this.velocityY = 0;
+        } else if (this.proximity(level)) { //Only move if protagonist is close enough
+            int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
+            if (nextDirection < 5 && Game.getNextRandomInt() > 5) { //If the shortest path has been calculated, updated based on that. With a small chance of random movement to avoid getting stuck
+                switch (nextDirection) {
+                case 1: //up
+                    this.velocityY = -this.EnemyMovementSpeed;
+                    break;
+                case 2://right
+                    this.velocityX = this.EnemyMovementSpeed;
+                    break;
+                case 3://down
+                    this.velocityY = this.EnemyMovementSpeed;
+                    break;
+                case 4://left
+                    this.velocityX = -this.EnemyMovementSpeed;
+                    break;
+                }
+            } else { //The shortest path has not been calculated yet, so move randomly
+                this.randomMovement();
+            }
+        } else {
+            this.randomMovement();
+        }
+        super.tick(cameraX, cameraY);
+    }
+
+    private void randomMovement() {
+        if (System.currentTimeMillis() - lastDirectionChangeTime > (Game.getNextRandomInt() * 5 + 500)) { //Change direction every 0.5 - 1 second
+            this.velocityX = Game.getNextRandomInt() < 50 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
+            this.velocityY = Game.getNextRandomInt() < 50 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
+            if (Game.getNextRandomInt() < 20) { //20% chance of stopping;
+                this.velocityX = 0;
+                this.velocityY = 0;
+            }
+            lastDirectionChangeTime = System.currentTimeMillis();
         }
     }
 

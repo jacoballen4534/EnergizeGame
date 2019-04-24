@@ -2,15 +2,12 @@ package model;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.TreeMap;
-import java.util.spi.CalendarDataProvider;
 
 public class Protagonist extends Character {
     private static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -27,7 +24,6 @@ public class Protagonist extends Character {
 
     private final int PROTAGONIST_MAXHEALTH = 100;
     private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_START_LIVES = 3;
     private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
     private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
     private final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
@@ -37,7 +33,6 @@ public class Protagonist extends Character {
     private int maxEnergy;
     private HUD hud;
 
-    private Item equippedItem;
     private Inventory inventory;
     private Image shield;
 
@@ -63,14 +58,13 @@ public class Protagonist extends Character {
         this.currEnergy = 0; //Start with 0 energy and build it up
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
-        this.lives = PROTAGONIST_START_LIVES;
         this.hud = new HUD(this.id, this.maxHealth,this.maxEnergy,300,100,50,50);
         hud.setHealth(this.currHealth);
         hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
         this.inventory = new Inventory(3);
-        equippedItem = null;
+        this.inventory.setEquippedItem(null);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -80,35 +74,23 @@ public class Protagonist extends Character {
     @Override
     protected void attack() {
         if(super.canAttack()) {
-            if (Handler.attack(this)){
-                SoundController.PlayAudio("hitAttack");
-                System.out.println("Hit enemy!");
-            }
-            else{
-                SoundController.PlayAudio("missAttack");
-                System.out.println("Missed enemy!");
-            }
+            Handler.attack(this);
         }
     }
 
     @Override
     boolean pickup(Item pickup) {
-        if (!inventory.isFull()){
-            inventory.addItem(pickup);
-            SoundController.PlayAudio("itemPickup");
+        if (!this.inventory.isFull()){
+            if (this.inventory.getEquippedItem() == null){
+                this.inventory.setEquippedItem(pickup);
+            } else {
+                this.inventory.addItem(pickup);
+                System.out.println("Picked up item");
+            }
             return true;
         }
         return false;
     }
-
-    /*
-    void pickup(Pickup pickup){
-        //Use pickup immediately
-    }
-
-    void pickup(Scroll scroll){
-        //Add scroll to inventory
-    }*/
 
     private void block() {
         this.blockTimer += System.currentTimeMillis() - this.lastBlockTimer;
@@ -141,8 +123,8 @@ public class Protagonist extends Character {
             this.hud.setHealth(this.currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
+                this.playAttackAnimation = false;
                 this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
-                SoundController.PlayAudio("gameLose");
             }
         }
     }
@@ -174,6 +156,7 @@ public class Protagonist extends Character {
         } else if (this.playDieAnimation) {
 //            this.animationsState.copy(this.dieAnimation);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
+                this.keepRendering = false;
                 Handler.removePlayer(this);
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
@@ -181,6 +164,23 @@ public class Protagonist extends Character {
         } else { //Running (As this is the only other option)
             this.animationsState.copy(runningState);
         }
+    }
+
+
+    public void increaseHealth(int amount) {
+        this.currHealth += amount;
+        if (this.currHealth > this.maxHealth) {
+            this.currHealth = this.maxHealth;
+        }
+        this.hud.setHealth(this.currHealth);
+    }
+
+    public void increaseEnergy(int amount) {
+        this.currEnergy += amount;
+        if (this.currEnergy > this.maxEnergy) {
+            this.currEnergy = this.maxEnergy;
+        }
+        this.hud.setEnergy(this.currEnergy);
     }
 
 
@@ -237,9 +237,7 @@ public class Protagonist extends Character {
         if (keyInput.getKeyPressDebounced("useSpecial")){
             if (useSpecial()) {
                 System.out.println("Azarath, metrion, zinthos!");//Outdated reference
-                SoundController.PlayAudio("magicAbility");
-            }
-            else System.out.println("Insufficient energy");
+            }  else System.out.println("Insufficient energy");
         }
 
         if (keyInput.getKeyPressDebounced("cheatKey")){
@@ -248,6 +246,18 @@ public class Protagonist extends Character {
             hud.setEnergy(currEnergy);
             currHealth = maxHealth;
             hud.setHealth(currHealth);
+            for (int i = 0; i < 2; i++) {
+                this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Scroll("Wind Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.windScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Scroll("Ice Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                        PreLoadedImages.iceScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+                this.inventory.addItem(new Pickup("Health Kit", Level.HEALTH_KIT_DESCRIPTION, 0,0,
+                        PreLoadedImages.healthPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+                this.inventory.addItem(new Pickup("Energy Kit", Level.ENERGY_KIT_DESCRIPTION, 0,0,
+                        PreLoadedImages.energyPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+            }
 
             //TODO: Give the player a bunch of items and spells
             Platform.runLater(() -> { //Teleports the player to the boss room
@@ -302,27 +312,22 @@ public class Protagonist extends Character {
         return hud;
     }
 
-    public boolean pickUpItem(Item item){
-        if (!this.inventory.isFull()){
-            this.inventory.addItem(item);
-            System.out.println("Picked up item");
-            return true;
-        }
-        return false;
-    }
-
     public void useItem(){
-        if (equippedItem != null) {
-            System.out.println("Using an item");
-            equippedItem.useItem();
+        if (this.inventory.getEquippedItem() != null) {
+            this.inventory.getEquippedItem().useItem(this);
+            if (inventory.getItemCount() > 0) {
+                this.inventory.setEquippedItem(this.inventory.getItemList().get(0));
+                this.inventory.removeItem(this.inventory.getEquippedItem());
+
+            } else {
+                this.inventory.setEquippedItem(null);
+            }
+            //Update inv
         } else {
-            System.out.println("You dont have an item to use");
+            System.out.println("You don't have an item to use");
         }
     }
 
-    public void setEquippedItem(Item item){
-        equippedItem = item;
-    }
 
     public void addEnergy(int amount) {
         this.currEnergy += amount;
@@ -345,5 +350,6 @@ public class Protagonist extends Character {
     public Inventory getInventory() {
         return inventory;
     }
+
 }
 

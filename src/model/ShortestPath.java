@@ -253,7 +253,7 @@ public class ShortestPath {
         Node startingNode = getNodeFromId(startingId);
         Node destinationNode = getNodeFromId(destinationId);
         int length = 0;
-        if (next[startingId][destinationId] == null) {
+        if (next[startingId][destinationId] == null || startingNode == null || destinationNode == null) {
             return -1;//No path yet
         }
         while (!startingNode.equals(destinationNode)) {

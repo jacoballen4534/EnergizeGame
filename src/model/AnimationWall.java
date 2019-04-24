@@ -11,7 +11,7 @@ public class AnimationWall extends Wall {
     }
 
 
-    protected void updateSprite() { //TODO:Look at moving this to super
+    protected void updateSprite() {
         this.currentAnimationCol = this.animationsState.updateAnimationSprite(this.currentAnimationCol);
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(this.currentAnimationCol,this.animationsState.getAnimationRow()), null);
     }
