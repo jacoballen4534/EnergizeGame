@@ -15,6 +15,7 @@ public abstract class Enemy extends Character{
     protected long windSpellStartTime, windSpellDuration;
     protected boolean priorToFreezeAttackState;
     protected int priorToFreezeCol;
+    protected long lastDirectionChangeTime = 0;
 
 
     public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
@@ -102,44 +103,44 @@ public abstract class Enemy extends Character{
         if (this.blownAway) { //Push enemys away at double speed
             this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 5 : -5);
             this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 5 : -5);
-            super.tick(cameraX, cameraY);
-        } else if (!this.frozen && this.proximity(level)) { //Only move if protagonist is close enough
-            //Give a 50% chance of changing of getting a path update
-            if (Game.getNextRandomInt() < 50) {
-                int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
-                switch (nextDirection) {
-                    case 1: //up
-                        this.velocityY = -this.EnemyMovementSpeed;
-                        break;
-                    case 2://right
-                        this.velocityX = this.EnemyMovementSpeed;
-                        break;
-                    case 3://down
-                        this.velocityY = this.EnemyMovementSpeed;
-                        break;
-                    case 4://left
-                        this.velocityX = -this.EnemyMovementSpeed;
-                        break;
-                    case 5: //The path has not been found yet, so just move randomly
-                        if (Game.getNextRandomInt() > 89) {
-                            this.velocityX = Game.getNextRandomInt() > 49 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
-                        }
-                        if (Game.getNextRandomInt() > 89) {
-                            this.velocityY = Game.getNextRandomInt() > 49 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
-                        }
-                }
-            } else { //Give a tiny chance of getting a random direction to avoid getting stuck
-                if (Game.getNextRandomInt() > 97) {
-                    this.velocityX = Game.getNextRandomInt() > 49 ? 3 : -3;
-                }
-                if (Game.getNextRandomInt() > 97) {
-                    this.velocityY = Game.getNextRandomInt() > 49 ? 3 : -3;
-                }
-            }
-            super.tick(cameraX, cameraY);
-        } else {
+        } else if (this.frozen) {
             this.velocityX = 0;
             this.velocityY = 0;
+        } else if (this.proximity(level)) { //Only move if protagonist is close enough
+            int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left
+            if (nextDirection < 5 && Game.getNextRandomInt() > 5) { //If the shortest path has been calculated, updated based on that. With a small chance of random movement to avoid getting stuck
+                switch (nextDirection) {
+                case 1: //up
+                    this.velocityY = -this.EnemyMovementSpeed;
+                    break;
+                case 2://right
+                    this.velocityX = this.EnemyMovementSpeed;
+                    break;
+                case 3://down
+                    this.velocityY = this.EnemyMovementSpeed;
+                    break;
+                case 4://left
+                    this.velocityX = -this.EnemyMovementSpeed;
+                    break;
+                }
+            } else { //The shortest path has not been calculated yet, so move randomly
+                this.randomMovement();
+            }
+        } else {
+            this.randomMovement();
+        }
+        super.tick(cameraX, cameraY);
+    }
+
+    private void randomMovement() {
+        if (System.currentTimeMillis() - lastDirectionChangeTime > (Game.getNextRandomInt() * 5 + 500)) { //Change direction every 0.5 - 1 second
+            this.velocityX = Game.getNextRandomInt() < 50 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
+            this.velocityY = Game.getNextRandomInt() < 50 ? this.EnemyMovementSpeed : -this.EnemyMovementSpeed;
+            if (Game.getNextRandomInt() < 20) { //20% chance of stopping;
+                this.velocityX = 0;
+                this.velocityY = 0;
+            }
+            lastDirectionChangeTime = System.currentTimeMillis();
         }
     }
 
