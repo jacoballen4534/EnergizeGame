@@ -76,7 +76,7 @@ public class MainMenuController implements Initializable {
 
 
     private EventHandler JoinGameClicked = event -> {
-        Client client = new Client("localhost", 8192);
+        Client client = new Client("192.168.1.10", 8192);
         client.connect();
 
         System.out.println("Join multiPlayer game");

@@ -5,10 +5,16 @@ import java.net.*;
 
 public class Client {
 
+    //Packet constants
+    private final static byte[] PACKET_HEADER = new byte[] {0x40, 0x20}; //TODO: Make a list of different headers. This can be any identifier.
+    private final static byte PACKET_TYPE_CONNECT = 0x01;
+
+
     private int port;
     private InetAddress serverAddress;
     private String ipAddress;
     private DatagramSocket socket;
+
 
 
     //This is the host and port of the server the client is connecting to.
@@ -36,7 +42,7 @@ public class Client {
 
     public boolean connect() {
         try {
-            serverAddress = InetAddress.getByName(ipAddress);
+            this.serverAddress = InetAddress.getByName(ipAddress);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             return false;
@@ -55,8 +61,10 @@ public class Client {
 
 
     private void sendConnectionPacket() {
-        byte[] data = "ConnectionPacket".getBytes();
-        send(data);
+        BinaryWriter writer = new BinaryWriter();
+        writer.write(PACKET_HEADER);
+        writer.write(PACKET_TYPE_CONNECT);
+        send(writer.getBuffer());
     }
 
     public void send(byte[] data) {
