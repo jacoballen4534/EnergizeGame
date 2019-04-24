@@ -23,7 +23,7 @@ public class ShortestPath {
             setupNodes(tiles);
             calculateFloydWarshall();
 //            System.out.println("All paths found");
-        }).start();
+        }, "Path Finding Background Thread").start();
     }
 
 

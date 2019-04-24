@@ -1,5 +1,7 @@
 package FXMLControllers;
 
+import Multiplayer.Client;
+import Multiplayer.Server;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +16,9 @@ import javafx.util.Pair;
 import sample.Game;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import static model.Utilities.readFile;
@@ -51,7 +55,34 @@ public class MainMenuController implements Initializable {
         game = new Game(this, System.currentTimeMillis());
         game.start();
     };
-    private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
+
+    /////////////// MultiPlayer buttons ////////////////////////////////
+    private EventHandler HostGameClicked = event -> {
+        //Setup server
+        Server server = new Server(8192); //This can be any address
+        server.start();
+
+        InetAddress address = null;
+        try {
+            address = InetAddress.getByName("192.168.1.10");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        int port = 8192;
+        server.send(new byte[] {0,1,2}, address, port);
+        System.out.println("Host multiPlayer game");
+        System.out.println("Created new server");
+    };
+
+
+    private EventHandler JoinGameClicked = event -> {
+        Client client = new Client("localhost", 8192);
+        client.connect();
+
+        System.out.println("Join multiPlayer game");
+        System.out.println("Created client and trying to connect to the server");
+    };
+    ///////////////////////////////////////////////////////////////////
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -164,7 +195,8 @@ public class MainMenuController implements Initializable {
         VBox subMenu = CreateSubMenu();
         //Create labels
         CreateMenuLabel(subMenu,"Quick Play","submenu-label",labelPos++, QuickPlayClicked);
-        CreateMenuLabel(subMenu,"Custom Play","submenu-label",labelPos++,CustomPlayClicked);
+        CreateMenuLabel(subMenu,"Host Game","submenu-label",labelPos++,HostGameClicked);
+        CreateMenuLabel(subMenu,"Join Game","submenu-label",labelPos++,JoinGameClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(newGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
