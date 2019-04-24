@@ -24,19 +24,10 @@ public class Game extends Canvas {
     private long previousTime = System.nanoTime();
     private double delta = 0;
     private final double NS = 1000000000 / 60.0;
-    private boolean isPaused = false;
-    private boolean pauseButtonDown = false;
 
     //For handling UI
     private Group root;
     private InGameMenuController inGameMenuController;
-    private PauseMenu pauseMenu;
-    //private InventoryMenu inventoryMenu;
-    //private OptionsMenu optionsMenu;
-    private ConfirmationMenu confirmationMenu;
-
-    //Constants for UI
-
 
     private Scene gameScene;
     private Camera camera;
@@ -67,22 +58,21 @@ public class Game extends Canvas {
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
 
-        /*===========================================\
-        * pause Menu
-        */
-        inGameMenuController = new InGameMenuController(()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
-        inGameMenuController.AddMenusToRoot(root);
-
         stage.setScene(this.gameScene);
 
         stage.show();
         this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
         randomMovement = new Random(randomSeed);
-        //////////////////// Make the map /////////////////////////////////////
 
+        //////////////////// Make the map /////////////////////////////////////
         this.map = new Map(this, randomSeed);
         this.map.loadLevel();
+
+        //////////////////Load Menu//////////////////////
+        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController.AddMenusToRoot(root);
+
         init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
@@ -98,7 +88,6 @@ public class Game extends Canvas {
     public static int getNextRandomInt() {
         return randomMovement.nextInt(100);
     }
-
 
     public void start(){
         this.animationTimer.start();

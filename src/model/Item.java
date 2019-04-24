@@ -1,65 +1,59 @@
 package model;
 
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.awt.image.BufferedImage;
 
 public abstract class Item extends GameObject{
 
     //Adding properties for compliance with InventoryMenu table
-    private SimpleStringProperty name = new SimpleStringProperty();
-    private SimpleStringProperty description = new SimpleStringProperty();
-    private SimpleObjectProperty<Image> icon;
+    protected String name;
+    protected String description;
+    protected ImageView icon;
 
-    public Item(int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
+    public Item(String name, String description, int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
         super(xLocation, yLocation, sprite, spriteWidth, spriteHeight, spriteWidth, spriteHeight);
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0),null);
-        icon = new SimpleObjectProperty<Image>(this.jfxImage);
+        icon = new ImageView();
+        icon.setFitHeight(50);
+        icon.setFitWidth(50);
+        icon.setImage(this.jfxImage);
+
+        setName(name);
+        setDescription(description);
         this.isSolid = false;
     }
 
-    public abstract void useItem();
+    public abstract void useItem(Protagonist user);
 
-    public Image getImage(){
-        return this.jfxImage;
+    public ImageView getIcon(){
+        return this.icon;
     }
 
     public String getName() {
-        return name.get();
+        return this.name;
     }
 
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
 
     public void setName(String name) {
-        this.name.set(name);
+        this.name= name;
     }
 
     public String getDescription() {
-        return description.get();
-    }
-
-    public SimpleStringProperty descriptionProperty() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
-        this.description.set(description);
+        this.description = description;
     }
 
-    public Image getIcon() {
-        return icon.get();
+    public void setIcon(ImageView icon) {
+        this.icon = icon;
     }
 
-    public SimpleObjectProperty<Image> iconProperty() {
-        return icon;
-    }
-
-    public void setIcon(Image icon) {
-        this.icon.set(icon);
+    public Image getJFXImage() {
+        return this.jfxImage;
     }
 }

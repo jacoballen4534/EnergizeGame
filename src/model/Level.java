@@ -1,6 +1,7 @@
 package model;
 
 import javafx.geometry.Point2D;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.image.BufferedImage;
@@ -22,7 +23,9 @@ enum TileType {
     NULLTILE,
     HEALTH_PICKUP,
     ENERGY_PICKUP,
-    SCROLL,
+    FIRE_SCROLL,
+    ICE_SCROLL,
+    WIND_SCROLL,
     GRUNT,
     BOMBER,
     ARCHER,
@@ -66,14 +69,19 @@ public class Level {
     private final int GRUNT_SPRITE_WIDTH = 129;
     private final int GRUNT_SPRITE_HEIGHT = 111;
 
-    private final int PICKUP_SPRITE_WIDTH = 32;
-    private final int PICKUP_SPRITE_HEIGHT = 32;
+    public static final int PICKUP_SPRITE_WIDTH = 32;
+    public static final int PICKUP_SPRITE_HEIGHT = 32;
+
+    public static final int SCROLL_SPRITE_WIDTH = 32;
+    public static final int SCROLL_SPRITE_HEIGHT = 32;
+
     private final int BOSS_SPRITE_WIDTH = 128;
     private final int BOSS_SPRITE_HEIGHT = 128;
-    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determoned
+    public final static int BOSS_SCALE = 2;//public to update bounding box creation. Can be removed once size has been determined
 
-    private final int SCROLL_SPRITE_WIDTH = 32;
-    private final int SCROLL_SPRITE_HEIGHT = 32;
+    public static final String HEALTH_KIT_DESCRIPTION = "Can be used to restore some health";
+    public static final String ENERGY_KIT_DESCRIPTION = "Can be used to restore some energy";
+    public static final String SCROLL_DESCRIPTION = "Can be used to unleash a devastating magical effect";
 
     public Level(BufferedImage image, int levelNumber, int mapWidth, boolean bossLevel) { //Makes a level from an image
         this.levelWidth = image.getWidth();
@@ -198,13 +206,17 @@ public class Level {
             int row = randomGenerator.nextInt(this.levelHeight - 2) + 1;
             int col = randomGenerator.nextInt(this.levelWidth - 2) + 1;
             if (this.tiles.get(row).get(col) == TileType.FLOOR) { //A valid location
-                int type = randomGenerator.nextInt(6);
-                if (type < 1) { // 1/6 chance to get scroll
-                    this.tiles.get(row).set(col, TileType.SCROLL);
-                } else if (type < 3) { // 2/6 chance to get health
-                    this.tiles.get(row).set(col, TileType.HEALTH_PICKUP);
-                } else { // 3/6 chance to get energy
+                int type = randomGenerator.nextInt(100);
+                if (type < 30) { // 30% chance to get energy
                     this.tiles.get(row).set(col, TileType.ENERGY_PICKUP);
+                } else if (type < 55) { // 25% chance to get health
+                    this.tiles.get(row).set(col, TileType.HEALTH_PICKUP);
+                } else if (type < 72) { // 17% chance to get wind scroll
+                    this.tiles.get(row).set(col, TileType.WIND_SCROLL);
+                } else if (type < 87) { // 15% chance to get ice scroll
+                    this.tiles.get(row).set(col, TileType.ICE_SCROLL);
+                } else if (type < 100) { // 13% chance to get fire scroll
+                    this.tiles.get(row).set(col, TileType.FIRE_SCROLL);
                 }
                 numberOfItems--;
             } else {
@@ -349,6 +361,11 @@ public class Level {
         }
     }
 
+    public void removeObject(GameObject toRemove) {
+        int col = toRemove.getSpawnID().getValue() % this.levelWidth;
+        int row = toRemove.getSpawnID().getValue() / this.levelWidth;
+        this.tiles.get(row).set(col, TileType.FLOOR);
+    }
 
     public void setBossEntrance() {
         this.bossEntrance = true;
@@ -400,8 +417,12 @@ public class Level {
                     column.add(TileType.HEALTH_PICKUP);
                 } else if (red == 192 && green == 0 && blue == 192) { //Lighter Purple = Energy pickup
                     column.add(TileType.ENERGY_PICKUP);
-                } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple = Scroll (Fire)
-                    column.add(TileType.SCROLL);
+                } else if (red == 64 && green == 0 && blue == 64){ //Darker Purple (Green = 0) = Scroll (Fire)
+                    column.add(TileType.FIRE_SCROLL);
+                } else if (red == 64 && green == 1 && blue == 64){ //Darker Purple (Green = 1) = Scroll (Ice)
+                    column.add(TileType.ICE_SCROLL);
+                } else if (red == 64 && green == 2 && blue == 64){ //Darker Purple (Green = 2) = Scroll (Wind)
+                    column.add(TileType.WIND_SCROLL);
                 } else if (red == 255 && green == 0 && blue == 1) { // Red = Enemy, (Blue = 1) = Grunt
                     column.add(TileType.GRUNT);
                 } else if (red == 255 && green == 0 && blue == 2) { // Red = Enemy, (Blue = 2) = Bomber
@@ -425,6 +446,7 @@ public class Level {
         for (int row = 0; row < this.levelHeight; row++) {
             for (int col = 0; col < this.levelWidth; col++) {
                 TileType tile = this.tiles.get(row).get(col);
+                Pair<Integer, Integer> spawnID = new Pair<>(this.levelNumber, col + row * this.levelWidth);
                 //May be able to move sprite width into respective class's later. Keep here for testing
                 switch (tile) {
                     case CAMP_FIRE:
@@ -488,24 +510,37 @@ public class Level {
                         break;
 
                     case HEALTH_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup("Health Kit", HEALTH_KIT_DESCRIPTION, col,row,
+                                PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case ENERGY_PICKUP:
-                        Handler.addPickup(new Pickup(col,row,PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                        Handler.addPickup(new Pickup("Energy Kit", ENERGY_KIT_DESCRIPTION, col,row,
+                                PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT), spawnID);
                         break;
 
-                    case SCROLL:
-                        Handler.addPickup(new Scroll(col,row,PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                    case FIRE_SCROLL:
+                        Handler.addPickup(new Scroll("Fire Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
+                        break;
+
+                    case ICE_SCROLL:
+                        Handler.addPickup(new Scroll("Ice Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.iceScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
+                        break;
+
+                    case WIND_SCROLL:
+                        Handler.addPickup(new Scroll("Wind Scroll",SCROLL_DESCRIPTION, col,row,
+                                PreLoadedImages.windScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case GRUNT:
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth), spawnID);
                         break;
                     case BOSS:
                         Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
-                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
+                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth), spawnID);
                         break;
                     default:
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));
