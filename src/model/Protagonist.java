@@ -2,15 +2,12 @@ package model;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.TreeMap;
-import java.util.spi.CalendarDataProvider;
 
 public class Protagonist extends Character {
     private static int nextID = 0; //Unique id for all characters, this will be used for multilayer

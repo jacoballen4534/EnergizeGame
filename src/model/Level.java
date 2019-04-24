@@ -1,6 +1,7 @@
 package model;
 
 import javafx.geometry.Point2D;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.image.BufferedImage;
@@ -305,6 +306,11 @@ public class Level {
         }
     }
 
+    public void removeObject(GameObject toRemove) {
+        int col = toRemove.getSpawnID().getValue() % this.levelWidth;
+        int row = toRemove.getSpawnID().getValue() / this.levelWidth;
+        this.tiles.get(row).set(col, TileType.FLOOR);
+    }
 
     public void setBossEntrance() {
         this.bossEntrance = true;
@@ -385,6 +391,7 @@ public class Level {
         for (int row = 0; row < this.levelHeight; row++) {
             for (int col = 0; col < this.levelWidth; col++) {
                 TileType tile = this.tiles.get(row).get(col);
+                Pair<Integer, Integer> spawnID = new Pair<>(this.levelNumber, col + row * this.levelWidth);
                 //May be able to move sprite width into respective class's later. Keep here for testing
                 switch (tile) {
                     case CAMP_FIRE:
@@ -449,36 +456,36 @@ public class Level {
 
                     case HEALTH_PICKUP:
                         Handler.addPickup(new Pickup("Health Kit", HEALTH_KIT_DESCRIPTION, col,row,
-                                PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                                PreLoadedImages.healthPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case ENERGY_PICKUP:
                         Handler.addPickup(new Pickup("Energy Kit", ENERGY_KIT_DESCRIPTION, col,row,
-                                PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT));
+                                PreLoadedImages.energyPickupSprite,PICKUP_SPRITE_WIDTH,PICKUP_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case FIRE_SCROLL:
                         Handler.addPickup(new Scroll("Fire Scroll",SCROLL_DESCRIPTION, col,row,
-                                PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                                PreLoadedImages.fireScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case ICE_SCROLL:
                         Handler.addPickup(new Scroll("Ice Scroll",SCROLL_DESCRIPTION, col,row,
-                                PreLoadedImages.iceScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                                PreLoadedImages.iceScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case WIND_SCROLL:
                         Handler.addPickup(new Scroll("Wind Scroll",SCROLL_DESCRIPTION, col,row,
-                                PreLoadedImages.windScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT));
+                                PreLoadedImages.windScrollSprite,SCROLL_SPRITE_WIDTH,SCROLL_SPRITE_HEIGHT), spawnID);
                         break;
 
                     case GRUNT:
                         Handler.addEnemy(new Grunt(col,row,PreLoadedImages.gruntSpriteSheet, GRUNT_SPRITE_WIDTH, GRUNT_SPRITE_HEIGHT, GRUNT_SPRITE_WIDTH * Game.SCALE,
-                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth, true));
+                                GRUNT_SPRITE_HEIGHT * Game.SCALE, this.levelWidth), spawnID);
                         break;
                     case BOSS:
                         Handler.addEnemy(new Boss(col,row,PreLoadedImages.bossSpriteSheet, BOSS_SPRITE_WIDTH * 3, BOSS_SPRITE_HEIGHT * 3,
-                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth, true));
+                                BOSS_SPRITE_WIDTH * Game.SCALE * BOSS_SCALE, BOSS_SPRITE_HEIGHT * Game.SCALE * BOSS_SCALE, this.levelWidth), spawnID);
                         break;
                     default:
                         Handler.addWall(col + row * this.levelWidth, new NullTile(col, row, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, CAMP_FIRE_SPRITE_WIDTH * Game.SCALE, true));

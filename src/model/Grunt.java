@@ -1,6 +1,7 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.*;
@@ -12,8 +13,8 @@ public class Grunt extends Enemy {
     private final int GRUNT_MAXHEALTH = 100;
     private final int GRUNT_ATTACK_COOLDOWN = 2000;
 
-    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth, boolean enabled) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
+    public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth);
         //TODO: Add borders and additional sprite sheets
         //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
 //        this.attackState = new AnimationsState(9,63,15,0,17, 0,0);

@@ -3,6 +3,7 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

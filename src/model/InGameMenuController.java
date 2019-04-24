@@ -59,6 +59,7 @@ public class InGameMenuController {
     //==Event macros==//
     //--Pause Menu--
     private EventHandler resumeEvent;
+    private Runnable unpause;
     private EventHandler inventoryMenuEvent = mouseEvent ->{
         this.pauseMenu.hide();
         this.inventoryMenu.show();
@@ -74,12 +75,21 @@ public class InGameMenuController {
         this.pauseMenu.hide();
         this.optionsMenu.show();
     };
-    private EventHandler quitToTitleEvent = mouseEvent->this.exitToTitleConfirmation.show();
-    private EventHandler quitToDesktopEvent = mouseEvent->this.exitToDesktopConfirmation.show();
+    private EventHandler quitToTitleEvent = mouseEvent-> {
+        this.pauseMenu.hide();
+        this.exitToTitleConfirmation.show();
+    };
+
+    private EventHandler quitToDesktopEvent = mouseEvent-> {
+        this.pauseMenu.hide();
+        this.exitToDesktopConfirmation.show();
+    };
     //--Inventory Menu--//
     private EventHandler closeInventoryMenuEvent = mouseEvent->{
         this.inventoryMenu.hide();
-        this.pauseMenu.show();
+//        this.pauseMenu.show(); //Goes back to pause menu. Instead go back to game
+        this.unpause.run();
+
     };
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
@@ -122,6 +132,7 @@ public class InGameMenuController {
     public InGameMenuController(Inventory inventory, Runnable unpauseGame, EventHandler returnToTitleScreen) {
 
         this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
+        this.unpause = unpauseGame;
         this.returnToTitleEvent = returnToTitleScreen;
 
         //Generate menu layouts
@@ -211,7 +222,10 @@ public class InGameMenuController {
         Button confirm = CreateButton("Quit","confirmationMenuButton",
                 CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,confirmationAction);
         Button cancel = CreateButton("Cancel","confirmationMenuButton",
-                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> confirmationMenu.hide());
+                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> {
+                    confirmationMenu.hide();
+                    pauseMenu.show();
+                });
 
         HBox hbox = confirmationMenu.getHbox();
 

@@ -3,6 +3,7 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.*;
@@ -22,8 +23,8 @@ public class Boss extends Enemy {
     private boolean specialFirstHalf = true; //Indicate which half of the special move to play,
 
 
-    public Boss(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth, boolean enabled) {
-        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth,enabled);
+    public Boss(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
+        super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight,levelWidth);
 
         //////////////////////////// SET UP ANIMATION STATES ////////////////////////////////
 //            this.attackState = new AnimationsState(48,40,220,42,7,0,0);
