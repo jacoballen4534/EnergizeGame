@@ -206,13 +206,17 @@ public class Level {
             int row = randomGenerator.nextInt(this.levelHeight - 2) + 1;
             int col = randomGenerator.nextInt(this.levelWidth - 2) + 1;
             if (this.tiles.get(row).get(col) == TileType.FLOOR) { //A valid location
-                int type = randomGenerator.nextInt(6);
-                if (type < 1) { // 1/6 chance to get scroll
-                    this.tiles.get(row).set(col, TileType.SCROLL);
-                } else if (type < 3) { // 2/6 chance to get health
-                    this.tiles.get(row).set(col, TileType.HEALTH_PICKUP);
-                } else { // 3/6 chance to get energy
+                int type = randomGenerator.nextInt(100);
+                if (type < 30) { // 30% chance to get energy
                     this.tiles.get(row).set(col, TileType.ENERGY_PICKUP);
+                } else if (type < 55) { // 25% chance to get health
+                    this.tiles.get(row).set(col, TileType.HEALTH_PICKUP);
+                } else if (type < 72) { // 17% chance to get wind scroll
+                    this.tiles.get(row).set(col, TileType.WIND_SCROLL);
+                } else if (type < 87) { // 15% chance to get ice scroll
+                    this.tiles.get(row).set(col, TileType.ICE_SCROLL);
+                } else if (type < 100) { // 13% chance to get fire scroll
+                    this.tiles.get(row).set(col, TileType.FIRE_SCROLL);
                 }
                 numberOfItems--;
             } else {
