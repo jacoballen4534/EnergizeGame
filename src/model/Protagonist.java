@@ -63,7 +63,7 @@ public class Protagonist extends Character {
         hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
-        this.inventory = new Inventory(3);
+        this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
@@ -79,17 +79,13 @@ public class Protagonist extends Character {
     }
 
     @Override
-    boolean pickup(Item pickup) {
-        if (!this.inventory.isFull()){
-            if (this.inventory.getEquippedItem() == null){
-                this.inventory.setEquippedItem(pickup);
-            } else {
-                this.inventory.addItem(pickup);
-                System.out.println("Picked up item");
-            }
-            return true;
+    void pickup(Item pickup) {
+        if (this.inventory.getEquippedItem() == null){
+            this.inventory.setEquippedItem(pickup);
+        } else {
+            this.inventory.addItem(pickup);
+            System.out.println("Picked up item");
         }
-        return false;
     }
 
     private void block() {

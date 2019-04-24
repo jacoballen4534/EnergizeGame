@@ -9,19 +9,16 @@ import java.util.*;
 public class Inventory{
 
     private ArrayList<Item> items;
-    private int size;
     private Item equippedItem;
 
-    public Inventory(int size){
+    public Inventory(){
         items = new ArrayList<>();
-        this.size = size;
     }
 
     public void addItem(Item item){
         if (this.equippedItem == null) {
             this.equippedItem = item;
         } else {
-            //items.add(item);
             Item getItem = hasItem(item);
             if (getItem == null) {
                 item.increaseQuantity();
@@ -47,16 +44,8 @@ public class Inventory{
         return this.items;
     }
 
-    public int size(){
-        return size;
-    }
-
     public int getItemCount(){
         return items.size();
-    }
-
-    public boolean isFull(){
-        return items.size() == size;
     }
 
     /*public boolean containsItem(Item item){

@@ -1,10 +1,8 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.util.Pair;
 import sample.Game;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
@@ -67,10 +65,7 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    boolean pickup(Item pickup) {
-        //Intentionally left blank
-        return false;
-    }
+    void pickup(Item pickup) {}
 
     @Override
     protected void attack() {

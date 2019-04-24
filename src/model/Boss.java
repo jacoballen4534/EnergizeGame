@@ -3,7 +3,6 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.*;
@@ -85,9 +84,7 @@ public class Boss extends Enemy {
     }
 
     @Override
-    boolean pickup(Item pickup) {
-        return false;
-    }
+    void pickup(Item pickup) {}
 
     protected int getAttackDamage() { //To vary the amount of damage dealt with better weapons
         if (this.playSpecialAttackAnimation) {
