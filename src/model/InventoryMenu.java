@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class InventoryMenu extends PauseMenu {
 
+    //Macros
+    private final int INVENTORY_TABLE_WIDTH = 300;
+
     //For showing the inventory itself
     private TableView inventoryView;
 
@@ -53,49 +56,23 @@ public class InventoryMenu extends PauseMenu {
         inventoryView = new TableView();
         inventoryView.setEditable(false);
         inventoryView.setId("inventory");
-        inventoryView.setPrefWidth(250);
+        inventoryView.setPrefWidth(INVENTORY_TABLE_WIDTH);
 
         //Create table column
         TableColumn iconColumn = new TableColumn("Icon");
         iconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
-        iconColumn.setPrefWidth(inventoryView.getPrefWidth()/2);
+        iconColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
 
         TableColumn nameColumn = new TableColumn("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/2);
+        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
 
-//        itemList.setCellFactory(itemImageTableColumn -> {
-//            TableCell<Item,Image> cell = new TableCell<Item,Image>(){
-//                @Override
-//                public void updateItem(Image icon, boolean empty){
-//                    if (icon!=null){
-//                        ImageView imageView = new ImageView();
-//                        imageView.setFitHeight(50);
-//                        imageView.setFitWidth(50);
-//                        imageView.setImage(icon);
-//
-//                        setGraphic(imageView);
-//                    }
-//                }
-//            };
-//        System.out.println("=========================");
-//        System.out.println(cell.getIndex());
-//        System.out.println("=========================");
-//        return cell;
-//        });
+        TableColumn quantityColumn = new TableColumn("Quantity");
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
 
         //Add columns to table view
-        inventoryView.getColumns().addAll(iconColumn,nameColumn);
-
-        //Add rows to table view - should be taken from player inventory
-        /*ObservableList<Item> items = FXCollections.observableArrayList();
-        for (int i=0;i<3;i++){
-            Item testItem = new Pickup(0,0,PreLoadedImages.healthPickupSprite,32,32);
-            testItem.setName("Health Kit");
-            items.add(testItem);
-        }
-
-        inventoryView.setItems(items);*/
+        inventoryView.getColumns().addAll(iconColumn,nameColumn,quantityColumn);
 
         return inventoryView;
 
@@ -118,12 +95,11 @@ public class InventoryMenu extends PauseMenu {
             return;
         }
 
-
         ArrayList<Item> items = inventory.getItemList();
         items.forEach(item -> {
             System.out.println(item.getName());
             inventoryView.getItems().add(item);
-            ObservableList<Item> check = inventoryView.getItems();
+            //ObservableList<Item> check = inventoryView.getItems();
         });
     }
 }

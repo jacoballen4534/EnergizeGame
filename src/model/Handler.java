@@ -251,9 +251,17 @@ public class Handler { //This class will hold all the game objects and is respon
     public static boolean checkCollision (Character character) {
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup) &&
-                        (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
+                /*
+                * Conditions are:
+                * - Is the character the protagonist?
+                * - Is the protagonist's inventory full? //Not relevant with stackable items?
+                * - Is the item already in the inventory? //This needs to change to allow stackable items
+                * - Is the item already equipped?
+                * */
+                if (character.equals(protagonist) && !pickup.isInInventory()
+                        && (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
                     System.out.println("can pick up " + pickup.getName());
+                    pickup.setInInventory(true);
                     character.pickup(pickup);
                     removePickup(pickup);
                 }

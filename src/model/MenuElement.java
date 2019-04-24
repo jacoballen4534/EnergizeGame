@@ -2,9 +2,9 @@ package model;
 
 import javafx.scene.layout.AnchorPane;
 
-public class Menu extends AnchorPane {
+public class MenuElement extends AnchorPane {
 
-    public Menu(String ID, int width, int height, int xPos, int yPos) {
+    public MenuElement(String ID, int width, int height, int xPos, int yPos) {
         super();
         this.setId(ID);
         this.setPrefSize(width,height);

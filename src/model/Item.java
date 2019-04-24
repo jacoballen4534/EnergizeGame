@@ -11,6 +11,8 @@ public abstract class Item extends GameObject{
     //Adding properties for compliance with InventoryMenu table
     protected String name;
     protected String description;
+    protected int quantity;
+    protected boolean inInventory;
     protected ImageView icon;
 
     public Item(String name, String description, int xLocation, int yLocation, BufferedImage sprite, int spriteWidth, int spriteHeight) {
@@ -23,6 +25,8 @@ public abstract class Item extends GameObject{
 
         setName(name);
         setDescription(description);
+        this.quantity = 0;
+        this.inInventory = false;
         this.isSolid = false;
     }
 
@@ -35,7 +39,6 @@ public abstract class Item extends GameObject{
     public String getName() {
         return this.name;
     }
-
 
     public void setName(String name) {
         this.name= name;
@@ -55,5 +58,29 @@ public abstract class Item extends GameObject{
 
     public Image getJFXImage() {
         return this.jfxImage;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void increaseQuantity(){
+        quantity++;
+    }
+
+    public void decreaseQuantity(){
+        quantity--;
+    }
+
+    public boolean isInInventory() {
+        return inInventory;
+    }
+
+    public void setInInventory(boolean inInventory) {
+        this.inInventory = inInventory;
     }
 }

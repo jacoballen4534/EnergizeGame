@@ -21,7 +21,13 @@ public class Inventory{
         if (this.equippedItem == null) {
             this.equippedItem = item;
         } else {
-            items.add(item);
+            //items.add(item);
+            Item getItem = hasItem(item);
+            if (getItem == null) {
+                item.increaseQuantity();
+                items.add(item);
+            }
+            else increaseQuantity(getItem);
         }
     }
 
@@ -53,7 +59,22 @@ public class Inventory{
         return items.size() == size;
     }
 
-    public boolean containsItem(Item item){
+    /*public boolean containsItem(Item item){
         return items.contains(item);
+    }*/
+
+    private Item hasItem(Item item){
+        for (Item item1 : items){
+            if(item1.getName().equals(item.getName()))
+                return item1;
+        }
+        return null;
+    }
+
+    private void increaseQuantity(Item item){
+        items.forEach(item1 -> {
+            if (item1.getName().equals(item.getName()))
+                item1.increaseQuantity();
+        });
     }
 }

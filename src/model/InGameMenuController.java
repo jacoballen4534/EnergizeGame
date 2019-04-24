@@ -1,15 +1,12 @@
 package model;
 
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -168,6 +165,7 @@ public class InGameMenuController {
     }
 
     public void AddMenusToRoot(Group root){
+        //root.getChildren().add(HUD); //Include HUD as part of menu controller
         root.getChildren().add(pauseMenu);
         root.getChildren().add(inventoryMenu);
         root.getChildren().add(saveGameMenu);

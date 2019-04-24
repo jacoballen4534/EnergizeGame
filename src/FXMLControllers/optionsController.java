@@ -36,7 +36,7 @@ public class optionsController implements Initializable {
     }
 
     public void optionsBackButtonPressed() throws IOException {
-        changeStageName("Main Menu");
+        changeStageName("Main MenuElement");
         optionsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 

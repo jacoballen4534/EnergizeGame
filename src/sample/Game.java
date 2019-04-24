@@ -69,7 +69,7 @@ public class Game extends Canvas {
         this.map = new Map(this, randomSeed);
         this.map.loadLevel();
 
-        //////////////////Load Menu//////////////////////
+        //////////////////Load MenuElement//////////////////////
         inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
         inGameMenuController.AddMenusToRoot(root);
 
