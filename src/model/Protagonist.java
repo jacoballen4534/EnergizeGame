@@ -323,9 +323,5 @@ public class Protagonist extends Character {
     public Inventory getInventory() {
         return inventory;
     }
-
-    public Item getEquippedItem() {
-        return equippedItem;
-    }
 }
 
