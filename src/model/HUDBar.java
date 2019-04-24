@@ -3,7 +3,6 @@ package model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import sample.Game;
 
 import java.awt.image.BufferedImage;
 

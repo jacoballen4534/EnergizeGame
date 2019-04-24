@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import sample.Game;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Enemy extends Character{
@@ -12,17 +11,14 @@ public abstract class Enemy extends Character{
     protected AnimationsState dieState;
     protected int APPLY_DAMEAGE_COL;
     protected int EnemyMovementSpeed;
-    private boolean enabled;
     protected long freezeStartTime, freezeDuration;
     protected long windSpellStartTime, windSpellDuration;
     protected boolean priorToFreezeAttackState;
     protected int priorToFreezeCol;
 
 
-    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
-                 boolean enabled) {
+    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.enabled = enabled;
     }
 
     protected void updateTarget(Protagonist target) {
@@ -57,6 +53,7 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(runningState);
         }
     }
+
 
     public void freeze(long duration) {
         this.priorToFreezeAttackState = this.playAttackAnimation;

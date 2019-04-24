@@ -59,7 +59,9 @@ public class Map {
 
     }
 
-
+    public void removeObject(GameObject toRemove) {
+        levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove);
+    }
 
     public Level getLevel(int levelNumber) {
         if (this.levels.size() >= levelNumber) {

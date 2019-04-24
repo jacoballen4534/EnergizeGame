@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.util.*;
@@ -138,13 +139,15 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
-    public static void addEnemy (Enemy enemy) {
+    public static void addEnemy (Enemy enemy, Pair<Integer, Integer> spawnID) {
         enemies.add(enemy);
+        enemy.setSpawnID(spawnID);
     }
 
     public static void removeEnemy (Enemy enemy) { //TODO: Also remove these from the level so they dont spawn again
         Platform.runLater(() -> {
             enemies.remove(enemy);
+            map.removeObject(enemy);
         });
     }
 
@@ -156,13 +159,15 @@ public class Handler { //This class will hold all the game objects and is respon
         floors.add(floor);
     }
 
-    public static void addPickup (Item pickup) {
+    public static void addPickup (Item pickup, Pair<Integer, Integer> spawnID) {
         pickups.add(pickup);
+        pickup.setSpawnID(spawnID);
     }
 
     public static void removePickup (Item pickup) {
         Platform.runLater(() -> {
             pickups.remove(pickup);
+            map.removeObject(pickup);
         });
     }
 
