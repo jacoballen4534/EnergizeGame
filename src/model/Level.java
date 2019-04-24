@@ -147,13 +147,6 @@ public class Level {
 
             //place floor and add to floor list
             this.placeFloor(currentPoint, true);
-            if ((randomGenerator.nextDouble() * 100) < 0) { //Randomly event //TODO: Sort out what will spawn in the levels
-                if (numberOfDoors == 1) { // Place chests at dead ends
-                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.FIRE_SCROLL);
-                } else {
-                    this.tiles.get((int)currentPoint.getY()).set((int)currentPoint.getX(), TileType.GRUNT);
-                }
-            }
 
             //check if a door is now reachable - update reachable boolean accordingly
             this.updateReachableDoors(currentPoint);
@@ -186,16 +179,74 @@ public class Level {
             }
         }
 
-
         ///////////////////////////////////////// PLACE DOORS /////////////////////////////////////////////////////
         //Add all the doors to the tile list.
         for (Map.Entry<TileType, Point2D> door : this.doorMap.entrySet()) {
             this.tiles.get((int)door.getValue().getY()).set((int)door.getValue().getX(), door.getKey());
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /////////////////////////////////// ADD RANDOM ITEMS / ENEMY'S ////////////////////////////////////////////
+        if (numberOfDoors == 1) { //This is a dead end so add chests and items.
+            this.addRandomItems(randomGenerator, 4, 3);
+        } else {
+            this.addRandomEnemys(randomGenerator);
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //        this.debugDrawFloor();
 
         this.shortestPath = new ShortestPath(this.levelWidth,this.levelHeight,this.tiles);
+    }
+
+    private void addRandomItems(Random randomGenerator, int minNumberOfItems, int range) {
+        int numberOfItems = (int) (randomGenerator.nextDouble() * range) + minNumberOfItems; //more items if there are less rooms so dead ends have alot
+        int numberOfAttempts = 50;
+        while (numberOfItems > 0 && numberOfAttempts > 0) {
+            int row = randomGenerator.nextInt(this.levelHeight - 2) + 1;
+            int col = randomGenerator.nextInt(this.levelWidth - 2) + 1;
+            if (this.tiles.get(row).get(col) == TileType.FLOOR) { //A valid location
+                int type = randomGenerator.nextInt(6);
+                if (type < 1) { // 1/6 chance to get scroll
+                    this.tiles.get(row).set(col, TileType.SCROLL);
+                } else if (type < 3) { // 2/6 chance to get health
+                    this.tiles.get(row).set(col, TileType.HEALTH_PICKUP);
+                } else { // 3/6 chance to get energy
+                    this.tiles.get(row).set(col, TileType.ENERGY_PICKUP);
+                }
+                numberOfItems--;
+            } else {
+                numberOfAttempts--;
+            }
+        }
+    }
+
+    private void addRandomEnemys (Random randomGenerator) {
+    //Put in random enemy's and some items
+    addRandomItems(randomGenerator, 1, 5 - numberOfDoors);
+    int numberOfAttempts = 50;
+
+        int numberOfEnemys = (int) (randomGenerator.nextDouble() * 3) + 2; //add from 2-4 random enemy's
+        while (numberOfEnemys > 0 && numberOfAttempts > 0) {
+            int row = randomGenerator.nextInt(this.levelHeight - 2) + 1;
+            int col = randomGenerator.nextInt(this.levelWidth - 2) + 1;
+            boolean valid = true;
+            //Check that this is a valid location. Not blocking a door or in another enemy.
+            for (int rowOffSet = -1; rowOffSet <= 1; rowOffSet++) {
+                for (int colOffSet = -1; colOffSet <= 1; colOffSet++) {
+                    if (this.tiles.get(row + rowOffSet).get(col + colOffSet) != TileType.FLOOR ||
+                            this.tiles.get(row + rowOffSet + 1).get(col + colOffSet) != TileType.FLOOR){
+                        valid = false;
+                    }
+                }
+            }
+            if (valid) {
+                this.tiles.get(row).set(col, TileType.GRUNT);
+                numberOfEnemys--;
+            } else {
+                numberOfAttempts--;
+            }
+        }
     }
 
     private void addHorizontalStep(int steps, TileType door) {
