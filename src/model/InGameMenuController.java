@@ -22,7 +22,8 @@ import static sample.Game.SCREEN_WIDTH;
 
 public class InGameMenuController {
 
-    //Sizing macros
+    //==Sizing macros==//
+    //--Pause Menu--//
     private static final int PAUSE_MENU_WIDTH = 300;
     private static final int PAUSE_MENU_HEIGHT = 500;
     private static final int PAUSE_MENU_BTN_WIDTH = 250;
@@ -30,6 +31,7 @@ public class InGameMenuController {
     private static final int PAUSE_MENU_TITLE_WIDTH = 250;
     private static final int PAUSE_MENU_TITLE_HEIGHT = 130;
 
+    //--Inventory Menu--//
     private static final int INVENTORY_MENU_WIDTH = 500;
     private static final int INVENTORY_MENU_HEIGHT = 500;
     private static final int INVENTORY_TITLE_WIDTH = 300;
@@ -37,6 +39,7 @@ public class InGameMenuController {
     private static final int CLOSE_MENU_BTN_WIDTH = 125;
     private static final int CLOSE_MENU_BTN_HEIGHT = 100;
 
+    //--Save Menu--//
     private static final int SAVE_MENU_WIDTH = 300;
     private static final int SAVE_MENU_HEIGHT = 150;
     private static final int SAVE_TITLE_WIDTH = 200;
@@ -46,9 +49,11 @@ public class InGameMenuController {
     private static final int SAVE_NAME_INPUT_WIDTH = 250;
     private static final int SAVE_NAME_INPUT_HEIGHT = 50;
 
+    //--Options Menu--//
     private static final int OPTIONS_MENU_WIDTH = 400;
     private static final int OPTIONS_MENU_HEIGHT = 400;
 
+    //--Confirmation Menu--//
     private static final int CONFIRMATION_MENU_WIDTH = 300;
     private static final int CONFIRMATION_MENU_HEIGHT = 100;
     private static final int CONFIRMATION_TITLE_WIDTH = 250;
@@ -57,7 +62,7 @@ public class InGameMenuController {
     private static final int CONFIRMATION_BUTTON_HEIGHT = 40;
 
     //==Event macros==//
-    //--Pause Menu--
+    //--Pause Menu--//
     private EventHandler resumeEvent;
     private Runnable unpause;
     private EventHandler inventoryMenuEvent = mouseEvent ->{
@@ -94,12 +99,7 @@ public class InGameMenuController {
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
 
-        //Not 100% sure if this is the only way to get the name.
-        ObservableList<Node> children = this.saveGameMenu.getChildren();
-        VBox vBox = (VBox)children.get(0);
-        ObservableList<Node> vboxChild = vBox.getChildren();
-        TextField field = (TextField)vboxChild.get(1);
-        Utilities.saveNewMapSeed(field.getText(), Game.getRandomSeed());
+        Utilities.saveNewMapSeed(this.saveGameMenu.getTextInput(),Game.getRandomSeed());
         System.out.println("The current map has been saved");
 
         this.saveGameMenu.hide();
@@ -257,6 +257,8 @@ public class InGameMenuController {
 
         TextField saveNameInput = CreateTextField("Enter Map Name","saveNameTextField",
                 SAVE_NAME_INPUT_WIDTH,SAVE_NAME_INPUT_HEIGHT);
+
+        saveGameMenu.setTextField(saveNameInput);
 
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveNameInput);
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveGameMenu.getHBox());
