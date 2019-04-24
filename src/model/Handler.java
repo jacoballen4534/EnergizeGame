@@ -7,6 +7,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.util.*;
@@ -52,9 +53,7 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Enemy enemy : enemies) {
-            if (enemy.inCameraBounds(camera.getX(),camera.getY())) {
-                enemy.updateSprite();
-            }
+            enemy.updateSprite(); //Dont check camera so spells do damage to all.
         }
     }));
 
@@ -140,13 +139,15 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
-    public static void addEnemy (Enemy enemy) {
+    public static void addEnemy (Enemy enemy, Pair<Integer, Integer> spawnID) {
         enemies.add(enemy);
+        enemy.setSpawnID(spawnID);
     }
 
     public static void removeEnemy (Enemy enemy) { //TODO: Also remove these from the level so they dont spawn again
         Platform.runLater(() -> {
             enemies.remove(enemy);
+            map.removeObject(enemy);
         });
     }
 
@@ -158,13 +159,15 @@ public class Handler { //This class will hold all the game objects and is respon
         floors.add(floor);
     }
 
-    public static void addPickup (Item pickup) {
+    public static void addPickup (Item pickup, Pair<Integer, Integer> spawnID) {
         pickups.add(pickup);
+        pickup.setSpawnID(spawnID);
     }
 
     public static void removePickup (Item pickup) {
         Platform.runLater(() -> {
             pickups.remove(pickup);
+            map.removeObject(pickup);
         });
     }
 
@@ -211,6 +214,24 @@ public class Handler { //This class will hold all the game objects and is respon
         }
     }
 
+    public static void fireScrollAttack(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.getHit(scroll.getDamage());
+        }
+    }
+
+    public static void freezeEnemys(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.freeze(scroll.getFreezeDuration());
+        }
+    }
+
+    public static void blowEnemysAway(Scroll scroll) {
+        for (Enemy enemy : enemies) {
+            enemy.blowAway(scroll.getWindDuration());
+        }
+    }
+
     public static void setProtagonist (Protagonist _protagonist) {
         protagonist = _protagonist;
     }
@@ -231,7 +252,7 @@ public class Handler { //This class will hold all the game objects and is respon
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
                 if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup) &&
-                        (protagonist.getEquippedItem() == null || !protagonist.getEquippedItem().equals(pickup))){
+                        (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
                     System.out.println("can pick up " + pickup.getName());
                     character.pickup(pickup);
                     removePickup(pickup);

@@ -15,7 +15,7 @@ public class Weapon extends Item {
     }
 
     @Override
-    public void useItem() {
+    public void useItem(Protagonist user) {
 
     }
 }

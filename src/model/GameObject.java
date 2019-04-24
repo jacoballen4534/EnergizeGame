@@ -3,6 +3,7 @@ package model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import sample.Game;
 
 import java.awt.*;
@@ -24,6 +25,7 @@ public abstract class GameObject {
 
     protected int spriteDirection = 1; //This is used to flip the image, -1 is face left, 1 is face right.
     protected Image jfxImage; //The sprite To draw onto the canvas. Needs to be in FXImage form.
+    protected Pair<Integer, Integer> spawnID;//Used to identify enemy's when removing. Form (level number, SpawnLocation)
 
 
     //TODO: Add isSolid to construcot, and pass empty rectangle in getBounds if it is not solid
@@ -78,6 +80,14 @@ public abstract class GameObject {
 
     protected boolean inCameraBounds(double cameraX, double cameraY) {
         return (this.x + this.spriteWidth > cameraX && this.x < cameraX + Game.SCREEN_WIDTH && this.y + this.spriteHeight > cameraY && this.y < cameraY + Game.SCREEN_HEIGHT);
+    }
+
+    protected Pair<Integer, Integer> getSpawnID() {
+        return this.spawnID;
+    }
+
+    protected void setSpawnID(Pair<Integer, Integer> spawnID) {
+        this.spawnID = spawnID;
     }
 
     protected void loadSpriteSheet(BufferedImage image) {

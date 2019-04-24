@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 import sample.Game;
 
 import java.awt.*;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Enemy extends Character{
@@ -12,12 +11,14 @@ public abstract class Enemy extends Character{
     protected AnimationsState dieState;
     protected int APPLY_DAMEAGE_COL;
     protected int EnemyMovementSpeed;
-    private boolean enabled;
+    protected long freezeStartTime, freezeDuration;
+    protected long windSpellStartTime, windSpellDuration;
+    protected boolean priorToFreezeAttackState;
+    protected int priorToFreezeCol;
 
-    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth,
-                 boolean enabled) {
+
+    public Enemy(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
-        this.enabled = enabled;
     }
 
     protected void updateTarget(Protagonist target) {
@@ -30,6 +31,7 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(this.dieState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playDieAnimation = false; //Once the animation has finished, set this to false to only play the animation once
+                this.keepRendering = false;
                 Handler.removeEnemy(this);
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
@@ -53,6 +55,22 @@ public abstract class Enemy extends Character{
         }
     }
 
+
+    public void freeze(long duration) {
+        this.priorToFreezeAttackState = this.playAttackAnimation;
+        this.priorToFreezeCol = this.currentAnimationCol;
+        this.playAttackAnimation = false;
+        this.freezeDuration = duration;
+        this.freezeStartTime = System.currentTimeMillis();
+        this.frozen = true;
+    }
+
+    public void blowAway(long duration) {
+        this.windSpellDuration = duration;
+        this.windSpellStartTime = System.currentTimeMillis();
+        this.blownAway = true;
+    }
+
     protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can overwride
         super.render(graphicsContext, cameraX, cameraY);
     }
@@ -61,16 +79,31 @@ public abstract class Enemy extends Character{
         return false;
     }
 
+    private void updateSpellEffect() {
+        if (this.frozen && System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will ware off even if the player is in the pause menu
+            this.frozen = false; //TODO: Add ice sprite to show frozen (fire for fire scroll also)
+            this.playAttackAnimation = priorToFreezeAttackState;
+            this.currentAnimationCol = this.priorToFreezeCol;
+        }
+        if (this.blownAway && System.currentTimeMillis() - this.windSpellStartTime > this.windSpellDuration) {
+            this.blownAway = false;
+        }
+    }
+
+
     protected void tick(double cameraX, double cameraY, Level level) {
         int currentNodeId = (int)(this.x / Game.PIXEL_UPSCALE) + (int)(this.y / Game.PIXEL_UPSCALE) * level.getLevelWidth();
         int targetNodeId = (int)(this.target.getX() / Game.PIXEL_UPSCALE) + (int)(this.target.getY() / Game.PIXEL_UPSCALE) * level.getLevelWidth();
-
+        this.updateSpellEffect();
 //        if (Game.getNextRandomInt(100, false) > 98) { //Can print out path periodically to show off path finding.
 //            level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
 //        }
 
-        //Only move if protagonist is close enough
-        if (this.proximity(level)) {
+        if (this.blownAway) { //Push enemys away at double speed
+            this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 5 : -5);
+            this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 5 : -5);
+            super.tick(cameraX, cameraY);
+        } else if (!this.frozen && this.proximity(level)) { //Only move if protagonist is close enough
             //Give a 50% chance of changing of getting a path update
             if (Game.getNextRandomInt() < 50) {
                 int nextDirection = level.getShortestPath().nextDirection(currentNodeId, targetNodeId); //1=up,2=right,3=down,4=left

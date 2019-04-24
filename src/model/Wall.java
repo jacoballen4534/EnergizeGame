@@ -2,8 +2,6 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import sample.Game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

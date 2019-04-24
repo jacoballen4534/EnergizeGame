@@ -1,7 +1,7 @@
 package model;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -9,9 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-
-import javafx.scene.Node;
 
 import java.util.ArrayList;
 
@@ -19,7 +16,7 @@ import java.util.ArrayList;
 public class InventoryMenu extends PauseMenu {
 
     //For showing the inventory itself
-    private TableView<Item> inventoryView;
+    private TableView inventoryView;
 
     private VBox innerVBox;
     private HBox hbox;
@@ -51,47 +48,44 @@ public class InventoryMenu extends PauseMenu {
         return innerVBox;
     }
 
-    public TableView CreateTable(){
+    public TableView<Item> CreateTable(){
 
-        inventoryView = new TableView<Item>();
+        inventoryView = new TableView();
         inventoryView.setEditable(false);
         inventoryView.setId("inventory");
         inventoryView.setPrefWidth(250);
 
         //Create table column
-        TableColumn<Item, Image> itemList = new TableColumn<Item, Image>("Items");
-        itemList.setCellValueFactory(new PropertyValueFactory("icon"));
-        itemList.setPrefWidth(inventoryView.getPrefWidth()/2);
+        TableColumn iconColumn = new TableColumn("Icon");
+        iconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
+        iconColumn.setPrefWidth(inventoryView.getPrefWidth()/2);
 
-        TableColumn<Item, String> nameList = new TableColumn<Item, String>("Names");
-        nameList.setCellValueFactory(new PropertyValueFactory("name"));
-        nameList.setPrefWidth(inventoryView.getPrefWidth()/2);
+        TableColumn nameColumn = new TableColumn("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/2);
 
-        itemList.setCellFactory(new Callback<TableColumn<Item, Image>, TableCell<Item, Image>>() {
-            @Override
-            public TableCell<Item, Image> call(TableColumn<Item, Image> itemImageTableColumn) {
-                TableCell<Item,Image> cell = new TableCell<Item,Image>(){
-                    @Override
-                    public void updateItem(Image icon, boolean empty){
-                        if (icon!=null){
-                            ImageView imageView = new ImageView();
-                            imageView.setFitHeight(50);
-                            imageView.setFitWidth(50);
-                            imageView.setImage(icon);
-
-                            setGraphic(imageView);
-                        }
-                    }
-                };
-                System.out.println("=========================");
-                System.out.println(cell.getIndex());
-                System.out.println("=========================");
-                return cell;
-            }
-        });
+//        itemList.setCellFactory(itemImageTableColumn -> {
+//            TableCell<Item,Image> cell = new TableCell<Item,Image>(){
+//                @Override
+//                public void updateItem(Image icon, boolean empty){
+//                    if (icon!=null){
+//                        ImageView imageView = new ImageView();
+//                        imageView.setFitHeight(50);
+//                        imageView.setFitWidth(50);
+//                        imageView.setImage(icon);
+//
+//                        setGraphic(imageView);
+//                    }
+//                }
+//            };
+//        System.out.println("=========================");
+//        System.out.println(cell.getIndex());
+//        System.out.println("=========================");
+//        return cell;
+//        });
 
         //Add columns to table view
-        inventoryView.getColumns().addAll(itemList,nameList);
+        inventoryView.getColumns().addAll(iconColumn,nameColumn);
 
         //Add rows to table view - should be taken from player inventory
         /*ObservableList<Item> items = FXCollections.observableArrayList();
@@ -108,12 +102,28 @@ public class InventoryMenu extends PauseMenu {
     }
 
     public void UpdateTable(){
-        if (inventory.getItemCount() == 0) return;
+
+        Image equippedItemIcon;
+        if (inventory.getEquippedItem() != null) {
+            equippedItemIcon = inventory.getEquippedItem().getJFXImage();
+        } else {
+            equippedItemIcon = SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null);
+        }
+
+        this.setEquippedItemIconImage(equippedItemIcon);
+
         if (!inventoryView.getItems().isEmpty()) inventoryView.getItems().clear();
+
+        if (inventory.getItemCount() == 0){
+            return;
+        }
+
+
         ArrayList<Item> items = inventory.getItemList();
         items.forEach(item -> {
             System.out.println(item.getName());
             inventoryView.getItems().add(item);
+            ObservableList<Item> check = inventoryView.getItems();
         });
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -58,6 +59,7 @@ public class InGameMenuController {
     //==Event macros==//
     //--Pause Menu--
     private EventHandler resumeEvent;
+    private Runnable unpause;
     private EventHandler inventoryMenuEvent = mouseEvent ->{
         this.pauseMenu.hide();
         this.inventoryMenu.show();
@@ -73,12 +75,21 @@ public class InGameMenuController {
         this.pauseMenu.hide();
         this.optionsMenu.show();
     };
-    private EventHandler quitToTitleEvent = mouseEvent->this.exitToTitleConfirmation.show();
-    private EventHandler quitToDesktopEvent = mouseEvent->this.exitToDesktopConfirmation.show();
+    private EventHandler quitToTitleEvent = mouseEvent-> {
+        this.pauseMenu.hide();
+        this.exitToTitleConfirmation.show();
+    };
+
+    private EventHandler quitToDesktopEvent = mouseEvent-> {
+        this.pauseMenu.hide();
+        this.exitToDesktopConfirmation.show();
+    };
     //--Inventory Menu--//
     private EventHandler closeInventoryMenuEvent = mouseEvent->{
         this.inventoryMenu.hide();
-        this.pauseMenu.show();
+//        this.pauseMenu.show(); //Goes back to pause menu. Instead go back to game
+        this.unpause.run();
+
     };
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
@@ -121,11 +132,12 @@ public class InGameMenuController {
     public InGameMenuController(Inventory inventory, Runnable unpauseGame, EventHandler returnToTitleScreen) {
 
         this.resumeEvent = event -> {this.pauseMenu.hide();unpauseGame.run();};
+        this.unpause = unpauseGame;
         this.returnToTitleEvent = returnToTitleScreen;
 
         //Generate menu layouts
         this.pauseMenu = CreatePauseMenu(pauseMenu);
-        this.inventoryMenu = CreateInventoryMenu(inventoryMenu, inventory);
+        this.inventoryMenu = CreateInventoryMenu(inventory);
         this.saveGameMenu = CreateSaveGameMenu(saveGameMenu);
         this.optionsMenu = CreateOptionsMenu(optionsMenu);
 
@@ -210,7 +222,10 @@ public class InGameMenuController {
         Button confirm = CreateButton("Quit","confirmationMenuButton",
                 CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,confirmationAction);
         Button cancel = CreateButton("Cancel","confirmationMenuButton",
-                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> confirmationMenu.hide());
+                CONFIRMATION_BUTTON_WIDTH,CONFIRMATION_BUTTON_HEIGHT,event -> {
+                    confirmationMenu.hide();
+                    pauseMenu.show();
+                });
 
         HBox hbox = confirmationMenu.getHbox();
 
@@ -249,7 +264,7 @@ public class InGameMenuController {
         return saveGameMenu;
     }
 
-    private InventoryMenu CreateInventoryMenu(InventoryMenu inventoryMenu, Inventory inventory){
+    private InventoryMenu CreateInventoryMenu(Inventory inventory){
 
         //To keep track of node positions within the menu
         int outerVBoxNodePos = 1;
@@ -273,8 +288,11 @@ public class InGameMenuController {
         Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
-        Image img = new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png"));
-        ImageView equippedItemIcon = CreateImageView(img,50,50);
+        ImageView equippedItemIcon = new ImageView();
+        equippedItemIcon.setFitHeight(50);
+        equippedItemIcon.setFitWidth(50);
+        equippedItemIcon.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null));
+
         inventoryMenu.setEquippedItemIcon(equippedItemIcon);
 
         //Button to close the inventory menu and return to pause screen
