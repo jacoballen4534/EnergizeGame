@@ -23,7 +23,7 @@ public class creditsController implements Initializable {
         logoImage.setImage(new Image(this.getClass().getResourceAsStream("/Images/NocturnalTutelageStudiosLogo.png")));
     }
     public void creditsBackButtonPressed() throws IOException {
-        changeStageName("Main MenuElemen");
+        changeStageName("Main Menu");
         creditsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 

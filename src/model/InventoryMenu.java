@@ -58,6 +58,7 @@ public class InventoryMenu extends PauseMenu {
         inventoryView = new TableView();
         inventoryView.setEditable(false);
         inventoryView.setId("inventory");
+        inventoryView.setPlaceholder(new Label("EMPTY"));
         inventoryView.setPrefWidth(INVENTORY_TABLE_WIDTH);
 
         //Create table column

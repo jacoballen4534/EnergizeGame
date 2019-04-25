@@ -202,11 +202,11 @@ https://stackoverflow.com/questions/33938811/styling-a-tableview-in-css-javafx
 */
 
 .table-view{
-   -fx-background-color: transparent;
+   -fx-background-color: grey;
 }
 
 .table-view:focused{
-    -fx-background-color: transparent;
+    -fx-background-color: grey;
 }
 
 .table-view .column-header-background{
