@@ -91,8 +91,8 @@ public class SoundController {
             System.out.println(clip.isControlSupported(FloatControl.Type.MASTER_GAIN));
             System.out.println("=========================");*/
 
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.open(stream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
             clip.start();
 
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
