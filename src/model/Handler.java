@@ -9,6 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import sample.Game;
+import sample.SoundController;
 
 import java.util.*;
 
@@ -173,6 +174,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void loadBossRoom() {
         map.loadLevel(8055);//Load boss level
+        SoundController.changeMusic("bossBGM");
     }
 
     public static void pauseUnpauseTimeline(){
