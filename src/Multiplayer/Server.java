@@ -9,10 +9,10 @@ import java.net.SocketException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Server {
+public class Server implements Runnable {
     private int port;
-    private Thread listenThread;
-    private boolean listening = false;
+    private Thread run, manage, send, receive;
+    private boolean running = false;
     private DatagramSocket socket;
     private final int MAX_PACKET_SIZE = 1024;
     private byte[] receivedDataBuffer = new byte[MAX_PACKET_SIZE * 10]; // Allocate a large array once and re-use it.
@@ -31,31 +31,18 @@ public class Server {
             return;
         }
 
-        System.out.print("\033[0;32m"); //Set Server print color to
+        System.out.print("\033[0;92m"); //Set Server print color to green
         System.out.println("Started server on port " + this.port + "...");
-
-
-        this.listening = true;
-        this.listenThread = new Thread(() -> listen(), "Server Listen Thread");
-        this.listenThread.start();
-
-        System.out.println("Server is listening...");
         System.out.print("\033[0m"); //Reset the color
 
+        run = new Thread(this, "server");
+        run.start();
 
+        System.out.print("\033[0;92m"); //Set Server print color to
+        System.out.println("Server is setup and listening...");
+        System.out.print("\033[0m"); //Reset the color
     }
 
-    public void listen() {
-        while (this.listening) {
-            DatagramPacket packet = new DatagramPacket(this.receivedDataBuffer, MAX_PACKET_SIZE);
-            try {
-                socket.receive(packet);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            process(packet);
-        }
-    }
 
     public void process(DatagramPacket packet) {
         byte[] data = packet.getData();
@@ -66,13 +53,27 @@ public class Server {
         dumpPacket(packet); //This is for debug
 
         if (data[0] == 0x40 && data[1] == 0x20) { //This is a PACKET_HEADER
-            System.out.print("\033[0;32m"); //Set Server print color to
+            System.out.print("\033[0;92m"); //Set Server print color to green
             switch (data[2]) {
                 case 0x01:
                     System.out.println("\n-------------------------");
-                    System.out.println("Adding a new client:\n\tAddress: " + packet.getAddress() + "\n\tPort: " + packet.getPort());
+                    System.out.println("Adding a new client:\n\tAddress: " + sendersAddress + "\n\tPort: " + sendersPort);
+                    System.out.println("-------------------------");
+                    this.clients.add(new ServerClient(sendersAddress, sendersPort));
                     System.out.println("\n-------------------------");
-                    this.clients.add(new ServerClient(packet.getAddress(), packet.getPort()));
+
+                    System.out.println("List of Currently Connected Clients:");
+                    for (ServerClient client : clients) {
+                        if (client.status) {
+                            System.out.println("\tID: " + client.userID);
+                            System.out.println("\tConnected on : " + client.address.getHostAddress() + ":" + client.port);
+                        }
+                    }
+                    System.out.println("\n-------------------------");
+
+                    //Send welcome message to the new client
+                    String welcomeMessage = "Welcome " + sendersAddress + ":" + sendersPort;
+                    this.send(welcomeMessage.getBytes(), sendersAddress, sendersPort);
                     break;
                 case 2:
                     //Packet type 2
@@ -108,8 +109,7 @@ public class Server {
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
 
-        System.out.print("\033[0;32m"); //Set Server print color to
-
+        System.out.print("\033[0;92m"); //Set Server print color to green
         System.out.println("-------------------------");
         System.out.println("PACKET:");
         System.out.println("\tFrom: " + address.getHostAddress() + ":" + port + "\n");
@@ -127,6 +127,42 @@ public class Server {
         System.out.print("\033[0m"); //Reset the color
 
 
+    }
+
+
+    public void run() { //Sets up server and then closes
+        this.running = true;
+        mannageClients();
+        receive();
+    }
+
+    private void mannageClients() { //Ensure clients are still connected ect...
+        this.manage = new Thread("Server Manage Clients") {
+            public void run() {
+                while(running) {
+
+                }
+            }
+        };
+        this.manage.start();
+    }
+
+    private void receive() {
+        this.receive = new Thread("Server Receive") {
+            public void run() {
+                while(running) {
+                    byte[] data = new byte[1024]; //Allow 1kb max
+                    DatagramPacket packet = new DatagramPacket(data, data.length);
+                    try {
+                        socket.receive(packet);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    process(packet);
+                }
+            }
+        };
+        this.receive.start();
     }
 
 

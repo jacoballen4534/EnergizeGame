@@ -65,40 +65,11 @@ public class MainMenuController implements Initializable {
 
     private EventHandler HostGameClicked = event -> {
         //Setup server
-        try {
-            System.out.println("LocalHost address: " + InetAddress.getLocalHost().getHostAddress().trim());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        String systemIP = "";
-        try {
-            URL url = new URL("http://bot.whatismyipaddress.com");
-            BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
-            systemIP =  sc.readLine().trim();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Public IP: " + systemIP);
-
-
         Server server = new Server(serverPort); //This can be any address
         server.start();
 
         Client client = new Client("localhost", serverPort);
         client.connect();
-
-
-
-
-//
-//        InetAddress address = null;
-//        try {
-//            address = InetAddress.getByName("125.237.55.215");
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-//
-//        server.send(new byte[] {0,1,2}, address, serverPort);
 
     };
     ///////////////////////////////////////////////////////////////
