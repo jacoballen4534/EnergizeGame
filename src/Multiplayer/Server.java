@@ -14,23 +14,27 @@ public class Server implements Runnable {
     private final int MAX_PACKET_SIZE = 1024;
     private byte[] receivedDataBuffer = new byte[MAX_PACKET_SIZE * 10]; // Allocate a large array once and re-use it.
     private Set<ServerClient> clients = new HashSet<ServerClient>(); //Hold clients in a hash set to quickly get client from name, and to remove any duplicates.
+    private InetAddress serverAddress;
+    private String serverAddressString;
 
-    public Server(int port) { //Create a new server with the given port number
+    public Server(String serverAddress, int port) { //Create a new server with the given port number
         this.port = port;
+        this.serverAddressString = serverAddress;
     }
 
 
     public void start() {
-        InetAddress address = null;
         try {
-            address = InetAddress.getByName("0.0.0.0");
-            this.socket = new DatagramSocket(this.port, address);
+            serverAddress = InetAddress.getByName(serverAddressString);
+            this.socket = new DatagramSocket(this.port, serverAddress);
         } catch (SocketException e) {
             e.printStackTrace();
             return;
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        System.out.println("Server can be reached on: " + serverAddress.getHostAddress() + ":" + this.port);
+
         StringBuilder consoleMessage = new StringBuilder();
 
         consoleMessage.append("\033[0;92m\n"); //Set Server print color to green
@@ -79,7 +83,7 @@ public class Server implements Runnable {
                             consoleMessage.append("\tConnection Status: ").append(client.status ? "\033[1;32m" + "Connected" : "\033[1;31m" + "Disconnected");
                             consoleMessage.append("\033[0;92m");
                             consoleMessage.append("\tID: ").append(client.userID);
-                            consoleMessage.append("\tConnected on : ").append(client.address.getHostAddress()).append(":").append(client.port).append("\n");
+                            consoleMessage.append("\tConnected from : ").append(client.address.getHostAddress()).append(":").append(client.port).append("\n");
                         }
 
                     } else {

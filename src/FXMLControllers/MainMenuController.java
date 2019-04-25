@@ -59,13 +59,16 @@ public class MainMenuController implements Initializable {
     /////////////// MultiPlayer buttons ////////////////////////////////
     ////////////////////////// HOST ////////////////////////////////
     private static final int serverPort = 4000;
+    private static final String serverAddressString = "10.0.0.9";
 
     private EventHandler HostGameClicked = event -> {
+        this.getServerAddressMenu = createGetServerAddressMenu(getServerAddressMenu);
+        this.getServerAddressMenu.show();
         //Setup server
-        Server server = new Server(serverPort); //This can be any address
+        Server server = new Server(serverAddressString, serverPort); //This can be any address
         server.start();
 
-        Client client = new Client("10.0.0.9", serverPort);
+        Client client = new Client(serverAddressString, serverPort);
         client.connect();
     };
     ///////////////////////////////////////////////////////////////
@@ -81,7 +84,7 @@ public class MainMenuController implements Initializable {
 //            e.printStackTrace();
 //        }
 
-        Client client1 = new Client("10.0.0.9", serverPort);
+        Client client1 = new Client(serverAddressString, serverPort);
         client1.connect();
 
         System.out.print("Join multiPlayer game");
