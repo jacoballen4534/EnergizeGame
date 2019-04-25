@@ -284,7 +284,7 @@ public class InGameMenuController {
         TableView table = inventoryMenu.CreateTable(changeEquippedItem);
 
         //Label for equipped item icon
-        Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);
+        Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",150,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
         ImageView equippedItemIcon = new ImageView();

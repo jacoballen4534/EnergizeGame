@@ -34,8 +34,8 @@ public class InventoryMenu extends PauseMenu {
         super(ID, width, height, xPos, yPos);
         this.inventory = inventory;
         innerVBox = new VBox(0);
-        hbox = new HBox(120);
-        innerVBox.setPrefWidth(100);
+        hbox = new HBox(100);
+        innerVBox.setPrefWidth(150);
         innerVBox.setAlignment(Pos.CENTER);
     }
 
