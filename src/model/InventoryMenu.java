@@ -18,6 +18,7 @@ public class InventoryMenu extends PauseMenu {
 
     //Macros
     private final int INVENTORY_TABLE_WIDTH = 300;
+    private final int INVENTORY_COLUMN_WIDTH = 100;
 
     //For showing the inventory itself
     private TableView inventoryView;
@@ -64,15 +65,15 @@ public class InventoryMenu extends PauseMenu {
         //Create table column
         TableColumn iconColumn = new TableColumn("Icon");
         iconColumn.setCellValueFactory(new PropertyValueFactory<>("icon"));
-        iconColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
+        iconColumn.setPrefWidth(INVENTORY_COLUMN_WIDTH);
 
         TableColumn nameColumn = new TableColumn("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
+        nameColumn.setPrefWidth(INVENTORY_COLUMN_WIDTH);
 
-        TableColumn quantityColumn = new TableColumn("Quantity");
+        TableColumn quantityColumn = new TableColumn("No.");
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        nameColumn.setPrefWidth(inventoryView.getPrefWidth()/3);
+        nameColumn.setPrefWidth(INVENTORY_COLUMN_WIDTH);
 
         //Add columns to table view
         inventoryView.getColumns().addAll(iconColumn,nameColumn,quantityColumn);
@@ -114,7 +115,7 @@ public class InventoryMenu extends PauseMenu {
         ArrayList<Item> items = inventory.getItemList();
         items.forEach(item -> {
             System.out.println(item.getName());
-            inventoryView.getItems().add(item);
+            if (item.getQuantity() > 0) inventoryView.getItems().add(item);
             //ObservableList<Item> check = inventoryView.getItems();
         });
     }
