@@ -51,17 +51,22 @@ public class Client {
 
         try {
             socket = new DatagramSocket();//This is the client socket. It can have a random serverPort as it will send data before receiving any.
+            socket.connect(serverIPAddress, 4000);
+            System.out.println("Client socket connected = " + socket.isConnected());
         } catch (SocketException e) {
             e.printStackTrace();
             return false;
         }
 
-        System.out.print("\033[0;34m"); //Set Client print color to blue
-        System.out.println("\n-------------------------");
-        System.out.println("Connected to server:");
-        System.out.println("\t" + this.serverIPAddressString + ":" + this.serverPort);
-        System.out.println("-------------------------");
-        System.out.print("\033[0m"); //Reset the color
+        StringBuilder consoleMessage = new StringBuilder();
+
+        consoleMessage.append("\033[0;34m"); //Set Client print color to blue
+        consoleMessage.append("\n-------------------------\n");
+        consoleMessage.append("Connected to server:\n");
+        consoleMessage.append("\t").append(this.serverIPAddressString).append(":").append(this.serverPort).append("\n");
+        consoleMessage.append("-------------------------");
+        consoleMessage.append("\033[0m"); //Reset the color
+        System.out.println(consoleMessage);
 
 
         this.listening = true;
@@ -93,13 +98,14 @@ public class Client {
         //This will be update instructions from the server.
 
         dumpPacket(packet); //This is for debug
+        StringBuilder consoleMessage = new StringBuilder();
 
         if (data[0] == 0x40 && data[1] == 0x20) { //This is a PACKET_HEADER
-            System.out.print("\033[0;34m"); //Set Client print color to blue
-            System.out.println("\n-------------------------");
+            consoleMessage.append("\033[0;94m"); //Set Client print color to blue
+            consoleMessage.append("\n-------------------------\n");
             switch (data[2]) {
                 case 1:
-                    System.out.println("Instruction type 1");
+                    consoleMessage.append("Instruction type 1\n");
                     //Instruction type 1
                     break;
                 case 2:
@@ -109,11 +115,12 @@ public class Client {
                     //Instruction type 3
                     break;
                 default:
-                    System.out.println("Unknown packet header received:");
+                    consoleMessage.append("Unknown packet header received:\n");
 
             }
-            System.out.println("-------------------------");
-            System.out.print("\033[0m"); //Reset the color
+            consoleMessage.append("-------------------------");
+            consoleMessage.append("\033[0m"); //Reset the color
+            System.out.println(consoleMessage);
         }
     }
 
@@ -150,19 +157,20 @@ public class Client {
         byte[] data = packet.getData();
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
+        StringBuilder consoleMessage = new StringBuilder();
 
-        System.out.print("\033[0;34m"); //Set Client print color to blue
-        System.out.println("-------------------------");
-        System.out.println("PACKET:");
-        System.out.println("\tFrom: " + address.getHostAddress() + ":" + port + "\n");
-        System.out.println("\tContents:");
-        System.out.print("\t\t");
+        consoleMessage.append("\033[0;94m"); //Set Client print color to blue
+        consoleMessage.append("-------------------------\n");
+        consoleMessage.append("CLIENT PACKET DUMP:\n");
+        consoleMessage.append("\tFrom: ").append(address.getHostAddress()).append(":").append(port).append("\n\n");
+        consoleMessage.append("\tContents:\n");
+        consoleMessage.append("\t\t");
         for (int i = 0; i < packet.getLength(); i++) {
-            System.out.printf("%c", data[i]);
+            consoleMessage.append(String.format("%c", data[i]));
         }
-        System.out.println();
-        System.out.println("-------------------------");
-        System.out.print("\033[0m"); //Reset the color
+        consoleMessage.append("\n-------------------------");
+        consoleMessage.append("\033[0m"); //Reset the color
+        System.out.println(consoleMessage);
     }
 }
 

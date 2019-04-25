@@ -18,10 +18,7 @@ import sample.Game;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.*;
 
 import static model.Utilities.readFile;
@@ -68,9 +65,8 @@ public class MainMenuController implements Initializable {
         Server server = new Server(serverPort); //This can be any address
         server.start();
 
-        Client client = new Client("localhost", serverPort);
+        Client client = new Client("10.0.0.9", serverPort);
         client.connect();
-
     };
     ///////////////////////////////////////////////////////////////
 
@@ -78,13 +74,39 @@ public class MainMenuController implements Initializable {
 
     ////////////////////////////////// JOIN /////////////////////////////////////////
     private EventHandler JoinGameClicked = event -> {
-        Client client = new Client("localhost", serverPort);
-        client.connect();
+//
+//        try {
+//            scan(InetAddress.getByName("0.0.0.0"));
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
 
-        System.out.println("Join multiPlayer game");
+        Client client1 = new Client("10.0.0.9", serverPort);
+        client1.connect();
+
+        System.out.print("Join multiPlayer game");
         System.out.println("Created client and trying to connect to the server");
     };
-    ///////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////// SCAN PORTS ////////////////////////////////////////
+    public static void scan (InetAddress remote) {
+        String hostName = remote.getHostName();
+
+        for (int i = 1; i < 65536; i++) {
+            try {
+                Socket s = new Socket(remote, i);
+                System.out.println("A server is listening on " + hostName + ":" + i);
+                s.close();
+            } catch (IOException e) {
+                //Not listening on this port
+            }
+        }
+        System.out.println("Scan Complete");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
