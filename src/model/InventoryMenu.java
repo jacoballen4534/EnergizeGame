@@ -1,8 +1,6 @@
 package model;
 
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -55,7 +53,7 @@ public class InventoryMenu extends PauseMenu {
         return innerVBox;
     }
 
-    public TableView<Item> CreateTable(EventHandler onItemSelect){
+    public TableView<Item> CreateTable(){
 
         inventoryView = new TableView();
         inventoryView.setEditable(false);
@@ -87,7 +85,6 @@ public class InventoryMenu extends PauseMenu {
                 UpdateTable();
                 System.out.println("User has clicked: " + rowData.getName());
             });
-            //row.setOnMouseClicked(onItemSelect);
             return row;
         });
 
@@ -116,7 +113,6 @@ public class InventoryMenu extends PauseMenu {
         items.forEach(item -> {
             System.out.println(item.getName());
             if (item.getQuantity() > 0) inventoryView.getItems().add(item);
-            //ObservableList<Item> check = inventoryView.getItems();
         });
     }
 }

@@ -89,9 +89,6 @@ public class InGameMenuController {
 //        this.pauseMenu.show(); //Goes back to pause menu. Instead go back to game
         this.unpause.run();
     };
-    private EventHandler changeEquippedItem = mouseEvent -> {
-        System.out.println("Work in progress");
-    };
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
 
@@ -281,7 +278,7 @@ public class InGameMenuController {
         inventoryMenu.SetLabelAsTitle(inventoryTitle);
 
         //Create the table of items
-        TableView table = inventoryMenu.CreateTable(changeEquippedItem);
+        TableView table = inventoryMenu.CreateTable();
 
         //Label for equipped item icon
         Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",150,100,TextAlignment.LEFT,true);
