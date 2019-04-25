@@ -3,10 +3,7 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -91,7 +88,9 @@ public class InGameMenuController {
         this.inventoryMenu.hide();
 //        this.pauseMenu.show(); //Goes back to pause menu. Instead go back to game
         this.unpause.run();
-
+    };
+    private EventHandler changeEquippedItem = mouseEvent -> {
+        System.out.println("Work in progress");
     };
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
@@ -282,7 +281,7 @@ public class InGameMenuController {
         inventoryMenu.SetLabelAsTitle(inventoryTitle);
 
         //Create the table of items
-        TableView table = inventoryMenu.CreateTable();
+        TableView table = inventoryMenu.CreateTable(changeEquippedItem);
 
         //Label for equipped item icon
         Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);

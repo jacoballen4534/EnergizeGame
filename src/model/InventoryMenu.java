@@ -2,6 +2,7 @@ package model;
 
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -21,10 +22,12 @@ public class InventoryMenu extends PauseMenu {
     //For showing the inventory itself
     private TableView inventoryView;
 
+    private Inventory inventory;
+
+    //Nodes within the menu
     private VBox innerVBox;
     private HBox hbox;
     private ImageView equippedItemIcon;
-    private Inventory inventory;
 
     public InventoryMenu(String ID, Inventory inventory, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
@@ -51,7 +54,7 @@ public class InventoryMenu extends PauseMenu {
         return innerVBox;
     }
 
-    public TableView<Item> CreateTable(){
+    public TableView<Item> CreateTable(EventHandler onItemSelect){
 
         inventoryView = new TableView();
         inventoryView.setEditable(false);
@@ -73,6 +76,18 @@ public class InventoryMenu extends PauseMenu {
 
         //Add columns to table view
         inventoryView.getColumns().addAll(iconColumn,nameColumn,quantityColumn);
+
+        //Set an on-click event for each row
+        inventoryView.setRowFactory(tableView -> {
+            TableRow<Item> row = new TableRow<>();
+            row.setOnMouseClicked(event->{
+                Item rowData = row.getItem();
+                inventory.changeEquippedItem(rowData);
+                System.out.println("User has clicked: " + rowData.getName());
+            });
+            //row.setOnMouseClicked(onItemSelect);
+            return row;
+        });
 
         return inventoryView;
 
