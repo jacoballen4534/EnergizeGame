@@ -16,11 +16,11 @@ public class SoundController {
         //For Player
         put("missAttackSword","/sound/missSwordAttack.wav");
         put("hitAttackSword","/sound/hitSwordAttack.wav");
-        put("fireScroll","/sound/explosion.wav");
+        put("fireScroll","/sound/fireExplosion.wav");
         put("iceScroll","/sound/iceFreezing.wav");
         put("windScroll",null);
-        put("magicAbility","/sound/magicBlast.wav");
-        put("itemPickup","/sound/pickup.wav");
+        put("magicAbility","/sound/magicEffect.wav");
+        put("itemPickup","/sound/pickupItem.wav");
         //For enemies
         put("missAttackAxe","/sound/missAxeAttack.wav");
         put("hitAttackAxe","/sound/hitAxeAttack.wav");
