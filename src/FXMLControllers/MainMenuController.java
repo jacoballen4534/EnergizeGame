@@ -15,8 +15,11 @@ import javafx.event.EventHandler;
 import javafx.util.Pair;
 import sample.Game;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -57,26 +60,54 @@ public class MainMenuController implements Initializable {
     };
 
     /////////////// MultiPlayer buttons ////////////////////////////////
+    ////////////////////////// HOST ////////////////////////////////
+    private static final int serverPort = 4000;
+
     private EventHandler HostGameClicked = event -> {
         //Setup server
-        Server server = new Server(8192); //This can be any address
-        server.start();
-
-        InetAddress address = null;
         try {
-            address = InetAddress.getByName("192.168.1.10");
+            System.out.println("LocalHost address: " + InetAddress.getLocalHost().getHostAddress().trim());
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        int port = 8192;
-        server.send(new byte[] {0,1,2}, address, port);
-        System.out.println("Host multiPlayer game");
-        System.out.println("Created new server");
+        String systemIP = "";
+        try {
+            URL url = new URL("http://bot.whatismyipaddress.com");
+            BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
+            systemIP =  sc.readLine().trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Public IP: " + systemIP);
+
+
+        Server server = new Server(serverPort); //This can be any address
+        server.start();
+
+        Client client = new Client("localhost", serverPort);
+        client.connect();
+
+
+
+
+//
+//        InetAddress address = null;
+//        try {
+//            address = InetAddress.getByName("125.237.55.215");
+//        } catch (UnknownHostException e) {
+//            e.printStackTrace();
+//        }
+//
+//        server.send(new byte[] {0,1,2}, address, serverPort);
+
     };
+    ///////////////////////////////////////////////////////////////
 
 
+
+    ////////////////////////////////// JOIN /////////////////////////////////////////
     private EventHandler JoinGameClicked = event -> {
-        Client client = new Client("192.168.1.10", 8192);
+        Client client = new Client("localhost", serverPort);
         client.connect();
 
         System.out.println("Join multiPlayer game");

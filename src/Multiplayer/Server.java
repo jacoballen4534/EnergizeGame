@@ -32,7 +32,7 @@ public class Server {
         }
 
         System.out.print("\033[0;32m"); //Set Server print color to
-        System.out.println("Started server on port 8192...");
+        System.out.println("Started server on port " + this.port + "...");
 
 
         this.listening = true;
@@ -60,15 +60,19 @@ public class Server {
     public void process(DatagramPacket packet) {
         byte[] data = packet.getData();
         //The server can get the address and port that the message was sent from. This allows the server to reply to the client.
-        InetAddress address = packet.getAddress();
-        int port = packet.getPort();
+        InetAddress sendersAddress = packet.getAddress();
+        int sendersPort = packet.getPort();
 
         dumpPacket(packet); //This is for debug
 
-        if (data[0] == 0x40 && data[1] == 0x40) { //This is a PACKET_HEADER
+        if (data[0] == 0x40 && data[1] == 0x20) { //This is a PACKET_HEADER
+            System.out.print("\033[0;32m"); //Set Server print color to
             switch (data[2]) {
                 case 0x01:
-                    clients.add(new ServerClient(packet.getAddress(), packet.getPort()));
+                    System.out.println("\n-------------------------");
+                    System.out.println("Adding a new client:\n\tAddress: " + packet.getAddress() + "\n\tPort: " + packet.getPort());
+                    System.out.println("\n-------------------------");
+                    this.clients.add(new ServerClient(packet.getAddress(), packet.getPort()));
                     break;
                 case 2:
                     //Packet type 2
@@ -76,14 +80,20 @@ public class Server {
                 case 3:
                     //Packet type 3
                     break;
+                default:
+                    System.out.println("\n-------------------------");
+                    System.out.println("Unknown packet header received:");
+                    System.out.println("-------------------------");
+
             }
+            System.out.print("\033[0m"); //Reset the color
         }
 
     }
 
-    public void send(byte[] data, InetAddress address, int port) {
+    public void send(byte[] data, InetAddress clientAddress, int clientPort) {
         assert (socket.isConnected());
-        DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
+        DatagramPacket packet = new DatagramPacket(data, data.length, clientAddress, clientPort);
         try {
             socket.send(packet);
         } catch (IOException e) {
