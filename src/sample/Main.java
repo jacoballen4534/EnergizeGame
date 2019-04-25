@@ -30,10 +30,8 @@ public class Main extends Application {
 
         Utilities.initializeFiles();
 
-        Clip clip = SoundController.playMusic("titleBGM");
-        clip.addLineListener(lineEvent -> {
-            if (!clip.isRunning()) clip.start();
-        });
+        SoundController.playMusic("titleBGM");
+
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);

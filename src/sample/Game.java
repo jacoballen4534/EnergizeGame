@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import model.*;
 
+import javax.sound.sampled.Clip;
 import java.util.Random;
 
 public class Game extends Canvas {
@@ -58,6 +59,9 @@ public class Game extends Canvas {
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
 
+        //////////////////Update the BGM////////////////////
+        SoundController.changeMusic("gameBGM");
+
         stage.setScene(this.gameScene);
 
         stage.show();
@@ -70,7 +74,10 @@ public class Game extends Canvas {
         this.map.loadLevel();
 
         //////////////////Load MenuElement//////////////////////
-        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> {
+            stage.setScene(Main.getMainScene());
+            SoundController.changeMusic("titleBGM");
+        });
         inGameMenuController.AddMenusToRoot(root);
 
         init(); //Setup game loop

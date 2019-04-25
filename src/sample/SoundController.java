@@ -40,6 +40,8 @@ public class SoundController {
        put("bossBGM","/music/bossFightBGM.wav");
     }};
 
+    private static Clip BGM;
+
     public static Clip playSoundFX(String audioName){
         try{
 
@@ -77,7 +79,6 @@ public class SoundController {
             AudioInputStream stream;
             AudioFormat format;
             DataLine.Info info;
-            Clip clip;
 
             InputStream inputStream = SoundController.class.getResourceAsStream(audioBGM.get(audioName));
             BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
@@ -85,26 +86,67 @@ public class SoundController {
             stream = AudioSystem.getAudioInputStream(bufferedInputStream);
             format = stream.getFormat();
             info = new DataLine.Info(Clip.class, format);
-            clip = (Clip) AudioSystem.getLine(info);
+            BGM = (Clip) AudioSystem.getLine(info);
 
             /*System.out.println("=========================");
             System.out.println(clip.isControlSupported(FloatControl.Type.MASTER_GAIN));
             System.out.println("=========================");*/
 
-            clip.open(stream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-            clip.start();
+            BGM.open(stream);
+            BGM.start();
 
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            BGM.addLineListener(lineEvent -> {
+                if (!BGM.isRunning()) BGM.start();
+            });
+
+            FloatControl gainControl = (FloatControl) BGM.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(-5.0f + MUSIC_GAIN_CONTROL + MASTER_GAIN_CONTROL);
 
-            return clip;
+            return BGM;
 
         }
         catch (Exception e){
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void changeMusic(String audioName){
+        BGM.stop();
+        BGM.close();
+        try{
+            AudioInputStream stream;
+            AudioFormat format;
+            DataLine.Info info;
+
+            InputStream inputStream = SoundController.class.getResourceAsStream(audioBGM.get(audioName));
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+            stream = AudioSystem.getAudioInputStream(bufferedInputStream);
+            format = stream.getFormat();
+            info = new DataLine.Info(Clip.class, format);
+            BGM = (Clip) AudioSystem.getLine(info);
+
+            /*System.out.println("=========================");
+            System.out.println(clip.isControlSupported(FloatControl.Type.MASTER_GAIN));
+            System.out.println("=========================");*/
+
+            BGM.open(stream);
+            //BGM.loop(Clip.LOOP_CONTINUOUSLY);
+            BGM.start();
+
+            FloatControl gainControl = (FloatControl) BGM.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-5.0f + MUSIC_GAIN_CONTROL + MASTER_GAIN_CONTROL);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void stopMusic(){
+        BGM.stop();
+        BGM.close();
     }
 
 }

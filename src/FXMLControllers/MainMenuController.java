@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.util.Pair;
 import sample.Game;
+import sample.SoundController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,8 +62,9 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void ResumeClicked() throws IOException{
-        game.hidePauseMenu(); //Consider removing for design reasons
+        game.hidePauseMenu(); //Consider allowing the pause menu to stay upon load
         game.unpause();
+        SoundController.changeMusic("gameBGM");
     }
 
     @FXML private void NewGameClicked() throws IOException {
