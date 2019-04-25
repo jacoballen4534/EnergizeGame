@@ -47,7 +47,7 @@ public class Main extends Application {
 
         stage = primaryStage;
         Parent root = (Parent) new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/mainMenu.fxml"));
-        primaryStage.setTitle("Main MenuElement");
+        primaryStage.setTitle("Main Menu");
 
         //Loads a global stylesheet
 //        File styleSheet = new File("resources/css/globalStyle.css");

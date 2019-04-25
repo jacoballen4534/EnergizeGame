@@ -54,7 +54,7 @@ public class highScoreController implements Initializable {
 
 
     public void highScoreBackButtonPressed() throws IOException {
-        changeStageName("Main MenuElement");
+        changeStageName("Main Menu");
         highScorePane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
