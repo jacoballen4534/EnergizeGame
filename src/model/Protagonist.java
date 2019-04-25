@@ -309,7 +309,7 @@ public class Protagonist extends Character {
     }
 
     public void useItem(){
-        if (this.inventory.getEquippedItem() != null) {
+        /*if (this.inventory.getEquippedItem() != null) {
             this.inventory.getEquippedItem().useItem(this);
             if (inventory.getItemCount() > 0) {
                 this.inventory.setEquippedItem(this.inventory.getItemList().get(0));
@@ -321,7 +321,20 @@ public class Protagonist extends Character {
             //Update inventory
         } else {
             System.out.println("You don't have an item to use");
+        }*/
+
+        /*
+        * Check equipped item is not null
+        * Use the item's effect
+        * remove the item from the inventory
+        * Equip next item in list
+        */
+        if (this.inventory.getEquippedItem() != null){
+            this.inventory.getEquippedItem().useItem(this);
+            this.inventory.setEquippedItem(null);
+            if (inventory.getItemCount()>0) this.inventory.changeEquippedItem(this.inventory.getItemList().get(0));
         }
+        else System.out.println("You don't have an item to use!");
     }
 
 
