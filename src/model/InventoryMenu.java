@@ -83,6 +83,7 @@ public class InventoryMenu extends PauseMenu {
             row.setOnMouseClicked(event->{
                 Item rowData = row.getItem();
                 inventory.changeEquippedItem(rowData);
+                UpdateTable();
                 System.out.println("User has clicked: " + rowData.getName());
             });
             //row.setOnMouseClicked(onItemSelect);

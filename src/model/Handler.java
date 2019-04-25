@@ -220,13 +220,13 @@ public class Handler { //This class will hold all the game objects and is respon
         }
     }
 
-    public static void freezeEnemys(Scroll scroll) {
+    public static void freezeEnemies(Scroll scroll) {
         for (Enemy enemy : enemies) {
             enemy.freeze(scroll.getFreezeDuration());
         }
     }
 
-    public static void blowEnemysAway(Scroll scroll) {
+    public static void blowEnemiesAway(Scroll scroll) {
         for (Enemy enemy : enemies) {
             enemy.blowAway(scroll.getWindDuration());
         }

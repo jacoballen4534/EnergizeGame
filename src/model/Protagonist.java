@@ -318,7 +318,7 @@ public class Protagonist extends Character {
             } else {
                 this.inventory.setEquippedItem(null);
             }
-            //Update inv
+            //Update inventory
         } else {
             System.out.println("You don't have an item to use");
         }

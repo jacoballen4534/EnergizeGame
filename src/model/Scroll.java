@@ -11,7 +11,7 @@ public class Scroll extends Item{
 
     public Scroll(String name, String description, int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight) {
         super(name, description,xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight);
-        this.damage = 50;
+        this.damage = 100;
         this.freezeDuration = 5000L; //Freeze enemy's for 5 seconds
         this.windDuration = 1500L; //Quickly blow enemy's away
     }
@@ -31,9 +31,9 @@ public class Scroll extends Item{
         if (this.name.equals("Fire Scroll")) {
             Handler.fireScrollAttack(this);
         } else if (this.name.equals("Ice Scroll")) {
-            Handler.freezeEnemys(this);
+            Handler.freezeEnemies(this);
         } else if (this.name.equals("Wind Scroll")) {
-            Handler.blowEnemysAway(this);
+            Handler.blowEnemiesAway(this);
         }
     }
 

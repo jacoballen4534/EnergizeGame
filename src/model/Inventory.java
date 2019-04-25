@@ -70,7 +70,6 @@ public class Inventory{
                Platform.runLater(()->items.remove(item1));
            }
         });
-        //this.items.remove(item);
     }
 
     public ArrayList<Item> getItemList(){
