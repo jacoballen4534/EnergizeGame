@@ -8,7 +8,7 @@ public class ServerClient {
     public InetAddress address;
     public int port;
     public boolean status = false; //is connected.
-
+    public int attempt;
     private static int nextUserID = 1;
 
     public ServerClient(InetAddress address, int port) {
@@ -16,9 +16,6 @@ public class ServerClient {
         this.address = address;
         this.port = port;
         this.status = true;
-    }
-
-    public int hashCode() {
-        return this.userID; //To be able to compare 2 server clients
+        this.attempt = 0;
     }
 }

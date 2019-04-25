@@ -2,14 +2,9 @@ package Multiplayer;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Arrays;
 
 public class Client {
-
-    //Packet constants
-    private final static byte[] PACKET_HEADER = new byte[] {0x40, 0x20}; //TODO: Make a list of different headers. This can be any identifier.
-    private final static byte PACKET_TYPE_CONNECT = 0x01;
-
-
     private int serverPort;
     private InetAddress serverIPAddress;
     private String serverIPAddressString;
@@ -18,6 +13,7 @@ public class Client {
     private byte[] receivedDataBuffer = new byte[MAX_PACKET_SIZE * 10]; // Allocate a large array once and re-use it.
     private boolean listening = false;
     private Thread send, receive;
+    private int clientID;//The server sends the client an clientID to use for further communication.
 
 
 
@@ -52,27 +48,14 @@ public class Client {
         try {
             socket = new DatagramSocket();//This is the client socket. It can have a random serverPort as it will send data before receiving any.
             socket.connect(serverIPAddress, 4000);
-            System.out.println("Client socket connected = " + socket.isConnected());
         } catch (SocketException e) {
             e.printStackTrace();
             return false;
         }
 
-        StringBuilder consoleMessage = new StringBuilder();
-
-        consoleMessage.append("\033[0;34m"); //Set Client print color to blue
-        consoleMessage.append("\n-------------------------\n");
-        consoleMessage.append("Connected to server:\n");
-        consoleMessage.append("\t").append(this.serverIPAddressString).append(":").append(this.serverPort).append("\n");
-        consoleMessage.append("-------------------------");
-        consoleMessage.append("\033[0m"); //Reset the color
-        System.out.println(consoleMessage);
-
-
         this.listening = true;
         this.receive = new Thread(() -> listen(), "Client Receiving Thread");
         this.receive.start();
-
 
         sendConnectionPacket(); //Send connection packet to send the server a message, so that the server can get the client address
 
@@ -94,45 +77,49 @@ public class Client {
 
 
     public void process(DatagramPacket packet) { //Process the incoming packet
-        byte[] data = packet.getData();
+        String data = new String(packet.getData(), 0, packet.getLength());
         //This will be update instructions from the server.
 
-        dumpPacket(packet); //This is for debug
+//        dumpPacket(packet); //Debug
         StringBuilder consoleMessage = new StringBuilder();
 
-        if (data[0] == 0x40 && data[1] == 0x20) { //This is a PACKET_HEADER
             consoleMessage.append("\033[0;94m"); //Set Client print color to blue
             consoleMessage.append("\n-------------------------\n");
-            switch (data[2]) {
-                case 1:
-                    consoleMessage.append("Instruction type 1\n");
-                    //Instruction type 1
-                    break;
-                case 2:
-                    //Instruction type 2
-                    break;
-                case 3:
-                    //Instruction type 3
-                    break;
-                default:
-                    consoleMessage.append("Unknown packet header received:\n");
-
-            }
-            consoleMessage.append("-------------------------");
-            consoleMessage.append("\033[0m"); //Reset the color
+        if (data.startsWith(Server.PACKET_ID)) { //This means this client has successfully connected to the server and got given an id
+            this.clientID = Integer.parseInt(data.split(Server.PACKET_ID + "|" + Server.PACKET_END)[1].trim());
+            consoleMessage.append("Client @ ").append(this.serverIPAddressString).append(":").append(this.serverPort).append(" got given clientID: ").append(this.clientID).append("\n");
+            consoleMessage.append("-------------------------\033[0m");
             System.out.println(consoleMessage);
+
+        } else if (data.startsWith(Server.PACKET_PING)) {
+            String message = Server.PACKET_PING + this.clientID + Server.PACKET_END;
+            send(message.getBytes());
+        } else if (data.startsWith(Server.PACKET_MESSAGE)) { //This is a message from the server
+            consoleMessage = new StringBuilder();
+            consoleMessage.append("\033[0;35m "); //Set Client print color to blue
+            data = data.split(Server.PACKET_MESSAGE + "|" + Server.PACKET_END)[1].trim();
+            consoleMessage.append(data).append("\n");
+            System.out.println(consoleMessage);
+        } else {
+            consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
+            consoleMessage.append("-------------------------\033[0m");
+            System.out.println(consoleMessage);
+
         }
+
     }
 
 
 
 
-    private void sendConnectionPacket() {
-        BinaryWriter writer = new BinaryWriter();
-        writer.write(PACKET_HEADER);
-        writer.write(PACKET_TYPE_CONNECT);
-        send(writer.getBuffer());
+    private void sendConnectionPacket() { //To send the server this clients address and port.
+          send((Server.PACKET_CONNECT + Server.PACKET_END).getBytes());
     }
+
+    private void disconnect() {
+        send((Server.PACKET_DISCONNECT + this.clientID + Server.PACKET_END).getBytes());
+    }
+
 
     public void send(final byte[] data) {
         this.send = new Thread("Client Send") {
@@ -154,7 +141,7 @@ public class Client {
 
 
     private void dumpPacket(DatagramPacket packet) {
-        byte[] data = packet.getData();
+        String data = new String(packet.getData());
         InetAddress address = packet.getAddress();
         int port = packet.getPort();
         StringBuilder consoleMessage = new StringBuilder();
@@ -164,10 +151,8 @@ public class Client {
         consoleMessage.append("CLIENT PACKET DUMP:\n");
         consoleMessage.append("\tFrom: ").append(address.getHostAddress()).append(":").append(port).append("\n\n");
         consoleMessage.append("\tContents:\n");
-        consoleMessage.append("\t\t");
-        for (int i = 0; i < packet.getLength(); i++) {
-            consoleMessage.append(String.format("%c", data[i]));
-        }
+        consoleMessage.append("\t\t").append(data, 0, packet.getLength());
+
         consoleMessage.append("\n-------------------------");
         consoleMessage.append("\033[0m"); //Reset the color
         System.out.println(consoleMessage);

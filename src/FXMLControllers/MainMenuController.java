@@ -56,16 +56,14 @@ public class MainMenuController implements Initializable {
         game.start();
     };
 
-    /////////////// MultiPlayer buttons ////////////////////////////////
-    ////////////////////////// HOST ////////////////////////////////
-    private static final int serverPort = 4000;
-    private static final String serverAddressString = "10.0.0.9";
+    //////////////////////// Multi Player buttons ////////////////////////////////
+    /////////////////////////////// HOST ////////////////////////////////
+    private static final int serverPort = 4000; //This can be any address
+    public static String serverAddressString = "localhost";
 
     private EventHandler HostGameClicked = event -> {
-        this.getServerAddressMenu = createGetServerAddressMenu(getServerAddressMenu);
-        this.getServerAddressMenu.show();
         //Setup server
-        Server server = new Server(serverAddressString, serverPort); //This can be any address
+        Server server = new Server(serverAddressString, serverPort);
         server.start();
 
         Client client = new Client(serverAddressString, serverPort);
@@ -77,38 +75,10 @@ public class MainMenuController implements Initializable {
 
     ////////////////////////////////// JOIN /////////////////////////////////////////
     private EventHandler JoinGameClicked = event -> {
-//
-//        try {
-//            scan(InetAddress.getByName("0.0.0.0"));
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-
         Client client1 = new Client(serverAddressString, serverPort);
         client1.connect();
 
-        System.out.print("Join multiPlayer game");
-        System.out.println("Created client and trying to connect to the server");
     };
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    //////////////////////////// SCAN PORTS ////////////////////////////////////////
-    public static void scan (InetAddress remote) {
-        String hostName = remote.getHostName();
-
-        for (int i = 1; i < 65536; i++) {
-            try {
-                Socket s = new Socket(remote, i);
-                System.out.println("A server is listening on " + hostName + ":" + i);
-                s.close();
-            } catch (IOException e) {
-                //Not listening on this port
-            }
-        }
-        System.out.println("Scan Complete");
-    }
-
     ////////////////////////////////////////////////////////////////////////////////
 
     @Override
