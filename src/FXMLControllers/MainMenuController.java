@@ -34,7 +34,6 @@ public class MainMenuController implements Initializable {
     private Pair<String, Long> saveTwo;
     private Pair<String, Long> saveThree;
 
-
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
     @FXML private Label Resume;

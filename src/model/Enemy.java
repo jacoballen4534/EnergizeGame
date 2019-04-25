@@ -100,7 +100,7 @@ public abstract class Enemy extends Character{
 //            level.getShortestPath().findAndPrintPath(currentNodeId, targetNodeId);
 //        }
 
-        if (this.blownAway) { //Push enemys away at double speed
+        if (this.blownAway) { //Push enemies away at double speed
             this.velocityX = this.EnemyMovementSpeed * (this.x > target.getX() ? 5 : -5);
             this.velocityY = this.EnemyMovementSpeed * (this.y > target.getY() ? 5 : -5);
         } else if (this.frozen) {

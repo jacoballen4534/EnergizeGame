@@ -30,6 +30,7 @@ public class Main extends Application {
 
         Utilities.initializeFiles();
 
+        /*
         //Play background music
         String musicFile = "/music/titleScreenBGM.wav"; //Must be a .wav!
         InputStream musicSrc = this.getClass().getResourceAsStream(musicFile);
@@ -42,7 +43,8 @@ public class Main extends Application {
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(-5.0f);
 
-        clip.start();
+        clip.start();*/
+        SoundController.playMusic("titleBGM");
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
