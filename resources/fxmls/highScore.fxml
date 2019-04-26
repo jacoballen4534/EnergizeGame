@@ -10,47 +10,46 @@
 
 <AnchorPane fx:id="highScorePane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.highScoreController">
     <children>
-        <Label fx:id="highScoreTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="-30.0" prefHeight="40.0" text="High Scores" textAlignment="CENTER" textFill="WHITE">
-            <font>
-                <Font name="Cantarell Thin" size="60.0" />
-            </font>
-        </Label>
-        <HBox layoutX="306.0" layoutY="154.0" prefHeight="230.0" prefWidth="403.0">
-            <children>
-                <VBox alignment="CENTER" prefHeight="230.0" prefWidth="305.0">
-                    <children>
-                        <Label styleClass="label-heading" text="Name">
-                            <font>
-                                <Font name="Cantarell Extra Bold" size="24.0" />
-                            </font></Label>
-                        <Label fx:id="Person1" text="Person1">
-                            <font>
-                                <Font name="C059-Bold" size="13.0" />
-                            </font></Label>
-                        <Label fx:id="Person2" text="Person2" />
-                        <Label fx:id="Person3" text="Person3" />
-                        <Label fx:id="Person4" text="Person4" />
-                        <Label fx:id="Person5" text="Person5" />
-                    </children>
-                </VBox>
-                <VBox alignment="CENTER" prefHeight="230.0" prefWidth="314.0">
-                    <children>
-                        <Label styleClass="label-heading" text="Score">
-                            <font>
-                                <Font name="Cantarell Extra Bold" size="24.0" />
-                            </font></Label>
-                        <Label fx:id="Score1" text="Score1" />
-                        <Label fx:id="Score2" text="Score2" />
-                        <Label fx:id="Score3" text="Score3" />
-                        <Label fx:id="Score4" text="Score4" />
-                        <Label fx:id="Score5" text="Score5" />
-                    </children>
-                    <opaqueInsets>
-                        <Insets />
-                    </opaqueInsets>
-                </VBox>
-            </children>
-        </HBox>
-        <Button fx:id="highScoreBackButton" alignment="CENTER" layoutX="412.0" layoutY="384.0" mnemonicParsing="false" onAction="#highScoreBackButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Back to Main Menu" textAlignment="CENTER" />
+      <VBox alignment="TOP_CENTER" layoutX="152.0" layoutY="250.0" prefHeight="200.0" prefWidth="100.0" spacing="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+              <Label fx:id="highScoreTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="High Scores" textAlignment="CENTER" textFill="WHITE">
+                  <font>
+                      <Font name="Cantarell Thin" size="60.0" />
+                  </font>
+              </Label>
+              <HBox alignment="CENTER" prefHeight="230.0" prefWidth="403.0">
+                  <children>
+                      <VBox alignment="CENTER" prefHeight="230.0" prefWidth="305.0">
+                          <children>
+                              <Label fx:id="highScoreHeading" text="Name"/>
+                              <Label fx:id="Person1" text="Person1"/>
+                              <Label fx:id="Person2" text="Person2" />
+                              <Label fx:id="Person3" text="Person3" />
+                              <Label fx:id="Person4" text="Person4" />
+                              <Label fx:id="Person5" text="Person5" />
+                          </children>
+                      </VBox>
+                      <VBox alignment="CENTER" prefHeight="230.0" prefWidth="314.0">
+                          <children>
+                              <Label fx:id="highScoreHeading" text="Score">
+                                  <font>
+                                      <Font name="Cantarell Extra Bold" size="24.0" />
+                                  </font>
+                        </Label>
+                              <Label fx:id="Score1" text="Score1" />
+                              <Label fx:id="Score2" text="Score2" />
+                              <Label fx:id="Score3" text="Score3" />
+                              <Label fx:id="Score4" text="Score4" />
+                              <Label fx:id="Score5" text="Score5" />
+                          </children>
+                          <opaqueInsets>
+                              <Insets />
+                          </opaqueInsets>
+                      </VBox>
+                  </children>
+              </HBox>
+              <Button fx:id="highScoreBackButton" alignment="CENTER" mnemonicParsing="false" onAction="#highScoreBackButtonPressed" prefHeight="40.0" prefWidth="200.0" text="Back to Main Menu" textAlignment="CENTER" />
+         </children>
+      </VBox>
     </children>
 </AnchorPane>

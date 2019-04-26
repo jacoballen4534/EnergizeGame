@@ -2,7 +2,7 @@
 .label{
     -fx-text-fill: #e8e8e8;
     /*-fx-font-family: beon;*/
-    -fx-font-size: 30;
+    -fx-font-size: 25;
 }
 .button{
     -fx-background-color: #ff8800; /*#AB4642;*/
@@ -175,6 +175,13 @@
     -fx-label-padding: 0 0 0 0;
     -fx-font-size: 150;
     -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#highScoreHeading{
+    -fx-text-fill:#ff8800;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 40;
 }
 .menulabel{
     -fx-text-fill: #ffc700;
