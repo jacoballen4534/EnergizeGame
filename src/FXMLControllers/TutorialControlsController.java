@@ -17,7 +17,7 @@ import sample.Game;
 public class TutorialControlsController implements Initializable {
 
     @FXML
-    public AnchorPane tutorialScreenPane;
+    public AnchorPane tutorialScreenControlsPane;
 
     @FXML public ImageView movementControls;
     @FXML public ImageView attackControl;
@@ -51,11 +51,11 @@ public class TutorialControlsController implements Initializable {
     }
 
     public void titleButtonPressed() throws IOException {
-       tutorialScreenPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/mainMenu.fxml")));
+       tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
     public void nextPageButtonPressed() throws IOException{
-        tutorialScreenPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenMechanics.fxml")));
+        tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenMechanics.fxml")));
     }
 
     public static void setController(MainMenuController menuController){
