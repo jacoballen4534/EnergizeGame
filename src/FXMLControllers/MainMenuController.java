@@ -294,6 +294,10 @@ public class MainMenuController implements Initializable {
          isGameActive = gameActive;
     }
 
+    public static void setGame(Game game) {
+        MainMenuController.game = game;
+    }
+
     /* DEPRECATED */
     /*
     private void FadeOutCurrentMenu(){
