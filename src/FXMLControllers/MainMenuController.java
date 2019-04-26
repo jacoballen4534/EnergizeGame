@@ -1,10 +1,8 @@
 package FXMLControllers;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -55,8 +53,8 @@ public class MainMenuController implements Initializable {
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
         try {
-            TutorialScreenController.setController(this);
-            mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreen.fxml")));
+            TutorialControlsController.setController(this);
+            mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenControls.fxml")));
         }
         catch (Exception e){
             e.printStackTrace();

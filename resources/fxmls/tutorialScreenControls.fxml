@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="tutorialScreenPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialScreenController">
+<AnchorPane fx:id="tutorialScreenPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialControlsController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -58,7 +58,49 @@
                         <Insets left="20.0" />
                      </padding>
                   </VBox>
-                  <VBox prefHeight="100.0" prefWidth="516.0" />
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="534.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Blocking" />
+                                    <ImageView fx:id="blockControl" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label text="Use this to activate a shield that prevents you from taking damage" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Pause" />
+                                    <ImageView fx:id="pauseButton" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="pauseControl" text="Use this to pause the game" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="71.0" prefWidth="65.0">
+                                 <children>
+                                    <Label text="Use Item" wrapText="true" />
+                                    <ImageView fx:id="itemControl1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label prefHeight="42.0" prefWidth="204.0" text="Use this to activate your equipped item" wrapText="true" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
                </children>
             </HBox>
             <Button mnemonicParsing="false" onMouseClicked="#continueButtonPressed" text="Continue" />
