@@ -166,10 +166,10 @@
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
     -fx-font-size: 130;
-    -fx-effect: dropshadow(gaussian, #7cafc2, 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
 }
 .label#highScoreTitle{
-    -fx-text-fill:#ffdd00;
+    -fx-text-fill:#ffe500;
     -fx-font-family: beon;
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
