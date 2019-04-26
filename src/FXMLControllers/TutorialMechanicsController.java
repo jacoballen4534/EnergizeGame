@@ -27,6 +27,6 @@ public class TutorialMechanicsController implements Initializable {
     }
 
     public void previousPageButtonPressed() throws IOException{
-        tutorialScreenMechanicsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenControls.fxml")));
+        tutorialScreenMechanicsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenItems.fxml")));
     }
 }

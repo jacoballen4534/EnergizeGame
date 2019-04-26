@@ -54,7 +54,7 @@ public class TutorialControlsController implements Initializable {
     }
 
     public void nextPageButtonPressed() throws IOException{
-        tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenMechanics.fxml")));
+        tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenItems.fxml")));
     }
 
     public static void setController(MainMenuController menuController){
