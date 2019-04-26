@@ -65,6 +65,6 @@ public class Grunt extends Enemy {
 
     @Override
     protected void playDeathSound() {
-        SoundController.playSoundFX("gruntDeath");
+        //SoundController.playSoundFX("gruntDeath");
     }
 }
