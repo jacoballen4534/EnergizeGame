@@ -15,7 +15,6 @@ public class TutorialMechanicsController implements Initializable {
     @FXML public AnchorPane tutorialScreenMechanicsPane;
 
     private static Game game;
-    public static MainMenuController controller;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

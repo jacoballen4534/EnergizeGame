@@ -22,7 +22,6 @@ public class TutorialItemsController implements Initializable {
     @FXML public ImageView fireScroll;
 
     private static Game game;
-    //public static MainMenuController controller;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
