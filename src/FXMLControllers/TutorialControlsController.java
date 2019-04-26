@@ -38,7 +38,7 @@ public class TutorialControlsController implements Initializable {
         inventoryButton.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_i.png")));
     }
 
-    public void startGameButtonPressed(){
+    @FXML public void startGameButtonPressed(){
         game = new Game(controller, System.currentTimeMillis());
         game.start();
         controller.setGame(game);
@@ -46,14 +46,14 @@ public class TutorialControlsController implements Initializable {
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("Continue button pressed");
+        //System.out.println("Start game");
     }
 
-    public void titleButtonPressed() throws IOException {
+    @FXML public void titleButtonPressed() throws IOException {
        tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
-    public void nextPageButtonPressed() throws IOException{
+    @FXML public void nextPageButtonPressed() throws IOException{
         tutorialScreenControlsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenItems.fxml")));
     }
 

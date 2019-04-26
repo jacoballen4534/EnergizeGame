@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import sample.Game;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,13 +14,23 @@ public class TutorialMechanicsController implements Initializable {
 
     @FXML public AnchorPane tutorialScreenMechanicsPane;
 
+    private static Game game;
+    public static MainMenuController controller;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
-    public void startGameButtonPressed(){
-        System.out.println("Refactor note");
+    @FXML public void startGameButtonPressed(){
+        game = new Game(TutorialControlsController.controller, System.currentTimeMillis());
+        game.start();
+        TutorialControlsController.controller.setGame(game);
+        try{titleButtonPressed();}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        //System.out.println("Start game");
     }
 
     public void titleButtonPressed() throws IOException {

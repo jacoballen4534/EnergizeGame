@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import sample.Game;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +21,9 @@ public class TutorialItemsController implements Initializable {
     @FXML public ImageView iceScroll;
     @FXML public ImageView fireScroll;
 
+    private static Game game;
+    //public static MainMenuController controller;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         healthKit.setImage(new Image(this.getClass().getResourceAsStream("/sprites/healthKit.png")));
@@ -29,8 +33,15 @@ public class TutorialItemsController implements Initializable {
         fireScroll.setImage(new Image(this.getClass().getResourceAsStream("/sprites/fireScroll.png")));
     }
 
-    public void startGameButtonPressed(){
-        System.out.println("Refactor note");
+    @FXML public void startGameButtonPressed(){
+        game = new Game(TutorialControlsController.controller, System.currentTimeMillis());
+        game.start();
+        TutorialControlsController.controller.setGame(game);
+        try{titleButtonPressed();}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        //System.out.println("Start game");
     }
 
     public void titleButtonPressed() throws IOException {
@@ -44,4 +55,5 @@ public class TutorialItemsController implements Initializable {
     public void previousPageButtonPressed() throws IOException{
         tutorialScreenItemsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenControls.fxml")));
     }
+
 }
