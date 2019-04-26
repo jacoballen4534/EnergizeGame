@@ -279,10 +279,12 @@ public class Protagonist extends Character {
         }
     }
 
-    public void sendToServer(String message) {
+    public boolean sendToServer(String message) {
         if (this.client != null) {
             this.client.send(message.getBytes());
+            return true;
         }
+        return false;
     }
 
     public void disconnect() {

@@ -130,9 +130,10 @@ public class Handler { //This class will hold all the game objects and is respon
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
-    public static void updateEnemyTarget (Protagonist target) {
+    public static void updateEnemyTarget () {
         for (Enemy enemy : enemies) {
-            enemy.updateTarget(target);
+//            ------change up the targets
+            enemy.updateTarget(protagonist);
         }
     }
 
@@ -166,10 +167,10 @@ public class Handler { //This class will hold all the game objects and is respon
         enemy.setSpawnID(spawnID);
     }
 
-    public static void removeEnemy (Enemy enemy) { //TODO: Also remove these from the level so they dont spawn again
+    public static void removeEnemy (Enemy enemy) { //Tell all clients to remove this from their map
         Platform.runLater(() -> {
-            enemies.remove(enemy);
             map.removeObject(enemy);
+            enemies.remove(enemy);
         });
     }
 
@@ -193,9 +194,23 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
-    public static void removeFromMap (int level, int location) {
+    public static void removeFromMap (int level, int location) { //Sent from server. Remove from map, and if it is on the current level, remove it from the handler also.
         Platform.runLater(() -> {
             map.removeObject(level, location);
+            if (level == map.getCurrentLevelNumber()) { //Remove if from the handler aswell
+                for (int i = 0; i < enemies.size(); i++) {
+                    Enemy enemy = enemies.get(i);
+                    if (enemy.getSpawnID().getKey() == level && enemy.getSpawnID().getValue() == location) {
+                        enemies.remove(enemy);
+                    }
+                }
+                for (int i = 0; i < pickups.size(); i++) {
+                    Item item = pickups.get(i);
+                    if (item.getSpawnID().getKey() == level && item.getSpawnID().getValue() == location) {
+                        pickups.remove(item);
+                    }
+                }
+            }
         });
     }
 

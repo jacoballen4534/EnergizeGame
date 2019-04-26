@@ -61,8 +61,9 @@ public class Map {
     }
 
     public void removeObject(GameObject toRemove) {
-        this.game.getProtagonist().sendToServer(Server.PACKET_REMOVE + toRemove.getSpawnID().getKey() + "," + toRemove.getSpawnID().getValue() + Server.PACKET_END); // /rm/level#,location#/e/
-        levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove.getSpawnID().getValue());
+        if (!this.game.getProtagonist().sendToServer(Server.PACKET_REMOVE + toRemove.getSpawnID().getKey() + "," + toRemove.getSpawnID().getValue() + Server.PACKET_END)) { // /rm/level#,location#/e/
+            levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove.getSpawnID().getValue()); //If it couldn't send to server, this means single player. So remove the item now
+        }
     }
 
     public void removeObject(int level, int location) { //This gets called by the client when removing based off server. So dont need to tell the server again
