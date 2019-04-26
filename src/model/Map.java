@@ -71,11 +71,7 @@ public class Map {
     }
 
     public Level getLevel(int levelNumber) {
-        if (this.levels.size() >= levelNumber) {
-            //By only updating currentLevelImage, this will ensure if a non existent level is requested it will still return a valid level
-            this.currentLevel = this.levels.get(levelNumber);
-        }
-        return this.currentLevel;
+        return this.levels.getOrDefault(levelNumber, null);
     }
 
     public int getTutorialLevelNumber() {

@@ -14,6 +14,7 @@ public abstract class Character extends GameObject{
     protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
+    protected boolean isAlive = true;
     //To play each animation once.
     protected AnimationsState attackState;
     protected AnimationsState gotHitState;

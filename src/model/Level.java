@@ -44,7 +44,7 @@ public class Level {
     private Point2D currentPoint;
     private int nextXDirection, nextYDirection; //Used to be able to keep doing in the same direction
     private ArrayList<Point2D> floorLocation = new ArrayList<>();
-    ShortestPath shortestPath;
+    private ShortestPath shortestPath = null;
     private int numberOfDoors = 0;
     private boolean bossEntrance = false;
     private boolean bossLevel = false;

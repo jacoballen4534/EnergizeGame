@@ -1,6 +1,5 @@
 package Multiplayer;
 
-import com.sun.xml.internal.ws.api.message.Packet;
 import javafx.application.Platform;
 import model.Handler;
 import sample.Game;
@@ -31,6 +30,9 @@ public class Server implements Runnable {
     public static final String PACKET_PROTAGONIST_UPDATE = "/pu/";
     public static final String PACKET_NEW_PLAYER = "/np/";
     public static final String PACKET_REMOVE = "/rm/"; //Remove something from the map
+    public static final String PACKET_ENEMY_UPDATE = "/eu/";
+    public static final String PACKET_ENEMY_TARGET_UPDATE = "/etu/"; //Indicates the type of message
+    public static final String PACKET_ENEMY_TARGET = "/et/";//This is the actual target
 
     private int port;
     private Thread run, manage, send, receive;
@@ -143,6 +145,16 @@ public class Server implements Runnable {
             forwardToOthers(data.getBytes(), id);
         } else if (data.startsWith(PACKET_REMOVE)) { //Tell the other clients to remove this object from their map
             sendToAll(data.getBytes()); //Forward it on to all clients
+        } else if (data.startsWith(PACKET_ENEMY_TARGET_UPDATE)) { //Tell all other clients to update their enemy targets
+            sendToAll(data.getBytes()); //Forward it on to all clients
+        } else if (data.startsWith(PACKET_ENEMY_UPDATE)) { //Tell all other clients to update their enemy positions.
+                for (int i = 0; i < clients.size(); i++) {
+                ServerClient client = clients.get(i);
+                if (client.address.equals(sendersAddress) && client.port == sendersPort) {
+                    forwardToOthers(data.getBytes(), client.userID);
+                    break;
+                }
+            }
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -235,7 +247,7 @@ public class Server implements Runnable {
 
     public void run() { //Sets up server and then closes
         this.running = true;
-        mannageClients();
+        manageClients();
         receive();
         Scanner scanner = new Scanner(System.in);
         while (running) {
@@ -302,7 +314,7 @@ public class Server implements Runnable {
         System.out.println(message);
     }
 
-    private void mannageClients() { //Ensure clients are still connected ect...
+    private void manageClients() { //Ensure clients are still connected ect... Also get all enemy's to update their target
         this.manage = new Thread("Server Manage Clients") {
             public void run() {
                 while(running) {
@@ -326,6 +338,7 @@ public class Server implements Runnable {
                             client.attempt = 0;
                         }
                     }
+                    Handler.updateEnemyTarget();
                 }
             }
         };

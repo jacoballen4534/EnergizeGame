@@ -1,5 +1,6 @@
 package model;
 
+import Multiplayer.Server;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -131,11 +132,100 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void updateEnemyTarget () {
-        for (Enemy enemy : enemies) {
-//            ------change up the targets
-            enemy.updateTarget(protagonist);
+        ShortestPath shortestPath = null;
+        Protagonist closestPlayer = protagonist;
+
+        if (map != null) { //If the map hasn't been setup yet. Just set all enemy targets as the host
+            shortestPath = map.getCurrentLevel().getShortestPath();
+        }
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (shortestPath == null) {
+                closestPlayer = protagonist;
+                enemy.updateTarget(closestPlayer);
+                continue;
+            }
+            int currentNodeId = (int)(enemy.x / Game.PIXEL_UPSCALE) + (int)(enemy.y / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+            int targetNodeId = (int)(protagonist.getX() / Game.PIXEL_UPSCALE) + (int)(protagonist.getY() / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+            double closestDist = Double.POSITIVE_INFINITY;
+            if (protagonist.isAlive) {
+                closestDist = shortestPath.shortestPathLength(currentNodeId, targetNodeId);
+            }
+
+            for (int j = 0; j < otherPlayers.size(); j++) {
+                if (otherPlayers.get(j).getLevelNumber() == map.getTutorialLevelNumber()) {
+                    targetNodeId = (int) (otherPlayers.get(j).getX() / Game.PIXEL_UPSCALE) + (int) (otherPlayers.get(j).getY() / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+                    int thisDist = shortestPath.shortestPathLength(currentNodeId, targetNodeId);
+                    if (thisDist < closestDist) {
+                        closestDist = thisDist;
+                        closestPlayer = otherPlayers.get(j);
+                    }
+                }
+            }
+            enemy.updateTarget(closestPlayer);
+            String commands = Server.PACKET_ENEMY_TARGET_UPDATE + Server.PACKET_ID + enemy.getSpawnID().getValue() + Server.PACKET_LEVEL_NUMBER
+                    + enemy.getSpawnID().getKey() + Server.PACKET_ENEMY_TARGET + enemy.target.id + Server.PACKET_END;
+            protagonist.sendToServer(commands);
         }
     }
+
+    public static void updateEnemyTarget (String target) { //This is only called from the server to sync the enemy targets
+        String[] temp;//For splitting
+        target = target.split(Server.PACKET_ENEMY_TARGET_UPDATE)[1]; //Remove /etu/ Left with /id/364/ln/20/et/1/e/
+        temp = target.split(Server.PACKET_ID + "|" + Server.PACKET_LEVEL_NUMBER); //Get the enemy id this packet is for
+        int id = Integer.parseInt(temp[1]);
+        target = temp[2]; // left with 20/et/1/e/
+        temp = target.split(Server.PACKET_ENEMY_TARGET); // Gives [20] [1/e/]
+        int levelNumber = Integer.parseInt(temp[0]);
+        target = temp[1].split(Server.PACKET_END)[0];// Splits to [1]
+        int targetId = Integer.parseInt(target);
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.getSpawnID().getKey() == levelNumber && enemy.getSpawnID().getValue() == id) { //This is the enemy we want to update
+                for (int j = 0; j < otherPlayers.size(); j++) {
+                    if (otherPlayers.get(j).id == targetId) {
+                        enemy.updateTarget(otherPlayers.get(j));
+                        return;
+                    }
+                }
+                enemy.updateTarget(protagonist); //If the target couldn't be found, or is the protag, then set it so that the enemy has a target.
+                return;
+            }
+        }
+    }
+
+    public static void updateEnemyLocations (String target) { //This is only called from the server to sync the enemy location
+        String[] temp;//For splitting
+        target = target.split(Server.PACKET_ENEMY_UPDATE)[1]; //Remove /eu/ Left with /id/336/ln/60/pos/381.0,671.0/pos/1/e/
+        temp = target.split(Server.PACKET_ID + "|" + Server.PACKET_LEVEL_NUMBER); //Get the enemy id this packet is for. Splits to [] [336] [60/pos/381.0,671.0/pos/1/e/]
+        int id = Integer.parseInt(temp[1]);
+        target = temp[2]; // left with 60/pos/381.0,671.0/pos/1/e/
+
+
+        temp = target.split(Server.PACKET_POSITION); // Gives [60] [381.0,671.0] [1/e/]
+        int levelNumber = Integer.parseInt(temp[0]);
+        final double newX = Double.parseDouble(temp[1].split(",")[0]);//[381.0]
+        final double newY = Double.parseDouble(temp[1].split(",")[1]);//[671.0]
+
+        target = temp[2].split(Server.PACKET_END)[0];// Splits to [1]
+        int targetId = Integer.parseInt(target);
+
+//        System.out.print("Enemy on lvl " + levelNumber + " with ID: " + id + " is at (" + newX + "," + newY + ") Looking for client " + targetId);
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.getSpawnID().getKey() == levelNumber && enemy.getSpawnID().getValue() == id) { //This is the enemy we want to update
+                Platform.runLater(() -> enemy.serverUpdatePosition(newX, newY, camera.getX(), camera.getY()));
+                break;
+            }
+        }
+
+
+    }
+
+
 
     public static void addWall (int location, GameObject wall) {
         walls.put(location, wall);
@@ -214,8 +304,16 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
-    public static void loadBossRoom() {
-        map.loadLevel(8055);//Load boss level
+    public static void loadBossRoom(double spawnX, double spawnY) {
+        Platform.runLater(() -> {
+           for (int i = 0; i < otherPlayers.size(); i++) {
+               otherPlayers.get(i).x = spawnX;
+               otherPlayers.get(i).y = spawnY;
+           }
+           protagonist.x = spawnX;
+           protagonist.y = spawnY;
+           map.loadLevel(8055);//Load boss level
+        });
     }
 
     public static void disconnectFromServer() {

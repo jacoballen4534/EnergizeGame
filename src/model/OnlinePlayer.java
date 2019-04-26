@@ -87,4 +87,8 @@ public class OnlinePlayer extends Protagonist {
 
     protected void tick(double cameraX, double cameraY, KeyInput keyInput) {}
 
+    @Override
+    protected boolean isOnline() {
+        return true;
+    }
 }

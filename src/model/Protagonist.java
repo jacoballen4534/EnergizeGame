@@ -38,7 +38,7 @@ public class Protagonist extends Character {
     protected int levelNumber;
     protected Inventory inventory;
     protected Image shield;
-    private Client client = null;//This is how the protagonist talks to the server
+    protected Client client = null;//This is how the protagonist talks to the server
 
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
@@ -161,6 +161,7 @@ public class Protagonist extends Character {
 //            this.animationsState.copy(this.dieAnimation);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.keepRendering = false;
+                this.isAlive = false;
                 Handler.removePlayer(this);
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
@@ -287,6 +288,10 @@ public class Protagonist extends Character {
         return false;
     }
 
+    protected boolean isOnline() {
+        return false;
+    }
+
     public void disconnect() {
         if (this.client != null) {
             this.client.disconnect();
@@ -320,13 +325,13 @@ public class Protagonist extends Character {
                     PreLoadedImages.energyPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
         }
 
-        //TODO: Give the player a bunch of items and spells
+
         Platform.runLater(() -> { //Teleports the player to the boss room
             Level bossLevel = Map.getBossLevel();
-            Handler.loadBossRoom();
+            double bossSpawnX = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
+            double bossSpawnY = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
+            Handler.loadBossRoom(bossSpawnX, bossSpawnY);
 
-            this.x = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
-            this.y = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
         });
     }
 

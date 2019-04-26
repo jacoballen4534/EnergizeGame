@@ -158,7 +158,14 @@ public class Client {
             int level = Integer.parseInt(part[0]);
             int location = Integer.parseInt(part[1]);
             Handler.removeFromMap(level, location);
+        } else if (data.startsWith(Server.PACKET_ENEMY_TARGET_UPDATE)) {
+            consoleMessage = new StringBuilder();
+            consoleMessage.append("\033[0;94m ").append(data).append("\033[0m");
+//            System.out.println(consoleMessage);
 
+            Handler.updateEnemyTarget(data);
+        } else if (data.startsWith(Server.PACKET_ENEMY_UPDATE)) {
+            Handler.updateEnemyLocations(data);
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
