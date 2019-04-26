@@ -145,7 +145,7 @@
 .label#tutorialHeading{
     -fx-text-fill: #ffc000;
     -fx-font-family: Sans Serif;
-    -fx-font-size: 12;
+    -fx-font-size: 20;
 }
 .label#tutorialInfo{
     -fx-text-fill: #ffccaa;

@@ -11,8 +11,7 @@ import java.util.ResourceBundle;
 
 public class TutorialMechanicsController implements Initializable {
 
-    @FXML
-    public AnchorPane tutorialScreenMechanicsPane;
+    @FXML public AnchorPane tutorialScreenMechanicsPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

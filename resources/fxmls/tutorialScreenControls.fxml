@@ -7,10 +7,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="tutorialScreenControlsPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialControlsController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="tutorialTitle" text="Tutorial - Controls" />
             <HBox prefHeight="426.0" prefWidth="1024.0" spacing="100.0">
@@ -41,13 +42,16 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="306.0">
                            <children>
-                              <VBox prefHeight="71.0" prefWidth="65.0">
+                              <VBox prefHeight="100.0" prefWidth="193.0">
                                  <children>
-                                    <Label fx:id="tutorialHeading" text="Use Item" wrapText="true" />
+                                    <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="129.0" text="Use Item" wrapText="true" />
                                     <ImageView fx:id="itemControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                               </VBox>
-                              <Label fx:id="tutorialInfo" prefHeight="42.0" prefWidth="378.0" text="Use this to activate your equipped item" wrapText="true" />
+                              <Label fx:id="tutorialInfo" prefHeight="102.0" prefWidth="284.0" text="Use this to activate your equipped item" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Label>
                            </children>
                         </HBox>
                      </children>
@@ -84,9 +88,9 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <VBox prefHeight="71.0" prefWidth="114.0">
+                              <VBox prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="81.0" text="Inventory" wrapText="true" />
+                                    <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="121.0" text="Inventory" wrapText="true" />
                                     <ImageView fx:id="inventoryButton" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                               </VBox>

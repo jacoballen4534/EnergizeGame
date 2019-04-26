@@ -16,8 +16,7 @@ import sample.Game;
 
 public class TutorialControlsController implements Initializable {
 
-    @FXML
-    public AnchorPane tutorialScreenControlsPane;
+    @FXML public AnchorPane tutorialScreenControlsPane;
 
     @FXML public ImageView movementControls;
     @FXML public ImageView attackControl;
