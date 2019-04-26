@@ -42,7 +42,7 @@ public class Game extends Canvas {
     public static final int SCREEN_HEIGHT = 768;
     private static Random randomMovement;//used for enemy movement.
     private static long randomSeed;
-    private String onlineCommands;
+    private String onlineCommands = "";
 
     private MainMenuController controller;
 
@@ -73,7 +73,11 @@ public class Game extends Canvas {
         this.map.loadLevel();
 
         //////////////////Load Menu//////////////////////
-        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),
+                exitToTitleScreenEvent-> {
+                    Handler.disconnectFromServer();
+                    stage.setScene(Main.getMainScene());
+                });
         inGameMenuController.AddMenusToRoot(root);
 
         init(); //Setup game loop
@@ -89,7 +93,7 @@ public class Game extends Canvas {
     }
 
     public void setOnlineCommand(String command) {
-        Platform.runLater(() -> this.onlineCommands = command);
+        this.onlineCommands = command;
     }
 
 
@@ -194,7 +198,7 @@ public class Game extends Canvas {
     }
 
     public void addPlayer(int id) {
-    OnlinePlayer temp = new OnlinePlayer((int)protagonist.getX()/Game.PIXEL_UPSCALE, (int)protagonist.getY()/Game.PIXEL_UPSCALE, PreLoadedImages.protagonistSpriteSheet,
+    OnlinePlayer temp = new OnlinePlayer((int)this.protagonist.getX()/Game.PIXEL_UPSCALE, (int)this.protagonist.getY()/Game.PIXEL_UPSCALE, PreLoadedImages.protagonistSpriteSheet,
     Level.PROTAGONIST_SPRITE_WIDTH, Level.PROTAGONIST_SPRITE_HEIGHT, (int) (Level.PROTAGONIST_SPRITE_WIDTH * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE),
     (int) (Level.PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE), this.map.getCurrentLevelWidth());
     temp.setId(id);

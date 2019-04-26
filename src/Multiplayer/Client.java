@@ -2,10 +2,12 @@ package Multiplayer;
 
 import FXMLControllers.MainMenuController;
 import javafx.application.Platform;
+import model.Handler;
 import sample.Game;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Arrays;
 
 public class Client {
     private int serverPort;
@@ -91,9 +93,9 @@ public class Client {
 
 
     public void process(DatagramPacket packet) { //Process the incoming packet
-        String data = new String(packet.getData(), 0, packet.getLength());
+        final String data = new String(packet.getData(), 0, packet.getLength());
         //This will be update instructions from the server.
-
+        String temp;
 //        dumpPacket(packet); //Debug
         StringBuilder consoleMessage = new StringBuilder();
 
@@ -128,8 +130,8 @@ public class Client {
         } else if (data.startsWith(Server.PACKET_MESSAGE)) { //This is a message from the server
             consoleMessage = new StringBuilder();
             consoleMessage.append("\033[0;35m "); //Set Client print color to blue
-            data = data.split(Server.PACKET_MESSAGE + "|" + Server.PACKET_END)[1].trim();
-            consoleMessage.append(data).append("\n");
+            temp = data.split(Server.PACKET_MESSAGE + "|" + Server.PACKET_END)[1].trim();
+            consoleMessage.append(temp).append("\n");
             System.out.println(consoleMessage);
         } else if(data.startsWith(Server.PACKET_NEW_PLAYER)) {
             String[] tokens = data.split(Server.PACKET_NEW_PLAYER + "|" + Server.PACKET_END);
@@ -142,7 +144,21 @@ public class Client {
             });
 
         } else if (data.startsWith(Server.PACKET_PROTAGONIST_UPDATE)) { //This is an update from a online player
-            game.setOnlineCommand(data);
+            Platform.runLater(() -> {
+                game.setOnlineCommand(data);
+            });
+        } else if (data.startsWith(Server.PACKET_DISCONNECT)) {
+            String[] tokens = data.split(Server.PACKET_DISCONNECT + "|" + Server.PACKET_END);
+            int id = Integer.parseInt(tokens[1]);
+//            System.out.println("Removing client " + id + " from the game");
+            Platform.runLater(() -> Handler.removePlayer(id));
+        } else if (data.startsWith(Server.PACKET_REMOVE)) { //Tell the other clients to remove this object from their map
+            temp = data.split(Server.PACKET_REMOVE + "|" + Server.PACKET_END)[1];
+            String[] part = temp.split(",");
+            int level = Integer.parseInt(part[0]);
+            int location = Integer.parseInt(part[1]);
+            Handler.removeFromMap(level, location);
+
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -158,7 +174,7 @@ public class Client {
           send((Server.PACKET_CONNECT + Server.PACKET_END).getBytes());
     }
 
-    private void disconnect() {
+    public void disconnect() {
         send((Server.PACKET_DISCONNECT + this.clientID + Server.PACKET_END).getBytes());
     }
 

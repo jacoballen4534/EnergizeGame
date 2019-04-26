@@ -1,6 +1,7 @@
 package Multiplayer;
 
 import com.sun.xml.internal.ws.api.message.Packet;
+import javafx.application.Platform;
 import model.Handler;
 import sample.Game;
 
@@ -29,6 +30,7 @@ public class Server implements Runnable {
     public static final String PACKET_LEVEL_NUMBER = "/ln/";
     public static final String PACKET_PROTAGONIST_UPDATE = "/pu/";
     public static final String PACKET_NEW_PLAYER = "/np/";
+    public static final String PACKET_REMOVE = "/rm/"; //Remove something from the map
 
     private int port;
     private Thread run, manage, send, receive;
@@ -134,11 +136,13 @@ public class Server implements Runnable {
             int id = Integer.parseInt(data.split(PACKET_PING + "|" + PACKET_END)[1].trim());
             clientResponse.add(id);
         } else if (data.startsWith(PACKET_PROTAGONIST_UPDATE)) { //This is an update from the protagonist of its actions
+//            System.out.println("\033[0;92m Protagonist update: \n" + data + "\033[0m");
+
             String temp = data.split(PACKET_PROTAGONIST_UPDATE + "|" + Server.PACKET_END)[1];
             int id = Integer.parseInt(temp.split(PACKET_ID + "|" + PACKET_LEVEL_NUMBER)[1]);
-//            System.out.println("\033[0;92m Protagonist update: \n" + data + "\033[0m");
             forwardToOthers(data.getBytes(), id);
-
+        } else if (data.startsWith(PACKET_REMOVE)) { //Tell the other clients to remove this object from their map
+            sendToAll(data.getBytes()); //Forward it on to all clients
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -179,23 +183,29 @@ public class Server implements Runnable {
         }
     }
 
-    private void disconnect(int id, boolean status) { //Id of client to disconnected. Status represents if they left or timed out / kicked
+    private void disconnect(final int id, boolean status) { //Id of client to disconnected. Status represents if they left or timed out / kicked
         ServerClient serverClient = null;
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).userID == id) {
                 serverClient = clients.get(i);
-                Handler.removePlayer(id);
+                Platform.runLater(() -> Handler.removePlayer(id));
                 clients.remove(i);
                 break;
             }
         }
+
         String disconnectionMessage = "\033[0;92m";
+
         if (serverClient != null) {
+            forwardToOthers((PACKET_DISCONNECT + serverClient.userID + PACKET_END).getBytes(), serverClient.userID);
             if (status) {
                 disconnectionMessage += "Client " + id + " @ " + serverClient.address + ":" + serverClient.port + " disconnected.";
             } else {
                 disconnectionMessage += "Client " + id + " @ " + serverClient.address + ":" + serverClient.port + " timed out.";
             }
+
+        } else {
+            disconnectionMessage += ("Cant find client " + id + " to disconnect");
         }
         disconnectionMessage += "\033[0m";
         System.out.println(disconnectionMessage);
@@ -299,7 +309,7 @@ public class Server implements Runnable {
                     String message = PACKET_PING  + PACKET_END;
                     sendToAll(message.getBytes());
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

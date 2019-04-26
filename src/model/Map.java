@@ -1,5 +1,6 @@
 package model;
 
+import Multiplayer.Server;
 import javafx.geometry.Point2D;
 import sample.Game;
 
@@ -60,7 +61,12 @@ public class Map {
     }
 
     public void removeObject(GameObject toRemove) {
-        levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove);
+        this.game.getProtagonist().sendToServer(Server.PACKET_REMOVE + toRemove.getSpawnID().getKey() + "," + toRemove.getSpawnID().getValue() + Server.PACKET_END); // /rm/level#,location#/e/
+        levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove.getSpawnID().getValue());
+    }
+
+    public void removeObject(int level, int location) { //This gets called by the client when removing based off server. So dont need to tell the server again
+        levels.get(level).removeObject(location);
     }
 
     public Level getLevel(int levelNumber) {

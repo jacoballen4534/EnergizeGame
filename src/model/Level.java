@@ -361,9 +361,9 @@ public class Level {
         }
     }
 
-    public void removeObject(GameObject toRemove) {
-        int col = toRemove.getSpawnID().getValue() % this.levelWidth;
-        int row = toRemove.getSpawnID().getValue() / this.levelWidth;
+    public void removeObject(int location) {
+        int col = location % this.levelWidth;
+        int row = location / this.levelWidth;
         this.tiles.get(row).set(col, TileType.FLOOR);
     }
 

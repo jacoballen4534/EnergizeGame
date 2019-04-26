@@ -188,6 +188,7 @@ public class Protagonist extends Character {
     }
 
     protected void tick(double cameraX, double cameraY, String commands) {
+        super.tick(cameraX,cameraY);
     }
 
     protected void tick(double cameraX, double cameraY, KeyInput keyInput) {
@@ -270,10 +271,23 @@ public class Protagonist extends Character {
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
         hud.tick(cameraX, cameraY); //Update health and energy displays
-        commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + commands;
 
+        if (this.client != null) { //Multi player
+            commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
+            commands += Server.PACKET_END;
+            sendToServer(commands);
+        }
+    }
+
+    public void sendToServer(String message) {
         if (this.client != null) {
-            this.client.send(commands.getBytes());
+            this.client.send(message.getBytes());
+        }
+    }
+
+    public void disconnect() {
+        if (this.client != null) {
+            this.client.disconnect();
         }
     }
 

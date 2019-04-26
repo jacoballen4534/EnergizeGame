@@ -141,9 +141,7 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void addPlayer (OnlinePlayer player) {
-        Platform.runLater(() -> {
-            otherPlayers.add(player);
-        });
+        Platform.runLater(() -> otherPlayers.add(player));
     }
 
     public static void removePlayer (Protagonist player) {
@@ -195,8 +193,18 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
+    public static void removeFromMap (int level, int location) {
+        Platform.runLater(() -> {
+            map.removeObject(level, location);
+        });
+    }
+
     public static void loadBossRoom() {
         map.loadLevel(8055);//Load boss level
+    }
+
+    public static void disconnectFromServer() {
+        protagonist.disconnect();
     }
 
     public static void pauseUnpauseTimeline(){
