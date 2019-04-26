@@ -20,24 +20,24 @@
                             <children>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="200.0" prefWidth="100.0">
+                                        <VBox prefHeight="100.0" prefWidth="179.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" text="Health Kit" />
+                                                <Label fx:id="tutorialHeading" prefHeight="61.0" prefWidth="230.0" text="Health Kit" />
                                                 <ImageView fx:id="healthKit" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
-                                        <Label fx:id="tutorialInfo" text="Restores some health" wrapText="true" />
+                                        <Label fx:id="tutorialInfo" prefHeight="100.0" prefWidth="187.0" text="Restores some health" wrapText="true" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="200.0" prefWidth="100.0">
+                                        <VBox prefHeight="100.0" prefWidth="185.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" text="Energy Kit" />
+                                                <Label fx:id="tutorialHeading" prefHeight="61.0" prefWidth="171.0" text="Energy Kit" />
                                                 <ImageView fx:id="energyKit" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
-                                        <Label fx:id="tutorialInfo" text="Restores some energy" wrapText="true" />
+                                        <Label fx:id="tutorialInfo" prefHeight="100.0" prefWidth="234.0" text="Restores some energy" wrapText="true" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="306.0">
@@ -66,35 +66,35 @@
                             <children>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="200.0" prefWidth="100.0">
+                                        <VBox prefHeight="100.0" prefWidth="205.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" text="Wind Scroll" />
+                                                <Label fx:id="tutorialHeading" prefHeight="63.0" prefWidth="176.0" text="Wind Scroll" />
                                                 <ImageView fx:id="windScroll" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
-                                        <Label fx:id="tutorialInfo" text="Creates a whirlwind to push enemies away" wrapText="true" />
+                                        <Label fx:id="tutorialInfo" prefHeight="112.0" prefWidth="345.0" text="Creates a whirlwind to push enemies away" wrapText="true" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="200.0" prefWidth="100.0">
+                                        <VBox prefHeight="100.0" prefWidth="199.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" text="Ice Scroll" />
+                                                <Label fx:id="tutorialHeading" prefHeight="62.0" prefWidth="187.0" text="Ice Scroll" />
                                                 <ImageView fx:id="iceScroll" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
-                                        <Label fx:id="tutorialInfo" prefHeight="63.0" prefWidth="343.0" text="Freezes enemies in their tracks" wrapText="true" />
+                                        <Label fx:id="tutorialInfo" prefHeight="126.0" prefWidth="343.0" text="Freezes enemies in their tracks" wrapText="true" />
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="100.0" prefWidth="160.0">
+                                        <VBox prefHeight="100.0" prefWidth="164.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="121.0" text="Fire Scroll" wrapText="true" />
+                                                <Label fx:id="tutorialHeading" prefHeight="57.0" prefWidth="170.0" text="Fire Scroll" wrapText="true" />
                                                 <ImageView fx:id="fireScroll" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
-                                        <Label fx:id="tutorialInfo" prefHeight="42.0" prefWidth="328.0" text="Burns enemies for massive damage" wrapText="true" />
+                                        <Label fx:id="tutorialInfo" prefHeight="114.0" prefWidth="294.0" text="Burns enemies for massive damage" wrapText="true" />
                                     </children>
                                 </HBox>
                             </children>
