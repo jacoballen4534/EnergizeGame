@@ -1,12 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="tutorialScreenPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialScreenController">
    <children>
-      <Button layoutX="162.0" layoutY="185.0" mnemonicParsing="false" onMouseClicked="#continueButtonPressed" text="Continue" />
-      <Button layoutX="363.0" layoutY="185.0" mnemonicParsing="false" onMouseClicked="#backButtonPressed" text="Go Back" />
+      <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label text="Tutorial - Controls" />
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="100.0" prefWidth="534.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Movement" />
+                                    <ImageView fx:id="movementControls" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label text="Use these to move the player through the level" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Attack" />
+                                    <ImageView fx:id="attackControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label text="Use this to attack and defeat enemies" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="71.0" prefWidth="65.0">
+                                 <children>
+                                    <Label text="Use Item" wrapText="true" />
+                                    <ImageView fx:id="itemControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label prefHeight="42.0" prefWidth="204.0" text="Use this to activate your equipped item" wrapText="true" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="100.0" prefWidth="516.0" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onMouseClicked="#continueButtonPressed" text="Continue" />
+            <Button mnemonicParsing="false" onMouseClicked="#backButtonPressed" text="Go Back" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
