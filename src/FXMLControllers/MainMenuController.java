@@ -45,11 +45,22 @@ public class MainMenuController implements Initializable {
     private Label focussedLabel = null;
 
     //Hard coding events for dynamic buttons, might refactor out later
-    private EventHandler QuickPlayClicked = event -> {
+    /*private EventHandler QuickPlayClicked = event -> {
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
         game = new Game(this, System.currentTimeMillis());
         game.start();
+    };*/
+    private EventHandler QuickPlayClicked = event -> {
+        focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+        UpdateMenu(focussedLabel);
+        try {
+            TutorialScreenController.setController(this);
+            mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreen.fxml")));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     };
     private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
 
