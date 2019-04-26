@@ -176,36 +176,16 @@ public class MainMenuController implements Initializable {
         HideCurrentSubMenu();
         //Create submenu
         VBox subMenu = CreateSubMenu();
+
         //Create labels
         CreateMenuLabel(subMenu,saveOne.getKey(),"submenu-label",0, event -> {
-            if (saveOne.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveOne.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveOne);
         });
         CreateMenuLabel(subMenu,saveTwo.getKey(),"submenu-label",1, event -> {
-            if (saveTwo.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveTwo.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveTwo);
         });
         CreateMenuLabel(subMenu,saveThree.getKey(),"submenu-label",2, event -> {
-            if (saveThree.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveThree.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveThree);
         });
         //Add submenu to menu
         mainMenuVBox.getChildren().add(loadGamePos,subMenu);
@@ -230,6 +210,17 @@ public class MainMenuController implements Initializable {
             } else {
                 saveThree = new Pair<>(block.get(2).getKey(), Long.parseLong(block.get(2).getValue()));
             }
+        }
+    }
+
+    private void loadGameFromSaveState(Pair<String, Long> saveGame){
+        if (saveGame.getValue() != null) {
+            focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+            UpdateMenu(focussedLabel);
+            game = new Game(this, saveGame.getValue());
+            game.start();
+        } else {
+            System.out.println("No map saved here");
         }
     }
 

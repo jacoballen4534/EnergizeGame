@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class SoundController {
 
     //Gain control is from -5 to 5
-    public static float MASTER_GAIN_CONTROL = 0;
+    public static float MASTER_GAIN_CONTROL = -2;
     public static float MUSIC_GAIN_CONTROL = 0;
     public static float SOUNDEFFECTS_GAIN_CONTROL = 0;
 
@@ -132,8 +132,11 @@ public class SoundController {
             System.out.println("=========================");*/
 
             BGM.open(stream);
-            //BGM.loop(Clip.LOOP_CONTINUOUSLY);
             BGM.start();
+
+            BGM.addLineListener(lineEvent -> {
+                if (!BGM.isRunning()) BGM.start();
+            });
 
             FloatControl gainControl = (FloatControl) BGM.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(-5.0f + MUSIC_GAIN_CONTROL + MASTER_GAIN_CONTROL);

@@ -4,6 +4,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import sample.Game;
+import sample.SoundController;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -196,5 +197,6 @@ public class Boss extends Enemy {
     @Override
     protected void playDeathSound() {
         //SoundController.PlayAudio("bossDeath"); //The sound effect isn't actually implemented yet tho
+        SoundController.playSoundFX("gameWin");
     }
 }
