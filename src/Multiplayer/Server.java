@@ -1,5 +1,9 @@
 package Multiplayer;
 
+import com.sun.xml.internal.ws.api.message.Packet;
+import model.Handler;
+import sample.Game;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -11,7 +15,20 @@ public class Server implements Runnable {
     public static final String PACKET_ID = "/id/";
     public static final String PACKET_MESSAGE = "/m/";
     public static final String PACKET_END = "/e/";//Used to indicate the end of a packet
-
+    public static final String PACKET_GAMESEED = "/g/";
+    public static final String PACKET_POSITION = "/pos/";
+    public static final String PACKET_ATTACK = "/a/";
+    public static final String PACKET_BLOCK = "/b/";
+    public static final String PACKET_GET_HIT = "/gh/";
+    public static final String PACKET_CHEAT = "/ck/";
+    public static final String PACKET_USE_HEALTH = "/uh/";
+    public static final String PACKET_USE_ENERGY = "/ue/";
+    public static final String PACKET_USE_WIND = "/uw/";
+    public static final String PACKET_USE_FIRE = "/uf/";
+    public static final String PACKET_USE_ICE = "/ui/";
+    public static final String PACKET_LEVEL_NUMBER = "/ln/";
+    public static final String PACKET_PROTAGONIST_UPDATE = "/pu/";
+    public static final String PACKET_NEW_PLAYER = "/np/";
 
     private int port;
     private Thread run, manage, send, receive;
@@ -23,10 +40,14 @@ public class Server implements Runnable {
     private List<Integer> clientResponse = new ArrayList<>();
     private final int MAX_ATTEMPTS = 5;
     private boolean raw = false;
+    private long gameSeed;
+    private Game game;
 
-    public Server(String serverAddress, int port) { //Create a new server with the given port number
+    public Server(String serverAddress, int port, Game game) { //Create a new server with the given port number
         this.port = port;
         this.serverAddressString = serverAddress;
+        this.gameSeed = System.nanoTime();
+        this.game = game;
     }
 
 
@@ -67,7 +88,7 @@ public class Server implements Runnable {
 
 
     public void process(DatagramPacket packet) {
-        String data = new String(packet.getData());
+        String data = new String(packet.getData()).substring(0, packet.getLength());
         //The server can get the address and port that the message was sent from. This allows the server to reply to the client.
         InetAddress sendersAddress = packet.getAddress();
         int sendersPort = packet.getPort();
@@ -84,13 +105,23 @@ public class Server implements Runnable {
             consoleMessage.append("New Client Created\n");
 
             ServerClient newClient = new ServerClient(sendersAddress, sendersPort);
+
+            //Send the client their id. the game seed and all existing players(id).
+            StringBuilder message = new StringBuilder(PACKET_ID + newClient.userID + PACKET_GAMESEED + this.gameSeed);
+            for (int i = 0; i < this.clients.size(); i++) {
+                message.append(PACKET_NEW_PLAYER).append(clients.get(i).userID);
+            }
+            message.append(PACKET_END);
+
+            this.send(message.toString().getBytes(), sendersAddress, sendersPort);
             this.clients.add(newClient);
 
-            //Send the client their id.
-            String message = PACKET_ID + newClient.userID + PACKET_END;
-            this.send(message.getBytes(), sendersAddress, sendersPort);
-            consoleMessage.append("Sent the new client their id\n");
 
+            //Tell the other clients to add an online player to their game.
+            forwardToOthers((PACKET_NEW_PLAYER + newClient.userID + PACKET_END).getBytes(), newClient.userID); //Tell all existing players about the new now.
+
+
+            consoleMessage.append("Sent the new client their id\n");
             consoleMessage.append("-------------------------\033[0m");
             System.out.println(consoleMessage);
         } else if (data.startsWith(PACKET_DISCONNECT)) { //Disconnection packet
@@ -102,6 +133,12 @@ public class Server implements Runnable {
         } else if (data.startsWith(PACKET_PING)) {
             int id = Integer.parseInt(data.split(PACKET_PING + "|" + PACKET_END)[1].trim());
             clientResponse.add(id);
+        } else if (data.startsWith(PACKET_PROTAGONIST_UPDATE)) { //This is an update from the protagonist of its actions
+            String temp = data.split(PACKET_PROTAGONIST_UPDATE + "|" + Server.PACKET_END)[1];
+            int id = Integer.parseInt(temp.split(PACKET_ID + "|" + PACKET_LEVEL_NUMBER)[1]);
+//            System.out.println("\033[0;92m Protagonist update: \n" + data + "\033[0m");
+            forwardToOthers(data.getBytes(), id);
+
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -133,11 +170,21 @@ public class Server implements Runnable {
         }
     }
 
+    private void forwardToOthers(byte[] data, int id) { //Only forward to the other clients
+        for (int i = 0; i < clients.size(); i++) {
+            ServerClient client = clients.get(i);
+            if (client.userID != id) {
+                send(data, client.address, client.port);
+            }
+        }
+    }
+
     private void disconnect(int id, boolean status) { //Id of client to disconnected. Status represents if they left or timed out / kicked
         ServerClient serverClient = null;
         for (int i = 0; i < clients.size(); i++) {
             if (clients.get(i).userID == id) {
                 serverClient = clients.get(i);
+                Handler.removePlayer(id);
                 clients.remove(i);
                 break;
             }

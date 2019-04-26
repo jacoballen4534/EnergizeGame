@@ -82,6 +82,10 @@ public abstract class Character extends GameObject{
 
     }
 
+    protected boolean isProtagonist(){
+        return false;
+    }
+
     protected void getHit(int damage) {
         this.animationsState.copy(this.gotHitState); //Set the state to update the bounding boxes
         this.currentAnimationCol = animationsState.getResetCol();//To start the animation from the start.
@@ -198,7 +202,12 @@ public abstract class Character extends GameObject{
         return this.levelWidth;
     }
 
+
     public void updateLevelWidth(int newLevelWidth) {
         this.levelWidth = newLevelWidth;
+    }
+
+    public Inventory getInventory() {
+        return null;
     }
 }

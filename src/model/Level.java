@@ -53,10 +53,10 @@ public class Level {
     private final int Tile_SPRITE_WIDTH = 32;
     private final int Tile_SPRITE_HEIGHT = 32;
 
-    private final int PROTAGONIST_SPRITE_WIDTH = 400;
-    private final int PROTAGONIST_SPRITE_HEIGHT = 296;
+    public static final int PROTAGONIST_SPRITE_WIDTH = 400;
+    public static final int PROTAGONIST_SPRITE_HEIGHT = 296;
     //Protagonist is downscaled from x8 spreadsheet to wanted size.
-    private final double PROTAGONIST_SPRITE_SCALE = 0.35;
+    public static final double PROTAGONIST_SPRITE_SCALE = 0.35;
 
     private final int CAMP_FIRE_SPRITE_WIDTH = 64;
     private final int CAMP_FIRE_SPRITE_HEIGHT = 64;
@@ -467,7 +467,7 @@ public class Level {
                         Protagonist tempProtagonist = new Protagonist(col, row, PreLoadedImages.protagonistSpriteSheet, PROTAGONIST_SPRITE_WIDTH,
                                 PROTAGONIST_SPRITE_HEIGHT, (int) (PROTAGONIST_SPRITE_WIDTH * Game.SCALE * PROTAGONIST_SPRITE_SCALE),
                                 (int) (PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * PROTAGONIST_SPRITE_SCALE), this.levelWidth);
-                        Handler.addPlayer(tempProtagonist);
+                        Handler.setProtagonist(tempProtagonist);
                         game.setProtagonist(tempProtagonist);
                         this.tiles.get(row).set(col, TileType.FLOOR);
                         break;
@@ -552,7 +552,7 @@ public class Level {
         }
         Handler.updateEnemyTarget(game.getProtagonist()); //As enemies can be added before protagonist making their target null. So add at the end.
         Handler.updateCharacterLevelWidth(this.levelWidth);
+        Handler.updateCharacterLevelNumber(this.levelNumber);
     }
-
 
 }

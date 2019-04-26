@@ -17,7 +17,7 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static TreeMap<Integer, GameObject> walls = new TreeMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     //private static ArrayList<Character> characters = new ArrayList<>();
-    private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
+    private static ArrayList<Protagonist> otherPlayers = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
     // so the only other player will be in multilayer, where the handler can hold other player on its own also
     private static ArrayList<Enemy> enemies = new ArrayList<>(); //Hold all enemies
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
@@ -46,11 +46,13 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Protagonist player : players) {
-            if (player.inCameraBounds(camera.getX(),camera.getY())) {
+        for (Protagonist player : otherPlayers) {
+            if (player.getLevelNumber() == protagonist.getLevelNumber()) {
                 player.updateSprite();
             }
         }
+
+        protagonist.updateSprite();
 
         for (Enemy enemy : enemies) {
             enemy.updateSprite(); //Dont check camera so spells do damage to all.
@@ -67,16 +69,21 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearForNewGame() {
         clearAllObjects();
-        players.clear();
+        otherPlayers.clear();
     }
 
     public static void setGame (Game _game) {
         game = _game;
     }
 
-    public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
-        for (Protagonist player : players) {
-            player.tick(cameraX, cameraY, keyInput);
+    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineComands) {
+
+        protagonist.tick(cameraX, cameraY, keyInput);
+
+        for (Protagonist player : otherPlayers) {
+            if(!player.equals(protagonist)) {
+                player.tick(cameraX, cameraY, onlineComands);
+            }
         }
         for (Enemy enemy : enemies) {
             enemy.tick(cameraX, cameraY, map.getCurrentLevel());
@@ -112,9 +119,13 @@ public class Handler { //This class will hold all the game objects and is respon
             enemy.render(graphicsContext,cameraX,cameraY);
         }
 
-        for (Protagonist player: players) {
-            player.render(graphicsContext,cameraX,cameraY);
+        for (Protagonist player: otherPlayers) {
+            if (player.getLevelNumber() == protagonist.getLevelNumber()) {
+                player.render(graphicsContext,cameraX,cameraY);
+            }
         }
+
+        protagonist.render(graphicsContext, cameraX, cameraY);
 
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
@@ -129,13 +140,26 @@ public class Handler { //This class will hold all the game objects and is respon
         walls.put(location, wall);
     }
 
-    public static void addPlayer (Protagonist player) {
-        players.add(player);
+    public static void addPlayer (OnlinePlayer player) {
+        Platform.runLater(() -> {
+            otherPlayers.add(player);
+        });
     }
 
     public static void removePlayer (Protagonist player) {
         Platform.runLater(() -> { //Use runLater to safely remove characters
-            players.remove(player);
+            otherPlayers.remove(player);
+        });
+    }
+
+    public static void removePlayer (int id) {
+        Platform.runLater(() -> { //Use runLater to safely remove characters
+            for (int i = 0; i < otherPlayers.size(); i++) {
+                if (otherPlayers.get(i).id == id) {
+                    otherPlayers.remove(otherPlayers.get(i));
+                    break;
+                }
+            }
         });
     }
 
@@ -207,11 +231,16 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void attack(Enemy enemy) {
-        for (Protagonist player: players){
+        for (Protagonist player: otherPlayers){
             if (enemy.getAttackBounds().intersects(player.getBounds())){
                 player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
         }
+
+        if (enemy.getAttackBounds().intersects(protagonist.getBounds())){
+            protagonist.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
+        }
+
     }
 
     public static void fireScrollAttack(Scroll scroll) {
@@ -236,23 +265,31 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist = _protagonist;
     }
 
+
     public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
         }
 
-        for (Protagonist player : players) {
+        for (Protagonist player : otherPlayers) {
             player.updateLevelWidth(newLevelWidth);
         }
 
         protagonist.updateLevelWidth(newLevelWidth);
     }
 
+    public static void updateCharacterLevelNumber(int newLevelNumber) {
+        for (Protagonist player : otherPlayers) {
+            player.updateLevelNumber(newLevelNumber);
+        }
+        protagonist.updateLevelNumber(newLevelNumber);
+    }
+
     public static boolean checkCollision (Character character) {
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup) &&
-                        (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
+                if (character.isProtagonist() && !character.getInventory().isFull() && !character.getInventory().containsItem(pickup) &&
+                        (character.getInventory().getEquippedItem() == null || !character.getInventory().getEquippedItem().equals(pickup))){
                     System.out.println("can pick up " + pickup.getName());
                     character.pickup(pickup);
                     removePickup(pickup);
@@ -261,8 +298,8 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
-                if (door.isOpen()) {
+            if (character.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+                if (door.isOpen() && character.equals(protagonist)) {
                     //Need to make this thread safe as we are changing things on the main thread. So use runLater
                     Platform.runLater(() -> {
 
@@ -308,8 +345,13 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Protagonist player: players){
-            if (!character.equals(player) && character.getBounds().intersects(player.getBounds())){
+        if (!character.isProtagonist()) {
+            for (Protagonist player : otherPlayers) {
+                if (character.getBounds().intersects(player.getBounds())) {
+                    return true;
+                }
+            }
+            if (character.getBounds().intersects(protagonist.getBounds())) {
                 return true;
             }
         }

@@ -43,7 +43,7 @@ public class MainMenuController implements Initializable {
     @FXML private VBox mainMenuVBox;
     @FXML private Label Resume;
 
-    private static Game game;
+    public static Game game;
     private static boolean isGameActive = false;
 
     private Label focussedLabel = null;
@@ -63,10 +63,11 @@ public class MainMenuController implements Initializable {
 
     private EventHandler HostGameClicked = event -> {
         //Setup server
-        Server server = new Server(serverAddressString, serverPort);
+        Server server = new Server(serverAddressString, serverPort, game);
         server.start();
 
-        Client client = new Client(serverAddressString, serverPort);
+
+        Client client = new Client(serverAddressString, serverPort, game, this);
         client.connect();
     };
     ///////////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ public class MainMenuController implements Initializable {
 
     ////////////////////////////////// JOIN /////////////////////////////////////////
     private EventHandler JoinGameClicked = event -> {
-        Client client1 = new Client(serverAddressString, serverPort);
+        Client client1 = new Client(serverAddressString, serverPort, game, this);
         client1.connect();
 
     };

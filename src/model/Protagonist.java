@@ -1,5 +1,7 @@
 package model;
 
+import Multiplayer.Client;
+import Multiplayer.Server;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,31 +12,33 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Protagonist extends Character {
-    private static int nextID = 0; //Unique id for all characters, this will be used for multilayer
+    protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
     protected int id;
-    private int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
+    protected int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
-    private boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
-    private boolean isAttacking = false; //Attempt to debounce attacking
-    private boolean playBlockingAnimation = false; //To add shield effect
+    protected boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
+    protected boolean isAttacking = false; //Attempt to debounce attacking
+    protected boolean playBlockingAnimation = false; //To add shield effect
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
-    private AnimationsState blockingState;
-    private long lastBlockTimer, blockCooldown, blockTimer = 0;
+    protected AnimationsState blockingState;
+    protected long lastBlockTimer, blockCooldown, blockTimer = 0;
 
 
-    private final int PROTAGONIST_MAXHEALTH = 100;
-    private final int PROTAGONIST_MAXENERGY = 100;
-    private final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
-    private final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
-    private final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
-    private final int BLOCK_COST = 5;
+    protected final int PROTAGONIST_MAXHEALTH = 100;
+    protected final int PROTAGONIST_MAXENERGY = 100;
+    protected final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
+    protected final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
+    protected final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
+    protected final int BLOCK_COST = 5;
 
-    private int currEnergy;
-    private int maxEnergy;
-    private HUD hud;
+    protected int currEnergy;
+    protected int maxEnergy;
+    protected HUD hud;
 
-    private Inventory inventory;
-    private Image shield;
+    protected int levelNumber;
+    protected Inventory inventory;
+    protected Image shield;
+    private Client client = null;//This is how the protagonist talks to the server
 
 
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
@@ -79,7 +83,7 @@ public class Protagonist extends Character {
     }
 
     @Override
-    boolean pickup(Item pickup) {
+    protected boolean pickup(Item pickup) {
         if (!this.inventory.isFull()){
             if (this.inventory.getEquippedItem() == null){
                 this.inventory.setEquippedItem(pickup);
@@ -92,7 +96,7 @@ public class Protagonist extends Character {
         return false;
     }
 
-    private void block() {
+    protected void block() {
         this.blockTimer += System.currentTimeMillis() - this.lastBlockTimer;
         this.lastBlockTimer = System.currentTimeMillis();
 
@@ -130,7 +134,7 @@ public class Protagonist extends Character {
     }
 
     @Override
-    void updateAnimationState() {
+    protected void updateAnimationState() {
         //Determine what state the player is in, and update the animation accordingly.
         //IMPLICIT PRIORITY. ORDER = DIE, ATTACKING, GotHit, IDLE/RUNNING
         //After die animation last frame, fade out ...Game over
@@ -183,8 +187,11 @@ public class Protagonist extends Character {
         this.hud.setEnergy(this.currEnergy);
     }
 
+    protected void tick(double cameraX, double cameraY, String commands) {
+    }
 
-    public void tick(double cameraX, double cameraY, KeyInput keyInput) {
+    protected void tick(double cameraX, double cameraY, KeyInput keyInput) {
+        String commands = "";
         //Update the velocity according to what keys are pressed.
         //If the key has just been pressed, update the animation. This leads to more responsive animations.
         if(this.playGotAttackedAnimation || this.playDieAnimation || this.playAttackAnimation || this.playBlockingAnimation) { //If the player is in an animation, disable movement
@@ -219,59 +226,92 @@ public class Protagonist extends Character {
         }
 
         if (keyInput.getKeyPressDebounced("attack")){
+            commands += (Server.PACKET_ATTACK);
             this.attack();
         }
 
-        if (keyInput.getKeyPressDebounced("jump")){
-            System.out.println("Jump for joy");// Using this to make it easier to custom add key bindings later
-        }
 
         if (keyInput.getKeyPressDebounced("useItem")){
+            if (this.inventory.getEquippedItem() != null) {
+                switch (this.inventory.getEquippedItem().name){
+                    case "Health Kit":
+                        commands += (Server.PACKET_USE_HEALTH);
+                        break;
+                    case "Energy Kit":
+                        commands += (Server.PACKET_USE_ENERGY);
+                        break;
+                    case "Fire Scroll":
+                        commands += (Server.PACKET_USE_FIRE);
+                        break;
+                    case "Ice Scroll":
+                        commands += (Server.PACKET_USE_ICE);
+                        break;
+                    case "Wind Scroll":
+                        commands += (Server.PACKET_USE_WIND);
+                        break;
+                }
+            }
+
             useItem();
         }
 
         if (keyInput.getKeyPress("block")){
+            commands += (Server.PACKET_BLOCK);
             this.block();
         }
 
-        if (keyInput.getKeyPressDebounced("useSpecial")){
-            if (useSpecial()) {
-                System.out.println("Azarath, metrion, zinthos!");//Outdated reference
-            }  else System.out.println("Insufficient energy");
-        }
 
         if (keyInput.getKeyPressDebounced("cheatKey")){
-            System.out.println("Wow, cheating in 2019?");
-            currEnergy = maxEnergy;
-            hud.setEnergy(currEnergy);
-            currHealth = maxHealth;
-            hud.setHealth(currHealth);
-            for (int i = 0; i < 2; i++) {
-                this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
-                        PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
-                this.inventory.addItem(new Scroll("Wind Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
-                        PreLoadedImages.windScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
-                this.inventory.addItem(new Scroll("Ice Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
-                        PreLoadedImages.iceScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
-                this.inventory.addItem(new Pickup("Health Kit", Level.HEALTH_KIT_DESCRIPTION, 0,0,
-                        PreLoadedImages.healthPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
-                this.inventory.addItem(new Pickup("Energy Kit", Level.ENERGY_KIT_DESCRIPTION, 0,0,
-                        PreLoadedImages.energyPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
-            }
+            commands += (Server.PACKET_CHEAT);
+            this.cheat();
 
-            //TODO: Give the player a bunch of items and spells
-            Platform.runLater(() -> { //Teleports the player to the boss room
-                Level bossLevel = Map.getBossLevel();
-                Handler.loadBossRoom();
-
-                this.x = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
-                this.y = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
-            });
         }
+
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
         hud.tick(cameraX, cameraY); //Update health and energy displays
+        commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + commands;
 
+        if (this.client != null) {
+            this.client.send(commands.getBytes());
+        }
+    }
+
+    public void addClient(Client client) {
+        this.client = client;
+        this.id = client.getClientID();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    protected void cheat() {
+        currEnergy = maxEnergy;
+        hud.setEnergy(currEnergy);
+        currHealth = maxHealth;
+        hud.setHealth(currHealth);
+        for (int i = 0; i < 2; i++) {
+            this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                    PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+            this.inventory.addItem(new Scroll("Wind Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                    PreLoadedImages.windScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+            this.inventory.addItem(new Scroll("Ice Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
+                    PreLoadedImages.iceScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
+            this.inventory.addItem(new Pickup("Health Kit", Level.HEALTH_KIT_DESCRIPTION, 0,0,
+                    PreLoadedImages.healthPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+            this.inventory.addItem(new Pickup("Energy Kit", Level.ENERGY_KIT_DESCRIPTION, 0,0,
+                    PreLoadedImages.energyPickupSprite,Level.PICKUP_SPRITE_WIDTH,Level.PICKUP_SPRITE_HEIGHT));
+        }
+
+        //TODO: Give the player a bunch of items and spells
+        Platform.runLater(() -> { //Teleports the player to the boss room
+            Level bossLevel = Map.getBossLevel();
+            Handler.loadBossRoom();
+
+            this.x = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
+            this.y = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
+        });
     }
 
     @Override
@@ -281,6 +321,10 @@ public class Protagonist extends Character {
 
     public String updateTimer() {//This gets called each second
         return this.hud.updateTimer();
+    }
+
+    protected boolean isProtagonist(){
+        return true;
     }
 
 
@@ -298,9 +342,6 @@ public class Protagonist extends Character {
             } else {
                 graphicsContext.drawImage(this.shield,this.x + characterWidth + 15, this.y + this.animationsState.getTopBorder()/3, -characterWidth * 2, characterHeight * 1.1);
             }
-
-
-
         }
         hud.render(graphicsContext, cameraX, cameraY);
 //        if (playAttackAnimation) {
@@ -345,6 +386,14 @@ public class Protagonist extends Character {
         } else {
             return false;
         }
+    }
+
+    public void updateLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
+    }
+
+    public int getLevelNumber() {
+        return this.levelNumber;
     }
 
     public Inventory getInventory() {

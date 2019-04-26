@@ -1,8 +1,11 @@
 package Multiplayer;
 
+import FXMLControllers.MainMenuController;
+import javafx.application.Platform;
+import sample.Game;
+
 import java.io.IOException;
 import java.net.*;
-import java.util.Arrays;
 
 public class Client {
     private int serverPort;
@@ -14,16 +17,21 @@ public class Client {
     private boolean listening = false;
     private Thread send, receive;
     private int clientID;//The server sends the client an clientID to use for further communication.
+    private long gameSeed;
+    private Game game;
+    private MainMenuController mainMenuController;
 
 
 
     //This is the host and serverPort of the server the client is connecting to.
-    public Client(String host, int port) { //This takes params in form host = ip, serverPort = serverPort.
+    public Client(String host, int port, Game game, MainMenuController mainMenuController) { //This takes params in form host = ip, serverPort = serverPort.
         this.serverIPAddressString = host;
         this.serverPort = port;
+        this.game = game;
+        this.mainMenuController = mainMenuController;
     }
 
-    public Client(String host) { //This takes address in form ip:serverPort
+    public Client(String host, Game game, MainMenuController mainMenuController) { //This takes address in form ip:serverPort
         String[] tokens = host.split(":");
         if (tokens.length != 2) { //This will be an invalid address.
             return;
@@ -34,6 +42,12 @@ public class Client {
         } catch (NumberFormatException e) {
             e.printStackTrace(); //This means the serverPort is invalid.
         }
+        this.game = game;
+        this.mainMenuController = mainMenuController;
+    }
+
+    public int getClientID() {
+        return this.clientID;
     }
 
 
@@ -86,8 +100,25 @@ public class Client {
             consoleMessage.append("\033[0;94m"); //Set Client print color to blue
             consoleMessage.append("\n-------------------------\n");
         if (data.startsWith(Server.PACKET_ID)) { //This means this client has successfully connected to the server and got given an id
-            this.clientID = Integer.parseInt(data.split(Server.PACKET_ID + "|" + Server.PACKET_END)[1].trim());
+            String[] tokens = data.split(Server.PACKET_ID + "|" + Server.PACKET_GAMESEED + "|" + Server.PACKET_NEW_PLAYER + "|" + Server.PACKET_END);
+
+            this.clientID = Integer.parseInt(tokens[1].trim());
+            this.gameSeed = Long.parseLong(tokens[2].trim());
+
+
+            Platform.runLater(() -> {
+                this.game = new Game(this.mainMenuController, this.gameSeed);
+                this.game.addClient(this);
+                this.game.start();
+                for (int i = 3; i < tokens.length; i++) {
+                    System.out.println("Adding exsisting player with id: " + tokens[i]);
+                    System.out.println("Adding them to the game");
+                    this.game.addPlayer(Integer.parseInt(tokens[i]));
+                }
+            });
+
             consoleMessage.append("Client @ ").append(this.serverIPAddressString).append(":").append(this.serverPort).append(" got given clientID: ").append(this.clientID).append("\n");
+            consoleMessage.append("Received Seed: ").append(this.gameSeed).append("\n");
             consoleMessage.append("-------------------------\033[0m");
             System.out.println(consoleMessage);
 
@@ -100,13 +131,24 @@ public class Client {
             data = data.split(Server.PACKET_MESSAGE + "|" + Server.PACKET_END)[1].trim();
             consoleMessage.append(data).append("\n");
             System.out.println(consoleMessage);
+        } else if(data.startsWith(Server.PACKET_NEW_PLAYER)) {
+            String[] tokens = data.split(Server.PACKET_NEW_PLAYER + "|" + Server.PACKET_END);
+            Platform.runLater(() -> {
+                for (int i = 1; i < tokens.length; i++) {
+                    System.out.println("New player joined with id:" + tokens[i]);
+                    System.out.println("Adding them to the game");
+                    this.game.addPlayer(Integer.parseInt(tokens[i]));
+                }
+            });
+
+        } else if (data.startsWith(Server.PACKET_PROTAGONIST_UPDATE)) { //This is an update from a online player
+            game.setOnlineCommand(data);
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
             System.out.println(consoleMessage);
 
         }
-
     }
 
 
