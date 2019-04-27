@@ -14,6 +14,7 @@ public abstract class Character extends GameObject{
     protected int maxHealth;
     protected Weapon weapon;
     protected float velocityX = 0, velocityY = 0;
+    protected boolean isAlive = true;
     //To play each animation once.
     protected AnimationsState attackState;
     protected AnimationsState gotHitState;
@@ -80,6 +81,10 @@ public abstract class Character extends GameObject{
 
     protected void attack(){
 
+    }
+
+    protected boolean isProtagonist(){
+        return false;
     }
 
     protected void getHit(int damage) {
@@ -198,7 +203,12 @@ public abstract class Character extends GameObject{
         return this.levelWidth;
     }
 
+
     public void updateLevelWidth(int newLevelWidth) {
         this.levelWidth = newLevelWidth;
+    }
+
+    public Inventory getInventory() {
+        return null;
     }
 }

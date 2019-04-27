@@ -23,7 +23,7 @@ public class ShortestPath {
             setupNodes(tiles);
             calculateFloydWarshall();
 //            System.out.println("All paths found");
-        }).start();
+        }, "Path Finding Background Thread").start();
     }
 
 
@@ -256,9 +256,13 @@ public class ShortestPath {
         if (next[startingId][destinationId] == null || startingNode == null || destinationNode == null) {
             return -1;//No path yet
         }
-        while (!startingNode.equals(destinationNode)) {
-            startingNode = next[startingNode.getId()][destinationNode.getId()];
-            length++;
+        try {
+            while (!startingNode.equals(destinationNode)) {
+                startingNode = next[startingNode.getId()][destinationNode.getId()];
+                length++;
+            }
+        } catch (NullPointerException e) {
+
         }
        return length;
     }

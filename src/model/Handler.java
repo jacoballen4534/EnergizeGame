@@ -1,5 +1,6 @@
 package model;
 
+import Multiplayer.Server;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -17,7 +18,7 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Floor> floors = new ArrayList<>(); //Holds the floor tiles. these are rendered first and dont need to be check for colisions.
     private static TreeMap<Integer, GameObject> walls = new TreeMap<>();//Holds all the walls and null tiles, with their position in the form x + y*width
     //private static ArrayList<Character> characters = new ArrayList<>();
-    private static ArrayList<Protagonist> players = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
+    private static ArrayList<Protagonist> otherPlayers = new ArrayList<>(); //Hold all players. May remove this as the handler needs to hold the protagonist on its own,
     // so the only other player will be in multilayer, where the handler can hold other player on its own also
     private static ArrayList<Enemy> enemies = new ArrayList<>(); //Hold all enemies
     private static ArrayList<Door> doors = new ArrayList<>();//Holds the various doors in the level. Used to load next level.
@@ -46,11 +47,13 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Protagonist player : players) {
-            if (player.inCameraBounds(camera.getX(),camera.getY())) {
+        for (Protagonist player : otherPlayers) {
+            if (player.getLevelNumber() == protagonist.getLevelNumber()) {
                 player.updateSprite();
             }
         }
+
+        protagonist.updateSprite();
 
         for (Enemy enemy : enemies) {
             enemy.updateSprite(); //Dont check camera so spells do damage to all.
@@ -67,16 +70,21 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearForNewGame() {
         clearAllObjects();
-        players.clear();
+        otherPlayers.clear();
     }
 
     public static void setGame (Game _game) {
         game = _game;
     }
 
-    public static void tick(double cameraX, double cameraY, KeyInput keyInput) {
-        for (Protagonist player : players) {
-            player.tick(cameraX, cameraY, keyInput);
+    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineComands) {
+
+        protagonist.tick(cameraX, cameraY, keyInput);
+
+        for (Protagonist player : otherPlayers) {
+            if(!player.equals(protagonist)) {
+                player.tick(cameraX, cameraY, onlineComands);
+            }
         }
         for (Enemy enemy : enemies) {
             enemy.tick(cameraX, cameraY, map.getCurrentLevel());
@@ -112,30 +120,135 @@ public class Handler { //This class will hold all the game objects and is respon
             enemy.render(graphicsContext,cameraX,cameraY);
         }
 
-        for (Protagonist player: players) {
-            player.render(graphicsContext,cameraX,cameraY);
+        for (Protagonist player: otherPlayers) {
+            if (player.getLevelNumber() == protagonist.getLevelNumber()) {
+                player.render(graphicsContext,cameraX,cameraY);
+            }
         }
+
+        protagonist.render(graphicsContext, cameraX, cameraY);
 
 //        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
-    public static void updateEnemyTarget (Protagonist target) {
-        for (Enemy enemy : enemies) {
-            enemy.updateTarget(target);
+    public static void updateEnemyTarget () {
+        ShortestPath shortestPath = null;
+        Protagonist closestPlayer = protagonist;
+
+        if (map != null) { //If the map hasn't been setup yet. Just set all enemy targets as the host
+            shortestPath = map.getCurrentLevel().getShortestPath();
+        }
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (shortestPath == null) {
+                closestPlayer = protagonist;
+                enemy.updateTarget(closestPlayer);
+                continue;
+            }
+            int currentNodeId = (int)(enemy.x / Game.PIXEL_UPSCALE) + (int)(enemy.y / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+            int targetNodeId = (int)(protagonist.getX() / Game.PIXEL_UPSCALE) + (int)(protagonist.getY() / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+            double closestDist = Double.POSITIVE_INFINITY;
+            if (protagonist.isAlive) {
+                closestDist = shortestPath.shortestPathLength(currentNodeId, targetNodeId);
+            }
+
+            for (int j = 0; j < otherPlayers.size(); j++) {
+                if (otherPlayers.get(j).getLevelNumber() == map.getCurrentLevelNumber()) {
+                    targetNodeId = (int) (otherPlayers.get(j).getX() / Game.PIXEL_UPSCALE) + (int) (otherPlayers.get(j).getY() / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
+                    int thisDist = shortestPath.shortestPathLength(currentNodeId, targetNodeId);
+                    if (thisDist < closestDist) {
+                        closestDist = thisDist;
+                        closestPlayer = otherPlayers.get(j);
+                    }
+                }
+            }
+            enemy.updateTarget(closestPlayer);
+            String commands = Server.PACKET_ENEMY_TARGET_UPDATE + Server.PACKET_ID + enemy.getSpawnID().getValue() + Server.PACKET_LEVEL_NUMBER
+                    + enemy.getSpawnID().getKey() + Server.PACKET_ENEMY_TARGET + enemy.target.id + Server.PACKET_END;
+            protagonist.sendToServer(commands);
         }
     }
+
+    public static void updateEnemyTarget (String target) { //This is only called from the server to sync the enemy targets
+        String[] temp;//For splitting
+        target = target.split(Server.PACKET_ENEMY_TARGET_UPDATE)[1]; //Remove /etu/ Left with /id/364/ln/20/et/1/e/
+        temp = target.split(Server.PACKET_ID + "|" + Server.PACKET_LEVEL_NUMBER); //Get the enemy id this packet is for
+        int id = Integer.parseInt(temp[1]);
+        target = temp[2]; // left with 20/et/1/e/
+        temp = target.split(Server.PACKET_ENEMY_TARGET); // Gives [20] [1/e/]
+        int levelNumber = Integer.parseInt(temp[0]);
+        target = temp[1].split(Server.PACKET_END)[0];// Splits to [1]
+        int targetId = Integer.parseInt(target);
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.getSpawnID().getKey() == levelNumber && enemy.getSpawnID().getValue() == id) { //This is the enemy we want to update
+                for (int j = 0; j < otherPlayers.size(); j++) {
+                    if (otherPlayers.get(j).id == targetId) {
+                        enemy.updateTarget(otherPlayers.get(j));
+                        return;
+                    }
+                }
+                enemy.updateTarget(protagonist); //If the target couldn't be found, or is the protag, then set it so that the enemy has a target.
+                return;
+            }
+        }
+    }
+
+    public static void updateEnemyLocations (String target) { //This is only called from the server to sync the enemy location
+        String[] temp;//For splitting
+        target = target.split(Server.PACKET_ENEMY_UPDATE)[1]; //Remove /eu/ Left with /id/336/ln/60/pos/381.0,671.0/pos/1/e/
+        temp = target.split(Server.PACKET_ID + "|" + Server.PACKET_LEVEL_NUMBER); //Get the enemy id this packet is for. Splits to [] [336] [60/pos/381.0,671.0/pos/1/e/]
+        int id = Integer.parseInt(temp[1]);
+        target = temp[2]; // left with 60/pos/381.0,671.0/pos/1/e/
+
+
+        temp = target.split(Server.PACKET_POSITION); // Gives [60] [381.0,671.0] [1/e/]
+        int levelNumber = Integer.parseInt(temp[0]);
+        final double newX = Double.parseDouble(temp[1].split(",")[0]);//[381.0]
+        final double newY = Double.parseDouble(temp[1].split(",")[1]);//[671.0]
+
+        target = temp[2].split(Server.PACKET_END)[0];// Splits to [1]
+        int targetId = Integer.parseInt(target);
+
+//        System.out.print("Enemy on lvl " + levelNumber + " with ID: " + id + " is at (" + newX + "," + newY + ") Looking for client " + targetId);
+
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.getSpawnID().getKey() == levelNumber && enemy.getSpawnID().getValue() == id) { //This is the enemy we want to update
+                Platform.runLater(() -> enemy.serverUpdatePosition(newX, newY, camera.getX(), camera.getY()));
+                break;
+            }
+        }
+
+
+    }
+
+
 
     public static void addWall (int location, GameObject wall) {
         walls.put(location, wall);
     }
 
-    public static void addPlayer (Protagonist player) {
-        players.add(player);
+    public static void addPlayer (OnlinePlayer player) {
+        Platform.runLater(() -> otherPlayers.add(player));
     }
 
     public static void removePlayer (Protagonist player) {
         Platform.runLater(() -> { //Use runLater to safely remove characters
-            players.remove(player);
+            otherPlayers.remove(player);
+        });
+    }
+
+    public static void removePlayer (int id) {
+        Platform.runLater(() -> { //Use runLater to safely remove characters
+            for (int i = 0; i < otherPlayers.size(); i++) {
+                if (otherPlayers.get(i).id == id) {
+                    otherPlayers.remove(otherPlayers.get(i));
+                    break;
+                }
+            }
         });
     }
 
@@ -144,10 +257,10 @@ public class Handler { //This class will hold all the game objects and is respon
         enemy.setSpawnID(spawnID);
     }
 
-    public static void removeEnemy (Enemy enemy) { //TODO: Also remove these from the level so they dont spawn again
+    public static void removeEnemy (Enemy enemy) { //Tell all clients to remove this from their map
         Platform.runLater(() -> {
-            enemies.remove(enemy);
             map.removeObject(enemy);
+            enemies.remove(enemy);
         });
     }
 
@@ -171,8 +284,40 @@ public class Handler { //This class will hold all the game objects and is respon
         });
     }
 
-    public static void loadBossRoom() {
-        map.loadLevel(8055);//Load boss level
+    public static void removeFromMap (int level, int location) { //Sent from server. Remove from map, and if it is on the current level, remove it from the handler also.
+        Platform.runLater(() -> {
+            map.removeObject(level, location);
+            if (level == map.getCurrentLevelNumber()) { //Remove if from the handler aswell
+                for (int i = 0; i < enemies.size(); i++) {
+                    Enemy enemy = enemies.get(i);
+                    if (enemy.getSpawnID().getKey() == level && enemy.getSpawnID().getValue() == location) {
+                        enemies.remove(enemy);
+                    }
+                }
+                for (int i = 0; i < pickups.size(); i++) {
+                    Item item = pickups.get(i);
+                    if (item.getSpawnID().getKey() == level && item.getSpawnID().getValue() == location) {
+                        pickups.remove(item);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void loadBossRoom(double spawnX, double spawnY) {
+        Platform.runLater(() -> {
+           for (int i = 0; i < otherPlayers.size(); i++) {
+               otherPlayers.get(i).x = spawnX;
+               otherPlayers.get(i).y = spawnY;
+           }
+           protagonist.x = spawnX;
+           protagonist.y = spawnY;
+           map.loadLevel(8055);//Load boss level
+        });
+    }
+
+    public static void disconnectFromServer() {
+        protagonist.disconnect();
     }
 
     public static void pauseUnpauseTimeline(){
@@ -207,11 +352,16 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void attack(Enemy enemy) {
-        for (Protagonist player: players){
+        for (Protagonist player: otherPlayers){
             if (enemy.getAttackBounds().intersects(player.getBounds())){
                 player.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
             }
         }
+
+        if (enemy.getAttackBounds().intersects(protagonist.getBounds())){
+            protagonist.getHit(enemy.getAttackDamage());  //Pass in damage which varies based on enemy type
+        }
+
     }
 
     public static void fireScrollAttack(Scroll scroll) {
@@ -236,23 +386,28 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist = _protagonist;
     }
 
+
     public static void updateCharacterLevelWidth(int newLevelWidth) {
         for (Enemy enemy : enemies) {
             enemy.updateLevelWidth(newLevelWidth);
         }
 
-        for (Protagonist player : players) {
+        for (Protagonist player : otherPlayers) {
             player.updateLevelWidth(newLevelWidth);
         }
 
         protagonist.updateLevelWidth(newLevelWidth);
     }
 
+    public static void updateCharacterLevelNumber(int newLevelNumber) {
+        protagonist.updateLevelNumber(newLevelNumber);
+    }
+
     public static boolean checkCollision (Character character) {
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.equals(protagonist) && !protagonist.getInventory().isFull() && !protagonist.getInventory().containsItem(pickup) &&
-                        (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
+                if (character.isProtagonist() && !character.getInventory().isFull() && !character.getInventory().containsItem(pickup) &&
+                        (character.getInventory().getEquippedItem() == null || !character.getInventory().getEquippedItem().equals(pickup))){
                     System.out.println("can pick up " + pickup.getName());
                     character.pickup(pickup);
                     removePickup(pickup);
@@ -261,8 +416,8 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         for (Door door : doors) { //If a door is on screen and the character is going through it, load the next level
-            if (protagonist.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
-                if (door.isOpen()) {
+            if (character.getBounds().intersects(door.getBounds())) { //Might need to check out of camera bounds for enemies running into doors
+                if (door.isOpen() && character.equals(protagonist)) {
                     //Need to make this thread safe as we are changing things on the main thread. So use runLater
                     Platform.runLater(() -> {
 
@@ -298,6 +453,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
                         protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
                         protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
+                        Handler.updateEnemyTarget();
 
                     });
                     return false;
@@ -308,8 +464,13 @@ public class Handler { //This class will hold all the game objects and is respon
             }
         }
 
-        for (Protagonist player: players){
-            if (!character.equals(player) && character.getBounds().intersects(player.getBounds())){
+        if (!character.isProtagonist()) {
+            for (Protagonist player : otherPlayers) {
+                if (character.getBounds().intersects(player.getBounds())) {
+                    return true;
+                }
+            }
+            if (character.getBounds().intersects(protagonist.getBounds())) {
                 return true;
             }
         }

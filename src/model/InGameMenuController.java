@@ -119,7 +119,10 @@ public class InGameMenuController {
     private EventHandler changeKeybindingsEvent = event -> System.out.println("Change keybindings");
     //--Confirmation Menu(s)--//
     private EventHandler returnToTitleEvent;
-    private EventHandler returnToDesktopEvent = event -> System.exit(0);
+    private EventHandler returnToDesktopEvent = event -> {
+        Handler.disconnectFromServer();
+        System.exit(0);
+    };
 
     //Menus
     private PauseMenu pauseMenu;

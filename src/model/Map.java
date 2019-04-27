@@ -1,5 +1,6 @@
 package model;
 
+import Multiplayer.Server;
 import javafx.geometry.Point2D;
 import sample.Game;
 
@@ -60,15 +61,17 @@ public class Map {
     }
 
     public void removeObject(GameObject toRemove) {
-        levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove);
+        if (!this.game.getProtagonist().sendToServer(Server.PACKET_REMOVE + toRemove.getSpawnID().getKey() + "," + toRemove.getSpawnID().getValue() + Server.PACKET_END)) { // /rm/level#,location#/e/
+            levels.get(toRemove.getSpawnID().getKey()).removeObject(toRemove.getSpawnID().getValue()); //If it couldn't send to server, this means single player. So remove the item now
+        }
+    }
+
+    public void removeObject(int level, int location) { //This gets called by the client when removing based off server. So dont need to tell the server again
+        levels.get(level).removeObject(location);
     }
 
     public Level getLevel(int levelNumber) {
-        if (this.levels.size() >= levelNumber) {
-            //By only updating currentLevelImage, this will ensure if a non existent level is requested it will still return a valid level
-            this.currentLevel = this.levels.get(levelNumber);
-        }
-        return this.currentLevel;
+        return this.levels.getOrDefault(levelNumber, null);
     }
 
     public int getTutorialLevelNumber() {

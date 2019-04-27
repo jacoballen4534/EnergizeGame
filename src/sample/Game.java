@@ -1,7 +1,9 @@
 package sample;
 
 import FXMLControllers.MainMenuController;
+import Multiplayer.Client;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -40,6 +42,7 @@ public class Game extends Canvas {
     public static final int SCREEN_HEIGHT = 768;
     private static Random randomMovement;//used for enemy movement.
     private static long randomSeed;
+    private String onlineCommands = "";
 
     private MainMenuController controller;
 
@@ -70,7 +73,11 @@ public class Game extends Canvas {
         this.map.loadLevel();
 
         //////////////////Load Menu//////////////////////
-        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
+        inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),
+                exitToTitleScreenEvent-> {
+                    Handler.disconnectFromServer();
+                    stage.setScene(Main.getMainScene());
+                });
         inGameMenuController.AddMenusToRoot(root);
 
         init(); //Setup game loop
@@ -80,6 +87,15 @@ public class Game extends Canvas {
         Handler.timeline.play();
         Handler.setGame(this);
     }
+
+    public void addClient(Client client) {
+        this.protagonist.addClient(client);
+    }
+
+    public void setOnlineCommand(String command) {
+        this.onlineCommands = command;
+    }
+
 
     public void hidePauseMenu () {
         this.inGameMenuController.hidePauseMenu();
@@ -140,7 +156,6 @@ public class Game extends Canvas {
         };
     }
 
-
     private void tick() {
         if (keyInput.getKeyPressDebounced("pause") || keyInput.getKeyPressDebounced("quit")){
             this.pause();
@@ -153,7 +168,7 @@ public class Game extends Canvas {
             System.out.println("Open inventory");
             System.out.println(this.protagonist.getInventory().getItemCount());
         }
-        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
+        Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput, this.onlineCommands);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
@@ -182,11 +197,26 @@ public class Game extends Canvas {
         return this.protagonist;
     }
 
+    public void addPlayer(int id) {
+        OnlinePlayer temp = new OnlinePlayer((int)this.protagonist.getX()/Game.PIXEL_UPSCALE, (int)this.protagonist.getY()/Game.PIXEL_UPSCALE, PreLoadedImages.protagonistSpriteSheet,
+        Level.PROTAGONIST_SPRITE_WIDTH, Level.PROTAGONIST_SPRITE_HEIGHT, (int) (Level.PROTAGONIST_SPRITE_WIDTH * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE),
+        (int) (Level.PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE), this.map.getCurrentLevelWidth());
+        temp.setId(id);
+        temp.updateLevelNumber(this.map.getCurrentLevelNumber());
+        temp.updateLevelWidth(this.map.getCurrentLevelWidth());
+        Handler.addPlayer(temp);
+        Handler.updateEnemyTarget();
+    }
+
     public Map getMap() {
         return this.map;
     }
 
     public static long getRandomSeed() {
         return randomSeed;
+    }
+
+    public static void setRandomSeed(long seed) {
+        randomSeed = seed;
     }
 }

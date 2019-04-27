@@ -1,11 +1,13 @@
 package sample;
 
+import FXMLControllers.MainMenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+import model.SaveGameMenu;
 import model.Utilities;
 
 import javax.sound.sampled.AudioInputStream;
@@ -20,6 +22,12 @@ public class Main extends Application {
     private static Scene mainScene;
 
     public static void main(String[] args) {
+        for (String arg : args) {
+            System.out.println(arg);
+        }
+        if (args.length > 0) {
+            MainMenuController.serverAddressString = args[0];
+        }
         launch(args);
     }
 

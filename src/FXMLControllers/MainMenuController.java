@@ -1,5 +1,7 @@
 package FXMLControllers;
 
+import Multiplayer.Client;
+import Multiplayer.Server;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +15,10 @@ import javafx.event.EventHandler;
 import javafx.util.Pair;
 import sample.Game;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStreamReader;
+import java.net.*;
 import java.util.*;
 
 import static model.Utilities.readFile;
@@ -39,7 +43,7 @@ public class MainMenuController implements Initializable {
     @FXML private VBox mainMenuVBox;
     @FXML private Label Resume;
 
-    private static Game game;
+    public static Game game;
     private static boolean isGameActive = false;
 
     private Label focussedLabel = null;
@@ -51,7 +55,32 @@ public class MainMenuController implements Initializable {
         game = new Game(this, System.currentTimeMillis());
         game.start();
     };
-    private EventHandler CustomPlayClicked = event -> System.out.println("Starts custom game");
+
+    //////////////////////// Multi Player buttons ////////////////////////////////
+    /////////////////////////////// HOST ////////////////////////////////
+    private static final int serverPort = 4000; //This can be any address
+    public static String serverAddressString = "localhost";
+
+    private EventHandler HostGameClicked = event -> {
+        //Setup server
+        Server server = new Server(serverAddressString, serverPort, game);
+        server.start();
+
+
+        Client client = new Client(serverAddressString, serverPort, game, this);
+        client.connect();
+    };
+    ///////////////////////////////////////////////////////////////
+
+
+
+    ////////////////////////////////// JOIN /////////////////////////////////////////
+    private EventHandler JoinGameClicked = event -> {
+        Client client1 = new Client(serverAddressString, serverPort, game, this);
+        client1.connect();
+
+    };
+    ////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,9 +90,13 @@ public class MainMenuController implements Initializable {
         Resume.setVisible(isGameActive);
     }
 
-    @FXML private void ResumeClicked() throws IOException{
-        game.hidePauseMenu(); //Consider removing for design reasons
-        game.unpause();
+    @FXML private void ResumeClicked() {
+        try {
+            game.hidePauseMenu(); //Consider removing for design reasons
+            game.unpause();
+        } catch (NullPointerException e) {
+            System.out.println("Cant resume an online game.");
+        }
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -164,7 +197,8 @@ public class MainMenuController implements Initializable {
         VBox subMenu = CreateSubMenu();
         //Create labels
         CreateMenuLabel(subMenu,"Quick Play","submenu-label",labelPos++, QuickPlayClicked);
-        CreateMenuLabel(subMenu,"Custom Play","submenu-label",labelPos++,CustomPlayClicked);
+        CreateMenuLabel(subMenu,"Host Game","submenu-label",labelPos++,HostGameClicked);
+        CreateMenuLabel(subMenu,"Join Game","submenu-label",labelPos++,JoinGameClicked);
         //Add submenu to menu
         mainMenuVBox.getChildren().add(newGamePos,subMenu);
         //System.out.println(subMenu.getChildren());

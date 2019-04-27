@@ -38,7 +38,7 @@ public class HUD{
         this.height = height;
         this.barWidth = (int)(0.8*this.width);
         this.barHeight = (int)(0.3*this.height);
-        int topOfHUD = Game.SCREEN_HEIGHT-yIndent-(height*(this.playerID+1));
+        int topOfHUD = Game.SCREEN_HEIGHT-yIndent-height;
         HUDCoord = new Coordinate(xIndent,topOfHUD);
         this.healthBar = new HUDBar(xIndent+healthCoord.x,
                 topOfHUD + healthCoord.y,
