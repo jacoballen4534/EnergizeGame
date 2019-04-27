@@ -166,13 +166,7 @@ public class Map {
         }
 
         ////////////////FOR DEBUG - Draw map //////////////////////
-        for (int row = 0; row < rows; row ++) {
-            for (int col = 0; col < cols; col++) {
-                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
-            }
-            System.out.println();
-        }
-        System.out.println();
+        drawMap();
         ///////////////////////////////////////////////////////////
 
 
@@ -224,5 +218,21 @@ public class Map {
 
     public static Level getBossLevel() {
         return bossLevel;
+    }
+
+    public void drawMap(){
+        for (int row = 0; row < levelLayout.size(); row ++) {
+            for (int col = 0; col < levelLayout.get(row).size(); col++) {
+                System.out.print(levelLayout.get(row).get(col) ? 1 : 0);
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        System.out.println("Rows: " + levelLayout.size() + " Cols: "+ levelLayout.get(0).size());
+    }
+
+    public ArrayList<ArrayList<Boolean>> getLevelLayout() {
+        return levelLayout;
     }
 }

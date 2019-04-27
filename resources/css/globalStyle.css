@@ -79,6 +79,11 @@
     -fx-font-size: 12;
 }
 /*For HUD*/
+.anchorpane#hud{
+    -fx-background-color:#ff0000;
+    /*-fx-background-image:url("/bg/hudBG.png");*/
+}
+
 .progress-bar {
     -fx-background-color: yellow;
     -fx-background-radius: 10, 10, 10, 10;
@@ -115,7 +120,7 @@
 
 .progress-bar#energyBar {
     -fx-background-color: black;
-    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-radius: 10, 5, 5, 5;
 
 }
 .progress-bar#energyBar .track{
@@ -125,7 +130,7 @@
 }
 .progress-bar#energyBar .bar {
     -fx-background-color: grey;
-    -fx-background-insets: 30, 30, 30, 30;
+    -fx-background-insets: 10, 10, 10, 10;
     -fx-background-radius: 4, 4, 4, 4;
 }
 /*For Title Screen*/

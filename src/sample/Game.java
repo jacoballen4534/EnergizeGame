@@ -41,6 +41,9 @@ public class Game extends Canvas {
     private static Random randomMovement;//used for enemy movement.
     private static long randomSeed;
 
+    private static final int HUD_WIDTH = 200;
+    private NewHUD hud;
+
     private MainMenuController controller;
 
     public Game(MainMenuController menuController, long _randomSeed) {
@@ -53,7 +56,7 @@ public class Game extends Canvas {
         this.stage.setTitle("Tutorial Room");
         this.root = new Group();
         this.root.getChildren().add(this);
-        this.gameScene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
+        this.gameScene = new Scene(root, SCREEN_WIDTH+HUD_WIDTH,SCREEN_HEIGHT, false);
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
@@ -72,6 +75,15 @@ public class Game extends Canvas {
         //////////////////Load MenuElement//////////////////////
         inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> stage.setScene(Main.getMainScene()));
         inGameMenuController.AddMenusToRoot(root);
+
+        //////////////////////Testing new HUD//////////////////////////
+        this.hud = new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
+        this.root.getChildren().add(hud);
+        this.hud.show();
+
+        NewHUDBar testBar = new NewHUDBar("energyBar",100,500,100,100);
+        testBar.setProgress(0.5);
+        this.root.getChildren().add(testBar);
 
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -151,13 +163,14 @@ public class Game extends Canvas {
             this.pause();
             inGameMenuController.showInventoryMenu();
             System.out.println("Open inventory");
-            System.out.println(this.protagonist.getInventory().getItemCount());
+            //System.out.println(this.protagonist.getInventory().getItemCount());
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
+        hud.tick();
     }
 
     private void render() {
