@@ -108,7 +108,7 @@ public class MainMenuController implements Initializable {
 
     @FXML private void CreditsClicked() throws IOException {
         ChangeStageName("Credits");
-        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/credits.fxml")));
+        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/endScreen.fxml")));
     }
 
     @FXML private void QuitClicked() {

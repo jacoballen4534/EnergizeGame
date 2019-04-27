@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="endScreenPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.EndScreenController">
+    <children>
+        <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label fx:id="endScreenTitle" text="GAME OVER LOL" />
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="30.0">
+                    <children>
+                        <Label fx:id="scoreLabel" text="Items Collected" />
+                        <Label fx:id="itemsCollectedLabel" text="12 * 100 = 1200" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                    <children>
+                        <Label fx:id="scoreLabel" text="Enemies Killed" />
+                        <Label fx:id="enemiesKilledLabel" text="14 * 200 = 2800" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                    <children>
+                        <Label fx:id="scoreLabel" text="Time Taken" />
+                        <Label fx:id="timeTakenLabel" text="5:00 -&gt; 300" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                    <children>
+                        <Label fx:id="scoreLabel" text="Victory Bonus" />
+                        <Label fx:id="victoryBonusLabel" text="700" />
+                    </children>
+                </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="331.0" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label fx:id="scoreLabel1" text="Final Score" />
+                  <Label fx:id="finalScoreLabel" text="5000" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button mnemonicParsing="false" text="Save Score" />
+                  <TextField prefHeight="31.0" prefWidth="185.0" promptText="Enter Your Name" />
+               </children>
+            </HBox>
+                <Button mnemonicParsing="false" onMouseClicked="#titleButtonPressed" text="Return to Title" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

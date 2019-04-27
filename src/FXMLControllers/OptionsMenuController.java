@@ -36,11 +36,11 @@ public class OptionsMenuController implements Initializable {
     }
 
     @FXML public void titleButtonPressed() throws IOException {
-        changeStageName("Main Menu");
+        ChangeStageName("Main Menu");
         optionsPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
     }
 
-    private void changeStageName(String newStageName) {
+    private void ChangeStageName(String newStageName) {
         Stage stage = (Stage) optionsPane.getScene().getWindow();
         stage.setTitle(newStageName);
     }
