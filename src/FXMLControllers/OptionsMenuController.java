@@ -1,5 +1,6 @@
 package FXMLControllers;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
@@ -11,7 +12,7 @@ import java.util.ResourceBundle;
 
 
 
-public class optionsController implements Initializable {
+public class OptionsMenuController implements Initializable {
     public AnchorPane optionsPane;
 
     @Override
@@ -43,5 +44,10 @@ public class optionsController implements Initializable {
     private void changeStageName(String newStageName) {
         Stage stage = (Stage) optionsPane.getScene().getWindow();
         stage.setTitle(newStageName);
+    }
+
+    @FXML
+    private void updateVolume(){
+
     }
 }
