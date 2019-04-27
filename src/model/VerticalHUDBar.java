@@ -5,11 +5,11 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 //Vertical progress bar for the side pane
-public class NewHUDBar extends ProgressBar {
+public class VerticalHUDBar extends ProgressBar {
 
     private int currVal, maxVal;
 
-    public NewHUDBar(String ID, int width, int height, int currVal, int maxVal) {
+    public VerticalHUDBar(String ID, int width, int height, int currVal, int maxVal) {
         super();
         this.setId(ID);
         this.setPrefSize(height,width);

@@ -1,6 +1,10 @@
 package model;
 
-public class Minimap{
+import java.awt.*;
+
+//Pixel reader and pixel writer to create the image itself
+
+public class Minimap {
 
     private Map map;
 

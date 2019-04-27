@@ -81,7 +81,7 @@ public class Game extends Canvas {
         this.root.getChildren().add(hud);
         this.hud.show();
 
-        NewHUDBar testBar = new NewHUDBar("energyBar",100,500,100,100);
+        VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
         testBar.setProgress(0.5);
         this.root.getChildren().add(testBar);
 
