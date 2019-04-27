@@ -2,7 +2,7 @@
 .label{
     -fx-text-fill: #e8e8e8;
     /*-fx-font-family: beon;*/
-    -fx-font-size: 30;
+    -fx-font-size: 25;
 }
 .button{
     -fx-background-color: #ff8800; /*#AB4642;*/
@@ -137,6 +137,21 @@
     -fx-font-family: Serif;
     -fx-font-size: 20;
 }
+.label#tutorialTitle{
+    -fx-text-fill: #ff8800;
+    -fx-font-family: beon;
+    -fx-font-size: 40;
+}
+.label#tutorialHeading{
+    -fx-text-fill: #ffc000;
+    -fx-font-family: Sans Serif;
+    -fx-font-size: 20;
+}
+.label#tutorialInfo{
+    -fx-text-fill: #ffccaa;
+    -fx-font-family: System;
+    -fx-font-size: 15;
+}
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
     -fx-font-family: beon;
@@ -146,12 +161,32 @@
     -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
 }
 .label#creditsTitle{
-    -fx-text-fill:#7cafc2;
+    -fx-text-fill:#ffe500;
     -fx-font-family: beon;
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
-    -fx-font-size: 100;
-    -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
+    -fx-font-size: 130;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#highScoreTitle{
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 150;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#highScoreHeading{
+    -fx-text-fill:#ff8800;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 40;
+}
+.highScoreLabel{
+    -fx-text-fill:#11d7d7;
+    -fx-font-family: Bubbler One;
+    -fx-font-size: 20;
 }
 .menulabel{
     -fx-text-fill: #ffc700;
@@ -186,14 +221,6 @@
 }
 .submenu-label:hover{
     -fx-text-fill: #ff0000;
-}
-.title-highscore{
-    -fx-text-fill:#74d5ff/*#7cafc2*/;
-    -fx-font-family: beon;
-    -fx-text-alignment:center;
-    -fx-label-padding: 0 0 0 0;
-    -fx-font-size: 150;
-    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
 }
 
 /*

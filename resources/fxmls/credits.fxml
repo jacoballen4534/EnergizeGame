@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -11,7 +12,7 @@
 
 <AnchorPane fx:id="creditsPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.creditsController">
     <children>
-      <VBox alignment="TOP_CENTER" layoutX="436.0" layoutY="438.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="436.0" layoutY="438.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
                 <Label fx:id="creditsTitle" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Credits">
                     <font>
@@ -27,6 +28,9 @@
                      </font>
                   </Label>
                </children>
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
             </HBox>
             <Button mnemonicParsing="false" onMouseClicked="#creditsBackButtonPressed" text="Return to Title Screen" />
          </children>
