@@ -67,7 +67,7 @@ public class Protagonist extends Character {
         hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
-        this.inventory = new Inventory(3);
+        this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
@@ -83,17 +83,13 @@ public class Protagonist extends Character {
     }
 
     @Override
-    protected boolean pickup(Item pickup) {
-        if (!this.inventory.isFull()){
-            if (this.inventory.getEquippedItem() == null){
-                this.inventory.setEquippedItem(pickup);
-            } else {
-                this.inventory.addItem(pickup);
-                System.out.println("Picked up item");
-            }
-            return true;
+    void pickup(Item pickup) {
+        if (this.inventory.getEquippedItem() == null){
+            this.inventory.setEquippedItem(pickup);
+        } else {
+            this.inventory.addItem(pickup);
+            System.out.println("Picked up item");
         }
-        return false;
     }
 
     protected void block() {
@@ -375,7 +371,7 @@ public class Protagonist extends Character {
     }
 
     public void useItem(){
-        if (this.inventory.getEquippedItem() != null) {
+        /*if (this.inventory.getEquippedItem() != null) {
             this.inventory.getEquippedItem().useItem(this);
             if (inventory.getItemCount() > 0) {
                 this.inventory.setEquippedItem(this.inventory.getItemList().get(0));
@@ -384,10 +380,23 @@ public class Protagonist extends Character {
             } else {
                 this.inventory.setEquippedItem(null);
             }
-            //Update inv
+            //Update inventory
         } else {
             System.out.println("You don't have an item to use");
+        }*/
+
+        /*
+        * Check equipped item is not null
+        * Use the item's effect
+        * remove the item from the inventory
+        * Equip next item in list
+        */
+        if (this.inventory.getEquippedItem() != null){
+            this.inventory.getEquippedItem().useItem(this);
+            this.inventory.setEquippedItem(null);
+            if (inventory.getItemCount()>0) this.inventory.changeEquippedItem(this.inventory.getItemList().get(0));
         }
+        else System.out.println("You don't have an item to use!");
     }
 
 
@@ -420,6 +429,5 @@ public class Protagonist extends Character {
     public Inventory getInventory() {
         return inventory;
     }
-
 }
 

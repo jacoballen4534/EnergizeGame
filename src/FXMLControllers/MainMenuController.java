@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -49,11 +48,22 @@ public class MainMenuController implements Initializable {
     private Label focussedLabel = null;
 
     //Hard coding events for dynamic buttons, might refactor out later
-    private EventHandler QuickPlayClicked = event -> {
+    /*private EventHandler QuickPlayClicked = event -> {
         focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
         UpdateMenu(focussedLabel);
         game = new Game(this, System.currentTimeMillis());
         game.start();
+    };*/
+    private EventHandler QuickPlayClicked = event -> {
+        focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+        UpdateMenu(focussedLabel);
+        try {
+            TutorialControlsController.setController(this);
+            mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenControls.fxml")));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     };
 
     //////////////////////// Multi Player buttons ////////////////////////////////
@@ -315,6 +325,10 @@ public class MainMenuController implements Initializable {
          if (isGameActive == gameActive) return;
          Resume.setVisible(gameActive);
          isGameActive = gameActive;
+    }
+
+    public static void setGame(Game game) {
+        MainMenuController.game = game;
     }
 
     /* DEPRECATED */

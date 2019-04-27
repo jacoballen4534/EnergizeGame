@@ -1,10 +1,8 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.util.Pair;
 import sample.Game;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
@@ -29,7 +27,7 @@ public class Grunt extends Enemy {
         //////////////////////////// SET UP HEALTH / DAMAGE //////////////////////////////
         this.attackDamage = GRUNT_BASE_ATTACK_DAMAGE;
         this.currHealth = GRUNT_MAXHEALTH;
-        this.APPLY_DAMEAGE_COL = 7; //To apply damage part way through the attack animation
+        this.APPLY_DAMAGE_COL = 7; //To apply damage part way through the attack animation
         this.alertRadius = 16; //Number of tiles in the path between this and target
 
         //Initialise image for first animation
@@ -57,24 +55,15 @@ public class Grunt extends Enemy {
     }
 
     @Override
-    void isPlayerInSight() {
-
-    }
-
-    @Override
-    void findPlayer() {
-
-    }
-
-    @Override
-    boolean pickup(Item pickup) {
-        //Intentionally left blank
-        return false;
-    }
+    void pickup(Item pickup) {}
 
     @Override
     protected void attack() {
        super.canAttack();
     }
 
+    @Override
+    protected void playDeathSound() {
+        SoundController.PlayAudio("gruntDeath");
+    }
 }

@@ -343,12 +343,14 @@ public class Handler { //This class will hold all the game objects and is respon
         //Dont clear the protagonist as this gets set once and moved through the rooms
     }
 
-    public static void attack(Protagonist protagonist) {
+    public static boolean attack(Protagonist protagonist) {
         for (Enemy enemy: enemies){
             if (enemy.inCameraBounds(camera.getX(), camera.getY()) && protagonist.getAttackBounds().intersects(enemy.getBounds())){
                 enemy.getHit(protagonist.getAttackDamage()); //Pass in damage which varies based on weapon type
+                return true; //indicates successful attack
             }
         }
+        return false;
     }
 
     public static void attack(Enemy enemy) {
@@ -370,13 +372,13 @@ public class Handler { //This class will hold all the game objects and is respon
         }
     }
 
-    public static void freezeEnemys(Scroll scroll) {
+    public static void freezeEnemies(Scroll scroll) {
         for (Enemy enemy : enemies) {
             enemy.freeze(scroll.getFreezeDuration());
         }
     }
 
-    public static void blowEnemysAway(Scroll scroll) {
+    public static void blowEnemiesAway(Scroll scroll) {
         for (Enemy enemy : enemies) {
             enemy.blowAway(scroll.getWindDuration());
         }
@@ -406,9 +408,17 @@ public class Handler { //This class will hold all the game objects and is respon
     public static boolean checkCollision (Character character) {
         for (Item pickup : pickups) {
             if (character.getBounds().intersects(pickup.getBounds())) {
-                if (character.isProtagonist() && !character.getInventory().isFull() && !character.getInventory().containsItem(pickup) &&
-                        (character.getInventory().getEquippedItem() == null || !character.getInventory().getEquippedItem().equals(pickup))){
+                /*
+                * Conditions are:
+                * - Is the character the protagonist?
+                * - Is the protagonist's inventory full? //Not relevant with stackable items?
+                * - Is the item already in the inventory? //This needs to change to allow stackable items
+                * - Is the item already equipped?
+                * */
+                if (character.equals(protagonist) && !pickup.isInInventory()
+                        && (protagonist.getInventory().getEquippedItem() == null || !protagonist.getInventory().getEquippedItem().equals(pickup))){
                     System.out.println("can pick up " + pickup.getName());
+                    pickup.setInInventory(true);
                     character.pickup(pickup);
                     removePickup(pickup);
                 }

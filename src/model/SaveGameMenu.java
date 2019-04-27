@@ -29,6 +29,10 @@ public class SaveGameMenu extends PauseMenu {
         return txtInput.getCharacters().toString();
     }
 
+    public void setTextField(TextField textField){
+        this.txtInput = textField;
+    }
+
     private void CreateMenuLayout(int width, int height){
 
         title = CreateLabel("Save Map","saveMenuTitle",width,height/2, TextAlignment.CENTER,false);
