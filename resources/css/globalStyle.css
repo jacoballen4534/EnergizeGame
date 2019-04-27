@@ -127,12 +127,12 @@
 }
 .progress-bar#energyBar .track{
     -fx-background-color: blue;
-    -fx-background-insets: 0;
+    -fx-background-insets: 1;
     -fx-background-radius: 5, 5, 5, 5;
 }
 .progress-bar#energyBar .bar {
     -fx-background-color: grey;
-    -fx-background-insets: 0;
+    -fx-background-insets: 1;
     -fx-background-radius: 5, 5, 5, 5;
 }
 /*For Title Screen*/

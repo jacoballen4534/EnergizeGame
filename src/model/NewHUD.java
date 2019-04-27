@@ -16,7 +16,7 @@ public class NewHUD extends PauseMenu {
 
     //Rough layout of menu from top to bottom
 
-    private HBox statusElements;
+    /*private HBox statusElements;
     private VerticalHUDBar healthBar;
     private VerticalHUDBar energyBar;
     private ImageView heartLives;
@@ -26,7 +26,7 @@ public class NewHUD extends PauseMenu {
     private ImageView equippedItem;
     private Label itemLabel;
 
-    private Minimap minimap;
+    private Minimap minimap;*/
 
     public NewHUD(String ID, int width, int height, int xPos, int yPos) {
         super(ID, width, height, xPos, yPos);
@@ -42,7 +42,7 @@ public class NewHUD extends PauseMenu {
         this.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/hud.fxml")));
     }
 
-    private void CreateHUDLayout(int width, int height){
+    /*private void CreateHUDLayout(int width, int height){
 
         //Create nodes of top part of HUD
         statusElements = new HBox(20);
@@ -72,15 +72,11 @@ public class NewHUD extends PauseMenu {
         vbox.getChildren().addAll(statusElements,itemBox);
     }
 
-    public void tick(){
-
-    }
-
     public VerticalHUDBar getHealthBar() {
         return healthBar;
     }
 
     public VerticalHUDBar getEnergyBar() {
         return energyBar;
-    }
+    }*/
 }

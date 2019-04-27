@@ -1,5 +1,6 @@
 package sample;
 
+import FXMLControllers.HudController;
 import FXMLControllers.MainMenuController;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -45,6 +46,7 @@ public class Game extends Canvas {
     private NewHUD hud;
 
     private MainMenuController controller;
+    private HudController hudController;
 
     public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
@@ -170,7 +172,6 @@ public class Game extends Canvas {
             this.camera.tick(this.protagonist, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT,
                     this.map.getCurrentLevelWidth() * PIXEL_UPSCALE, this.map.getCurrentLevelHeight() * PIXEL_UPSCALE);
         }
-        hud.tick();
     }
 
     private void render() {
