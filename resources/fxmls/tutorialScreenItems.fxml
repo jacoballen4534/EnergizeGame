@@ -40,20 +40,20 @@
                                         <Label fx:id="tutorialInfo" prefHeight="100.0" prefWidth="234.0" text="Restores some energy" wrapText="true" />
                                     </children>
                                 </HBox>
-                                <HBox prefHeight="100.0" prefWidth="306.0">
-                                    <children>
-                                        <VBox prefHeight="100.0" prefWidth="193.0">
-                                            <children>
-                                                <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="129.0" text="Use Item" wrapText="true" />
-                                                <ImageView fx:id="itemControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
-                                            </children>
-                                        </VBox>
-                                        <Label fx:id="tutorialInfo" prefHeight="102.0" prefWidth="284.0" text="Use this to activate your equipped item" wrapText="true">
-                                            <font>
-                                                <Font size="15.0" />
-                                            </font></Label>
-                                    </children>
-                                </HBox>
+                                <!--<HBox prefHeight="100.0" prefWidth="306.0">-->
+                                    <!--<children>-->
+                                        <!--<VBox prefHeight="100.0" prefWidth="193.0">-->
+                                            <!--<children>-->
+                                                <!--<Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="129.0" text="Use Item" wrapText="true" />-->
+                                                <!--<ImageView fx:id="itemControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />-->
+                                            <!--</children>-->
+                                        <!--</VBox>-->
+                                        <!--<Label fx:id="tutorialInfo" prefHeight="102.0" prefWidth="284.0" text="Use this to activate your equipped item" wrapText="true">-->
+                                            <!--<font>-->
+                                                <!--<Font size="15.0" />-->
+                                            <!--</font></Label>-->
+                                    <!--</children>-->
+                                <!--</HBox>-->
                             </children>
                             <opaqueInsets>
                                 <Insets />

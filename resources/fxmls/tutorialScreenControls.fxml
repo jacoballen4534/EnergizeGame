@@ -83,7 +83,7 @@
                                     <ImageView fx:id="blockControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                  </children>
                               </VBox>
-                              <Label fx:id="tutorialInfo" prefHeight="63.0" prefWidth="343.0" text="Use this to activate a shield that prevents you from taking damage" wrapText="true" />
+                              <Label fx:id="tutorialInfo" prefHeight="63.0" prefWidth="343.0" text="Use some energy to activate a shield that prevents you from taking damage." wrapText="true" />
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
