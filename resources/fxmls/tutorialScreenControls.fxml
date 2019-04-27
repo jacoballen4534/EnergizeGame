@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="tutorialScreenControlsPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialControlsController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="tutorialTitle" text="Tutorial - Controls" />
+            <HBox prefHeight="426.0" prefWidth="1024.0" spacing="100.0">
+               <children>
+                  <VBox prefHeight="100.0" prefWidth="534.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" text="Movement" />
+                                    <ImageView fx:id="movementControls" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" text="Use these to move the player through the level" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" text="Attack" />
+                                    <ImageView fx:id="attackControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" text="Use this to attack and defeat enemies" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="306.0">
+                           <children>
+                              <VBox prefHeight="100.0" prefWidth="193.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="129.0" text="Use Item" wrapText="true" />
+                                    <ImageView fx:id="itemControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" prefHeight="102.0" prefWidth="284.0" text="Use this to activate your equipped item" wrapText="true">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Label>
+                           </children>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="534.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" text="Pause" />
+                                    <ImageView fx:id="pauseControls" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" text="Use this to pause the game" wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" text="Blocking" />
+                                    <ImageView fx:id="blockControl" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" prefHeight="63.0" prefWidth="343.0" text="Use some energy to activate a shield that prevents you from taking damage." wrapText="true" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <VBox prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <Label fx:id="tutorialHeading" prefHeight="21.0" prefWidth="121.0" text="Inventory" wrapText="true" />
+                                    <ImageView fx:id="inventoryButton" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <Label fx:id="tutorialInfo" prefHeight="42.0" prefWidth="328.0" text="Use this to open your inventory" wrapText="true" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#titleButtonPressed" text="Return to Title" />
+                  <Button mnemonicParsing="false" onMouseClicked="#startGameButtonPressed" text="Start Game" />
+                  <Button mnemonicParsing="false" onMouseClicked="#nextPageButtonPressed" text="Next Page" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

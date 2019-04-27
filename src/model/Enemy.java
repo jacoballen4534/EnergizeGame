@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public abstract class Enemy extends Character{
     protected Protagonist target; //For path finding.
     protected AnimationsState dieState;
-    protected int APPLY_DAMEAGE_COL;
+    protected int APPLY_DAMAGE_COL;
     protected int EnemyMovementSpeed;
     protected long freezeStartTime, freezeDuration;
     protected long windSpellStartTime, windSpellDuration;
@@ -42,7 +42,7 @@ public abstract class Enemy extends Character{
             }
         } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
-            if (this.currentAnimationCol == APPLY_DAMEAGE_COL) {
+            if (this.currentAnimationCol == APPLY_DAMAGE_COL) {
                 Handler.attack(this); //Wait until part way through this animation before actually hitting
             }
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
@@ -176,11 +176,12 @@ public abstract class Enemy extends Character{
 
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
-            if (this.currHealth <= 0) { //died
+            if (this.currHealth <= 0) { //dead
                 //Make bounding box 0
                 this.target.addEnergy(10);
                 this.playGotAttackedAnimation = false;
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                this.playDieAnimation = true;
+                this.playDeathSound();
             }
         }
     }
@@ -194,7 +195,6 @@ public abstract class Enemy extends Character{
         }
     }
 
-    abstract void isPlayerInSight();
-    abstract void findPlayer();
+    protected abstract void playDeathSound();
 
 }

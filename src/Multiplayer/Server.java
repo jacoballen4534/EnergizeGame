@@ -59,8 +59,11 @@ public class Server implements Runnable {
         try {
             serverAddress = InetAddress.getByName(serverAddressString);
             this.socket = new DatagramSocket(this.port, serverAddress);
+        } catch (BindException e) {
+            System.out.println("\033[0;31mThere is already a host at this address. Joining that game instead");
+            return;
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
             return;
         } catch (UnknownHostException e) {
             System.out.println("It doesnt look like that is a valid host address.");
@@ -132,8 +135,6 @@ public class Server implements Runnable {
             int id = Integer.parseInt(data.split(PACKET_DISCONNECT + "|" + PACKET_END)[1].trim());
             this.disconnect(id, true);
 
-            consoleMessage.append("-------------------------\033[0m");
-            System.out.println(consoleMessage);
         } else if (data.startsWith(PACKET_PING)) {
             int id = Integer.parseInt(data.split(PACKET_PING + "|" + PACKET_END)[1].trim());
             clientResponse.add(id);
@@ -148,13 +149,15 @@ public class Server implements Runnable {
         } else if (data.startsWith(PACKET_ENEMY_TARGET_UPDATE)) { //Tell all other clients to update their enemy targets
             sendToAll(data.getBytes()); //Forward it on to all clients
         } else if (data.startsWith(PACKET_ENEMY_UPDATE)) { //Tell all other clients to update their enemy positions.
-                for (int i = 0; i < clients.size(); i++) {
+            for (int i = 0; i < clients.size(); i++) {
                 ServerClient client = clients.get(i);
                 if (client.address.equals(sendersAddress) && client.port == sendersPort) {
                     forwardToOthers(data.getBytes(), client.userID);
                     break;
                 }
             }
+        } else if (data.length() == 0) {
+            //Ignore
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -172,7 +175,7 @@ public class Server implements Runnable {
                 try {
                     socket.send(packet);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("\033[0;31m" + e.getMessage());
                 }
             }
         };
@@ -216,8 +219,6 @@ public class Server implements Runnable {
                 disconnectionMessage += "Client " + id + " @ " + serverClient.address + ":" + serverClient.port + " timed out.";
             }
 
-        } else {
-            disconnectionMessage += ("Cant find client " + id + " to disconnect");
         }
         disconnectionMessage += "\033[0m";
         System.out.println(disconnectionMessage);
@@ -323,7 +324,7 @@ public class Server implements Runnable {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println("\033[0;31m" + e.getMessage());
                     }
                     for (int i = 0; i < clients.size(); i++) {
                         ServerClient client = clients.get(i);
@@ -355,7 +356,7 @@ public class Server implements Runnable {
                         socket.receive(packet);
                     } catch (SocketException e) {
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.out.println("\033[0;31m" + e.getMessage());
                     }
                     process(packet);
                 }

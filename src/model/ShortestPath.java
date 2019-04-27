@@ -72,7 +72,7 @@ public class ShortestPath {
         if (startingId >= 0 && startingId < next.length && destinationId >= 0 && destinationId < next.length && this.pathsThreadComplete) {
             if (next[startingId][destinationId] == null) {
 //            return path;
-                System.out.println("There is no path from " + startingId + " to " + destinationId);
+//                System.out.println("There is no path from " + startingId + " to " + destinationId);
                 return 0;
             } else {
                 int nextNodeId = next[startingId][destinationId].getId();
@@ -212,7 +212,7 @@ public class ShortestPath {
         ArrayList<Node> path = new ArrayList<>();
         if (next[startingId][destinationId] == null) {
 //            return path;
-            System.out.println("There is no path from " + startingId + " to " + destinationId);
+//            System.out.println("There is no path from " + startingId + " to " + destinationId);
             return;
         }
         path.add(startingNode);

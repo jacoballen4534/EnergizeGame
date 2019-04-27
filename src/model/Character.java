@@ -3,7 +3,6 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -64,7 +63,7 @@ public abstract class Character extends GameObject{
     }
 
     abstract void updateAnimationState();
-    abstract boolean pickup(Item pickup);
+    abstract void pickup(Item pickup);
 
     protected boolean canAttack() {
         this.attackTimer += System.currentTimeMillis() - this.lastAttackTimer;

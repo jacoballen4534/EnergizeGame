@@ -1,9 +1,25 @@
-.root{
-    -fx-background-image:url("/bg/titleScreenBG.png");
+/*Generics*/
+.label{
+    -fx-text-fill: #e8e8e8;
+    /*-fx-font-family: beon;*/
+    -fx-font-size: 25;
 }
+.button{
+    -fx-background-color: #ff8800; /*#AB4642;*/
+    -fx-text-fill: #000000;
+    -fx-font-style: italic;
+    -fx-font-size: 20;
+    -fx-background-radius: 4;
+}
+.button:hover{
+    -fx-text-fill: #ffffff;
+    -fx-font-style: oblique;
+    /*-fx-font-weight: bold;*/
+    -fx-background-color: #0288D1;
+}
+/*For In-Game Menu*/
 .anchorpane#pauseMenu{
     -fx-background-image:url("/bg/pauseScreenBG.png");
-    /*-fx-background-color: #224D72;*/
 }
 .label#pauseMenuTitle{
     -fx-text-fill: #ffc700;
@@ -36,6 +52,9 @@
     -fx-font-size: 25;
     -fx-effect: dropshadow(gaussian, #00ff00, 10, 0.5, 0, 0);
 }
+.button#confirmationMenuButton{
+    -fx-font-size: 15;
+}
 .anchorpane#optionsMenu{
     -fx-background-image:url("/bg/optionsScreenBG.png");
 }
@@ -56,15 +75,65 @@
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, #ff00ff, 10, 0.5, 0, 0);
 }
-.label{
-    -fx-text-fill: #e8e8e8;
-    /*-fx-font-family: beon;*/
-    -fx-font-size: 30;
+.button#saveMenuButton{
+    -fx-font-size: 12;
+}
+/*For HUD*/
+.anchorpane#hud{
+    -fx-background-image:url("/bg/hudBG-border.png");
+}
+.label#hudLabel{
+    -fx-font-size: 20;
+    -fx-font-family: beon;
+    -fx-text-fill: #ffc700;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
+}
+
+.progress-bar#healthBar > .track{
+    -fx-background-color: black;
+}
+.progress-bar#healthBar > .bar {
+    -fx-background-color: red;
+    -fx-background-insets: 5, 5, 5, 5;
+    /*-fx-background-radius: 10, 10, 10, 10;*/
+}
+
+/*.progress-bar#energyBar {
+    -fx-background-color: black;
+    -fx-background-radius: 1, 1, 1, 1;
+
+}*/
+.progress-bar#energyBar .track{
+    -fx-background-color: black;
+}
+.progress-bar#energyBar .bar {
+    -fx-background-color: cyan;
+    -fx-background-insets: 5;
+    /*-fx-background-radius: 5, 5, 5, 5;*/
+}
+/*For Title Screen*/
+.root{
+    -fx-background-image:url("/bg/titleScreenBG.png");
 }
 .label#creditsInfo{
     -fx-text-fill: #e8e8e8;
     -fx-font-family: Serif;
     -fx-font-size: 20;
+}
+.label#tutorialTitle{
+    -fx-text-fill: #ff8800;
+    -fx-font-family: beon;
+    -fx-font-size: 40;
+}
+.label#tutorialHeading{
+    -fx-text-fill: #ffc000;
+    -fx-font-family: Sans Serif;
+    -fx-font-size: 20;
+}
+.label#tutorialInfo{
+    -fx-text-fill: #ffccaa;
+    -fx-font-family: System;
+    -fx-font-size: 15;
 }
 .label#mainMenuTitle{
     -fx-text-fill:#74d5ff/*#7cafc2*/;
@@ -74,13 +143,65 @@
     -fx-font-size: 200;
     -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
 }
+.label#optionsTitle{
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 130;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#optionsLabel{
+    -fx-text-fill: #ff8800;
+    -fx-font-family: beon;
+    -fx-font-size: 40;
+}
 .label#creditsTitle{
-    -fx-text-fill:#7cafc2;
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 130;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#highScoreTitle{
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 150;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#highScoreHeading{
+    -fx-text-fill:#ff8800;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 40;
+}
+.highScoreLabel{
+    -fx-text-fill:#11d7d7;
+    -fx-font-family: Bubbler One;
+    -fx-font-size: 20;
+}
+.label#endScreenTitle{
+    -fx-text-fill:#ffe500;
     -fx-font-family: beon;
     -fx-text-alignment:center;
     -fx-label-padding: 0 0 0 0;
     -fx-font-size: 100;
-    -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#endScoreLabel{
+    -fx-text-fill: #ff0000;
+    -fx-font-family: beon;
+    -fx-font-size: 30;
+    -fx-effect: dropshadow(gaussian, #ff8800, 10, 0, 0, 0);
+}
+.endScorePointsLabel{
+    -fx-text-fill: #ffff00;
+    -fx-font-family: beon;
+    -fx-font-size: 25;
 }
 .menulabel{
     -fx-text-fill: #ffc700;
@@ -116,33 +237,6 @@
 .submenu-label:hover{
     -fx-text-fill: #ff0000;
 }
-.title-highscore{
-    -fx-text-fill:#74d5ff/*#7cafc2*/;
-    -fx-font-family: beon;
-    -fx-text-alignment:center;
-    -fx-label-padding: 0 0 0 0;
-    -fx-font-size: 150;
-    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
-}
-.button{
-    -fx-background-color: #ff8800; /*#AB4642;*/
-    -fx-text-fill: #000000;
-    -fx-font-style: italic;
-    -fx-font-size: 20;
-    -fx-background-radius: 4;
-}
-.button:hover{
-    -fx-text-fill: #ffffff;
-    -fx-font-style: oblique;
-    /*-fx-font-weight: bold;*/
-    -fx-background-color: #0288D1;
-}
-.button#saveMenuButton{
-    -fx-font-size: 12;
-}
-.button#confirmationMenuButton{
-    -fx-font-size: 15;
-}
 
 /*
 Table view stuff ripped from here:
@@ -150,11 +244,11 @@ https://stackoverflow.com/questions/33938811/styling-a-tableview-in-css-javafx
 */
 
 .table-view{
-   -fx-background-color: transparent;
+   -fx-background-color: grey;
 }
 
 .table-view:focused{
-    -fx-background-color: transparent;
+    -fx-background-color: grey;
 }
 
 .table-view .column-header-background{

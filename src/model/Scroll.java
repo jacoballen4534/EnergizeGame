@@ -1,6 +1,7 @@
 package model;
 
 import javafx.scene.canvas.GraphicsContext;
+import sample.SoundController;
 
 import java.awt.image.BufferedImage;
 
@@ -11,7 +12,7 @@ public class Scroll extends Item{
 
     public Scroll(String name, String description, int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight) {
         super(name, description,xLocation, yLocation, spriteSheet, spriteWidth, spriteHeight);
-        this.damage = 50;
+        this.damage = 100;
         this.freezeDuration = 5000L; //Freeze enemy's for 5 seconds
         this.windDuration = 1500L; //Quickly blow enemy's away
     }
@@ -30,10 +31,13 @@ public class Scroll extends Item{
     public void useItem(Protagonist user) {
         if (this.name.equals("Fire Scroll")) {
             Handler.fireScrollAttack(this);
+            SoundController.playSoundFX("fireScroll");
         } else if (this.name.equals("Ice Scroll")) {
-            Handler.freezeEnemys(this);
+            Handler.freezeEnemies(this);
+            SoundController.playSoundFX("iceScroll");
         } else if (this.name.equals("Wind Scroll")) {
-            Handler.blowEnemysAway(this);
+            Handler.blowEnemiesAway(this);
+            SoundController.playSoundFX("windScroll");
         }
     }
 

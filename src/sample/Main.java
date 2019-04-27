@@ -17,6 +17,8 @@ import javax.sound.sampled.FloatControl;
 import java.io.*;
 import java.lang.String;
 
+import java.io.InputStream;
+
 public class Main extends Application {
     private static Stage stage;
     private static Scene mainScene;
@@ -28,6 +30,9 @@ public class Main extends Application {
         if (args.length > 0) {
             MainMenuController.serverAddressString = args[0];
         }
+        if (args.length > 1) {
+            MainMenuController.serverPort = Integer.parseInt(args[1]);
+        }
         launch(args);
     }
 
@@ -36,19 +41,8 @@ public class Main extends Application {
 
         Utilities.initializeFiles();
 
-        //Play background music
-        //String musicFile = "resources/music/theme.wav"; //Must be a .wav!
-        InputStream musicSrc = this.getClass().getResourceAsStream("/music/theme.wav");
-        InputStream music = new BufferedInputStream(musicSrc);
-        AudioInputStream audioInput = AudioSystem.getAudioInputStream(music);//AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInput);
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        SoundController.playMusic("titleBGM");
 
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(-5.0f);
-
-        clip.start();
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);

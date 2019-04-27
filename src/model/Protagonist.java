@@ -2,11 +2,15 @@ package model;
 
 import Multiplayer.Client;
 import Multiplayer.Server;
+import FXMLControllers.HUDController;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import sample.Game;
+import sample.SoundController;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,6 +38,7 @@ public class Protagonist extends Character {
     protected int currEnergy;
     protected int maxEnergy;
     protected HUD hud;
+    private NewHUD newHud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -67,8 +72,10 @@ public class Protagonist extends Character {
         hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
-        this.inventory = new Inventory(3);
+        this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
+
+        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -78,22 +85,20 @@ public class Protagonist extends Character {
     @Override
     protected void attack() {
         if(super.canAttack()) {
-            Handler.attack(this);
+            if (Handler.attack(this)) SoundController.playSoundFX("hitAttackSword");
+            else SoundController.playSoundFX("missAttackSword");
         }
     }
 
     @Override
-    protected boolean pickup(Item pickup) {
-        if (!this.inventory.isFull()){
-            if (this.inventory.getEquippedItem() == null){
-                this.inventory.setEquippedItem(pickup);
-            } else {
-                this.inventory.addItem(pickup);
-                System.out.println("Picked up item");
-            }
-            return true;
+    void pickup(Item pickup) {
+        if (this.inventory.getEquippedItem() == null){
+            this.inventory.setEquippedItem(pickup);
+        } else {
+            this.inventory.addItem(pickup);
+            System.out.println("Picked up item");
         }
-        return false;
+        SoundController.playSoundFX("itemPickup");
     }
 
     protected void block() {
@@ -104,6 +109,7 @@ public class Protagonist extends Character {
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
+                newHud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
                 System.out.println("An impenetrable defence");
@@ -125,6 +131,7 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
+            newHud.setCurrHealth(currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
                 this.playAttackAnimation = false;
@@ -163,6 +170,7 @@ public class Protagonist extends Character {
                 this.keepRendering = false;
                 this.isAlive = false;
                 Handler.removePlayer(this);
+                this.disconnect();
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -178,6 +186,7 @@ public class Protagonist extends Character {
             this.currHealth = this.maxHealth;
         }
         this.hud.setHealth(this.currHealth);
+        newHud.setCurrHealth(currHealth);
     }
 
     public void increaseEnergy(int amount) {
@@ -186,6 +195,7 @@ public class Protagonist extends Character {
             this.currEnergy = this.maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     protected void tick(double cameraX, double cameraY, String commands) {
@@ -272,6 +282,7 @@ public class Protagonist extends Character {
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
         hud.tick(cameraX, cameraY); //Update health and energy displays
+        newHud.tick();
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -374,8 +385,12 @@ public class Protagonist extends Character {
         return hud;
     }
 
+    public NewHUD getNewHud() {
+        return newHud;
+    }
+
     public void useItem(){
-        if (this.inventory.getEquippedItem() != null) {
+        /*if (this.inventory.getEquippedItem() != null) {
             this.inventory.getEquippedItem().useItem(this);
             if (inventory.getItemCount() > 0) {
                 this.inventory.setEquippedItem(this.inventory.getItemList().get(0));
@@ -384,10 +399,23 @@ public class Protagonist extends Character {
             } else {
                 this.inventory.setEquippedItem(null);
             }
-            //Update inv
+            //Update inventory
         } else {
             System.out.println("You don't have an item to use");
+        }*/
+
+        /*
+        * Check equipped item is not null
+        * Use the item's effect
+        * remove the item from the inventory
+        * Equip next item in list
+        */
+        if (this.inventory.getEquippedItem() != null){
+            this.inventory.getEquippedItem().useItem(this);
+            this.inventory.setEquippedItem(null);
+            if (inventory.getItemCount()>0) this.inventory.changeEquippedItem(this.inventory.getItemList().get(0));
         }
+        else System.out.println("You don't have an item to use!");
     }
 
 
@@ -397,12 +425,14 @@ public class Protagonist extends Character {
             this.currEnergy = maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
-            hud.setEnergy(currEnergy);
+            this.hud.setEnergy(this.currEnergy);
+            newHud.setCurrEnergy(currEnergy);
             return true;
         } else {
             return false;
@@ -420,6 +450,5 @@ public class Protagonist extends Character {
     public Inventory getInventory() {
         return inventory;
     }
-
 }
 

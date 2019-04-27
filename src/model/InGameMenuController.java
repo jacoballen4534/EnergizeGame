@@ -1,15 +1,9 @@
 package model;
 
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,7 +16,8 @@ import static sample.Game.SCREEN_WIDTH;
 
 public class InGameMenuController {
 
-    //Sizing macros
+    //==Sizing macros==//
+    //--Pause Menu--//
     private static final int PAUSE_MENU_WIDTH = 300;
     private static final int PAUSE_MENU_HEIGHT = 500;
     private static final int PAUSE_MENU_BTN_WIDTH = 250;
@@ -30,6 +25,7 @@ public class InGameMenuController {
     private static final int PAUSE_MENU_TITLE_WIDTH = 250;
     private static final int PAUSE_MENU_TITLE_HEIGHT = 130;
 
+    //--Inventory Menu--//
     private static final int INVENTORY_MENU_WIDTH = 500;
     private static final int INVENTORY_MENU_HEIGHT = 500;
     private static final int INVENTORY_TITLE_WIDTH = 300;
@@ -37,6 +33,7 @@ public class InGameMenuController {
     private static final int CLOSE_MENU_BTN_WIDTH = 125;
     private static final int CLOSE_MENU_BTN_HEIGHT = 100;
 
+    //--Save Menu--//
     private static final int SAVE_MENU_WIDTH = 300;
     private static final int SAVE_MENU_HEIGHT = 150;
     private static final int SAVE_TITLE_WIDTH = 200;
@@ -46,9 +43,11 @@ public class InGameMenuController {
     private static final int SAVE_NAME_INPUT_WIDTH = 250;
     private static final int SAVE_NAME_INPUT_HEIGHT = 50;
 
+    //--Options Menu--//
     private static final int OPTIONS_MENU_WIDTH = 400;
     private static final int OPTIONS_MENU_HEIGHT = 400;
 
+    //--Confirmation Menu--//
     private static final int CONFIRMATION_MENU_WIDTH = 300;
     private static final int CONFIRMATION_MENU_HEIGHT = 100;
     private static final int CONFIRMATION_TITLE_WIDTH = 250;
@@ -57,7 +56,7 @@ public class InGameMenuController {
     private static final int CONFIRMATION_BUTTON_HEIGHT = 40;
 
     //==Event macros==//
-    //--Pause Menu--
+    //--Pause Menu--//
     private EventHandler resumeEvent;
     private Runnable unpause;
     private EventHandler inventoryMenuEvent = mouseEvent ->{
@@ -89,17 +88,11 @@ public class InGameMenuController {
         this.inventoryMenu.hide();
 //        this.pauseMenu.show(); //Goes back to pause menu. Instead go back to game
         this.unpause.run();
-
     };
     //--Save Menu--//
     private EventHandler saveGameEvent = mouseEvent -> {
 
-        //Not 100% sure if this is the only way to get the name.
-        ObservableList<Node> children = this.saveGameMenu.getChildren();
-        VBox vBox = (VBox)children.get(0);
-        ObservableList<Node> vboxChild = vBox.getChildren();
-        TextField field = (TextField)vboxChild.get(1);
-        Utilities.saveNewMapSeed(field.getText(), Game.getRandomSeed());
+        Utilities.saveNewMapSeed(this.saveGameMenu.getTextInput(),Game.getRandomSeed());
         System.out.println("The current map has been saved");
 
         this.saveGameMenu.hide();
@@ -171,6 +164,7 @@ public class InGameMenuController {
     }
 
     public void AddMenusToRoot(Group root){
+        //root.getChildren().add(HUD); //Include HUD as part of menu controller
         root.getChildren().add(pauseMenu);
         root.getChildren().add(inventoryMenu);
         root.getChildren().add(saveGameMenu);
@@ -261,6 +255,8 @@ public class InGameMenuController {
         TextField saveNameInput = CreateTextField("Enter Map Name","saveNameTextField",
                 SAVE_NAME_INPUT_WIDTH,SAVE_NAME_INPUT_HEIGHT);
 
+        saveGameMenu.setTextField(saveNameInput);
+
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveNameInput);
         saveGameMenu.AddNodeToVBox(vboxNodePos++,saveGameMenu.getHBox());
 
@@ -288,13 +284,11 @@ public class InGameMenuController {
         TableView table = inventoryMenu.CreateTable();
 
         //Label for equipped item icon
-        Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",100,100,TextAlignment.LEFT,true);
+        Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",150,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
-        ImageView equippedItemIcon = new ImageView();
-        equippedItemIcon.setFitHeight(50);
-        equippedItemIcon.setFitWidth(50);
-        equippedItemIcon.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null));
+        ImageView equippedItemIcon = CreateImageView(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null),
+                50,50);
 
         inventoryMenu.setEquippedItemIcon(equippedItemIcon);
 

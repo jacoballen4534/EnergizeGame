@@ -67,7 +67,7 @@ public class Utilities {
             bufferedReader = new BufferedReader(new FileReader(fullFilePath));
             line = bufferedReader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
 
         openedBlock = false;
@@ -79,7 +79,7 @@ public class Utilities {
             try {
                 line = bufferedReader.readLine();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("\033[0;31m" + e.getMessage());
             }
         }
         return allContent;
@@ -106,7 +106,7 @@ public class Utilities {
             writer.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public class Utilities {
                 System.out.println("Could not create directory");
             }
         }catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
     }
 
@@ -179,7 +179,7 @@ public class Utilities {
             writer.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
     }
 

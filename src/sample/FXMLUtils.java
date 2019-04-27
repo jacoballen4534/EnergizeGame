@@ -35,9 +35,11 @@ public class FXMLUtils {
     }
 
     public static TextField CreateTextField(String text, String id, int prefWidth, int prefHeight){
-        TextField textField = new TextField(text);
+        TextField textField = new TextField();
+        textField.setPromptText(text);
         textField.setId(id);
         textField.setPrefSize(prefWidth,prefHeight);
+        textField.setFocusTraversable(false);
         return textField;
     }
 

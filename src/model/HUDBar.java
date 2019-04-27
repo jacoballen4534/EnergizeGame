@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class HUDBar extends GameObject{
 
-
     private int xIndent = 50;
     private int yIndent = 50;
     private int currVal;
@@ -16,7 +15,6 @@ public class HUDBar extends GameObject{
     private float valPercent;
     private Color outlineColour;
     private Color fillColour;
-    private Polygon health2D;
 
     public HUDBar(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight,
                   int currVal, int maxVal, Color fillColour, Color outlineColour) {
@@ -27,7 +25,6 @@ public class HUDBar extends GameObject{
         this.currVal = currVal;
         this.maxVal = maxVal;
         this.valPercent = (float)currVal/maxVal;
-        this.health2D = new Polygon();
         this.fillColour = fillColour;
         this.outlineColour = outlineColour;
         this.x = xLocation;
@@ -44,10 +41,6 @@ public class HUDBar extends GameObject{
 
     public float getValPercent() {
         return valPercent;
-    }
-
-    public Polygon getBar2D() {
-        return health2D;
     }
 
     @Override

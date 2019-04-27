@@ -1,17 +1,14 @@
 package model;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.Node;
 
 import static sample.FXMLUtils.getNodeByID;
 
-public class PauseMenu extends Menu {
+public class PauseMenu extends MenuElement {
 
     protected VBox vbox;
 
