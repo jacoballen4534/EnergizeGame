@@ -31,3 +31,6 @@ On both the host and client computer run the comand `java -jar <path>/2019-Java-
 `port_number` Defauly value is 4200. Only change this if receiving `*There is already a host at this address. Joining that game instead*` error message
 
 On the host computer, click "Host Game", while on any connecting computers click "Join Game"
+
+#### Prerequisites:
+- Java 1.8. This can be checked by running `java -version` in terminal.
