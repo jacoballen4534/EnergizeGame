@@ -68,7 +68,7 @@ public class MainMenuController implements Initializable {
 
     //////////////////////// Multi Player buttons ////////////////////////////////
     /////////////////////////////// HOST ////////////////////////////////
-    private static final int serverPort = 4000; //This can be any address
+    public static int serverPort = 4200; //This can be any address
     public static String serverAddressString = "localhost";
 
     private EventHandler HostGameClicked = event -> {

@@ -30,6 +30,9 @@ public class Main extends Application {
         if (args.length > 0) {
             MainMenuController.serverAddressString = args[0];
         }
+        if (args.length > 1) {
+            MainMenuController.serverPort = Integer.parseInt(args[1]);
+        }
         launch(args);
     }
 

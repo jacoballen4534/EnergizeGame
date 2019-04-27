@@ -64,7 +64,7 @@ public class Client {
 
         try {
             socket = new DatagramSocket();//This is the client socket. It can have a random serverPort as it will send data before receiving any.
-            socket.connect(serverIPAddress, 4000);
+            socket.connect(serverIPAddress, serverPort);
         } catch (SocketException e) {
             System.out.println("\033[0;31m" + e.getMessage());
             return false;
