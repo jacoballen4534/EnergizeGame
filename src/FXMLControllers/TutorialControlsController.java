@@ -34,7 +34,7 @@ public class TutorialControlsController implements Initializable {
         attackControl.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_j.png")));
         itemControl.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_k.png")));
         blockControl.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_l.png")));
-        pauseControls.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_p.png")));
+        pauseControls.setImage(new Image(this.getClass().getResourceAsStream("/sprites/pauseButtons.png")));
         inventoryButton.setImage(new Image(this.getClass().getResourceAsStream("/sprites/key_i.png")));
     }
 

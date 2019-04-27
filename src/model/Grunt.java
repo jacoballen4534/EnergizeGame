@@ -2,6 +2,7 @@ package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import sample.Game;
+import sample.SoundController;
 
 import java.awt.image.BufferedImage;
 
@@ -64,6 +65,6 @@ public class Grunt extends Enemy {
 
     @Override
     protected void playDeathSound() {
-        SoundController.PlayAudio("gruntDeath");
+        //SoundController.playSoundFX("gruntDeath");
     }
 }

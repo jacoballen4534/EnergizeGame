@@ -41,19 +41,8 @@ public class Main extends Application {
 
         Utilities.initializeFiles();
 
-        //Play background music
-        String musicFile = "/music/titleScreenBGM.wav"; //Must be a .wav!
-        InputStream musicSrc = this.getClass().getResourceAsStream(musicFile);
-        InputStream music = new BufferedInputStream(musicSrc);
-        AudioInputStream audioInput = AudioSystem.getAudioInputStream(music);//AudioSystem.getAudioInputStream(new File(musicFile).getAbsoluteFile());
-        Clip clip = AudioSystem.getClip();
-        clip.open(audioInput);
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        SoundController.playMusic("titleBGM");
 
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(-5.0f);
-
-        clip.start();
 
         //Attempts to load a custom font
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);

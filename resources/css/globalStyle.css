@@ -160,6 +160,19 @@
     -fx-font-size: 200;
     -fx-effect: dropshadow(gaussian, #74d5ff, 10, 0, 0, 0);
 }
+.label#optionsTitle{
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 130;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#optionsLabel{
+    -fx-text-fill: #ff8800;
+    -fx-font-family: beon;
+    -fx-font-size: 40;
+}
 .label#creditsTitle{
     -fx-text-fill:#ffe500;
     -fx-font-family: beon;
@@ -187,6 +200,25 @@
     -fx-text-fill:#11d7d7;
     -fx-font-family: Bubbler One;
     -fx-font-size: 20;
+}
+.label#endScreenTitle{
+    -fx-text-fill:#ffe500;
+    -fx-font-family: beon;
+    -fx-text-alignment:center;
+    -fx-label-padding: 0 0 0 0;
+    -fx-font-size: 100;
+    -fx-effect: dropshadow(gaussian, #ffffff, 10, 0, 0, 0);
+}
+.label#endScoreLabel{
+    -fx-text-fill: #ff0000;
+    -fx-font-family: beon;
+    -fx-font-size: 30;
+    -fx-effect: dropshadow(gaussian, #ff8800, 10, 0, 0, 0);
+}
+.endScorePointsLabel{
+    -fx-text-fill: #ffff00;
+    -fx-font-family: beon;
+    -fx-font-size: 25;
 }
 .menulabel{
     -fx-text-fill: #ffc700;

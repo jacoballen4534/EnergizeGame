@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.util.Pair;
 import sample.Game;
+import sample.SoundController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +37,6 @@ public class MainMenuController implements Initializable {
     private Pair<String, Long> saveOne;
     private Pair<String, Long> saveTwo;
     private Pair<String, Long> saveThree;
-
 
     @FXML private AnchorPane mainMenuPane;
     @FXML private VBox mainMenuVBox;
@@ -104,9 +104,11 @@ public class MainMenuController implements Initializable {
         try {
             game.hidePauseMenu(); //Consider removing for design reasons
             game.unpause();
+            SoundController.changeMusic("gameBGM");
         } catch (NullPointerException e) {
             System.out.println("Cant resume an online game.");
         }
+        
     }
 
     @FXML private void NewGameClicked() throws IOException {
@@ -132,16 +134,16 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void OptionsClicked() throws IOException {
-        //changeStageName("Options");
-        focussedLabel = UpdateFocussedLabel(focussedLabel, "options");
-        UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/options.fxml")));
+        ChangeStageName("Options");
+        //focussedLabel = UpdateFocussedLabel(focussedLabel, "options");
+        //UpdateMenu(focussedLabel);
+        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/fxmls/options.fxml")));
     }
 
 
     @FXML private void CreditsClicked() throws IOException {
         ChangeStageName("Credits");
-        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/credits.fxml")));
+        mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/endScreen.fxml")));
     }
 
     @FXML private void QuitClicked() {
@@ -219,42 +221,23 @@ public class MainMenuController implements Initializable {
         HideCurrentSubMenu();
         //Create submenu
         VBox subMenu = CreateSubMenu();
+
         //Create labels
         CreateMenuLabel(subMenu,saveOne.getKey(),"submenu-label",0, event -> {
-            if (saveOne.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveOne.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveOne);
         });
         CreateMenuLabel(subMenu,saveTwo.getKey(),"submenu-label",1, event -> {
-            if (saveTwo.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveTwo.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveTwo);
         });
         CreateMenuLabel(subMenu,saveThree.getKey(),"submenu-label",2, event -> {
-            if (saveThree.getValue() != null) {
-                focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
-                UpdateMenu(focussedLabel);
-                game = new Game(this, saveThree.getValue());
-                game.start();
-            } else {
-                System.out.println("No map saved here");
-            }
+            loadGameFromSaveState(saveThree);
         });
         //Add submenu to menu
         mainMenuVBox.getChildren().add(loadGamePos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
+    //TODO: Loop behaviour can be refactored if saves are put into an array
     private void updateSaveStates() {
         ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("mapSeeds.txt", true);
         for (ArrayList<Pair<String, String>> block : seeds) {
@@ -273,6 +256,17 @@ public class MainMenuController implements Initializable {
             } else {
                 saveThree = new Pair<>(block.get(2).getKey(), Long.parseLong(block.get(2).getValue()));
             }
+        }
+    }
+
+    private void loadGameFromSaveState(Pair<String, Long> saveGame){
+        if (saveGame.getValue() != null) {
+            focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
+            UpdateMenu(focussedLabel);
+            game = new Game(this, saveGame.getValue());
+            game.start();
+        } else {
+            System.out.println("No map saved here");
         }
     }
 

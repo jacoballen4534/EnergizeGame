@@ -7,6 +7,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import sample.Game;
+import sample.SoundController;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -78,7 +79,8 @@ public class Protagonist extends Character {
     @Override
     protected void attack() {
         if(super.canAttack()) {
-            Handler.attack(this);
+            if (Handler.attack(this)) SoundController.playSoundFX("hitAttackSword");
+            else SoundController.playSoundFX("missAttackSword");
         }
     }
 
@@ -90,6 +92,7 @@ public class Protagonist extends Character {
             this.inventory.addItem(pickup);
             System.out.println("Picked up item");
         }
+        SoundController.playSoundFX("itemPickup");
     }
 
     protected void block() {
