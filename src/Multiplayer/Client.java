@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import model.Handler;
 import sample.Game;
 
+import javax.sound.sampled.Port;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
@@ -57,7 +58,7 @@ public class Client {
         try {
             this.serverIPAddress = InetAddress.getByName(serverIPAddressString);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.out.println("It doesnt look like that is a valid host address.");
             return false;
         }
 
@@ -84,6 +85,8 @@ public class Client {
             DatagramPacket packet = new DatagramPacket(this.receivedDataBuffer, MAX_PACKET_SIZE);
             try {
                 socket.receive(packet);
+            }catch (PortUnreachableException e) {
+                System.out.println("There is no hosted game available to join");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -90,9 +90,13 @@ public class MainMenuController implements Initializable {
         Resume.setVisible(isGameActive);
     }
 
-    @FXML private void ResumeClicked() throws IOException{
-        game.hidePauseMenu(); //Consider removing for design reasons
-        game.unpause();
+    @FXML private void ResumeClicked() {
+        try {
+            game.hidePauseMenu(); //Consider removing for design reasons
+            game.unpause();
+        } catch (NullPointerException e) {
+            System.out.println("Cant resume an online game.");
+        }
     }
 
     @FXML private void NewGameClicked() throws IOException {

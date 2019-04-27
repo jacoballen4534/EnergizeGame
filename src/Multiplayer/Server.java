@@ -63,9 +63,9 @@ public class Server implements Runnable {
             e.printStackTrace();
             return;
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.out.println("It doesnt look like that is a valid host address.");
+            return;
         }
-        System.out.println("Server can be reached on: " + serverAddress.getHostAddress() + ":" + this.port);
 
         StringBuilder consoleMessage = new StringBuilder();
 
