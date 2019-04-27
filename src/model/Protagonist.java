@@ -36,7 +36,6 @@ public class Protagonist extends Character {
     private int maxEnergy;
     private HUD hud;
     private NewHUD newHud;
-    //private HUDController hudController;
 
     private Inventory inventory;
     private Image shield;
@@ -89,8 +88,6 @@ public class Protagonist extends Character {
     void pickup(Item pickup) {
         if (this.inventory.getEquippedItem() == null){
             this.inventory.setEquippedItem(pickup);
-            //hudController.UpdateEquippedItem(inventory.getEquippedItem());
-            //newHud.setEquippedItem(pickup); //TODO: Refactor to integrate with inventory
         } else {
             this.inventory.addItem(pickup);
             System.out.println("Picked up item");
@@ -105,7 +102,6 @@ public class Protagonist extends Character {
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
-                //hudController.UpdateEnergy((double)this.currEnergy/this.maxEnergy);
                 newHud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
@@ -128,7 +124,6 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
-            //hudController.UpdateHealth((double)currHealth/maxHealth);
             newHud.setCurrHealth(currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
@@ -182,7 +177,6 @@ public class Protagonist extends Character {
             this.currHealth = this.maxHealth;
         }
         this.hud.setHealth(this.currHealth);
-        //hudController.UpdateHealth((double)currHealth/maxHealth);
         newHud.setCurrHealth(currHealth);
     }
 
@@ -192,7 +186,6 @@ public class Protagonist extends Character {
             this.currEnergy = this.maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
-        //hudController.UpdateHealth((double)currEnergy/maxEnergy);
         newHud.setCurrEnergy(currEnergy);
     }
 
@@ -257,10 +250,8 @@ public class Protagonist extends Character {
             System.out.println("Wow, cheating in 2019?");
             currEnergy = maxEnergy;
             newHud.setCurrEnergy(maxEnergy);
-            //hudController.UpdateEnergy((double)currEnergy/maxEnergy);
             currHealth = maxHealth;
             newHud.setCurrHealth(maxHealth);
-            //hudController.UpdateHealth((double)currHealth/maxHealth);
             for (int i = 0; i < 2; i++) {
                 this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
                         PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
@@ -368,7 +359,6 @@ public class Protagonist extends Character {
             this.currEnergy = maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
-        //hudController.UpdateHealth((double)currEnergy/maxEnergy);
         newHud.setCurrEnergy(currEnergy);
     }
 
@@ -376,7 +366,6 @@ public class Protagonist extends Character {
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
             this.hud.setEnergy(this.currEnergy);
-            //hudController.UpdateHealth((double)currEnergy/maxEnergy);
             newHud.setCurrEnergy(currEnergy);
             return true;
         } else {
