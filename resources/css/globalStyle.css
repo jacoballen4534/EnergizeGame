@@ -79,54 +79,37 @@
     -fx-font-size: 12;
 }
 /*For HUD*/
-.progress-bar {
-    -fx-background-color: yellow;
-    -fx-background-radius: 10, 10, 10, 10;
-
+.anchorpane#hud{
+    -fx-background-image:url("/bg/hudBG-border.png");
+}
+.label#hudLabel{
+    -fx-font-size: 20;
+    -fx-font-family: beon;
+    -fx-text-fill: #ffc700;
+    -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 
-.progress-bar .track{
-    -fx-background-color: green;
-    -fx-background-insets: 20;
-    -fx-background-radius: 6, 6, 6, 6;
-}
-
-.progress-bar .bar {
-    -fx-background-color: grey;
-    -fx-background-insets: 30, 30, 30, 30;
-    -fx-background-radius: 4, 4, 4, 4;
-}
-
-.progress-bar#healthBar {
-    -fx-background-color: yellow;
-    -fx-background-radius: 10, 5, 5, 10;
-
-}
 .progress-bar#healthBar > .track{
-    -fx-background-color: green;
-    -fx-background-insets: 10;
-    -fx-background-radius: 6, 6, 6, 6;
+    -fx-background-color: black;
 }
 .progress-bar#healthBar > .bar {
     -fx-background-color: red;
-    -fx-background-insets: 12, 12, 12, 12;
-    -fx-background-radius: 4, 4, 4, 4;
+    -fx-background-insets: 5, 5, 5, 5;
+    /*-fx-background-radius: 10, 10, 10, 10;*/
 }
 
-.progress-bar#energyBar {
+/*.progress-bar#energyBar {
     -fx-background-color: black;
-    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-radius: 1, 1, 1, 1;
 
-}
+}*/
 .progress-bar#energyBar .track{
-    -fx-background-color: blue;
-    -fx-background-insets: 10;
-    -fx-background-radius: 6, 6, 6, 6;
+    -fx-background-color: black;
 }
 .progress-bar#energyBar .bar {
-    -fx-background-color: grey;
-    -fx-background-insets: 30, 30, 30, 30;
-    -fx-background-radius: 4, 4, 4, 4;
+    -fx-background-color: cyan;
+    -fx-background-insets: 5;
+    /*-fx-background-radius: 5, 5, 5, 5;*/
 }
 /*For Title Screen*/
 .root{

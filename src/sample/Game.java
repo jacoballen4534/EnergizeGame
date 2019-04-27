@@ -1,5 +1,6 @@
 package sample;
 
+import FXMLControllers.HUDController;
 import FXMLControllers.MainMenuController;
 import Multiplayer.Client;
 import javafx.animation.*;
@@ -45,7 +46,11 @@ public class Game extends Canvas {
     private static long randomSeed;
     private String onlineCommands = "";
 
+    private static final int HUD_WIDTH = 200;
+    private NewHUD hud;
+
     private MainMenuController controller;
+    private HUDController hudController;
 
     public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
@@ -57,7 +62,7 @@ public class Game extends Canvas {
         this.stage.setTitle("Tutorial Room");
         this.root = new Group();
         this.root.getChildren().add(this);
-        this.gameScene = new Scene(root, SCREEN_WIDTH,SCREEN_HEIGHT, false);
+        this.gameScene = new Scene(root, SCREEN_WIDTH+HUD_WIDTH,SCREEN_HEIGHT, false);
         this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
         Utilities.saveNewHighScore("TestAdd", 1513560);
@@ -83,6 +88,15 @@ public class Game extends Canvas {
             SoundController.changeMusic("titleBGM");
         });
         inGameMenuController.AddMenusToRoot(root);
+
+        //////////////////////Testing new HUD//////////////////////////
+        this.hud = protagonist.getNewHud(); //new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
+        this.root.getChildren().add(hud);
+        this.hud.show();
+
+        /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
+        testBar.setProgress(0.5);
+        this.root.getChildren().add(testBar);*/
 
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -170,7 +184,7 @@ public class Game extends Canvas {
             this.pause();
             inGameMenuController.showInventoryMenu();
             System.out.println("Open inventory");
-            System.out.println(this.protagonist.getInventory().getItemCount());
+            //System.out.println(this.protagonist.getInventory().getItemCount());
         }
         Handler.tick(this.camera.getX(), this.camera.getY(),this.keyInput, this.onlineCommands);
         if (this.protagonist != null) { //Make sure there is a protagonist to pan towards

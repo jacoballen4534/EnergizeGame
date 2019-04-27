@@ -2,7 +2,10 @@ package model;
 
 import Multiplayer.Client;
 import Multiplayer.Server;
+import FXMLControllers.HUDController;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -35,6 +38,7 @@ public class Protagonist extends Character {
     protected int currEnergy;
     protected int maxEnergy;
     protected HUD hud;
+    private NewHUD newHud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -71,6 +75,8 @@ public class Protagonist extends Character {
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
+        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
@@ -103,6 +109,7 @@ public class Protagonist extends Character {
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
+                newHud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
                 System.out.println("An impenetrable defence");
@@ -124,6 +131,7 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
+            newHud.setCurrHealth(currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
                 this.playAttackAnimation = false;
@@ -178,6 +186,7 @@ public class Protagonist extends Character {
             this.currHealth = this.maxHealth;
         }
         this.hud.setHealth(this.currHealth);
+        newHud.setCurrHealth(currHealth);
     }
 
     public void increaseEnergy(int amount) {
@@ -186,6 +195,7 @@ public class Protagonist extends Character {
             this.currEnergy = this.maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     protected void tick(double cameraX, double cameraY, String commands) {
@@ -272,6 +282,7 @@ public class Protagonist extends Character {
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
         hud.tick(cameraX, cameraY); //Update health and energy displays
+        newHud.tick();
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -374,6 +385,10 @@ public class Protagonist extends Character {
         return hud;
     }
 
+    public NewHUD getNewHud() {
+        return newHud;
+    }
+
     public void useItem(){
         /*if (this.inventory.getEquippedItem() != null) {
             this.inventory.getEquippedItem().useItem(this);
@@ -410,12 +425,14 @@ public class Protagonist extends Character {
             this.currEnergy = maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
-            hud.setEnergy(currEnergy);
+            this.hud.setEnergy(this.currEnergy);
+            newHud.setCurrEnergy(currEnergy);
             return true;
         } else {
             return false;
