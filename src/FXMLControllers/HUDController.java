@@ -35,7 +35,7 @@ public class HUDController implements Initializable {
     }
 
     @FXML public void UpdateHealth(double healthPercent){
-        healthBar.setProgress(0.5);
+        healthBar.setProgress(healthPercent);
     }
 
     @FXML public void UpdateEnergy(double energyPercent){
