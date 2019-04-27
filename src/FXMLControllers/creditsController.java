@@ -3,10 +3,13 @@ package FXMLControllers;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.SoundController;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,10 +34,6 @@ public class creditsController implements Initializable {
     private void changeStageName(String newStageName) {
         Stage stage = (Stage) creditsPane.getScene().getWindow();
         stage.setTitle(newStageName);
-    }
-
-    private void testButtonPressed(){
-        System.out.println("MY NAME IS JEFF");
     }
 
 }
