@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="FXMLControllers.OptionsMenuController"
-            prefHeight="768.0" prefWidth="1024.0">
+<AnchorPane fx:id="optionsPane" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.OptionsMenuController">
+    <children>
+        <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Label fx:id="optionsTitle" text="Options" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="30.0">
+               <children>
+                  <Label fx:id="optionsLabel" text="Difficulty" />
+                  <ComboBox prefWidth="150.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label fx:id="optionsLabel" text="Master Volume" />
+                  <Slider showTickLabels="true" showTickMarks="true" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label fx:id="optionsLabel" text="SFX Volume" />
+                  <Slider showTickLabels="true" showTickMarks="true" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label fx:id="optionsLabel" text="Music Volume" />
+                  <Slider showTickLabels="true" showTickMarks="true" />
+               </children>
+            </HBox>
+                  <Button mnemonicParsing="false" onMouseClicked="#titleButtonPressed" text="Return to Title" />
+            </children>
+        </VBox>
+    </children>
 
 </AnchorPane>

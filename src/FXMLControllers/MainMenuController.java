@@ -99,10 +99,10 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void OptionsClicked() throws IOException {
-        //changeStageName("Options");
-        focussedLabel = UpdateFocussedLabel(focussedLabel, "options");
-        UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/options.fxml")));
+        ChangeStageName("Options");
+        //focussedLabel = UpdateFocussedLabel(focussedLabel, "options");
+        //UpdateMenu(focussedLabel);
+        mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/fxmls/options.fxml")));
     }
 
 

@@ -110,6 +110,8 @@ public class SoundController {
 
             gainControl.setValue(gain);
 
+            //BGM.getControl(FloatControl.Type.VOLUME); Maybe? To deal with the logarithmic scaling
+
             return BGM;
 
         }
