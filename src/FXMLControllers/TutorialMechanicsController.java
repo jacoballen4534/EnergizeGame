@@ -27,7 +27,7 @@ public class TutorialMechanicsController implements Initializable {
         TutorialControlsController.controller.setGame(game);
         try{titleButtonPressed();}
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
         //System.out.println("Start game");
     }

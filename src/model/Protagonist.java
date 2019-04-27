@@ -159,6 +159,7 @@ public class Protagonist extends Character {
                 this.keepRendering = false;
                 this.isAlive = false;
                 Handler.removePlayer(this);
+                this.disconnect();
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);

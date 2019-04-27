@@ -43,7 +43,7 @@ public class Client {
         try {
             this.serverPort = Integer.parseInt(tokens[1]);
         } catch (NumberFormatException e) {
-            e.printStackTrace(); //This means the serverPort is invalid.
+            System.out.println("\033[0;31m" + e.getMessage());//This means the serverPort is invalid.
         }
         this.game = game;
         this.mainMenuController = mainMenuController;
@@ -66,7 +66,7 @@ public class Client {
             socket = new DatagramSocket();//This is the client socket. It can have a random serverPort as it will send data before receiving any.
             socket.connect(serverIPAddress, 4000);
         } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
             return false;
         }
 
@@ -88,7 +88,7 @@ public class Client {
             }catch (PortUnreachableException e) {
                 System.out.println("There is no hosted game available to join");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("\033[0;31m" + e.getMessage());
             }
             process(packet);
         }
@@ -169,6 +169,8 @@ public class Client {
             Handler.updateEnemyTarget(data);
         } else if (data.startsWith(Server.PACKET_ENEMY_UPDATE)) {
             Handler.updateEnemyLocations(data);
+        } else if (data.length() == 0) {
+            //Ignore
         } else {
             consoleMessage.append("Unknown packet: ").append(data, 0, packet.getLength()).append("\n");
             consoleMessage.append("-------------------------\033[0m");
@@ -197,7 +199,7 @@ public class Client {
                 try {
                     socket.send(packet);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("\033[0;31m" + e.getMessage());
                 }
             }
         };

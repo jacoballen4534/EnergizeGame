@@ -41,7 +41,7 @@ public class PreLoadedImages {
             bossSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossSpriteSheetx3.png"));
             bossRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossRoom.png"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
     }
 }

@@ -180,7 +180,7 @@ public abstract class Enemy extends Character{
                 //Make bounding box 0
                 this.target.addEnergy(10);
                 this.playGotAttackedAnimation = false;
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                this.playDieAnimation = true;
                 this.playDeathSound();
             }
         }

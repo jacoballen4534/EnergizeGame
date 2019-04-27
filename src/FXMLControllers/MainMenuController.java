@@ -62,7 +62,7 @@ public class MainMenuController implements Initializable {
             mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/tutorialScreenControls.fxml")));
         }
         catch (Exception e){
-            e.printStackTrace();
+            System.out.println("\033[0;31m" + e.getMessage());
         }
     };
 
