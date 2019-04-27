@@ -1,6 +1,6 @@
 package sample;
 
-import FXMLControllers.HudController;
+import FXMLControllers.HUDController;
 import FXMLControllers.MainMenuController;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -46,7 +46,7 @@ public class Game extends Canvas {
     private NewHUD hud;
 
     private MainMenuController controller;
-    private HudController hudController;
+    private HUDController hudController;
 
     public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
@@ -79,13 +79,13 @@ public class Game extends Canvas {
         inGameMenuController.AddMenusToRoot(root);
 
         //////////////////////Testing new HUD//////////////////////////
-        this.hud = new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
+        this.hud = protagonist.getNewHud(); //new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
         this.root.getChildren().add(hud);
         this.hud.show();
 
-        VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
+        /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
         testBar.setProgress(0.5);
-        this.root.getChildren().add(testBar);
+        this.root.getChildren().add(testBar);*/
 
         init(); //Setup game loop
         Handler.setCamera(this.camera);

@@ -1,5 +1,6 @@
 package model;
 
+import FXMLControllers.HUDController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -12,10 +13,10 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class NewHUD extends PauseMenu {
+public class NewHUD extends MenuElement{
 
+    //DEPRECATED - assumes this class extends pause menu
     //Rough layout of menu from top to bottom
-
     /*private HBox statusElements;
     private VerticalHUDBar healthBar;
     private VerticalHUDBar energyBar;
@@ -28,18 +29,64 @@ public class NewHUD extends PauseMenu {
 
     private Minimap minimap;*/
 
-    public NewHUD(String ID, int width, int height, int xPos, int yPos) {
-        super(ID, width, height, xPos, yPos);
-        this.vbox.setAlignment(Pos.TOP_CENTER);
-        try{LoadFXML();}
+    private HUDController controller;
+    private Inventory inventory;
+
+    private double currHealth;
+    private double maxHealth;
+    private double healthPercent;
+    private double currEnergy;
+    private double maxEnergy;
+    private double energyPercent;
+
+    public NewHUD(String ID, double maxHealth, double maxEnergy, Inventory inventory, int xPos, int yPos) {
+        super(ID,0,0, xPos, yPos);
+
+        this.maxHealth = maxHealth;
+        this.maxEnergy = maxEnergy;
+        this.inventory = inventory;
+
+        currHealth = maxHealth;
+        currEnergy = 0;
+
+        try{
+            controller = LoadFXML();
+        }
         catch (Exception e){
             e.printStackTrace();
         }
-        //CreateHUDLayout(width,height);
+
+        //CreateHUDLayout(width,height); //Deprecated
     }
 
-    private void LoadFXML() throws IOException{
-        this.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/hud.fxml")));
+    private HUDController LoadFXML() throws IOException{
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxmls/hud.fxml")
+        );
+        this.getChildren().setAll((AnchorPane) loader.load());
+        return loader.getController();
+    }
+
+    public void setCurrHealth(double currHealth) {
+        this.currHealth = currHealth;
+    }
+
+    public void setCurrEnergy(double currEnergy) {
+        this.currEnergy = currEnergy;
+    }
+
+    public void setEquippedItem(Item item){
+        controller.UpdateEquippedItem(item);
+    }
+
+    public void tick(){
+
+        healthPercent = currHealth/maxHealth;
+        energyPercent = currEnergy/maxEnergy;
+
+        controller.UpdateHealth(healthPercent);
+        controller.UpdateEnergy(energyPercent);
+        controller.UpdateEquippedItem(inventory.getEquippedItem());
     }
 
     /*private void CreateHUDLayout(int width, int height){

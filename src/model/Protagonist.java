@@ -1,6 +1,9 @@
 package model;
 
+import FXMLControllers.HUDController;
 import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -32,6 +35,8 @@ public class Protagonist extends Character {
     private int currEnergy;
     private int maxEnergy;
     private HUD hud;
+    private NewHUD newHud;
+    //private HUDController hudController;
 
     private Inventory inventory;
     private Image shield;
@@ -66,6 +71,8 @@ public class Protagonist extends Character {
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
+        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
@@ -82,6 +89,8 @@ public class Protagonist extends Character {
     void pickup(Item pickup) {
         if (this.inventory.getEquippedItem() == null){
             this.inventory.setEquippedItem(pickup);
+            //hudController.UpdateEquippedItem(inventory.getEquippedItem());
+            //newHud.setEquippedItem(pickup); //TODO: Refactor to integrate with inventory
         } else {
             this.inventory.addItem(pickup);
             System.out.println("Picked up item");
@@ -96,6 +105,8 @@ public class Protagonist extends Character {
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
                 this.hud.setEnergy(this.currEnergy);
+                //hudController.UpdateEnergy((double)this.currEnergy/this.maxEnergy);
+                newHud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
                 System.out.println("An impenetrable defence");
@@ -117,6 +128,8 @@ public class Protagonist extends Character {
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
             this.hud.setHealth(this.currHealth);
+            //hudController.UpdateHealth((double)currHealth/maxHealth);
+            newHud.setCurrHealth(currHealth);
             if (this.currHealth <= 0) { //died
                 this.playGotAttackedAnimation = false;
                 this.playAttackAnimation = false;
@@ -169,6 +182,8 @@ public class Protagonist extends Character {
             this.currHealth = this.maxHealth;
         }
         this.hud.setHealth(this.currHealth);
+        //hudController.UpdateHealth((double)currHealth/maxHealth);
+        newHud.setCurrHealth(currHealth);
     }
 
     public void increaseEnergy(int amount) {
@@ -177,6 +192,8 @@ public class Protagonist extends Character {
             this.currEnergy = this.maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        //hudController.UpdateHealth((double)currEnergy/maxEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
 
@@ -239,9 +256,11 @@ public class Protagonist extends Character {
         if (keyInput.getKeyPressDebounced("cheatKey")){
             System.out.println("Wow, cheating in 2019?");
             currEnergy = maxEnergy;
-            hud.setEnergy(currEnergy);
+            newHud.setCurrEnergy(maxEnergy);
+            //hudController.UpdateEnergy((double)currEnergy/maxEnergy);
             currHealth = maxHealth;
-            hud.setHealth(currHealth);
+            newHud.setCurrHealth(maxHealth);
+            //hudController.UpdateHealth((double)currHealth/maxHealth);
             for (int i = 0; i < 2; i++) {
                 this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
                         PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
@@ -267,6 +286,7 @@ public class Protagonist extends Character {
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
         hud.tick(cameraX, cameraY); //Update health and energy displays
+        newHud.tick();
 
     }
 
@@ -308,6 +328,10 @@ public class Protagonist extends Character {
         return hud;
     }
 
+    public NewHUD getNewHud() {
+        return newHud;
+    }
+
     public void useItem(){
         /*if (this.inventory.getEquippedItem() != null) {
             this.inventory.getEquippedItem().useItem(this);
@@ -344,12 +368,16 @@ public class Protagonist extends Character {
             this.currEnergy = maxEnergy;
         }
         this.hud.setEnergy(this.currEnergy);
+        //hudController.UpdateHealth((double)currEnergy/maxEnergy);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
-            hud.setEnergy(currEnergy);
+            this.hud.setEnergy(this.currEnergy);
+            //hudController.UpdateHealth((double)currEnergy/maxEnergy);
+            newHud.setCurrEnergy(currEnergy);
             return true;
         } else {
             return false;
