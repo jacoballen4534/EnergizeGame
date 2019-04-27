@@ -154,7 +154,7 @@ public class Handler { //This class will hold all the game objects and is respon
             }
 
             for (int j = 0; j < otherPlayers.size(); j++) {
-                if (otherPlayers.get(j).getLevelNumber() == map.getTutorialLevelNumber()) {
+                if (otherPlayers.get(j).getLevelNumber() == map.getCurrentLevelNumber()) {
                     targetNodeId = (int) (otherPlayers.get(j).getX() / Game.PIXEL_UPSCALE) + (int) (otherPlayers.get(j).getY() / Game.PIXEL_UPSCALE) * map.getCurrentLevelWidth();
                     int thisDist = shortestPath.shortestPathLength(currentNodeId, targetNodeId);
                     if (thisDist < closestDist) {
@@ -400,9 +400,6 @@ public class Handler { //This class will hold all the game objects and is respon
     }
 
     public static void updateCharacterLevelNumber(int newLevelNumber) {
-        for (Protagonist player : otherPlayers) {
-            player.updateLevelNumber(newLevelNumber);
-        }
         protagonist.updateLevelNumber(newLevelNumber);
     }
 
@@ -456,6 +453,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
                         protagonist.setX(nextLevelX * Game.PIXEL_UPSCALE);
                         protagonist.setY(nextLevelY * Game.PIXEL_UPSCALE);
+                        Handler.updateEnemyTarget();
 
                     });
                     return false;

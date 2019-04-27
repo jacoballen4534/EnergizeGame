@@ -550,9 +550,9 @@ public class Level {
                 Handler.addFloor(new Floor(col, row, PreLoadedImages.tileSpriteSheet, Tile_SPRITE_WIDTH, Tile_SPRITE_HEIGHT, Game.PIXEL_UPSCALE, Game.PIXEL_UPSCALE, 0, 0));
             }
         }
-        Handler.updateEnemyTarget(); //As enemies can be added before protagonist making their target null. So add at the end.
         Handler.updateCharacterLevelWidth(this.levelWidth);
         Handler.updateCharacterLevelNumber(this.levelNumber);
+        Handler.updateEnemyTarget(); //As enemies can be added before protagonist making their target null. So add at the end.
     }
 
 }
