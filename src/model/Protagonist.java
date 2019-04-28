@@ -1,28 +1,17 @@
 package model;
 
-import FXMLControllers.MainMenuController;
-import FXMLControllers.TutorialControlsController;
 import Multiplayer.Client;
 import Multiplayer.Server;
-import FXMLControllers.HUDController;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import sample.DifficultyController;
 import sample.Game;
-import sample.Main;
 import sample.SoundController;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -50,7 +39,7 @@ public class Protagonist extends Character {
 
     protected int currEnergy;
     protected int maxEnergy;
-    public static NewHUD newHud;
+    public static HUD newHud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -85,7 +74,7 @@ public class Protagonist extends Character {
         this.inventory.setEquippedItem(null);
 
         if (!this.isOnline()) {
-            newHud = new NewHUD("hud", PROTAGONIST_MAXHEALTH, PROTAGONIST_MAXENERGY, this.inventory, Game.SCREEN_WIDTH, 0);
+            newHud = new HUD("hud", PROTAGONIST_MAXHEALTH, PROTAGONIST_MAXENERGY, this.inventory, Game.SCREEN_WIDTH, 0);
             newHud.setCurrHealth(this.currHealth);
             newHud.setCurrEnergy(this.currEnergy);
         }

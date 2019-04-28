@@ -23,7 +23,7 @@ enum RoomType{
     CURRENT,
     BOSS_ROOM
 }
-public class NewHUD extends MenuElement{
+public class HUD extends MenuElement{
 
     //DEPRECATED - assumes this class extends pause menu
     //Rough layout of menu from top to bottom
@@ -53,7 +53,7 @@ public class NewHUD extends MenuElement{
     private ArrayList<RoomType> rooms = new ArrayList<>();
 
 
-    public NewHUD(String ID, double maxHealth, double maxEnergy, Inventory inventory, int xPos, int yPos) {
+    public HUD(String ID, double maxHealth, double maxEnergy, Inventory inventory, int xPos, int yPos) {
         super(ID,0,0, xPos, yPos);
 
         this.maxHealth = maxHealth;

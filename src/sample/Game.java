@@ -1,12 +1,9 @@
 package sample;
 
 import FXMLControllers.EndScreenController;
-import FXMLControllers.HUDController;
 import FXMLControllers.MainMenuController;
 import Multiplayer.Client;
 import javafx.animation.*;
-import javafx.application.Platform;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.*;
 
-import javax.sound.sampled.Clip;
 import java.util.Random;
 
 public class Game extends Canvas {
@@ -49,7 +45,7 @@ public class Game extends Canvas {
     private String onlineCommands = "";
 
     public static final int HUD_WIDTH = 200;
-    private NewHUD hud;
+    private HUD hud;
 
     private MainMenuController controller;
 

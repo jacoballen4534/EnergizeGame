@@ -46,7 +46,7 @@ public class SoundController {
     public static Clip playSoundFX(String audioName) {
         try {
 
-            AudioInputStream stream = AudioSystem.getAudioInputStream(SoundController.class.getResourceAsStream(audioSFX.get(audioName)));
+            AudioInputStream stream = AudioSystem.getAudioInputStream(new BufferedInputStream(SoundController.class.getResourceAsStream(audioSFX.get(audioName))));
             Clip clip = AudioSystem.getClip();
             clip.open(stream);
 
