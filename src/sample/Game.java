@@ -94,7 +94,7 @@ public class Game extends Canvas {
         //////////////////////Testing new HUD//////////////////////////
         this.hud = protagonist.getNewHud(); //new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
         root.getChildren().add(hud);
-//        this.hud.show();
+        this.hud.show();
 
         /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
         testBar.setProgress(0.5);

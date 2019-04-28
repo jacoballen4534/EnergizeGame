@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.MainMenuController">
+<AnchorPane fx:id="mainMenuPane" maxHeight="900.0" maxWidth="1440.0" minHeight="768.0" minWidth="1024.0" prefHeight="768.0" prefWidth="1224.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.MainMenuController">
    <children>
       <VBox fx:id="mainMenuVBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="160.0" prefHeight="176.0" prefWidth="400.0">
          <children>
@@ -21,7 +21,7 @@
          <padding>
             <Insets top="50.0" />
          </padding></VBox>
-      <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="-50.0" styleClass="title" text="Energize">
+      <Label fx:id="mainMenuTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="150.0" layoutY="-50.0" styleClass="title" text="Energize">
          <font>
             <Font size="200.0" />
          </font>
