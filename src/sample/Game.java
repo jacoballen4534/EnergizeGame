@@ -87,7 +87,7 @@ public class Game extends Canvas {
         inGameMenuController.AddMenusToRoot(root);
 
         //////////////////////Load HUD//////////////////////////
-        this.hud = Protagonist.newHud;
+        this.hud = Protagonist.hud;
         this.hud.show();
 
         /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
@@ -207,7 +207,7 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
-        this.hud = Protagonist.newHud;
+        this.hud = Protagonist.hud;
         root.getChildren().add(hud);
         Handler.setProtagonist(protagonist);
     }

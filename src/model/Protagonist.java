@@ -39,7 +39,7 @@ public class Protagonist extends Character {
 
     protected int currEnergy;
     protected int maxEnergy;
-    public static HUD newHud;
+    public static HUD hud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -50,7 +50,6 @@ public class Protagonist extends Character {
     public Protagonist(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {
         super(x, y, image, spriteWidth, spriteHeight, renderWidth, renderHeight, levelWidth);
         this.id = nextID++; //Give each protagonist a unique id. (Will be used for multilayer)
-        //this.keyInput = keyInput;
 
         //Set up the bounding boxes and sprite selection for the different animation options.
         this.idleState = new AnimationsState(45,45,17, 5, 3, 0, 0);
@@ -74,9 +73,9 @@ public class Protagonist extends Character {
         this.inventory.setEquippedItem(null);
 
         if (!this.isOnline()) {
-            newHud = new HUD("hud", PROTAGONIST_MAXHEALTH, PROTAGONIST_MAXENERGY, this.inventory, Game.SCREEN_WIDTH, 0);
-            newHud.setCurrHealth(this.currHealth);
-            newHud.setCurrEnergy(this.currEnergy);
+            hud = new HUD("hud", PROTAGONIST_MAXHEALTH, PROTAGONIST_MAXENERGY, this.inventory, Game.SCREEN_WIDTH, 0);
+            hud.setCurrHealth(this.currHealth);
+            hud.setCurrEnergy(this.currEnergy);
         }
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -89,10 +88,6 @@ public class Protagonist extends Character {
             if (Handler.attack(this)) SoundController.playSoundFX("hitAttackSword");
             else SoundController.playSoundFX("missAttackSword");
         }
-        /*if (super.canAttack()){
-            if (Handler.attack(this)) SoundEffect.SWORD_ATTACK_HIT.play();
-            else SoundEffect.SWORD_ATTACK_MISS.play();
-        }*/
     }
 
     @Override
@@ -114,7 +109,7 @@ public class Protagonist extends Character {
         if (!this.playBlockingAnimation &&  (this.blockTimer >= this.blockCooldown)) { //May take this out
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
-                newHud.setCurrEnergy(currEnergy);
+                hud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
                 System.out.println("An impenetrable defence");
@@ -141,11 +136,12 @@ public class Protagonist extends Character {
                     this.playGotAttackedAnimation = false;
                     this.playAttackAnimation = false;
                     this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                    SoundController.playSoundFX("gameLose");
                 } else {
                     this.currHealth = PROTAGONIST_MAXHEALTH;
                 }
             }
-            newHud.setCurrHealth(this.currHealth);
+            hud.setCurrHealth(this.currHealth);
 
         }
     }
@@ -196,7 +192,7 @@ public class Protagonist extends Character {
         if (this.currHealth > this.maxHealth) {
             this.currHealth = this.maxHealth;
         }
-        newHud.setCurrHealth(currHealth);
+        hud.setCurrHealth(currHealth);
     }
 
     public void increaseEnergy(int amount) {
@@ -204,7 +200,7 @@ public class Protagonist extends Character {
         if (this.currEnergy > this.maxEnergy) {
             this.currEnergy = this.maxEnergy;
         }
-        newHud.setCurrEnergy(currEnergy);
+        hud.setCurrEnergy(currEnergy);
     }
 
     protected void endGame(){
@@ -292,10 +288,12 @@ public class Protagonist extends Character {
 
         }
 
+        //Easter egg
+        if (keyInput.getKeyPressDebounced("useSpecial")) useSpecial();
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
 
-        newHud.tick(this.lives, this.levelNumber); //Update health and energy displays
+        hud.tick(this.lives, this.levelNumber); //Update health and energy displays
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -356,8 +354,8 @@ public class Protagonist extends Character {
             Handler.loadBossRoom(bossSpawnX, bossSpawnY);
         });
 
-        newHud.setCurrHealth(currHealth);
-        newHud.setCurrEnergy(currEnergy);
+        hud.setCurrHealth(currHealth);
+        hud.setCurrEnergy(currEnergy);
     }
 
     @Override
@@ -366,15 +364,15 @@ public class Protagonist extends Character {
     }
 
     public String updateTimer() {//This gets called each second
-        return newHud.updateTimer();
+        return hud.updateTimer();
     }
 
     public int getMinutes(){
-        return newHud.getMinutes();
+        return hud.getMinutes();
     }
 
     public int getSeconds() {
-        return newHud.getSeconds();
+        return hud.getSeconds();
     }
 
     protected boolean isProtagonist(){
@@ -404,20 +402,6 @@ public class Protagonist extends Character {
     
 
     public void useItem(){
-        /*if (this.inventory.getEquippedItem() != null) {
-            this.inventory.getEquippedItem().useItem(this);
-            if (inventory.getItemCount() > 0) {
-                this.inventory.setEquippedItem(this.inventory.getItemList().get(0));
-                this.inventory.removeItem(this.inventory.getEquippedItem());
-
-            } else {
-                this.inventory.setEquippedItem(null);
-            }
-            //Update inventory
-        } else {
-            System.out.println("You don't have an item to use");
-        }*/
-
         /*
         * Check equipped item is not null
         * Use the item's effect
@@ -438,14 +422,17 @@ public class Protagonist extends Character {
         if (this.currEnergy > maxEnergy) { //Can't go over max
             this.currEnergy = maxEnergy;
         }
-        newHud.setCurrEnergy(currEnergy);
+        hud.setCurrEnergy(currEnergy);
         this.enemysKilled++;
     }
 
+    //Easter egg
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
-            newHud.setCurrEnergy(currEnergy);
+            hud.setCurrEnergy(currEnergy);
+            if (this.lives<3)this.lives++;
+            SoundController.playMusic("magicAbility");
             return true;
         } else {
             return false;
