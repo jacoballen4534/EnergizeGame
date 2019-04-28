@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import sample.DifficultyController;
 import sample.Game;
 import sample.Main;
 import sample.SoundController;
@@ -40,9 +41,9 @@ public class Protagonist extends Character {
     private int enemysKilled = 0;
 
 
-    protected final int PROTAGONIST_MAXHEALTH = 100;
+    protected int PROTAGONIST_MAXHEALTH = DifficultyController.PLAYER_HEALTH.value;
     protected final int PROTAGONIST_MAXENERGY = 100;
-    protected final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
+    protected int PROTAGONIST_BASE_ATTACK_DAMAGE = DifficultyController.PLAYER_DAMAGE.value;
     protected final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
     protected final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
     protected final int BLOCK_COST = 5;
@@ -75,7 +76,7 @@ public class Protagonist extends Character {
 
         //Set health
         this.currHealth = PROTAGONIST_MAXHEALTH;
-        this.currEnergy = 50; //Start with half energy to use shield in tutorial
+        this.currEnergy = PROTAGONIST_MAXENERGY/2; //Start with half energy to use shield in tutorial
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
 
@@ -98,6 +99,10 @@ public class Protagonist extends Character {
             if (Handler.attack(this)) SoundController.playSoundFX("hitAttackSword");
             else SoundController.playSoundFX("missAttackSword");
         }
+        /*if (super.canAttack()){
+            if (Handler.attack(this)) SoundEffect.SWORD_ATTACK_HIT.play();
+            else SoundEffect.SWORD_ATTACK_MISS.play();
+        }*/
     }
 
     @Override

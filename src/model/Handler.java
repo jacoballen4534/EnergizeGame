@@ -339,20 +339,6 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist.disconnect();
     }
 
-    /*public static void pauseUnpauseTimeline(){
-        if (timelineIsPaused){
-            timeline.play();
-        }
-        else{
-            timeline.pause();
-        }
-        timelineIsPaused = !timelineIsPaused;
-    }
-
-    public static void pauseTimeline(){timeline.pause();}
-
-    public static void unpauseTimeline(){timeline.play();}*/
-
     public static void clearAllObjects() { //Not safe to use while in the middle of a level
         walls.clear();
         enemies.clear();

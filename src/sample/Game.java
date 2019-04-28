@@ -94,6 +94,13 @@ public class Game extends Canvas {
         this.hud = Protagonist.newHud;
         this.hud.show();
 
+        /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
+        testBar.setProgress(0.5);
+        this.root.getChildren().add(testBar);*/
+
+        ////////////Sound Stuff///////////
+        //SoundEffect.init();
+
         init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);

@@ -42,7 +42,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         Utilities.initializeFiles(false);
-
+        DifficultyController.setDifficulty("NORMAL"); //Default difficulty
         SoundController.playMusic("titleBGM");
 
 
