@@ -12,11 +12,9 @@
       <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="tutorialTitle" text="Tutorial - Mechanics" />
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="TOP_CENTER" prefHeight="467.0" prefWidth="1214.0">
                <children>
-                  <Label text="Defeat all enemies in each room to unlock the doors" />
-                  <Label text="Journey from room to room until you find the boss" />
-                  <Label text="Defeat the boss to save Emberrath, your birthplace" />
+                  <Label fx:id="tutorialBrief" prefHeight="468.0" prefWidth="832.0" text="Each room contains enemies. You must defeat all enemies in a room before you can progress through any of the doors. There are many pickups that you will find along the way. You will find them very useful. Find your way to the RED square on the minimap and defeat they who lie within to become the True Hero of Emberrath. Good luck!" wrapText="true" />
                </children>
                <VBox.margin>
                   <Insets left="10.0" />

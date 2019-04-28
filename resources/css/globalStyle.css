@@ -126,13 +126,18 @@
 }
 .label#tutorialHeading{
     -fx-text-fill: #ffc000;
-    -fx-font-family: Sans Serif;
+    -fx-font-family: beon;
     -fx-font-size: 20;
 }
 .label#tutorialInfo{
-    -fx-text-fill: #ffccaa;
-    -fx-font-family: System;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: Sans Serif;
     -fx-font-size: 15;
+}
+.label#tutorialBrief{
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: Sans Serif;
+    -fx-font-size: 30;
 }
 /*OPTIONS SCREEN*/
 .label#optionsTitle{

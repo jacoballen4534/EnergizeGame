@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="tutorialScreenItemsPane" prefHeight="768.0" prefWidth="1224.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXMLControllers.TutorialItemsController">
     <children>
@@ -20,9 +19,9 @@
                             <children>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="100.0" prefWidth="179.0">
+                                        <VBox prefHeight="100.0" prefWidth="130.0">
                                             <children>
-                                                <Label fx:id="tutorialHeading" prefHeight="61.0" prefWidth="230.0" text="Health Kit" />
+                                                <Label fx:id="tutorialHeading" prefHeight="50.0" prefWidth="177.0" text="Health Kit" />
                                                 <ImageView fx:id="healthKit" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
                                             </children>
                                         </VBox>
@@ -31,7 +30,7 @@
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="100.0" prefWidth="185.0">
+                                        <VBox prefHeight="100.0" prefWidth="129.0">
                                             <children>
                                                 <Label fx:id="tutorialHeading" prefHeight="61.0" prefWidth="171.0" text="Energy Kit" />
                                                 <ImageView fx:id="energyKit" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
@@ -66,7 +65,7 @@
                             <children>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="100.0" prefWidth="205.0">
+                                        <VBox prefHeight="100.0" prefWidth="154.0">
                                             <children>
                                                 <Label fx:id="tutorialHeading" prefHeight="63.0" prefWidth="176.0" text="Wind Scroll" />
                                                 <ImageView fx:id="windScroll" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
@@ -77,7 +76,7 @@
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <VBox prefHeight="100.0" prefWidth="199.0">
+                                        <VBox prefHeight="100.0" prefWidth="161.0">
                                             <children>
                                                 <Label fx:id="tutorialHeading" prefHeight="62.0" prefWidth="187.0" text="Ice Scroll" />
                                                 <ImageView fx:id="iceScroll" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
