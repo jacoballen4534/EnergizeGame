@@ -12,7 +12,7 @@
         <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label fx:id="endScreenTitle" text="GAME OVER" />
-            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="1224.0">
+            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="1224.0" spacing="200.0">
                <children>
                   <VBox prefHeight="240.0" prefWidth="346.0">
                      <children>
