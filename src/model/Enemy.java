@@ -34,7 +34,6 @@ public abstract class Enemy extends Character{
                 this.keepRendering = false;
                 this.isAlive = false;
                 Handler.removeEnemy(this);
-                this.endGame();
                 this.die();
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
@@ -58,8 +57,6 @@ public abstract class Enemy extends Character{
         }
     }
 
-    protected void endGame(){}
-
     protected void die(){}
 
     public void freeze(long duration) {
@@ -76,7 +73,7 @@ public abstract class Enemy extends Character{
         this.blownAway = true;
     }
 
-    protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can overwride
+    protected void render(GraphicsContext graphicsContext, double cameraX, double cameraY) { //Here so the boss can override
         super.render(graphicsContext, cameraX, cameraY);
     }
 
@@ -85,7 +82,7 @@ public abstract class Enemy extends Character{
     }
 
     private void updateSpellEffect() {
-        if (this.frozen && System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will ware off even if the player is in the pause menu
+        if (this.frozen && System.currentTimeMillis() - this.freezeStartTime > this.freezeDuration) { //This will wear off even if the player is in the pause menu
             this.frozen = false; //TODO: Add ice sprite to show frozen (fire for fire scroll also)
         }
         if (this.blownAway && System.currentTimeMillis() - this.windSpellStartTime > this.windSpellDuration) {

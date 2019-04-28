@@ -26,7 +26,6 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
-    private static boolean timelineIsPaused = false;
     private static Game game;
     private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
@@ -70,11 +69,16 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearForNewGame() {
         clearAllObjects();
+        Scores.resetScores();
         otherPlayers.clear();
     }
 
     public static void setGame (Game _game) {
         game = _game;
+    }
+
+    public static void finishGame(){
+        //Change to end screen
     }
 
     public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineCommands) {
