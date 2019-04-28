@@ -31,7 +31,6 @@ public class OptionsScreenController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setupComboBox();
         setupVolumeSliders();
-        System.out.println("HELLO");
     }
 
     @FXML private void setupComboBox(){
