@@ -1,5 +1,8 @@
 package model;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -22,6 +25,8 @@ public class PreLoadedImages {
     public static BufferedImage windScrollSprite;
     public static BufferedImage bossSpriteSheet;
     public static BufferedImage emptyItemSlot;
+    public static BufferedImage emptyHeart;
+    public static BufferedImage fullHeart;
 
     static {
         try {
@@ -40,6 +45,8 @@ public class PreLoadedImages {
             emptyItemSlot = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/emptyItemSlot.png"));
             bossSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossSpriteSheetx3.png"));
             bossRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossRoom.png"));
+            emptyHeart = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/heartEmpty.png"));
+            fullHeart = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/heartFull.png"));
         } catch (IOException e) {
             System.out.println("\033[0;31m" + e.getMessage());
         }
