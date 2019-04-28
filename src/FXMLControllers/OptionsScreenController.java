@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 
 
-public class OptionsMenuController implements Initializable {
+public class OptionsScreenController implements Initializable {
 
     @FXML private AnchorPane optionsPane;
     @FXML private ComboBox difficultySelect;
@@ -31,6 +31,7 @@ public class OptionsMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setupComboBox();
         setupVolumeSliders();
+        System.out.println("HELLO");
     }
 
     @FXML private void setupComboBox(){
@@ -38,7 +39,7 @@ public class OptionsMenuController implements Initializable {
         difficultySelect.getItems().add("EASY");
         difficultySelect.getItems().add("NORMAL");
         difficultySelect.getItems().add("HARD");
-        difficultySelect.setValue("NORMAL");
+        difficultySelect.setValue(DifficultyController.difficulty);
         difficultySelect.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observableValue, Object o, Object t1) {
