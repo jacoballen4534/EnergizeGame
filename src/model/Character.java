@@ -31,6 +31,7 @@ public abstract class Character extends GameObject{
     protected boolean frozen = false;
     protected boolean blownAway = false; //Probably needs new name
     protected boolean keepRendering = true;
+    protected boolean onFire = false;
 
 
 
@@ -169,6 +170,7 @@ public abstract class Character extends GameObject{
                         this.y - this.animationsState.getTopBorder(), -this.spriteWidth, this.spriteHeight);
             }
 //            this.renderBoundingBox(graphicsContext);
+            this.renderSpellEffect(graphicsContext);
         }
 //        this.renderAttackBoundingBox(graphicsContext);
     }
@@ -179,6 +181,20 @@ public abstract class Character extends GameObject{
         graphicsContext.fillRect(this.x, this.y,
                 this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
                 this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
+    }
+
+    protected void renderSpellEffect(GraphicsContext graphicsContext) {
+        graphicsContext.setGlobalAlpha(0.3);
+        if (this.frozen) {
+            graphicsContext.drawImage(PreLoadedImages.icicle, this.x,this.y,
+                    this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
+                    this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
+        } else if (this.onFire) {
+            graphicsContext.drawImage(PreLoadedImages.flame, this.x,this.y,
+                    this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
+                    this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
+        }
+        graphicsContext.setGlobalAlpha(1);
     }
 
     /////////////////////////////////////////

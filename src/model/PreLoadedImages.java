@@ -33,6 +33,8 @@ public class PreLoadedImages {
     public static Image mapRoomVisited;
     public static Image mapCurrentRoom;
     public static Image mapBossEnterance;
+    public static Image flame;
+    public static Image icicle;
 
 
     static {
@@ -60,6 +62,8 @@ public class PreLoadedImages {
             mapRoomVisited = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_roomVisited.png"));
             mapCurrentRoom = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_currentRoom.png"));
             mapBossEnterance = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_bossEntrance.png"));
+            flame = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/Flame.png"));
+            icicle = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/Icicle.png"));
         } catch (IOException e) {
             System.out.println("\033[0;31m" + e.getMessage());
         }

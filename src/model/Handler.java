@@ -375,6 +375,7 @@ public class Handler { //This class will hold all the game objects and is respon
         for (Enemy enemy : enemies) {
             if (enemy.inCameraBounds(camera.getX(), camera.getY())) {
                 enemy.getHit(scroll.getDamage());
+                enemy.setOnFire();
             }
         }
     }
