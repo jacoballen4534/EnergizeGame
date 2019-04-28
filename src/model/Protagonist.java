@@ -84,10 +84,11 @@ public class Protagonist extends Character {
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
-        newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
-        newHud.setCurrHealth(this.currHealth);
-        newHud.setCurrEnergy(this.currEnergy);
-
+        if (!this.isOnline()) {
+            newHud = new NewHUD("hud", PROTAGONIST_MAXHEALTH, PROTAGONIST_MAXENERGY, this.inventory, Game.SCREEN_WIDTH, 0);
+            newHud.setCurrHealth(this.currHealth);
+            newHud.setCurrEnergy(this.currEnergy);
+        }
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
         this.jfxImage = SwingFXUtils.toFXImage(this.spriteSheet.getSprite(0,0), null); //Initialise image for first animation
