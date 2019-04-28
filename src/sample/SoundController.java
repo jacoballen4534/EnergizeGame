@@ -63,7 +63,10 @@ public class SoundController {
         } catch (NullPointerException e) {
             System.out.println("Requested sound was unavailable");
             return null;
-        } catch (Exception e) {
+        } catch (LineUnavailableException e) { //Suppress this warning
+            return null;
+        }
+        catch (Exception e){
             e.printStackTrace();
             return null;
         }

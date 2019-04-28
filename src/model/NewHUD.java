@@ -142,6 +142,9 @@ public class NewHUD extends MenuElement{
             rooms.set(currentLevel, RoomType.CURRENT);
         }
 
+        if (Map.bossEntranceLevelNumber != -1) {
+            rooms.set(Map.bossEntranceLevelNumber, RoomType.BOSS_ROOM);
+        }
 
         for (int i = 0; i < rooms.size(); i++) {
             ImageView imageView = (ImageView) this.getChildren().get(i + 1);//AnchorPane is element 0 so +1.
