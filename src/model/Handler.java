@@ -56,7 +56,7 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist.updateSprite();
 
         for (Enemy enemy : enemies) {
-            enemy.updateSprite(); //Dont check camera so spells do damage to all.
+            enemy.updateSprite(); //Don't check camera so spells do damage to all.
         }
     }));
 
@@ -77,13 +77,13 @@ public class Handler { //This class will hold all the game objects and is respon
         game = _game;
     }
 
-    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineComands) {
+    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineCommands) {
 
         protagonist.tick(cameraX, cameraY, keyInput);
 
         for (Protagonist player : otherPlayers) {
             if(!player.equals(protagonist)) {
-                player.tick(cameraX, cameraY, onlineComands);
+                player.tick(cameraX, cameraY, onlineCommands);
             }
         }
         for (Enemy enemy : enemies) {
@@ -127,8 +127,6 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         protagonist.render(graphicsContext, cameraX, cameraY);
-
-//        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
     public static void updateEnemyTarget () {
@@ -221,11 +219,7 @@ public class Handler { //This class will hold all the game objects and is respon
                 break;
             }
         }
-
-
     }
-
-
 
     public static void addWall (int location, GameObject wall) {
         walls.put(location, wall);
