@@ -6,11 +6,11 @@ Energize is a side-scrolling action adventure game set in the far future. It fol
 
 
 #### Compile instructions - Eclipse
-1. File > Open Projects from File System.
-2. Locate the project and click "Finish".
-3. Project > Properties.
-4. Java Build Path > Add Folder > Select src and resources (If not already selected) > OK > Apply.
-5. Run/Debug Settings > New > Java Application > OK.
+1. On the top menu, click "File"  and choose "Open Projects from File System".
+2. At "Import Source", click "Directory" and navigate to where you have extracted the project. Once this is done, simply click "Finish".
+3. On the top menu, click "Project" and then from the drop down click "Properties".
+4. On the left hand side of the menu, click "Java Build Path". Navigate to the tab named "Source" and ensure that both "2019-Java-Group34-master/resources" and "2019-Java-Group34-master/src" are listed. If not, click "Add Folder" and select both "src" and "resources". Once both folders are showing correctly, click "Apply".
+5. On the left hand side of the menu, click "Run/Debug Settings". Then > New > Java Application > OK.
 6. Name appropriately. Set Main class as Main-sample > OK > Apply.
 7. File > Export > Java > Runnable JAR file.
 8. Set Launch configuration to the configuration made in step 6.
