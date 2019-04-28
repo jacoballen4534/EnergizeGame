@@ -12,30 +12,41 @@
         <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Label fx:id="endScreenTitle" text="GAME OVER" />
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="30.0">
-                    <children>
-                        <Label fx:id="endScoreLabel" text="Items Collected" />
-                        <Label fx:id="itemsCollectedLabel" styleClass="endScorePointsLabel" text="12 * 100 = 1200" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                    <children>
-                        <Label fx:id="endScoreLabel" text="Enemies Killed" />
-                        <Label fx:id="enemiesKilledLabel" styleClass="endScorePointsLabel" text="14 * 200 = 2800" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                    <children>
-                        <Label fx:id="endScoreLabel" text="Time Taken" />
-                        <Label fx:id="timeTakenLabel" styleClass="endScorePointsLabel" text="5:00 -&gt; 300" />
-                    </children>
-                </HBox>
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                    <children>
-                        <Label fx:id="endScoreLabel" text="Victory Bonus" />
-                        <Label fx:id="victoryBonusLabel" styleClass="endScorePointsLabel" text="700" />
-                    </children>
-                </HBox>
+            <HBox alignment="CENTER" prefHeight="240.0" prefWidth="1224.0">
+               <children>
+                  <VBox prefHeight="240.0" prefWidth="346.0">
+                     <children>
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="364.0" spacing="30.0">
+                                <children>
+                                    <Label fx:id="endScoreLabel" text="Items Collected" />
+                                    <Label fx:id="itemsCollectedLabel" styleClass="endScorePointsLabel" text="12 * 100 = 1200" />
+                                </children>
+                            </HBox>
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="341.0" spacing="30.0">
+                                <children>
+                                    <Label fx:id="endScoreLabel" text="Time Taken" />
+                                    <Label fx:id="timeTakenLabel" styleClass="endScorePointsLabel" text="5:00 -&gt; 300" />
+                                </children>
+                            </HBox>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="240.0" prefWidth="332.0">
+                     <children>
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="308.0" spacing="30.0">
+                                <children>
+                                    <Label fx:id="endScoreLabel" text="Enemies Killed" />
+                                    <Label fx:id="enemiesKilledLabel" styleClass="endScorePointsLabel" text="14 * 200 = 2800" />
+                                </children>
+                            </HBox>
+                            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="215.0" spacing="30.0">
+                                <children>
+                                    <Label fx:id="endScoreLabel" text="Victory Bonus" />
+                                    <Label fx:id="victoryBonusLabel" styleClass="endScorePointsLabel" text="700" />
+                                </children>
+                            </HBox>
+                     </children></VBox>
+               </children>
+            </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="331.0" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label fx:id="endScoreLabel" text="Final Score" />
