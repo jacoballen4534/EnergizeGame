@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
     protected int id;
-    protected int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
+    protected int lives = 3; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
     protected boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     protected boolean isAttacking = false; //Attempt to debounce attacking
@@ -83,6 +83,8 @@ public class Protagonist extends Character {
         this.inventory.setEquippedItem(null);
 
         this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        this.newHud.setCurrHealth(this.currHealth);
+        this.newHud.setCurrEnergy(this.maxEnergy);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -137,12 +139,18 @@ public class Protagonist extends Character {
 
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
-            newHud.setCurrHealth(currHealth);
-            if (this.currHealth <= 0) { //died
-                this.playGotAttackedAnimation = false;
-                this.playAttackAnimation = false;
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            if (this.currHealth <= 0) {
+                this.lives--;
+                if (this.lives <= 0) {
+                    this.playGotAttackedAnimation = false;
+                    this.playAttackAnimation = false;
+                    this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                } else {
+                    this.currHealth = PROTAGONIST_MAXHEALTH;
+                }
             }
+            this.newHud.setCurrHealth(this.currHealth);
+
         }
     }
 
@@ -290,7 +298,7 @@ public class Protagonist extends Character {
 
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
-        newHud.tick(); //Update health and energy displays
+        newHud.tick(lives); //Update health and energy displays
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -364,11 +372,11 @@ public class Protagonist extends Character {
     }
 
     public int getMinutes(){
-        return this.hud.getMinutes();
+        return this.newHud.getMinutes();
     }
 
     public int getSeconds() {
-        return this.hud.getSeconds();
+        return this.newHud.getSeconds();
     }
 
     protected boolean isProtagonist(){
@@ -398,6 +406,8 @@ public class Protagonist extends Character {
 
     public NewHUD getNewHud() {
         this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        this.newHud.setCurrHealth(this.currHealth);
+        this.newHud.setCurrEnergy(this.maxEnergy);
         return this.newHud;
     }
 

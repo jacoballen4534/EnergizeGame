@@ -41,8 +41,6 @@ public class NewHUD extends MenuElement{
     private int minutes = 0;
     private int seconds = 0;
 
-    private int seconds, minutes; //For updateTimer()
-
     public NewHUD(String ID, double maxHealth, double maxEnergy, Inventory inventory, int xPos, int yPos) {
         super(ID,0,0, xPos, yPos);
 
@@ -64,9 +62,7 @@ public class NewHUD extends MenuElement{
     }
 
     private HUDController LoadFXML() throws IOException{
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxmls/hud.fxml")
-        );
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmls/hud.fxml"));
         this.getChildren().setAll((AnchorPane) loader.load());
         return loader.getController();
     }
@@ -112,36 +108,16 @@ public class NewHUD extends MenuElement{
         return this.seconds;
     }
 
-    public void tick(){
+    public void tick(int lives){
+        this.healthPercent = this.currHealth/this.maxHealth;
+        this.energyPercent = this.currEnergy/this.maxEnergy;
 
-        healthPercent = currHealth/maxHealth;
-        energyPercent = currEnergy/maxEnergy;
-
-        controller.UpdateHealth(healthPercent);
-        controller.UpdateEnergy(energyPercent);
-        controller.UpdateEquippedItem(inventory.getEquippedItem());
+        this.controller.UpdateHealth(this.healthPercent);
+        this.controller.UpdateEnergy(this.energyPercent);
+        this.controller.UpdateEquippedItem(this.inventory.getEquippedItem());
+        this.controller.UpdateLives(lives);
     }
 
-    public String updateTimer(){
-        String toReturn = "";
-        if (this.seconds < 59) {
-            this.seconds++;
-        } else {
-            this.seconds = 0;
-            this.minutes++;
-        }
-
-        if (this.seconds < 10) {
-            toReturn += "0";
-        }
-        toReturn += this.seconds;
-
-        if (this.minutes > 0) {
-            toReturn = this.minutes + ":" + toReturn;
-        }
-
-        return toReturn;
-    }
 
     /*private void CreateHUDLayout(int width, int height){
 

@@ -92,7 +92,7 @@ public class Game extends Canvas {
 
         //////////////////////Load HUD//////////////////////////
         this.hud = protagonist.getNewHud();
-        this.root.getChildren().add(hud);
+        root.getChildren().add(hud);
         this.hud.show();
 
         init(); //Setup game loop
@@ -205,7 +205,8 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
-        root.getChildren().add(protagonist.getNewHud());
+        this.hud = protagonist.getNewHud();
+        root.getChildren().add(hud);
         Handler.setProtagonist(protagonist);
     }
 
