@@ -231,8 +231,6 @@ public class Map {
             System.out.println();
         }
         System.out.println();
-
-        System.out.println("Rows: " + levelLayout.size() + " Cols: "+ levelLayout.get(0).size());
     }
 
     public ArrayList<ArrayList<Boolean>> getLevelLayout() {

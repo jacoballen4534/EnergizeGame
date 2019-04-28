@@ -48,7 +48,14 @@ public class HUD{
                 topOfHUD + energyCoord.y,
                 null,0,0,barWidth,barHeight,
                 maxEnergy,maxEnergy,Color.MEDIUMTURQUOISE,Color.BLACK);
+    }
 
+    public int getMinutes(){
+        return this.minutes;
+    }
+
+    public int getSeconds() {
+        return this.seconds;
     }
 
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY){

@@ -91,4 +91,7 @@ public class OnlinePlayer extends Protagonist {
     protected boolean isOnline() {
         return true;
     }
+
+    protected void endGame(){}
+
 }

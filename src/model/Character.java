@@ -108,6 +108,8 @@ public abstract class Character extends GameObject{
         }
     }
 
+    protected void endGame(){}
+
 
     /*protected void updateTarget(Character target) {
         //Empty for Protagonist, override in enemy

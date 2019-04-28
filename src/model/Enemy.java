@@ -57,8 +57,6 @@ public abstract class Enemy extends Character{
         }
     }
 
-    protected void endGame(){}
-
     public void freeze(long duration) {
         this.playAttackAnimation = false;
         this.freezeDuration = duration;

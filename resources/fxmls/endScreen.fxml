@@ -11,7 +11,7 @@
     <children>
         <VBox alignment="TOP_CENTER" layoutX="250.0" layoutY="23.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label fx:id="endScreenTitle" text="GAME OVER LOL" />
+                <Label fx:id="endScreenTitle" text="GAME OVER" />
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="30.0">
                     <children>
                         <Label fx:id="endScoreLabel" text="Items Collected" />
@@ -44,8 +44,8 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                <children>
-                  <Button mnemonicParsing="false" text="Save Score" />
-                  <TextField prefHeight="31.0" prefWidth="185.0" promptText="Enter Your Name" />
+                  <Button mnemonicParsing="false" onMouseClicked="#saveScoreButtonClicked" text="Save Score" />
+                  <TextField fx:id="NameField" prefHeight="31.0" prefWidth="185.0" promptText="Enter Your Name" />
                </children>
             </HBox>
                 <Button mnemonicParsing="false" onMouseClicked="#titleButtonPressed" text="Return to Title" />

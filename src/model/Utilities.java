@@ -3,6 +3,7 @@ package model;
 import javafx.util.Pair;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class Utilities {
@@ -29,30 +30,34 @@ public class Utilities {
 
 
     private static void processLine(String line, boolean keepFormat) {
-        if (!line.startsWith("//")) { //Ignore comments
-            if (!openedBlock) {
-                if (line.equalsIgnoreCase("<begin>")) {//start new structure
-                    blockOfData = new ArrayList<>();
-                    openedBlock = true;
-                }
-            } else { //Inside a begin statment
-                if (blockOfData != null && line.equalsIgnoreCase("<end>")) {
-                    //Inset line items into
-                    allContent.add(blockOfData);
-                    openedBlock = false;
-                    blockOfData = null;
-                } else {
-                    // Split and add to lineItem
-                    String[] tokens = line.split(":");
-                    if (keepFormat) {
-                        blockOfData.add(new Pair<>(tokens[0],tokens[1]));
+        try {
+            if (!line.startsWith("//")) { //Ignore comments
+                if (!openedBlock) {
+                    if (line.equalsIgnoreCase("<begin>")) {//start new structure
+                        blockOfData = new ArrayList<>();
+                        openedBlock = true;
+                    }
+                } else { //Inside a begin statment
+                    if (blockOfData != null && line.equalsIgnoreCase("<end>")) {
+                        //Inset line items into
+                        allContent.add(blockOfData);
+                        openedBlock = false;
+                        blockOfData = null;
                     } else {
-                        blockOfData.add(new Pair<>(
-                                tokens[0].replaceAll("[^A-Za-z0-9_ ]+", "").toLowerCase(),
-                                tokens[1].replaceAll("[^A-Za-z0-9_ ]+", "")));
+                        // Split and add to lineItem
+                        String[] tokens = line.split(":");
+                        if (keepFormat) {
+                            blockOfData.add(new Pair<>(tokens[0], tokens[1]));
+                        } else {
+                            blockOfData.add(new Pair<>(
+                                    tokens[0].replaceAll("[^A-Za-z0-9_ ]+", "").toLowerCase(),
+                                    tokens[1].replaceAll("[^A-Za-z0-9_ ]+", "")));
+                        }
                     }
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            initializeFiles(true);
         }
     }
 
@@ -111,7 +116,7 @@ public class Utilities {
     }
 
 
-    public static void initializeFiles() {
+    public static void initializeFiles(boolean override) {
         try {
             String path = System.getProperty("user.home") + File.separator + "Group34GameSettings";
             File rootDir = new File(path);
@@ -121,7 +126,7 @@ public class Utilities {
                 System.out.println("Directory already exists or was created");
 
                 File highScorePath = new File(path + File.separator + "highScores.txt");
-                if (!highScorePath.exists()) { //If the highScore file doesnt exist. Make and initialize it.
+                if (override || !highScorePath.exists()) { //If the highScore file doesnt exist. Make and initialize it.
                     PrintWriter writer = new PrintWriter(new FileWriter(path + File.separator + "highScores.txt", false));
                     writer.printf("%s", prepareBlockToWrite(readFileInsideJar("/highScores.txt", true))); //Write the blank template to the new file
                     writer.close();
@@ -129,7 +134,7 @@ public class Utilities {
 
 
                 File mapSeeds = new File(path + File.separator + "mapSeeds.txt");
-                if (!mapSeeds.exists()) { //If the mapSeeds file doesnt exist. Make and initialize it.
+                if (override || !mapSeeds.exists()) { //If the mapSeeds file doesnt exist. Make and initialize it.
                     PrintWriter writer = new PrintWriter(new FileWriter(path + File.separator + "mapSeeds.txt", false));
                     writer.printf("%s", prepareBlockToWrite(readFileInsideJar("/mapSeeds.txt", true))); //Write the blank template to the new file
                     writer.close();

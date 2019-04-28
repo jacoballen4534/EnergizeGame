@@ -1,17 +1,23 @@
 package model;
 
+import FXMLControllers.EndScreenController;
+import FXMLControllers.MainMenuController;
 import Multiplayer.Server;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 import sample.Game;
 import sample.SoundController;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Handler { //This class will hold all the game objects and is responsible for rendering each one
@@ -60,6 +66,21 @@ public class Handler { //This class will hold all the game objects and is respon
             enemy.updateSprite(); //Dont check camera so spells do damage to all.
         }
     }));
+
+    public static void gameOver(boolean victory) {
+    try {
+        game.pause();
+        int time = protagonist.getMinutes() * 60 + protagonist.getSeconds();
+
+        EndScreenController.SetScore(victory, protagonist.getItemsCollected(), protagonist.getEnemysKilled(), time);
+        Stage stage = (Stage) Game.getRoot().getScene().getWindow();
+        stage.setTitle("Game Over");
+        Game.getRoot().getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/endScreen.fxml")));
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    }
 
     public static void setCamera(Camera _camera) {
         camera = _camera;

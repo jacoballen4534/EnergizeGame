@@ -146,6 +146,7 @@ public class MainMenuController implements Initializable {
         mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResource("/fxmls/endScreen.fxml")));
     }
 
+
     @FXML private void QuitClicked() {
         Stage stage = (Stage) mainMenuPane.getScene().getWindow();
         stage.close();
