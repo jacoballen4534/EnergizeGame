@@ -34,6 +34,7 @@ public abstract class Enemy extends Character{
                 this.keepRendering = false;
                 this.isAlive = false;
                 Handler.removeEnemy(this);
+                this.endGame();
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
             this.animationsState.copy(this.gotHitState);

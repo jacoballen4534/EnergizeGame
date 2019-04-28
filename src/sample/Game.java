@@ -84,7 +84,7 @@ public class Game extends Canvas {
 
         //////////////////Load MenuElement//////////////////////
         inGameMenuController = new InGameMenuController(protagonist.getInventory(),()->unpause(),exitToTitleScreenEvent-> {
-                    Handler.disconnectFromServer();
+            Handler.disconnectFromServer();
             stage.setScene(Main.getMainScene());
             SoundController.changeMusic("titleBGM");
         });
@@ -215,7 +215,7 @@ public class Game extends Canvas {
     }
 
     public void addPlayer(int id) {
-        OnlinePlayer temp = new OnlinePlayer((int)this.protagonist.getX()/Game.PIXEL_UPSCALE, (int)this.protagonist.getY()/Game.PIXEL_UPSCALE, PreLoadedImages.protagonistSpriteSheet,
+        OnlinePlayer temp = new OnlinePlayer((int)this.protagonist.getX()/Game.PIXEL_UPSCALE, (int)this.protagonist.getY()/Game.PIXEL_UPSCALE, PreLoadedImages.onlinePlayerSpriteSheet,
         Level.PROTAGONIST_SPRITE_WIDTH, Level.PROTAGONIST_SPRITE_HEIGHT, (int) (Level.PROTAGONIST_SPRITE_WIDTH * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE),
         (int) (Level.PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE), this.map.getCurrentLevelWidth());
         temp.setId(id);

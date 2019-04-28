@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.Utilities;
 import sample.Game;
 import sample.Main;
+import sample.SoundController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +28,7 @@ public class EndScreenController implements Initializable {
     private static int enemyScore;
     private static int timeScore;
     private static int victoryScore;
-    private static int finalScore = 1;
+    private static int finalScore = 0;
     public static boolean scoreSaved = false;
 
 
@@ -53,7 +54,7 @@ public class EndScreenController implements Initializable {
     @FXML public void titleButtonPressed() throws IOException {
         ChangeStageName("Main Menu");
         endScreenPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
-//        Game.getRoot().getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
+        SoundController.changeMusic("titleBGM");
     }
 
     @FXML public void saveScoreButtonClicked() throws IOException {
