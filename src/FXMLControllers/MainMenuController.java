@@ -164,7 +164,7 @@ public class MainMenuController implements Initializable {
         return currFocussedLabel;
     }
 
-    //TODO refactor switch statement to be less hardcoded
+
     private void UpdateMenu(Label currFocussedLabel){
         if (currFocussedLabel == null){
             //FadeOutCurrentMenu();
@@ -218,7 +218,7 @@ public class MainMenuController implements Initializable {
         //System.out.println(subMenu.getChildren());
     }
 
-    //TODO: Loop behaviour can be refactored if saves are put into an array
+
     private void updateSaveStates() {
         ArrayList<ArrayList<Pair<String, String>>> seeds = readFile("mapSeeds.txt", true);
         for (ArrayList<Pair<String, String>> block : seeds) {

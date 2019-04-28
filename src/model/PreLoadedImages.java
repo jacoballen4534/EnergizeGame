@@ -42,7 +42,7 @@ public class PreLoadedImages {
             tileSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Tileset.png"));
             gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GruntSpriteSheet.png"));
             protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
-            onlinePlayerSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BlueCapeProtagonistSheet.png"));
+            onlinePlayerSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/YelllowCapeProtagonistSheet.png"));
             campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
             shieldSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Shield.png"));
             healthPickupSprite = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/healthKit.png"));

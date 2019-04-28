@@ -16,7 +16,7 @@ public class Boss extends Enemy {
 
     private final int BOSS_BASE_ATTACK_DAMAGE = DifficultyController.BOSS_BASE_DAMAGE.value;//Low damage but cant run away from it. Need to use block
     private final int BOSS_SPECIAL_ATTACK_DAMAGE = DifficultyController.BOSS_SPECIAL_DAMAGE.value; //High damage but easy to run away from.
-    private final int BOSS_MAXHEALTH = DifficultyController.BOSS_HEALTH.value; //TODO: Increase
+    private final int BOSS_MAXHEALTH = DifficultyController.BOSS_HEALTH.value;
     private final int BOSS_ATTACK_COOLDOWN = 3000;
     private AnimationsState specialAttackstatePt1;
     private AnimationsState specialAttackstatePt2;

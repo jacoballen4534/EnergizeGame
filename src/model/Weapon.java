@@ -11,7 +11,6 @@ public class Weapon extends Item {
 
     @Override
     public void render(GraphicsContext graphicsContext, double cameraX, double cameraY) {
-        //TODO
     }
 
     @Override

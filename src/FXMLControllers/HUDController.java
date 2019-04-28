@@ -48,7 +48,6 @@ public class HUDController implements Initializable {
         else equippedItem.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null));
     }
 
-    //TODO: Refactor to burn our eyes less
     @FXML public void UpdateLives(int lives){
 //        lives = 2;
         switch(lives){
