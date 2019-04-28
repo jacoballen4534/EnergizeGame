@@ -2,7 +2,6 @@ package FXMLControllers;
 
 import Multiplayer.Client;
 import Multiplayer.Server;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,9 +14,7 @@ import javafx.util.Pair;
 import sample.Game;
 import sample.SoundController;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.*;
 import java.util.*;
 
@@ -29,7 +26,7 @@ public class MainMenuController implements Initializable {
 
     //Macros
     private final int newGamePos = 2;
-    private final int loadGamePos = 3;
+    private final int loadMapPos = 3;
     private final int optionsPos = 4;
     private final int highscorePos = 5;
     private final int creditsPos = 6;
@@ -112,31 +109,23 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML private void NewGameClicked() throws IOException {
-        //changeStageName("New Game");
         focussedLabel = UpdateFocussedLabel(focussedLabel,"newGame");
         UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/newGame.fxml")));
     }
 
-    @FXML private void LoadGameClicked() throws IOException {
-        //changeStageName("Load Game");
+    @FXML private void LoadMapClicked() throws IOException {
         this.updateSaveStates();
-        focussedLabel = UpdateFocussedLabel(focussedLabel, "loadGame");
+        focussedLabel = UpdateFocussedLabel(focussedLabel, "loadMap");
         UpdateMenu(focussedLabel);
-        //mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("../fxmls/loadGame.fxml")));
     }
 
     @FXML private void HighScoreClicked() throws IOException {
         ChangeStageName("High Score");
-        //focussedLabel = UpdateFocussedLabel(focussedLabel,"highScores");
-        //UpdateMenu(focussedLabel);
         mainMenuPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(getClass().getResourceAsStream("/fxmls/highScore.fxml")));
     }
 
     @FXML private void OptionsClicked() throws IOException {
         ChangeStageName("Options");
-        //focussedLabel = UpdateFocussedLabel(focussedLabel, "options");
-        //UpdateMenu(focussedLabel);
         mainMenuPane.getChildren().setAll((AnchorPane) FXMLLoader.load(getClass().getResource("/fxmls/options.fxml")));
     }
 
@@ -187,17 +176,8 @@ public class MainMenuController implements Initializable {
             case "newGame":
                 ShowNewGameMenu();
                 break;
-            case "loadGame":
-                ShowLoadGameMenu();
-                break;
-            case "highScores":
-                ShowHighScoresMenu();
-                break;
-            case "options":
-                ShowOptionsMenu();
-                break;
-            case "credits":
-                ShowCreditsMenu();
+            case "loadMap":
+                ShowLoadMapMenu();
                 break;
         }
     }
@@ -217,7 +197,7 @@ public class MainMenuController implements Initializable {
         //System.out.println(subMenu.getChildren());
     }
 
-    private void ShowLoadGameMenu(){
+    private void ShowLoadMapMenu(){
         //Remove previous submenu
         HideCurrentSubMenu();
         //Create submenu
@@ -225,16 +205,16 @@ public class MainMenuController implements Initializable {
 
         //Create labels
         CreateMenuLabel(subMenu,saveOne.getKey(),"submenu-label",0, event -> {
-            loadGameFromSaveState(saveOne);
+            loadMapFromSaveState(saveOne);
         });
         CreateMenuLabel(subMenu,saveTwo.getKey(),"submenu-label",1, event -> {
-            loadGameFromSaveState(saveTwo);
+            loadMapFromSaveState(saveTwo);
         });
         CreateMenuLabel(subMenu,saveThree.getKey(),"submenu-label",2, event -> {
-            loadGameFromSaveState(saveThree);
+            loadMapFromSaveState(saveThree);
         });
         //Add submenu to menu
-        mainMenuVBox.getChildren().add(loadGamePos,subMenu);
+        mainMenuVBox.getChildren().add(loadMapPos,subMenu);
         //System.out.println(subMenu.getChildren());
     }
 
@@ -260,55 +240,15 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    private void loadGameFromSaveState(Pair<String, Long> saveGame){
-        if (saveGame.getValue() != null) {
+    private void loadMapFromSaveState(Pair<String, Long> saveMap){
+        if (saveMap.getValue() != null) {
             focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
             UpdateMenu(focussedLabel);
-            game = new Game(this, saveGame.getValue());
+            game = new Game(this, saveMap.getValue());
             game.start();
         } else {
             System.out.println("No map saved here");
         }
-    }
-
-    private void ShowOptionsMenu(){
-        //Remove previous submenu
-        HideCurrentSubMenu();
-        //Create submenu
-        VBox subMenu = CreateSubMenu();
-        //Create labels
-        CreateMenuLabel(subMenu,"Change Keybindings","submenu-label",0,null);
-        CreateMenuLabel(subMenu,"Change volume","submenu-label",1,null);
-        //Add submenu to menu
-        mainMenuVBox.getChildren().add(optionsPos,subMenu);
-        //System.out.println(subMenu.getChildren());
-    }
-
-    private void ShowHighScoresMenu(){
-        //Remove previous submenu
-        HideCurrentSubMenu();
-        //Create submenu
-        VBox subMenu = CreateSubMenu();
-        //Create labels
-        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
-        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
-        //Add submenu to menu
-        mainMenuVBox.getChildren().add(highscorePos,subMenu);
-        //System.out.println(subMenu.getChildren());
-    }
-
-    private void ShowCreditsMenu(){
-        //Remove previous submenu
-        HideCurrentSubMenu();
-        //Create submenu
-        VBox subMenu = CreateSubMenu();
-        //Create labels
-        CreateMenuLabel(subMenu,"Do stuff","submenu-label",0,null);
-        CreateMenuLabel(subMenu,"Other stuff","submenu-label",1,null);
-        CreateMenuLabel(subMenu,"Even more stuff","submenu-label",1,null);
-        //Add submenu to menu
-        mainMenuVBox.getChildren().add(creditsPos,subMenu);
-        //System.out.println(subMenu.getChildren());
     }
 
     private void HideCurrentSubMenu(){
@@ -325,31 +265,6 @@ public class MainMenuController implements Initializable {
     public static void setGame(Game game) {
         MainMenuController.game = game;
     }
-
-    /* DEPRECATED */
-    /*
-    private void FadeOutCurrentMenu(){
-        ObservableList<Node> currItems = miniMenuVBox.getChildren();
-        if (currItems.isEmpty()){return;}
-
-        FadeTransition ft = new FadeTransition();
-        ft.setNode(miniMenuVBox);
-        ft.setDuration(new Duration(10));
-        ft.setFromValue(1.0);
-        ft.setToValue(0.0);
-        ft.setAutoReverse(false);
-        ft.play();
-        //System.out.println(miniMenuVBox.getChildren());
-        ft.setOnFinished(e -> miniMenuVBox.getChildren().removeAll(currItems));
-    }*/
-    /*private void FadeInMenu(Node node){
-        FadeTransition ft = new FadeTransition();
-        ft.setDuration(new Duration(10));
-        ft.setFromValue(0.0);
-        ft.setToValue(1.0);
-        ft.setNode(node);
-        ft.play();
-    }*/
 }
 
 

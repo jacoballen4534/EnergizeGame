@@ -12,7 +12,7 @@
          <children>
             <Label fx:id="Resume" onMouseClicked="#ResumeClicked" styleClass="menulabel" text="RESUME" visible="false" />
             <Label fx:id="newGame" onMouseClicked="#NewGameClicked" styleClass="menulabel" text="NEW GAME" />
-            <Label fx:id="loadGame" onMouseClicked="#LoadGameClicked" styleClass="menulabel" text="LOAD GAME" />
+            <Label fx:id="loadMap" onMouseClicked="#LoadMapClicked" styleClass="menulabel" text="LOAD MAP" />
             <Label fx:id="options" onMouseClicked="#OptionsClicked" styleClass="menulabel" text="OPTIONS" />
             <Label fx:id="highScores" onMouseClicked="#HighScoreClicked" styleClass="menulabel" text="HIGH SCORES" />
             <Label fx:id="credits" onMouseClicked="#CreditsClicked" styleClass="menulabel" text="CREDITS" />
