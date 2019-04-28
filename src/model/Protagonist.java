@@ -74,7 +74,7 @@ public class Protagonist extends Character {
 
 
         //Set health
-        this.currHealth = 10;/*PROTAGONIST_MAXHEALTH;*/
+        this.currHealth = PROTAGONIST_MAXHEALTH;
         this.currEnergy = 50; //Start with half energy to use shield in tutorial
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
