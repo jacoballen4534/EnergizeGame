@@ -151,7 +151,7 @@
 .label#optionsLabel{
     -fx-text-fill: #ff8800;
     -fx-font-family: beon;
-    -fx-font-size: 40;
+    -fx-font-size: 25;
 }
 .slider{
     -fx-scale-x: 1.5;

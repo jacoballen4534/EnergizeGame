@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import sample.Game;
 
@@ -47,6 +48,8 @@ public class InGameMenuController {
     //--Options Menu--//
     private static final int OPTIONS_MENU_WIDTH = 400;
     private static final int OPTIONS_MENU_HEIGHT = 400;
+    private static final int OPTIONS_TITLE_WIDTH = 250;
+    private static final int OPTIONS_TITLE_HEIGHT = 150;
 
     //--Confirmation Menu--//
     private static final int CONFIRMATION_MENU_WIDTH = 300;
@@ -314,18 +317,21 @@ public class InGameMenuController {
                 SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
         Label title = CreateLabel("OPTIONS","optionsMenuTitle",
-                OPTIONS_MENU_WIDTH,OPTIONS_MENU_HEIGHT/3,TextAlignment.CENTER,false);
+                OPTIONS_TITLE_WIDTH,OPTIONS_TITLE_HEIGHT,TextAlignment.CENTER,false);
         optionsMenu.SetLabelAsTitle(title);
 
-        Button changeVolume = CreateButton("Change volume","changeVolumeButton",
+        Label inProgress = CreateLabel("To be added soon","optionsLabel",200,100, TextAlignment.CENTER,true);
+
+        /*Button changeVolume = CreateButton("Change volume","changeVolumeButton",
                 OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,changeVolumeEvent);
         Button changeKeybindings = CreateButton("Change keybindings","changeKeybindingsButton",
-                OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,changeKeybindingsEvent);
+                OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,changeKeybindingsEvent);*/
         Button closeOptionsMenu = CreateButton("Close","closeOptionsMenu",
                 OPTIONS_MENU_WIDTH/2,OPTIONS_MENU_HEIGHT/6,closeOptionsMenuEvent);
 
-        optionsMenu.AddNodeToVBox(nodePos++,changeVolume);
-        optionsMenu.AddNodeToVBox(nodePos++,changeKeybindings);
+        /*optionsMenu.AddNodeToVBox(nodePos++,changeVolume);
+        optionsMenu.AddNodeToVBox(nodePos++,changeKeybindings);*/
+        optionsMenu.AddNodeToVBox(nodePos++,inProgress);
         optionsMenu.AddNodeToVBox(nodePos++,closeOptionsMenu);
 
         return optionsMenu;
