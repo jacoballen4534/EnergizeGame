@@ -1,6 +1,7 @@
 package model;
 
 import javafx.embed.swing.SwingFXUtils;
+import sample.DifficultyController;
 import sample.Game;
 import sample.SoundController;
 
@@ -8,8 +9,8 @@ import java.awt.image.BufferedImage;
 
 public class Grunt extends Enemy {
 
-    private final int GRUNT_BASE_ATTACK_DAMAGE = 10;
-    private final int GRUNT_MAXHEALTH = 100;
+    private final int GRUNT_BASE_ATTACK_DAMAGE = DifficultyController.GRUNT_DAMAGE.value;
+    private final int GRUNT_MAXHEALTH = DifficultyController.GRUNT_HEALTH.value;
     private final int GRUNT_ATTACK_COOLDOWN = 2000;
 
     public Grunt(int x, int y, BufferedImage image, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight, int levelWidth) {

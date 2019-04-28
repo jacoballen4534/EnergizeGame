@@ -100,6 +100,9 @@ public class Game extends Canvas {
         testBar.setProgress(0.5);
         this.root.getChildren().add(testBar);*/
 
+        ////////////Sound Stuff///////////
+        //SoundEffect.init();
+
         init(); //Setup game loop
         Handler.setCamera(this.camera);
         Handler.setMap(this.map);
