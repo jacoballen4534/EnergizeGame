@@ -21,6 +21,7 @@ import sample.SoundController;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -48,7 +49,7 @@ public class Protagonist extends Character {
 
     protected int currEnergy;
     protected int maxEnergy;
-    private NewHUD newHud;
+    public static NewHUD newHud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -82,9 +83,9 @@ public class Protagonist extends Character {
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
-        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
-        this.newHud.setCurrHealth(this.currHealth);
-        this.newHud.setCurrEnergy(this.maxEnergy);
+        newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        newHud.setCurrHealth(this.currHealth);
+        newHud.setCurrEnergy(this.maxEnergy);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -149,7 +150,7 @@ public class Protagonist extends Character {
                     this.currHealth = PROTAGONIST_MAXHEALTH;
                 }
             }
-            this.newHud.setCurrHealth(this.currHealth);
+            newHud.setCurrHealth(this.currHealth);
 
         }
     }
@@ -298,7 +299,8 @@ public class Protagonist extends Character {
 
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
-        newHud.tick(lives); //Update health and energy displays
+
+        newHud.tick(this.lives, this.levelNumber); //Update health and energy displays
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -306,6 +308,7 @@ public class Protagonist extends Character {
             sendToServer(commands);
         }
     }
+
 
     public boolean sendToServer(String message) {
         if (this.client != null) {
@@ -368,15 +371,15 @@ public class Protagonist extends Character {
     }
 
     public String updateTimer() {//This gets called each second
-        return this.newHud.updateTimer();
+        return newHud.updateTimer();
     }
 
     public int getMinutes(){
-        return this.newHud.getMinutes();
+        return newHud.getMinutes();
     }
 
     public int getSeconds() {
-        return this.newHud.getSeconds();
+        return newHud.getSeconds();
     }
 
     protected boolean isProtagonist(){
@@ -403,13 +406,7 @@ public class Protagonist extends Character {
 //            this.renderAttackBoundingBox(graphicsContext);
 //        }
     }
-
-    public NewHUD getNewHud() {
-        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
-        this.newHud.setCurrHealth(this.currHealth);
-        this.newHud.setCurrEnergy(this.maxEnergy);
-        return this.newHud;
-    }
+    
 
     public void useItem(){
         /*if (this.inventory.getEquippedItem() != null) {

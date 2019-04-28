@@ -15,7 +15,7 @@ public class Map {
     //Holds all the levels.
     private TreeMap<Integer, Level> levels = new TreeMap<>();
     //May need to put this into a level class so we dont need to get the floor each time.
-    private Level currentLevel;
+    private static Level currentLevel = null;
     private Game game; //To add the protagonist to.
     private int tutorialRow;
     private final int MAP_WIDTH = 10;
@@ -24,13 +24,13 @@ public class Map {
     private final int LEVEL_HEIGHT = 15; //Cannot be less than 12 as the tutorial room door needs to align
     private ArrayList<ArrayList<TreeMap<TileType, Point2D>>> allDoorLocations = new ArrayList<>(); //2d array list of door locations. in col,row form
     private static Level bossLevel; //This has level number of 8055
-    private int bossEntranceLevelNumber;// This is the room that goes to boss level.
-    private int tutorialLevelNumber;
+    public static int bossEntranceLevelNumber = -1;// This is the room that goes to boss level.
+    public static int tutorialLevelNumber = 0;
 
     //Hold the layout of the different levels that makes up the map, Can be used for mini-map.
     //Using bitwise operations to indicate which side shares a wall with another level (need a door). Or 0 if it is not a level
     // 4 bits in the form Top,Right,Bottom,Left.
-    private ArrayList<ArrayList<Boolean>> levelLayout = new ArrayList<>();
+    private static ArrayList<ArrayList<Boolean>> levelLayout = new ArrayList<>();
 
 
     public Map(Game game, long MAP_SEED){
@@ -40,9 +40,9 @@ public class Map {
         //Generate a random layout of levels.
         this.generateLevelLayout(MAP_HEIGHT, MAP_WIDTH,15,4, randomGenerator);
         //Generate tutorial room first as the shortest path takes a while so start it first
-        this.tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
-        this.currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH, false);
-        this.levels.put(tutorialLevelNumber, this.currentLevel); //Level number = col + row * width, col is 0
+        tutorialLevelNumber = tutorialRow * MAP_WIDTH;//Level number = col + row * width, where col is 0
+        currentLevel = new Level(PreLoadedImages.tutorialRoom, tutorialLevelNumber,MAP_WIDTH, false);
+        this.levels.put(tutorialLevelNumber, currentLevel); //Level number = col + row * width, col is 0
         bossLevel = new Level(PreLoadedImages.bossRoom, 8055, MAP_WIDTH, true);
         this.levels.put(8055, bossLevel);
 
@@ -57,7 +57,6 @@ public class Map {
         }
 
         this.levels.get(bossEntranceLevelNumber).setBossEntrance(); //Indicate that this is the boss level entrance so the door goes to 8055
-
     }
 
     public void removeObject(GameObject toRemove) {
@@ -89,8 +88,8 @@ public class Map {
         this.currentLevel.loadLevel(game);//Pass the game in to add the protagonist to it.
     }
 
-    public int getCurrentLevelNumber() {
-        return this.currentLevel.getLevelNumber();
+    public static int getCurrentLevelNumber() {
+        return currentLevel.getLevelNumber();
     }
 
     public Level getCurrentLevel () {
@@ -112,7 +111,7 @@ public class Map {
         directions.add(new Point2D(0, -1)); //up
         directions.add(new Point2D(0, 1)); //down
 
-        this.levelLayout.clear();
+        levelLayout.clear();
 
         int currentRow = (int)(randomGenerator.nextDouble() * rows); //Pick a random starting height for the tutorial room, 1 up from the bottom and 1 down from the top.
         this.tutorialRow = currentRow; //Return this to know where the tutorial room is.
@@ -233,7 +232,7 @@ public class Map {
         System.out.println();
     }
 
-    public ArrayList<ArrayList<Boolean>> getLevelLayout() {
+    public static ArrayList<ArrayList<Boolean>> getLevelLayout() {
         return levelLayout;
     }
 }

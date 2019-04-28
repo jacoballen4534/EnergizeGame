@@ -288,8 +288,7 @@ public class InGameMenuController {
         Label equippedLabel = CreateLabel("Equipped Item","itemEquippedLabel",150,100,TextAlignment.LEFT,true);
 
         //Create the imageview for the equipped item
-        ImageView equippedItemIcon = CreateImageView(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null),
-                50,50);
+        ImageView equippedItemIcon = CreateImageView(SwingFXUtils.toFXImage(PreLoadedImages.emptyItemSlot,null), 50,50);
 
         inventoryMenu.setEquippedItemIcon(equippedItemIcon);
 
