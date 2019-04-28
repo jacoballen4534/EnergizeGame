@@ -27,7 +27,6 @@ public class Handler { //This class will hold all the game objects and is respon
     private static Map map;
     private static Camera camera;
     private static boolean timelineIsPaused = false;
-    private static HUD hud;
     private static Game game;
     private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
     //private static KeyInput keyInput = new KeyInput(getKeyInput());

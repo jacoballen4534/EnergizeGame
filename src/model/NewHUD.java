@@ -39,6 +39,8 @@ public class NewHUD extends MenuElement{
     private double maxEnergy;
     private double energyPercent;
 
+    private int seconds, minutes; //For updateTimer()
+
     public NewHUD(String ID, double maxHealth, double maxEnergy, Inventory inventory, int xPos, int yPos) {
         super(ID,0,0, xPos, yPos);
 
@@ -87,6 +89,27 @@ public class NewHUD extends MenuElement{
         controller.UpdateHealth(healthPercent);
         controller.UpdateEnergy(energyPercent);
         controller.UpdateEquippedItem(inventory.getEquippedItem());
+    }
+
+    public String updateTimer(){
+        String toReturn = "";
+        if (this.seconds < 59) {
+            this.seconds++;
+        } else {
+            this.seconds = 0;
+            this.minutes++;
+        }
+
+        if (this.seconds < 10) {
+            toReturn += "0";
+        }
+        toReturn += this.seconds;
+
+        if (this.minutes > 0) {
+            toReturn = this.minutes + ":" + toReturn;
+        }
+
+        return toReturn;
     }
 
     /*private void CreateHUDLayout(int width, int height){
