@@ -184,12 +184,13 @@ public abstract class Character extends GameObject{
     }
 
     protected void renderSpellEffect(GraphicsContext graphicsContext) {
-        graphicsContext.setGlobalAlpha(0.3);
         if (this.frozen) {
+            graphicsContext.setGlobalAlpha(0.4);
             graphicsContext.drawImage(PreLoadedImages.icicle, this.x,this.y,
                     this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
                     this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
         } else if (this.onFire) {
+            graphicsContext.setGlobalAlpha(0.6);
             graphicsContext.drawImage(PreLoadedImages.flame, this.x,this.y,
                     this.spriteWidth - this.animationsState.getLeftBorder() - this.animationsState.getRightBorder(),
                     this.spriteHeight - this.animationsState.getTopBorder() - this.animationsState.getBottomBorder());
