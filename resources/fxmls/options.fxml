@@ -16,25 +16,25 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="966.0" spacing="30.0">
                <children>
                   <Label fx:id="optionsLabel" text="Difficulty" />
-                  <ComboBox prefWidth="150.0" />
+                  <ComboBox fx:id="difficultySelect" prefWidth="150.0" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
                <children>
                   <Label fx:id="optionsLabel" text="Master Volume" />
-                  <Slider showTickLabels="true" showTickMarks="true" />
+                  <Slider fx:id="masterSlider" onMouseReleased="#updateMasterVolume" showTickLabels="true" showTickMarks="true" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
                <children>
                   <Label fx:id="optionsLabel" text="SFX Volume" />
-                  <Slider showTickLabels="true" showTickMarks="true" />
+                  <Slider fx:id="sfxSlider" onMouseReleased="#updateSFXVolume" showTickLabels="true" showTickMarks="true" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="60.0">
                <children>
                   <Label fx:id="optionsLabel" text="Music Volume" />
-                  <Slider showTickLabels="true" showTickMarks="true" />
+                  <Slider fx:id="musicSlider" onMouseReleased="#updateMusicVolume" showTickLabels="true" showTickMarks="true" />
                </children>
             </HBox>
                   <Button mnemonicParsing="false" onMouseClicked="#titleButtonPressed" text="Return to Title" />
