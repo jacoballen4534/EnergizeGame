@@ -34,7 +34,6 @@ public abstract class Enemy extends Character{
                 this.keepRendering = false;
                 this.isAlive = false;
                 Handler.removeEnemy(this);
-                this.die();
             }
         }else if (this.playGotAttackedAnimation) { //Got Hit
             this.animationsState.copy(this.gotHitState);
@@ -56,8 +55,6 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(runningState);
         }
     }
-
-    protected void die(){}
 
     public void freeze(long duration) {
         this.playAttackAnimation = false;

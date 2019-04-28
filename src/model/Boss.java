@@ -198,10 +198,4 @@ public class Boss extends Enemy {
     protected void playDeathSound() {
         SoundController.playSoundFX("gameWin");
     }
-
-    @Override
-    protected void die() {
-        Scores.VICTORY = true;
-        Handler.finishGame();
-    }
 }

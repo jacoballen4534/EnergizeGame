@@ -95,7 +95,6 @@ public class Protagonist extends Character {
             System.out.println("Picked up item");
         }
         SoundController.playSoundFX("itemPickup");
-        Scores.ITEMS_COLLECTED++;
     }
 
     protected void block() {

@@ -69,7 +69,6 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void clearForNewGame() {
         clearAllObjects();
-        Scores.resetScores();
         otherPlayers.clear();
     }
 
