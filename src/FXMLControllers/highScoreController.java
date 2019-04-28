@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import model.Utilities;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,28 +26,39 @@ public class highScoreController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ArrayList<ArrayList<Pair<String,String>>> highScores = readFile("highScores.txt", false);
-        List<Pair<String, Integer>> scores = new ArrayList<>();
+        int attempts = 0;
+        while (true) {
+            try {
+                ArrayList<ArrayList<Pair<String, String>>> highScores = readFile("highScores.txt", false);
+                List<Pair<String, Integer>> scores = new ArrayList<>();
 
-        //Put each score into list of pairs in the form of <Name,Score>
-        for (ArrayList<Pair<String,String>> block : highScores) {
-            scores.add(new Pair<>(block.get(0).getValue(), Integer.parseInt(block.get(1).getValue())));
+                //Put each score into list of pairs in the form of <Name,Score>
+                for (ArrayList<Pair<String, String>> block : highScores) {
+                    scores.add(new Pair<>(block.get(0).getValue(), Integer.parseInt(block.get(1).getValue())));
+                }
+
+                //Sort the scores into descending order
+                scores.sort((score1, score2) -> (score2.getValue() - score1.getValue()));
+
+                Person1.setText(scores.get(0).getKey());
+                Person2.setText(scores.get(1).getKey());
+                Person3.setText(scores.get(2).getKey());
+                Person4.setText(scores.get(3).getKey());
+                Person5.setText(scores.get(4).getKey());
+
+                Score1.setText(scores.get(0).getValue().toString());
+                Score2.setText(scores.get(1).getValue().toString());
+                Score3.setText(scores.get(2).getValue().toString());
+                Score4.setText(scores.get(3).getValue().toString());
+                Score5.setText(scores.get(4).getValue().toString());
+                return;
+            } catch (NumberFormatException e) {
+                Utilities.initializeFiles(true); //If there was a format error, wipe all scores and re-read
+                if (++attempts >= 2) {
+                    e.printStackTrace();
+                }
+            }
         }
-
-        //Sort the scores into descending order
-        scores.sort((score1, score2) -> (score2.getValue() - score1.getValue()));
-
-        Person1.setText(scores.get(0).getKey());
-        Person2.setText(scores.get(1).getKey());
-        Person3.setText(scores.get(2).getKey());
-        Person4.setText(scores.get(3).getKey());
-        Person5.setText(scores.get(4).getKey());
-
-        Score1.setText(scores.get(0).getValue().toString());
-        Score2.setText(scores.get(1).getValue().toString());
-        Score3.setText(scores.get(2).getValue().toString());
-        Score4.setText(scores.get(3).getValue().toString());
-        Score5.setText(scores.get(4).getValue().toString());
 
     }
 

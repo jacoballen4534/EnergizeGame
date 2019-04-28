@@ -38,6 +38,8 @@ public class NewHUD extends MenuElement{
     private double currEnergy;
     private double maxEnergy;
     private double energyPercent;
+    private int minutes = 0;
+    private int seconds = 0;
 
     private int seconds, minutes; //For updateTimer()
 
@@ -69,12 +71,45 @@ public class NewHUD extends MenuElement{
         return loader.getController();
     }
 
+    public String updateTimer(){
+        String toReturn = "";
+        if (this.seconds < 59) {
+            this.seconds++;
+        } else {
+            this.seconds = 0;
+            this.minutes++;
+        }
+
+        if (this.seconds < 10) {
+            toReturn += "0";
+        }
+        toReturn += this.seconds;
+
+        if (this.minutes > 0) {
+            toReturn = this.minutes + ":" + toReturn;
+        }
+
+        return toReturn;
+    }
+
     public void setCurrHealth(double currHealth) {
         this.currHealth = currHealth;
     }
 
     public void setCurrEnergy(double currEnergy) {
         this.currEnergy = currEnergy;
+    }
+
+    public void setEquippedItem(Item item){
+        controller.UpdateEquippedItem(item);
+    }
+
+    public int getMinutes(){
+        return this.minutes;
+    }
+
+    public int getSeconds() {
+        return this.seconds;
     }
 
     public void tick(){

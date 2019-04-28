@@ -1,5 +1,6 @@
 package sample;
 
+import FXMLControllers.EndScreenController;
 import FXMLControllers.HUDController;
 import FXMLControllers.MainMenuController;
 import Multiplayer.Client;
@@ -9,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.*;
 
@@ -30,10 +32,10 @@ public class Game extends Canvas {
     private final double NS = 1000000000 / 60.0;
 
     //For handling UI
-    private Group root;
-    private InGameMenuController inGameMenuController;
+    private static AnchorPane root = new AnchorPane();
+    public InGameMenuController inGameMenuController;
 
-    private Scene gameScene;
+    private static Scene gameScene;
     private Camera camera;
     private Protagonist protagonist = null;
     private Map map;
@@ -46,7 +48,7 @@ public class Game extends Canvas {
     private static long randomSeed;
     private String onlineCommands = "";
 
-    private static final int HUD_WIDTH = 200;
+    public static final int HUD_WIDTH = 200;
     private NewHUD hud;
 
     private MainMenuController controller;
@@ -59,20 +61,20 @@ public class Game extends Canvas {
         Handler.clearForNewGame();
         this.stage = Main.getStage();
         this.stage.setTitle("Tutorial Room");
-        this.root = new Group();
-        this.root.getChildren().add(this);
-        this.gameScene = new Scene(root, SCREEN_WIDTH+HUD_WIDTH,SCREEN_HEIGHT, false);
-        this.gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
+        root = new AnchorPane();
+        root.getChildren().add(this);
+        gameScene = new Scene(root, SCREEN_WIDTH+HUD_WIDTH,SCREEN_HEIGHT, false);
+        gameScene.getStylesheets().add(Main.class.getResource("/css/globalStyle.css").toExternalForm());
         randomSeed = _randomSeed;
-        Utilities.saveNewHighScore("TestAdd", 1513560);
 
         //////////////////Update the BGM////////////////////
         SoundController.changeMusic("gameBGM");
 
-        stage.setScene(this.gameScene);
+        stage.setScene(gameScene);
+        EndScreenController.scoreSaved = false; //Only allow a new score to be saved if the a new game is started.
 
         stage.show();
-        this.keyInput = new KeyInput(this.gameScene); //Keyboard inputs
+        this.keyInput = new KeyInput(gameScene); //Keyboard inputs
         this.camera = new Camera(Game.SCREEN_WIDTH/2,Game.SCREEN_HEIGHT/2);
         randomMovement = new Random(randomSeed);
 
@@ -122,13 +124,13 @@ public class Game extends Canvas {
         this.animationTimer.start();
     }
 
-    private void pause(){
+    public void pause(){
         this.animationTimer.stop();
         Handler.timeline.pause();
     }
 
     public void unpause(){
-        this.stage.setScene(this.gameScene);
+        this.stage.setScene(gameScene);
         this.previousTime = System.nanoTime(); // Reset the previous to now, so it doesnt make up for all the ticks that where missed in pause state.
         this.animationTimer.start();
         Handler.timeline.play();
@@ -203,6 +205,7 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
+        root.getChildren().add(protagonist.getNewHud());
         Handler.setProtagonist(protagonist);
     }
 
@@ -231,5 +234,9 @@ public class Game extends Canvas {
 
     public static void setRandomSeed(long seed) {
         randomSeed = seed;
+    }
+
+    public static AnchorPane getRoot() {
+        return root;
     }
 }

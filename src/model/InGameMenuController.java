@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -163,7 +164,7 @@ public class InGameMenuController {
         inventoryMenu.show();
     }
 
-    public void AddMenusToRoot(Group root){
+    public void AddMenusToRoot(AnchorPane root){
         //root.getChildren().add(HUD); //Include HUD as part of menu controller
         root.getChildren().add(pauseMenu);
         root.getChildren().add(inventoryMenu);

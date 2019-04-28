@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import model.SaveGameMenu;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 public class Main extends Application {
     private static Stage stage;
     private static Scene mainScene;
+    private static AnchorPane root = new AnchorPane(); //Make empty anchor pane here to be able to set children later.
 
     public static void main(String[] args) {
         for (String arg : args) {
@@ -39,7 +41,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        Utilities.initializeFiles();
+        Utilities.initializeFiles(false);
 
         SoundController.playMusic("titleBGM");
 
@@ -48,14 +50,14 @@ public class Main extends Application {
         Font.loadFont(Main.class.getResourceAsStream("/fonts/beon.otf"), 10);
 
         stage = primaryStage;
-        Parent root = (Parent) new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/mainMenu.fxml"));
+        root.getChildren().setAll((AnchorPane) new FXMLLoader().load(Main.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
         primaryStage.setTitle("Main Menu");
 
         //Loads a global stylesheet
 //        File styleSheet = new File("resources/css/globalStyle.css");
         String url = Main.class.getResource("/css/globalStyle.css").toExternalForm();
 
-        mainScene = new Scene(root, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT, false);
+        mainScene = new Scene(root, Game.SCREEN_WIDTH + Game.HUD_WIDTH, Game.SCREEN_HEIGHT, false);
         mainScene.getStylesheets().add(url);
 
         primaryStage.setScene(mainScene);
@@ -64,9 +66,13 @@ public class Main extends Application {
 
     }
 
-    static Stage getStage() {
+    public static Stage getStage() {
         return stage;
     }
 
-    static Scene getMainScene() {return mainScene;}
+    public static Scene getMainScene() {return mainScene;}
+
+    public static AnchorPane getRoot() {
+        return root;
+    }
 }

@@ -1,5 +1,7 @@
 package model;
 
+import FXMLControllers.MainMenuController;
+import FXMLControllers.TutorialControlsController;
 import Multiplayer.Client;
 import Multiplayer.Server;
 import FXMLControllers.HUDController;
@@ -7,13 +9,18 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import sample.Game;
+import sample.Main;
 import sample.SoundController;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -26,6 +33,10 @@ public class Protagonist extends Character {
     //The different animation states to hold the borders and which sprite from sprite sheet to use.
     protected AnimationsState blockingState;
     protected long lastBlockTimer, blockCooldown, blockTimer = 0;
+
+    //For Score
+    private int itemsCollected = 0;
+    private int enemysKilled = 0;
 
 
     protected final int PROTAGONIST_MAXHEALTH = 100;
@@ -62,8 +73,8 @@ public class Protagonist extends Character {
 
 
         //Set health
-        this.currHealth = PROTAGONIST_MAXHEALTH;
-        this.currEnergy = 0; //Start with 0 energy and build it up
+        this.currHealth = 10;/*PROTAGONIST_MAXHEALTH;*/
+        this.currEnergy = 50; //Start with half energy to use shield in tutorial
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
 
@@ -94,6 +105,7 @@ public class Protagonist extends Character {
             this.inventory.addItem(pickup);
             System.out.println("Picked up item");
         }
+        this.itemsCollected++;
         SoundController.playSoundFX("itemPickup");
     }
 
@@ -165,6 +177,7 @@ public class Protagonist extends Character {
                 this.isAlive = false;
                 Handler.removePlayer(this);
                 this.disconnect();
+                this.endGame();
             }
         } else if (this.velocityX == 0 && this.velocityY == 0) { //Idle
             this.animationsState.copy(this.idleState);
@@ -188,6 +201,10 @@ public class Protagonist extends Character {
             this.currEnergy = this.maxEnergy;
         }
         newHud.setCurrEnergy(currEnergy);
+    }
+
+    protected void endGame(){
+        Handler.gameOver(false);
     }
 
     protected void tick(double cameraX, double cameraY, String commands) {
@@ -346,6 +363,14 @@ public class Protagonist extends Character {
         return this.newHud.updateTimer();
     }
 
+    public int getMinutes(){
+        return this.hud.getMinutes();
+    }
+
+    public int getSeconds() {
+        return this.hud.getSeconds();
+    }
+
     protected boolean isProtagonist(){
         return true;
     }
@@ -372,7 +397,8 @@ public class Protagonist extends Character {
     }
 
     public NewHUD getNewHud() {
-        return newHud;
+        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        return this.newHud;
     }
 
     public void useItem(){
@@ -411,6 +437,7 @@ public class Protagonist extends Character {
             this.currEnergy = maxEnergy;
         }
         newHud.setCurrEnergy(currEnergy);
+        this.enemysKilled++;
     }
 
     public boolean useSpecial(){
@@ -433,6 +460,14 @@ public class Protagonist extends Character {
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public int getEnemysKilled() {
+        return enemysKilled;
+    }
+
+    public int getItemsCollected() {
+        return itemsCollected;
     }
 }
 

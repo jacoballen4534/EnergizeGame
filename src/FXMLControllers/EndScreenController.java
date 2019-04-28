@@ -4,8 +4,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Utilities;
+import sample.Game;
+import sample.Main;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +27,9 @@ public class EndScreenController implements Initializable {
     private static int enemyScore;
     private static int timeScore;
     private static int victoryScore;
-    private static int finalScore;
+    private static int finalScore = 1;
+    public static boolean scoreSaved = false;
+
 
     @FXML
     private AnchorPane endScreenPane;
@@ -33,6 +39,7 @@ public class EndScreenController implements Initializable {
     @FXML private Label timeTakenLabel;
     @FXML private Label victoryBonusLabel;
     @FXML private Label finalScoreLabel;
+    @FXML private TextField NameField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,6 +53,17 @@ public class EndScreenController implements Initializable {
     @FXML public void titleButtonPressed() throws IOException {
         ChangeStageName("Main Menu");
         endScreenPane.getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
+//        Game.getRoot().getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/mainMenu.fxml")));
+    }
+
+    @FXML public void saveScoreButtonClicked() throws IOException {
+        if (NameField.getText().length() != 0) {
+            if (!scoreSaved) {
+                Utilities.saveNewHighScore(NameField.getText(), finalScore); //Only allow the score to be saved once
+                scoreSaved = true;
+            }
+            titleButtonPressed();
+        }
     }
 
     private void ChangeStageName(String newStageName) {

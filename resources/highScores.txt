@@ -1,25 +1,25 @@
 <begin>
-name:_  
+name:_
 score:0
 <end>
 
 <begin>
-name:_ 
+name:_
 score:0
 <end>
 
 <begin>
-name:_ 
+name:_
 score:0
 <end>
 
 <begin>
-name:_ 
+name:_
 score:0
 <end>
 
 <begin>
-name:_ 
+name:_
 score:0
 <end>
 

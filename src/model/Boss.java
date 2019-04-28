@@ -85,6 +85,11 @@ public class Boss extends Enemy {
     }
 
     @Override
+    protected void endGame() {
+        Handler.gameOver(true);
+    }
+
+    @Override
     void pickup(Item pickup) {}
 
     protected int getAttackDamage() { //To vary the amount of damage dealt with better weapons
