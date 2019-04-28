@@ -8,8 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import model.Item;
 import model.PreLoadedImages;
+import sample.FXMLUtils;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HUDController implements Initializable {
@@ -22,7 +24,7 @@ public class HUDController implements Initializable {
     @FXML private ImageView heartContainer3;
 
     @FXML public ImageView equippedItem;
-    protected int lives;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -30,6 +32,7 @@ public class HUDController implements Initializable {
         equippedItem.setImage(new Image(this.getClass().getResourceAsStream("/sprites/emptyItemSlot.png")));
         healthBar.setProgress(1);
         energyBar.setProgress(1);
+
     }
 
     @FXML public void UpdateHealth(double healthPercent){

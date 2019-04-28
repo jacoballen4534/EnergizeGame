@@ -1,6 +1,7 @@
 package model;
 
 import javafx.scene.canvas.GraphicsContext;
+import sample.DifficultyController;
 
 import java.awt.image.BufferedImage;
 
@@ -13,10 +14,10 @@ public class Pickup extends Item {
     public void useItem(Protagonist user) {
         switch (this.name) {
             case "Health Kit":
-                user.increaseHealth(10);//Health kit restores 10 hp
+                user.increaseHealth(DifficultyController.PICKUP_REFILL_AMOUNT.value);//Health kit restores 10 hp
                 break;
             case "Energy Kit":
-                user.increaseEnergy(10);
+                user.increaseEnergy(DifficultyController.PICKUP_REFILL_AMOUNT.value);
                 break;
         }
     }

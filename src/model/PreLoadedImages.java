@@ -28,6 +28,12 @@ public class PreLoadedImages {
     public static BufferedImage emptyItemSlot;
     public static BufferedImage emptyHeart;
     public static BufferedImage fullHeart;
+    public static Image mapNoRoom;
+    public static Image mapRoomUnVisited;
+    public static Image mapRoomVisited;
+    public static Image mapCurrentRoom;
+    public static Image mapBossEnterance;
+
 
     static {
         try {
@@ -49,6 +55,11 @@ public class PreLoadedImages {
             bossRoom = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BossRoom.png"));
             emptyHeart = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/heartEmpty.png"));
             fullHeart = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/heartFull.png"));
+            mapNoRoom = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_noRoom.png"));
+            mapRoomUnVisited = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_roomUnVisited.png"));
+            mapRoomVisited = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_roomVisited.png"));
+            mapCurrentRoom = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_currentRoom.png"));
+            mapBossEnterance = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_bossEntrance.png"));
         } catch (IOException e) {
             System.out.println("\033[0;31m" + e.getMessage());
         }

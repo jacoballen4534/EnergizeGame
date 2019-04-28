@@ -91,9 +91,15 @@ public class Game extends Canvas {
         inGameMenuController.AddMenusToRoot(root);
 
         //////////////////////Load HUD//////////////////////////
-        this.hud = protagonist.getNewHud();
-        root.getChildren().add(hud);
+        this.hud = Protagonist.newHud;
         this.hud.show();
+
+        /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
+        testBar.setProgress(0.5);
+        this.root.getChildren().add(testBar);*/
+
+        ////////////Sound Stuff///////////
+        //SoundEffect.init();
 
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -205,7 +211,7 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
-        this.hud = protagonist.getNewHud();
+        this.hud = Protagonist.newHud;
         root.getChildren().add(hud);
         Handler.setProtagonist(protagonist);
     }
@@ -219,7 +225,7 @@ public class Game extends Canvas {
         Level.PROTAGONIST_SPRITE_WIDTH, Level.PROTAGONIST_SPRITE_HEIGHT, (int) (Level.PROTAGONIST_SPRITE_WIDTH * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE),
         (int) (Level.PROTAGONIST_SPRITE_HEIGHT * Game.SCALE * Level.PROTAGONIST_SPRITE_SCALE), this.map.getCurrentLevelWidth());
         temp.setId(id);
-        temp.updateLevelNumber(this.map.getCurrentLevelNumber());
+        temp.updateLevelNumber(Map.getCurrentLevelNumber());
         temp.updateLevelWidth(this.map.getCurrentLevelWidth());
         Handler.addPlayer(temp);
         Handler.updateEnemyTarget();

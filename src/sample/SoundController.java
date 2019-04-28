@@ -9,10 +9,9 @@ import java.util.HashMap;
 
 public class SoundController {
 
-    //Gain control is from -5 to 5
     public static float MASTER_GAIN_CONTROL = 1;
-    public static float MUSIC_GAIN_CONTROL = 1;
-    public static float SOUNDEFFECTS_GAIN_CONTROL = 1;
+    public static float MUSIC_GAIN_CONTROL = 0.5f;
+    public static float SOUNDEFFECTS_GAIN_CONTROL = 0.5f;
 
     private static final HashMap<String,String> audioSFX = new HashMap<String,String>(){{
         //For Player
@@ -47,7 +46,7 @@ public class SoundController {
     public static Clip playSoundFX(String audioName){
         try{
 
-            AudioInputStream stream;
+            /*AudioInputStream stream;
             AudioFormat format;
             DataLine.Info info;
             Clip clip;
@@ -61,12 +60,18 @@ public class SoundController {
             clip = (Clip) AudioSystem.getLine(info);
 
             clip.open(stream);
-            clip.start();
+            clip.start();*/
+
+            AudioInputStream stream = AudioSystem.getAudioInputStream(SoundController.class.getResourceAsStream(audioSFX.get(audioName)));
+            Clip clip = AudioSystem.getClip();
+            clip.open(stream);
 
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             float range = gainControl.getMaximum() - gainControl.getMinimum();
             float gain = (range * (SOUNDEFFECTS_GAIN_CONTROL * MASTER_GAIN_CONTROL)) + gainControl.getMinimum();
             gainControl.setValue(gain);
+
+            clip.start();
 
             return clip;
 
@@ -104,17 +109,11 @@ public class SoundController {
             BGM.start();
             BGM.loop(Clip.LOOP_CONTINUOUSLY);
 
+            updateVolume();
+
             BGM.addLineListener(lineEvent -> {
                 if (!BGM.isRunning()) BGM.start();
             });
-
-            FloatControl gainControl = (FloatControl) BGM.getControl(FloatControl.Type.MASTER_GAIN);
-            float range = gainControl.getMaximum() - gainControl.getMinimum();
-            float gain = (range * (MUSIC_GAIN_CONTROL * MASTER_GAIN_CONTROL)) + gainControl.getMinimum();
-
-            gainControl.setValue(gain);
-
-            //BGM.getControl(FloatControl.Type.VOLUME); Maybe? To deal with the logarithmic scaling
 
             return BGM;
 
@@ -135,10 +134,10 @@ public class SoundController {
 
         FloatControl gainControl = (FloatControl) BGM.getControl(FloatControl.Type.MASTER_GAIN);
 
-        float range = gainControl.getMaximum() - gainControl.getMinimum();
-        float gain = (range * (MUSIC_GAIN_CONTROL * MASTER_GAIN_CONTROL)) + gainControl.getMinimum();
+        float linearVolume = MUSIC_GAIN_CONTROL*MASTER_GAIN_CONTROL;
+        float decibelVolume = (float)Math.log10(linearVolume) * 20.0f;
 
-        gainControl.setValue(gain);
+        gainControl.setValue(decibelVolume);
     }
 
     /*public static void stopMusic(){

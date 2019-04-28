@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import sample.DifficultyController;
 import sample.Game;
 import sample.Main;
 import sample.SoundController;
@@ -21,6 +22,7 @@ import sample.SoundController;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
@@ -39,16 +41,16 @@ public class Protagonist extends Character {
     private int enemysKilled = 0;
 
 
-    protected final int PROTAGONIST_MAXHEALTH = 100;
+    protected int PROTAGONIST_MAXHEALTH = DifficultyController.PLAYER_HEALTH.value;
     protected final int PROTAGONIST_MAXENERGY = 100;
-    protected final int PROTAGONIST_BASE_ATTACK_DAMAGE = 34;
+    protected int PROTAGONIST_BASE_ATTACK_DAMAGE = DifficultyController.PLAYER_DAMAGE.value;
     protected final int PROTAGONIST_ATTACK_COOLDOWN = 1000;
     protected final int PROTAGONIST_BLOCK_COOLDOWN = 1; //Change this to add block cool down for increased difficulty (ms).
     protected final int BLOCK_COST = 5;
 
     protected int currEnergy;
     protected int maxEnergy;
-    private NewHUD newHud;
+    public static NewHUD newHud;
 
     protected int levelNumber;
     protected Inventory inventory;
@@ -73,8 +75,8 @@ public class Protagonist extends Character {
 
 
         //Set health
-        this.currHealth = 10;/*PROTAGONIST_MAXHEALTH;*/
-        this.currEnergy = 50; //Start with half energy to use shield in tutorial
+        this.currHealth = PROTAGONIST_MAXHEALTH;
+        this.currEnergy = PROTAGONIST_MAXENERGY/2; //Start with half energy to use shield in tutorial
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
 
@@ -82,9 +84,9 @@ public class Protagonist extends Character {
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
-        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
-        this.newHud.setCurrHealth(this.currHealth);
-        this.newHud.setCurrEnergy(this.maxEnergy);
+        newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        newHud.setCurrHealth(this.currHealth);
+        newHud.setCurrEnergy(this.currEnergy);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -97,6 +99,10 @@ public class Protagonist extends Character {
             if (Handler.attack(this)) SoundController.playSoundFX("hitAttackSword");
             else SoundController.playSoundFX("missAttackSword");
         }
+        /*if (super.canAttack()){
+            if (Handler.attack(this)) SoundEffect.SWORD_ATTACK_HIT.play();
+            else SoundEffect.SWORD_ATTACK_MISS.play();
+        }*/
     }
 
     @Override
@@ -149,7 +155,7 @@ public class Protagonist extends Character {
                     this.currHealth = PROTAGONIST_MAXHEALTH;
                 }
             }
-            this.newHud.setCurrHealth(this.currHealth);
+            newHud.setCurrHealth(this.currHealth);
 
         }
     }
@@ -298,7 +304,8 @@ public class Protagonist extends Character {
 
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
-        newHud.tick(lives); //Update health and energy displays
+
+        newHud.tick(this.lives, this.levelNumber); //Update health and energy displays
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -306,6 +313,7 @@ public class Protagonist extends Character {
             sendToServer(commands);
         }
     }
+
 
     public boolean sendToServer(String message) {
         if (this.client != null) {
@@ -368,15 +376,15 @@ public class Protagonist extends Character {
     }
 
     public String updateTimer() {//This gets called each second
-        return this.newHud.updateTimer();
+        return newHud.updateTimer();
     }
 
     public int getMinutes(){
-        return this.newHud.getMinutes();
+        return newHud.getMinutes();
     }
 
     public int getSeconds() {
-        return this.newHud.getSeconds();
+        return newHud.getSeconds();
     }
 
     protected boolean isProtagonist(){
@@ -403,13 +411,7 @@ public class Protagonist extends Character {
 //            this.renderAttackBoundingBox(graphicsContext);
 //        }
     }
-
-    public NewHUD getNewHud() {
-        this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
-        this.newHud.setCurrHealth(this.currHealth);
-        this.newHud.setCurrEnergy(this.maxEnergy);
-        return this.newHud;
-    }
+    
 
     public void useItem(){
         /*if (this.inventory.getEquippedItem() != null) {

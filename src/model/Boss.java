@@ -3,6 +3,7 @@ package model;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import sample.DifficultyController;
 import sample.Game;
 import sample.SoundController;
 
@@ -13,13 +14,13 @@ import static model.Level.BOSS_SCALE;
 
 public class Boss extends Enemy {
 
-    private final int BOSS_BASE_ATTACK_DAMAGE = 10;//Low damage but cant run away from it. Need to use block
-    private final int BOSS_SPECIAL_ATTACK_DAMAGE = 60; //High damage but easy to run away from.
-    private final int BOSS_MAXHEALTH = 300; //TODO: Increase
+    private final int BOSS_BASE_ATTACK_DAMAGE = DifficultyController.BOSS_BASE_DAMAGE.value;//Low damage but cant run away from it. Need to use block
+    private final int BOSS_SPECIAL_ATTACK_DAMAGE = DifficultyController.BOSS_SPECIAL_DAMAGE.value; //High damage but easy to run away from.
+    private final int BOSS_MAXHEALTH = DifficultyController.BOSS_HEALTH.value; //TODO: Increase
     private final int BOSS_ATTACK_COOLDOWN = 3000;
     private AnimationsState specialAttackstatePt1;
     private AnimationsState specialAttackstatePt2;
-    private final int APPLY_SPECIAL_DAMEAGE_COL = 7;
+    private final int APPLY_SPECIAL_DAMAGE_COL = 7;
     private boolean specialFirstHalf = true; //Indicate which half of the special move to play,
 
 
@@ -65,7 +66,7 @@ public class Boss extends Enemy {
                }
            } else {
                this.animationsState.copy(this.specialAttackstatePt2);
-               if (this.currentAnimationCol == APPLY_SPECIAL_DAMEAGE_COL) {
+               if (this.currentAnimationCol == APPLY_SPECIAL_DAMAGE_COL) {
                    Handler.attack(this); //Wait until part way through this animation before actually hitting
                }
                if (this.animationsState.isLastFrame(this.currentAnimationCol)) {

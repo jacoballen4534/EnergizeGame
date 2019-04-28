@@ -35,6 +35,8 @@ public class EndScreenController implements Initializable {
     @FXML
     private AnchorPane endScreenPane;
 
+    @FXML Label endScreenTitle;
+
     @FXML private Label itemsCollectedLabel;
     @FXML private Label enemiesKilledLabel;
     @FXML private Label timeTakenLabel;
@@ -44,6 +46,10 @@ public class EndScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        if (gameVictory) endScreenTitle.setText("EMBERRATH IS SAVED");
+        else endScreenTitle.setText("GAME OVER");
+
         itemsCollectedLabel.setText(Integer.toString(itemScore));
         enemiesKilledLabel.setText(Integer.toString(enemyScore));
         timeTakenLabel.setText(Integer.toString(timeScore));
