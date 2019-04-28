@@ -8,7 +8,7 @@ public class DifficultyController {
         public int value;
     }
 
-    //Parameters
+    //Parameters for controlling difficulty
     public static IntObj GRUNT_HEALTH = new IntObj();
     public static IntObj GRUNT_DAMAGE = new IntObj();
     public static IntObj PLAYER_HEALTH = new IntObj();
