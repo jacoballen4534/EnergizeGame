@@ -201,7 +201,6 @@ public class Boss extends Enemy {
 
     @Override
     protected void playDeathSound() {
-        //SoundController.PlayAudio("bossDeath"); //The sound effect isn't actually implemented yet tho
         SoundController.playSoundFX("gameWin");
     }
 }

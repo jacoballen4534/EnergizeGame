@@ -80,26 +80,7 @@ public class HUD{
         energyBar.setCurrVal(energy);
     }
 
-    public String updateTimer(){
-        String toReturn = "";
-        if (this.seconds < 59) {
-            this.seconds++;
-        } else {
-            this.seconds = 0;
-            this.minutes++;
-        }
 
-        if (this.seconds < 10) {
-            toReturn += "0";
-        }
-        toReturn += this.seconds;
-
-        if (this.minutes > 0) {
-            toReturn = this.minutes + ":" + toReturn;
-        }
-
-       return toReturn;
-    }
 
     public int getEnergy(){
         return energyBar.getCurrVal();

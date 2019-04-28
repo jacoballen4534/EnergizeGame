@@ -17,18 +17,16 @@ public class HUDController implements Initializable {
     @FXML public ProgressBar healthBar;
     @FXML public ProgressBar energyBar;
 
-    @FXML public ImageView heartContainer1;
-    @FXML public ImageView heartContainer2;
-    @FXML public ImageView heartContainer3;
+    @FXML private ImageView heartContainer1;
+    @FXML private ImageView heartContainer2;
+    @FXML private ImageView heartContainer3;
 
     @FXML public ImageView equippedItem;
+    protected int lives;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Default starting values
-        heartContainer1.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-        heartContainer2.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-        heartContainer3.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
         equippedItem.setImage(new Image(this.getClass().getResourceAsStream("/sprites/emptyItemSlot.png")));
         healthBar.setProgress(1);
         energyBar.setProgress(1);
@@ -49,23 +47,31 @@ public class HUDController implements Initializable {
 
     //TODO: Refactor to burn our eyes less
     @FXML public void UpdateLives(int lives){
+//        lives = 2;
         switch(lives){
             case 0:
-                heartContainer1.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
-                heartContainer2.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
-                heartContainer3.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
+                this.heartContainer1.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                this.heartContainer2.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                this.heartContainer3.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                break;
             case 1:
-                heartContainer1.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-                heartContainer2.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
-                heartContainer3.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
+                this.heartContainer1.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                this.heartContainer2.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                this.heartContainer3.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                break;
+
             case 2:
-                heartContainer1.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-                heartContainer2.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-                heartContainer3.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartEmpty.png")));
+                this.heartContainer1.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                this.heartContainer2.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                this.heartContainer3.setImage(SwingFXUtils.toFXImage(PreLoadedImages.emptyHeart,null));
+                break;
+
             case 3:
-                heartContainer1.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-                heartContainer2.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
-                heartContainer3.setImage(new Image(this.getClass().getResourceAsStream("/sprites/heartFull.png")));
+                this.heartContainer1.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                this.heartContainer2.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                this.heartContainer3.setImage(SwingFXUtils.toFXImage(PreLoadedImages.fullHeart,null));
+                break;
+
             default:
                 return;
         }

@@ -32,8 +32,6 @@ public class Handler { //This class will hold all the game objects and is respon
     private static ArrayList<Item> pickups = new ArrayList<>(); //Holds the scrolls and keys that are left on the map. Chests?
     private static Map map;
     private static Camera camera;
-    private static boolean timelineIsPaused = false;
-    private static HUD hud;
     private static Game game;
     private static Protagonist protagonist; //Tie the protagonist to this handler. Used for multiplayer when there are multiple protagonist's.
     //private static KeyInput keyInput = new KeyInput(getKeyInput());
@@ -63,7 +61,7 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist.updateSprite();
 
         for (Enemy enemy : enemies) {
-            enemy.updateSprite(); //Dont check camera so spells do damage to all.
+            enemy.updateSprite(); //Don't check camera so spells do damage to all.
         }
     }));
 
@@ -99,13 +97,17 @@ public class Handler { //This class will hold all the game objects and is respon
         game = _game;
     }
 
-    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineComands) {
+    public static void finishGame(){
+        //Change to end screen
+    }
+
+    public static void tick(double cameraX, double cameraY, KeyInput keyInput, String onlineCommands) {
 
         protagonist.tick(cameraX, cameraY, keyInput);
 
         for (Protagonist player : otherPlayers) {
             if(!player.equals(protagonist)) {
-                player.tick(cameraX, cameraY, onlineComands);
+                player.tick(cameraX, cameraY, onlineCommands);
             }
         }
         for (Enemy enemy : enemies) {
@@ -149,8 +151,6 @@ public class Handler { //This class will hold all the game objects and is respon
         }
 
         protagonist.render(graphicsContext, cameraX, cameraY);
-
-//        hud.render(graphicsContext,cameraX,cameraY);//Need to render hud last, as it is the top overlay.
     }
 
     public static void updateEnemyTarget () {
@@ -243,11 +243,7 @@ public class Handler { //This class will hold all the game objects and is respon
                 break;
             }
         }
-
-
     }
-
-
 
     public static void addWall (int location, GameObject wall) {
         walls.put(location, wall);
@@ -343,7 +339,7 @@ public class Handler { //This class will hold all the game objects and is respon
         protagonist.disconnect();
     }
 
-    public static void pauseUnpauseTimeline(){
+    /*public static void pauseUnpauseTimeline(){
         if (timelineIsPaused){
             timeline.play();
         }
@@ -355,7 +351,7 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void pauseTimeline(){timeline.pause();}
 
-    public static void unpauseTimeline(){timeline.play();}
+    public static void unpauseTimeline(){timeline.play();}*/
 
     public static void clearAllObjects() { //Not safe to use while in the middle of a level
         walls.clear();

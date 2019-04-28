@@ -52,7 +52,6 @@ public class Game extends Canvas {
     private NewHUD hud;
 
     private MainMenuController controller;
-    private HUDController hudController;
 
     public Game(MainMenuController menuController, long _randomSeed) {
         //Setup the canvas
@@ -91,14 +90,10 @@ public class Game extends Canvas {
         });
         inGameMenuController.AddMenusToRoot(root);
 
-        //////////////////////Testing new HUD//////////////////////////
-        this.hud = protagonist.getNewHud(); //new NewHUD("hud",HUD_WIDTH,SCREEN_HEIGHT,SCREEN_WIDTH+HUD_WIDTH/2,SCREEN_HEIGHT/2);
+        //////////////////////Load HUD//////////////////////////
+        this.hud = protagonist.getNewHud();
         root.getChildren().add(hud);
         this.hud.show();
-
-        /*VerticalHUDBar testBar = new VerticalHUDBar("energyBar",100,500,100,100);
-        testBar.setProgress(0.5);
-        this.root.getChildren().add(testBar);*/
 
         init(); //Setup game loop
         Handler.setCamera(this.camera);
@@ -210,7 +205,8 @@ public class Game extends Canvas {
 
     public void setProtagonist (Protagonist protagonist) {
         this.protagonist = protagonist;
-        root.getChildren().add(protagonist.getNewHud());
+        this.hud = protagonist.getNewHud();
+        root.getChildren().add(hud);
         Handler.setProtagonist(protagonist);
     }
 

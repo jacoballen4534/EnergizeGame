@@ -39,8 +39,9 @@
     -fx-effect: dropshadow(gaussian, #ff0000, 10, 0.5, 0, 0);
 }
 .label#itemEquippedLabel{
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 20;
+    -fx-text-fill: #ffdd00;
+    -fx-font-family: beon;
+    -fx-font-size: 24;
     -fx-font-weight: bold;
 }
 .anchorpane#confirmationMenu{

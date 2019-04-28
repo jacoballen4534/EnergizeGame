@@ -25,7 +25,7 @@ import java.io.IOException;
 public class Protagonist extends Character {
     protected static int nextID = 0; //Unique id for all characters, this will be used for multilayer
     protected int id;
-    protected int lives; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
+    protected int lives = 3; //Keep track of how many lives, Can pick up hearts which increase this. 0 = dead.
     //private KeyInput keyInput; //The keyboard inputs to move the character.
     protected boolean buttonAlreadyDown = false; //To only update animation state on button initial press, not on hold.
     protected boolean isAttacking = false; //Attempt to debounce attacking
@@ -48,7 +48,6 @@ public class Protagonist extends Character {
 
     protected int currEnergy;
     protected int maxEnergy;
-    protected HUD hud;
     private NewHUD newHud;
 
     protected int levelNumber;
@@ -78,15 +77,14 @@ public class Protagonist extends Character {
         this.currEnergy = 50; //Start with half energy to use shield in tutorial
         this.maxHealth = PROTAGONIST_MAXHEALTH;
         this.maxEnergy = PROTAGONIST_MAXENERGY;
-        this.hud = new HUD(this.id, this.maxHealth,this.maxEnergy,300,100,50,50);
-        hud.setHealth(this.currHealth);
-        hud.setEnergy(this.currEnergy);
 
         this.shield = SwingFXUtils.toFXImage(PreLoadedImages.shieldSpriteSheet, null);
         this.inventory = new Inventory();
         this.inventory.setEquippedItem(null);
 
         this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        this.newHud.setCurrHealth(this.currHealth);
+        this.newHud.setCurrEnergy(this.maxEnergy);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
@@ -120,7 +118,6 @@ public class Protagonist extends Character {
         if (!this.playBlockingAnimation &&  (this.blockTimer >= this.blockCooldown)) { //May take this out
             if (this.currEnergy > BLOCK_COST) { //Only block if you have enough energy
                 this.currEnergy -= BLOCK_COST;
-                this.hud.setEnergy(this.currEnergy);
                 newHud.setCurrEnergy(currEnergy);
 
                 this.animationsState.copy(this.blockingState);
@@ -142,13 +139,18 @@ public class Protagonist extends Character {
 
             this.animationsState.copy(this.gotHitState);
             super.getHit(damage);
-            this.hud.setHealth(this.currHealth);
-            newHud.setCurrHealth(currHealth);
-            if (this.currHealth <= 0) { //died
-                this.playGotAttackedAnimation = false;
-                this.playAttackAnimation = false;
-                this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+            if (this.currHealth <= 0) {
+                this.lives--;
+                if (this.lives <= 0) {
+                    this.playGotAttackedAnimation = false;
+                    this.playAttackAnimation = false;
+                    this.playDieAnimation = true; //Can leave other play animation booleans true as die has implicit priority when checking.
+                } else {
+                    this.currHealth = PROTAGONIST_MAXHEALTH;
+                }
             }
+            this.newHud.setCurrHealth(this.currHealth);
+
         }
     }
 
@@ -198,7 +200,6 @@ public class Protagonist extends Character {
         if (this.currHealth > this.maxHealth) {
             this.currHealth = this.maxHealth;
         }
-        this.hud.setHealth(this.currHealth);
         newHud.setCurrHealth(currHealth);
     }
 
@@ -207,7 +208,6 @@ public class Protagonist extends Character {
         if (this.currEnergy > this.maxEnergy) {
             this.currEnergy = this.maxEnergy;
         }
-        this.hud.setEnergy(this.currEnergy);
         newHud.setCurrEnergy(currEnergy);
     }
 
@@ -298,8 +298,7 @@ public class Protagonist extends Character {
 
 
         super.tick(cameraX,cameraY); //Check collisions and update x and y
-        hud.tick(cameraX, cameraY); //Update health and energy displays
-        newHud.tick();
+        newHud.tick(lives); //Update health and energy displays
 
         if (this.client != null) { //Multi player
             commands = Server.PACKET_PROTAGONIST_UPDATE + Server.PACKET_ID + this.client.getClientID() + Server.PACKET_LEVEL_NUMBER + this.levelNumber + Server.PACKET_POSITION + this.x + "," + this.y + Server.PACKET_POSITION + commands;
@@ -337,9 +336,7 @@ public class Protagonist extends Character {
 
     protected void cheat() {
         currEnergy = maxEnergy;
-        hud.setEnergy(currEnergy);
         currHealth = maxHealth;
-        hud.setHealth(currHealth);
         for (int i = 0; i < 2; i++) {
             this.inventory.addItem(new Scroll("Fire Scroll", Level.SCROLL_DESCRIPTION, 0, 0,
                     PreLoadedImages.fireScrollSprite, Level.SCROLL_SPRITE_WIDTH, Level.SCROLL_SPRITE_HEIGHT));
@@ -359,8 +356,10 @@ public class Protagonist extends Character {
             double bossSpawnX = (bossLevel.getDoors().get(TileType.DOOR_LEFT).getX() + 1) * Game.PIXEL_UPSCALE;
             double bossSpawnY = bossLevel.getDoors().get(TileType.DOOR_LEFT).getY() * Game.PIXEL_UPSCALE;
             Handler.loadBossRoom(bossSpawnX, bossSpawnY);
-
         });
+
+        newHud.setCurrHealth(currHealth);
+        newHud.setCurrEnergy(currEnergy);
     }
 
     @Override
@@ -369,15 +368,15 @@ public class Protagonist extends Character {
     }
 
     public String updateTimer() {//This gets called each second
-        return this.hud.updateTimer();
+        return this.newHud.updateTimer();
     }
 
     public int getMinutes(){
-        return this.hud.getMinutes();
+        return this.newHud.getMinutes();
     }
 
     public int getSeconds() {
-        return this.hud.getSeconds();
+        return this.newHud.getSeconds();
     }
 
     protected boolean isProtagonist(){
@@ -400,18 +399,15 @@ public class Protagonist extends Character {
                 graphicsContext.drawImage(this.shield,this.x + characterWidth + 15, this.y + this.animationsState.getTopBorder()/3, -characterWidth * 2, characterHeight * 1.1);
             }
         }
-        hud.render(graphicsContext, cameraX, cameraY);
 //        if (playAttackAnimation) {
 //            this.renderAttackBoundingBox(graphicsContext);
 //        }
     }
 
-    public HUD getHud() {
-        return hud;
-    }
-
     public NewHUD getNewHud() {
         this.newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
+        this.newHud.setCurrHealth(this.currHealth);
+        this.newHud.setCurrEnergy(this.maxEnergy);
         return this.newHud;
     }
 
@@ -450,7 +446,6 @@ public class Protagonist extends Character {
         if (this.currEnergy > maxEnergy) { //Can't go over max
             this.currEnergy = maxEnergy;
         }
-        this.hud.setEnergy(this.currEnergy);
         newHud.setCurrEnergy(currEnergy);
         this.enemysKilled++;
     }
@@ -458,7 +453,6 @@ public class Protagonist extends Character {
     public boolean useSpecial(){
         if (currEnergy == maxEnergy){
             currEnergy = 0; //Use all energy
-            this.hud.setEnergy(this.currEnergy);
             newHud.setCurrEnergy(currEnergy);
             return true;
         } else {

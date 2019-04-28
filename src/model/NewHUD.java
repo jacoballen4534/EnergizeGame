@@ -62,9 +62,7 @@ public class NewHUD extends MenuElement{
     }
 
     private HUDController LoadFXML() throws IOException{
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxmls/hud.fxml")
-        );
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmls/hud.fxml"));
         this.getChildren().setAll((AnchorPane) loader.load());
         return loader.getController();
     }
@@ -110,15 +108,16 @@ public class NewHUD extends MenuElement{
         return this.seconds;
     }
 
-    public void tick(){
+    public void tick(int lives){
+        this.healthPercent = this.currHealth/this.maxHealth;
+        this.energyPercent = this.currEnergy/this.maxEnergy;
 
-        healthPercent = currHealth/maxHealth;
-        energyPercent = currEnergy/maxEnergy;
-
-        controller.UpdateHealth(healthPercent);
-        controller.UpdateEnergy(energyPercent);
-        controller.UpdateEquippedItem(inventory.getEquippedItem());
+        this.controller.UpdateHealth(this.healthPercent);
+        this.controller.UpdateEnergy(this.energyPercent);
+        this.controller.UpdateEquippedItem(this.inventory.getEquippedItem());
+        this.controller.UpdateLives(lives);
     }
+
 
     /*private void CreateHUDLayout(int width, int height){
 

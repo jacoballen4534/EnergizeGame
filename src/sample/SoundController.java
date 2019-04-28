@@ -71,6 +71,10 @@ public class SoundController {
             return clip;
 
         }
+        catch (NullPointerException e){
+            System.out.println("Requested sound was unavailable");
+            return null;
+        }
         catch (Exception e){
             e.printStackTrace();
             return null;
