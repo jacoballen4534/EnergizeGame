@@ -28,7 +28,7 @@ On both the host and client computer run the comand `java -jar <path>/2019-Java-
 `host_ip_address` Default value is localhost. For networked multiplayer run `hostname -I` on the host computer to find the ip address.</br>
 -If there are multiple addresses displayed pick the one that only consists of numbers (usualy in the form 192.168.##.##).
 
-`port_number` Defauly value is 4200. Only change this if receiving `*There is already a host at this address. Joining that game instead*` error message. Valid port numbers are from 1023 - 65535 but these are not guaranteed to be available.
+`port_number` Default value is 4200. Only change this if receiving `*There is already a host at this address. Joining that game instead*` error message. Valid port numbers are from 1023 - 65535 but these are not guaranteed to be available.
 
 On the host computer, click "Host Game", while on any connecting computers click "Join Game".
 
