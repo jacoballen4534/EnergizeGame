@@ -387,19 +387,25 @@ public class Handler { //This class will hold all the game objects and is respon
 
     public static void fireScrollAttack(Scroll scroll) {
         for (Enemy enemy : enemies) {
-            enemy.getHit(scroll.getDamage());
+            if (enemy.inCameraBounds(camera.getX(), camera.getY())) {
+                enemy.getHit(scroll.getDamage());
+            }
         }
     }
 
     public static void freezeEnemies(Scroll scroll) {
         for (Enemy enemy : enemies) {
-            enemy.freeze(scroll.getFreezeDuration());
+            if (enemy.inCameraBounds(camera.getX(), camera.getY())) {
+                enemy.freeze(scroll.getFreezeDuration());
+            }
         }
     }
 
     public static void blowEnemiesAway(Scroll scroll) {
         for (Enemy enemy : enemies) {
-            enemy.blowAway(scroll.getWindDuration());
+            if (enemy.inCameraBounds(camera.getX(), camera.getY())) {
+                enemy.blowAway(scroll.getWindDuration());
+            }
         }
     }
 
