@@ -77,10 +77,6 @@ public class NewHUD extends MenuElement{
         this.currEnergy = currEnergy;
     }
 
-    public void setEquippedItem(Item item){
-        controller.UpdateEquippedItem(item);
-    }
-
     public void tick(){
 
         healthPercent = currHealth/maxHealth;
