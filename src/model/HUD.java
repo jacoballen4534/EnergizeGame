@@ -50,6 +50,7 @@ public class HUD extends MenuElement{
     private double energyPercent;
     private int minutes = 0;
     private int seconds = 0;
+    private int previousLvlNumber;
     private ArrayList<RoomType> rooms = new ArrayList<>();
 
 
@@ -71,6 +72,7 @@ public class HUD extends MenuElement{
             e.printStackTrace();
         }
         this.makeMap();
+        this.previousLvlNumber = Map.tutorialLevelNumber;
     }
 
     private HUDController LoadFXML() throws IOException{
@@ -132,33 +134,36 @@ public class HUD extends MenuElement{
     }
 
     private void updateMap(int currentLevel) {
-        for (int i = 0; i < rooms.size(); i++) {
-            if (rooms.get(i) == RoomType.CURRENT) {
-                rooms.set(i,RoomType.VISITED);
+        if (currentLevel != previousLvlNumber) {
+            for (int i = 0; i < rooms.size(); i++) {
+                if (rooms.get(i) == RoomType.CURRENT) {
+                    rooms.set(i, RoomType.VISITED);
+                }
             }
-        }
 
-        if (currentLevel < rooms.size()) { //As boss room is lvl 8055, so check for out of bounds
-            rooms.set(currentLevel, RoomType.CURRENT);
-        }
-
-        if (Map.bossEntranceLevelNumber != -1) {
-            rooms.set(Map.bossEntranceLevelNumber, RoomType.BOSS_ROOM);
-        }
-
-        for (int i = 0; i < rooms.size(); i++) {
-            ImageView imageView = (ImageView) this.getChildren().get(i + 1);//AnchorPane is element 0 so +1.
-            if (this.rooms.get(i) == RoomType.CURRENT) {
-                imageView.setImage(PreLoadedImages.mapCurrentRoom);
-            } else if (this.rooms.get(i) == RoomType.UNVISITED) {
-                imageView.setImage(PreLoadedImages.mapRoomUnVisited);
-            } else if (this.rooms.get(i) == RoomType.VISITED) {
-                imageView.setImage(PreLoadedImages.mapRoomVisited);
-            } else if (this.rooms.get(i) == RoomType.NO_ROOM) {
-                imageView.setImage(PreLoadedImages.mapNoRoom);
-            } else if (this.rooms.get(i) == RoomType.BOSS_ROOM) {
-                imageView.setImage(PreLoadedImages.mapBossEnterance);
+            if (currentLevel < rooms.size()) { //As boss room is lvl 8055, so check for out of bounds
+                rooms.set(currentLevel, RoomType.CURRENT);
             }
+
+            if (Map.bossEntranceLevelNumber != -1) {
+                rooms.set(Map.bossEntranceLevelNumber, RoomType.BOSS_ROOM);
+            }
+
+            for (int i = 0; i < rooms.size(); i++) {
+                ImageView imageView = (ImageView) this.getChildren().get(i + 1);//AnchorPane is element 0 so +1.
+                if (this.rooms.get(i) == RoomType.CURRENT) {
+                    imageView.setImage(PreLoadedImages.mapCurrentRoom);
+                } else if (this.rooms.get(i) == RoomType.UNVISITED) {
+                    imageView.setImage(PreLoadedImages.mapRoomUnVisited);
+                } else if (this.rooms.get(i) == RoomType.VISITED) {
+                    imageView.setImage(PreLoadedImages.mapRoomVisited);
+                } else if (this.rooms.get(i) == RoomType.NO_ROOM) {
+                    imageView.setImage(PreLoadedImages.mapNoRoom);
+                } else if (this.rooms.get(i) == RoomType.BOSS_ROOM) {
+                    imageView.setImage(PreLoadedImages.mapBossEnterance);
+                }
+            }
+            previousLvlNumber = currentLevel;
         }
     }
 

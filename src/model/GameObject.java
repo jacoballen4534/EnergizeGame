@@ -28,7 +28,7 @@ public abstract class GameObject {
     protected Pair<Integer, Integer> spawnID;//Used to identify enemy's when removing. Form (level number, SpawnLocation)
 
 
-    //TODO: Add isSolid to construcot, and pass empty rectangle in getBounds if it is not solid
+
     public GameObject(int xLocation, int yLocation, BufferedImage spriteSheet, int spriteWidth, int spriteHeight, int renderWidth, int renderHeight) {
         //Multiply by PIXEL_UPSCALE to scale up from single pixels to desired map size
         this.x = xLocation * Game.PIXEL_UPSCALE;

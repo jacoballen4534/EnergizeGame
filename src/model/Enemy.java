@@ -40,6 +40,7 @@ public abstract class Enemy extends Character{
             this.animationsState.copy(this.gotHitState);
             if (this.animationsState.isLastFrame(this.currentAnimationCol)) {
                 this.playGotAttackedAnimation = false;
+                this.onFire = false;
             }
         } else if (this.playAttackAnimation) {
             this.animationsState.copy(this.attackState);
@@ -88,6 +89,9 @@ public abstract class Enemy extends Character{
         }
     }
 
+    protected void setOnFire(){
+        this.onFire = true;
+    }
 
     protected void tick(double cameraX, double cameraY, Level level) {
         if (this.target.isOnline()) {

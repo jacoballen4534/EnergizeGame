@@ -33,6 +33,8 @@ public class PreLoadedImages {
     public static Image mapRoomVisited;
     public static Image mapCurrentRoom;
     public static Image mapBossEnterance;
+    public static Image flame;
+    public static Image icicle;
 
 
     static {
@@ -42,7 +44,7 @@ public class PreLoadedImages {
             tileSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Tileset.png"));
             gruntSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/GruntSpriteSheet.png"));
             protagonistSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/ProtagonistSheet.png"));
-            onlinePlayerSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/BlueCapeProtagonistSheet.png"));
+            onlinePlayerSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/YelllowCapeProtagonistSheet.png"));
             campFireSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/CampFire.png"));
             shieldSpriteSheet = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/Images/Shield.png"));
             healthPickupSprite = ImageIO.read(PreLoadedImages.class.getResourceAsStream("/sprites/healthKit.png"));
@@ -60,6 +62,8 @@ public class PreLoadedImages {
             mapRoomVisited = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_roomVisited.png"));
             mapCurrentRoom = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_currentRoom.png"));
             mapBossEnterance = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/map_bossEntrance.png"));
+            flame = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/Flame.png"));
+            icicle = new Image(PreLoadedImages.class.getResourceAsStream("/sprites/Icicle.png"));
         } catch (IOException e) {
             System.out.println("\033[0;31m" + e.getMessage());
         }
