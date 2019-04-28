@@ -110,6 +110,7 @@ public class Boss extends Enemy {
                         y - this.idleState.getTopBorder(),
                         -this.spriteWidth, this.spriteHeight);
             }
+            this.renderSpellEffect(graphicsContext);
 //            this.renderBoundingBox(graphicsContext);
 //            this.renderAttackBoundingBox(graphicsContext);
     }
