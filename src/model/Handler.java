@@ -75,6 +75,7 @@ public class Handler { //This class will hold all the game objects and is respon
         stage.setTitle("Game Over");
         Game.getRoot().getChildren().setAll((AnchorPane) new FXMLLoader().load(MainMenuController.class.getResourceAsStream("/fxmls/endScreen.fxml")));
         SoundController.playMusic("titleBGM");
+        game.getController().setGameActive(false);
     } catch (IOException e) {
         e.printStackTrace();
     }

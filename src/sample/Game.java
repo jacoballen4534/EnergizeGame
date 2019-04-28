@@ -242,4 +242,8 @@ public class Game extends Canvas {
     public static AnchorPane getRoot() {
         return root;
     }
+
+    public MainMenuController getController() {
+        return controller;
+    }
 }
