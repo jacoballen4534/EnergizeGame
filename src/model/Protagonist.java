@@ -86,7 +86,7 @@ public class Protagonist extends Character {
 
         newHud = new NewHUD("hud",PROTAGONIST_MAXHEALTH,PROTAGONIST_MAXENERGY,this.inventory,Game.SCREEN_WIDTH,0);
         newHud.setCurrHealth(this.currHealth);
-        newHud.setCurrEnergy(this.maxEnergy);
+        newHud.setCurrEnergy(this.currEnergy);
 
         this.attackDamage = PROTAGONIST_BASE_ATTACK_DAMAGE; //Start with 10 damage pwe hit and updated based on weapon tier.
 
