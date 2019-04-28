@@ -14,8 +14,9 @@ Energize is a side-scrolling action adventure game set in the far future. It fol
 6. Name appropriately. Set Main class as Main-sample > OK > Apply.
 7. File > Export > Java > Runnable JAR file.
 8. Set Launch configuration to the configuration made in step 6.
-9. Give an appropriate name and location.
-10. Select Package required libraries into generated JAR from Library handling > Finish.
+9. Choose a name and location for the JAR file.
+10. Ensure that "Extract required libraries into generated JAR" is selected underneath "Library handling".
+11. Simply click "Finish", and you're ready to play!
 
 
 #### Launch instructions
@@ -34,3 +35,4 @@ On the host computer, click "Host Game", while on any connecting computers click
 
 #### Prerequisites:
 - Java 1.8. This can be checked by running `java -version` in terminal.
+- For networked multiplayer, all devices wishing to connect to the same host game must be on the same network.
