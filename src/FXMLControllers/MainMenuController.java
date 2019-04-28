@@ -264,6 +264,9 @@ public class MainMenuController implements Initializable {
         if (saveGame.getValue() != null) {
             focussedLabel = UpdateFocussedLabel(focussedLabel,focussedLabel.getId());
             UpdateMenu(focussedLabel);
+            if (game != null) {
+                game.pause();
+            }
             game = new Game(this, saveGame.getValue());
             game.start();
         } else {

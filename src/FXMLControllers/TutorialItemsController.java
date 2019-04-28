@@ -33,6 +33,9 @@ public class TutorialItemsController implements Initializable {
     }
 
     @FXML public void startGameButtonPressed(){
+        if (game != null) {
+            game.pause();
+        }
         game = new Game(TutorialControlsController.controller, System.currentTimeMillis());
         game.start();
         TutorialControlsController.controller.setGame(game);

@@ -112,6 +112,9 @@ public class Client {
 
 
             Platform.runLater(() -> {
+                if (game != null) {
+                    game.pause();
+                }
                 this.game = new Game(this.mainMenuController, this.gameSeed);
                 this.game.addClient(this);
                 this.game.start();
