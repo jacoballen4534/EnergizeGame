@@ -432,7 +432,7 @@ public class Protagonist extends Character {
             currEnergy = 0; //Use all energy
             hud.setCurrEnergy(currEnergy);
             if (this.lives<3)this.lives++;
-            SoundController.playMusic("magicAbility");
+            SoundController.playSoundFX("magicAbility");
             return true;
         } else {
             return false;
