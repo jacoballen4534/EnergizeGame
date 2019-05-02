@@ -21,6 +21,7 @@ public class DifficultyController {
     public static IntObj BOSS_SPECIAL_DAMAGE = new IntObj();
 
     public static String difficulty;
+    public static int difficultyLevel;
 
     private static ArrayList<IntObj> params = new ArrayList<IntObj>() {
         {
@@ -51,19 +52,20 @@ public class DifficultyController {
 
     public static void setDifficulty(String newDifficulty){
         difficulty = newDifficulty;
-        switch(newDifficulty){
+        switch(difficulty){
             case "EASY":
-                updateDifficulty(0);
+                difficultyLevel = 0;
                 break;
             case "NORMAL":
-                updateDifficulty(1);
+                difficultyLevel = 1;
                 break;
             case "HARD":
-                updateDifficulty(2);
+                difficultyLevel = 2;
                 break;
             default:
                 break;
         }
+        updateDifficulty(difficultyLevel);
     }
 
 }

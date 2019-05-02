@@ -19,13 +19,13 @@
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="364.0" spacing="30.0">
                                 <children>
                                     <Label fx:id="endScoreLabel" text="Item Score" />
-                                    <Label fx:id="itemsCollectedLabel" styleClass="endScorePointsLabel" text="12 * 100 = 1200" />
+                                    <Label fx:id="itemScoreLabel" styleClass="endScorePointsLabel" text="12 * 100 = 1200" />
                                 </children>
                             </HBox>
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="341.0" spacing="30.0">
                                 <children>
-                                    <Label fx:id="endScoreLabel" text="Time Taken" />
-                                    <Label fx:id="timeTakenLabel" styleClass="endScorePointsLabel" text="5:00 -&gt; 300" />
+                                    <Label fx:id="endScoreLabel" text="Time Score" />
+                                    <Label fx:id="timeScoreLabel" styleClass="endScorePointsLabel" text="5:00 -&gt; 300" />
                                 </children>
                             </HBox>
                      </children>
@@ -35,7 +35,7 @@
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="308.0" spacing="30.0">
                                 <children>
                                     <Label fx:id="endScoreLabel" text="Enemies Score" />
-                                    <Label fx:id="enemiesKilledLabel" styleClass="endScorePointsLabel" text="14 * 200 = 2800" />
+                                    <Label fx:id="enemyScoreLabel" styleClass="endScorePointsLabel" text="14 * 200 = 2800" />
                                 </children>
                             </HBox>
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="215.0" spacing="30.0">

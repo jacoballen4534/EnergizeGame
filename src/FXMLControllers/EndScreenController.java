@@ -8,8 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Utilities;
-import sample.Game;
-import sample.Main;
+import sample.DifficultyController;
 import sample.SoundController;
 
 import java.io.IOException;
@@ -37,9 +36,9 @@ public class EndScreenController implements Initializable {
 
     @FXML Label endScreenTitle;
 
-    @FXML private Label itemsCollectedLabel;
-    @FXML private Label enemiesKilledLabel;
-    @FXML private Label timeTakenLabel;
+    @FXML private Label itemScoreLabel;
+    @FXML private Label enemyScoreLabel;
+    @FXML private Label timeScoreLabel;
     @FXML private Label victoryBonusLabel;
     @FXML private Label finalScoreLabel;
     @FXML private TextField NameField;
@@ -50,9 +49,9 @@ public class EndScreenController implements Initializable {
         if (gameVictory) endScreenTitle.setText("EMBERRATH IS SAVED");
         else endScreenTitle.setText("GAME OVER");
 
-        itemsCollectedLabel.setText(Integer.toString(itemScore));
-        enemiesKilledLabel.setText(Integer.toString(enemyScore));
-        timeTakenLabel.setText(Integer.toString(timeScore));
+        itemScoreLabel.setText(Integer.toString(itemScore));
+        enemyScoreLabel.setText(Integer.toString(enemyScore));
+        timeScoreLabel.setText(Integer.toString(timeScore));
         victoryBonusLabel.setText(Integer.toString(victoryScore));
         finalScoreLabel.setText(Integer.toString(finalScore));
     }
@@ -80,10 +79,10 @@ public class EndScreenController implements Initializable {
 
     public static void SetScore(boolean victory, int numItems, int numEnemies, int time){
         gameVictory = victory;
-        itemScore = numItems * ITEM_MULTIPLIER;
-        enemyScore = numEnemies * ENEMY_MULTIPLIER;
+        itemScore = numItems * ITEM_MULTIPLIER * (DifficultyController.difficultyLevel+1);
+        enemyScore = numEnemies * ENEMY_MULTIPLIER * (DifficultyController.difficultyLevel+1);
         timeScore = ((time > 300) ? 0:300-time) * TIME_MULTIPLIER;
-        victoryScore = (victory) ? VICTORY_BONUS:0;
+        victoryScore = ((victory) ? VICTORY_BONUS:0) * (DifficultyController.difficultyLevel + 1);
         finalScore = itemScore + enemyScore + timeScore + victoryScore;
     }
 }
