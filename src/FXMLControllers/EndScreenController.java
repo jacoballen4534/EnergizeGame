@@ -82,7 +82,7 @@ public class EndScreenController implements Initializable {
         gameVictory = victory;
         itemScore = numItems * ITEM_MULTIPLIER;
         enemyScore = numEnemies * ENEMY_MULTIPLIER;
-        timeScore = time * TIME_MULTIPLIER; //Time in seconds
+        timeScore = ((time > 300) ? 0:300-time) * TIME_MULTIPLIER;
         victoryScore = (victory) ? VICTORY_BONUS:0;
         finalScore = itemScore + enemyScore + timeScore + victoryScore;
     }
