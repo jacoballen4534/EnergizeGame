@@ -53,12 +53,34 @@ public class Inventory{
         }
     }
 
+    public void updateEquippedItem(){
+        /*
+        * Options
+        * 1. Equipped item is the only copy of the item (total items > 0)
+        * 2. Equipped item is no the only copy of the item (total items > 0)
+        * 3. Equipped item is the only item (items = 0)
+        * */
+        if (getItemCount() > 0){
+            if (hasItem(equippedItem) != null){
+                removeItem(equippedItem);
+            }
+            else{
+                equippedItem = this.items.get(0);
+            }
+        }
+        else{
+            equippedItem = null;
+        }
+    }
+
+    //Item scrolling
+    /*public Item getNextItem(){
+        if (equippedItem == null){
+            equippedItem = this.items.get(0); //Equipped item becomes the first in the list
+        }
+    }*/
+
     public void removeItem(Item item) throws NullPointerException{
-        /*items.forEach(item1 -> {
-           if (item1.getName().equals(item.getName())){
-               Platform.runLater(()->items.remove(item1));
-           }
-        });*/
         if (item == null) throw new NullPointerException("Tried to remove null from inventory");
         //Find item in item list and decrease amount/remove it
         items.forEach(item1 -> {

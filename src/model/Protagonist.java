@@ -410,8 +410,7 @@ public class Protagonist extends Character {
         */
         if (this.inventory.getEquippedItem() != null){
             this.inventory.getEquippedItem().useItem(this);
-            this.inventory.setEquippedItem(null);
-            if (inventory.getItemCount()>0) this.inventory.changeEquippedItem(this.inventory.getItemList().get(0));
+            this.inventory.updateEquippedItem();
         }
         else System.out.println("You don't have an item to use!");
     }
