@@ -11,6 +11,7 @@ public class Inventory{
 
     private ArrayList<Item> items;
     private Item equippedItem;
+    private int pos = 0;
 
     public Inventory(){
         items = new ArrayList<>();
@@ -74,11 +75,13 @@ public class Inventory{
     }
 
     //Item scrolling
-    /*public Item getNextItem(){
-        if (equippedItem == null){
-            equippedItem = this.items.get(0); //Equipped item becomes the first in the list
-        }
-    }*/
+    public Item getNextItem(){
+        //int pos = items.indexOf(equippedItem);
+        //Item nextItem = (pos==items.size()) ? items.get(0):items.get(pos+1);
+        pos = (pos==items.size()) ? 0:pos+1;
+        Item nextItem = items.get(pos);
+        return nextItem;
+    }
 
     public void removeItem(Item item) throws NullPointerException{
         if (item == null) throw new NullPointerException("Tried to remove null from inventory");
@@ -100,7 +103,7 @@ public class Inventory{
     }
 
     private Item hasItem(Item item){
-        if (item==null) return null;
+        if (item == null) return null;
         for (Item item1 : items){
             if(item1.getName().equals(item.getName()))
                 return item1;

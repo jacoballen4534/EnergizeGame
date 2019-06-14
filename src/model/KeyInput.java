@@ -20,6 +20,7 @@ public class KeyInput{
             put("left",KeyCode.A);
             put("down",KeyCode.S);
             put("right",KeyCode.D);
+            put("switchItem",KeyCode.E);
             put("attack",KeyCode.J);
             put("useItem",KeyCode.K);
             put("block",KeyCode.L);

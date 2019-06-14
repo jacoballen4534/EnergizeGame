@@ -246,6 +246,10 @@ public class Protagonist extends Character {
             }
         }
 
+        if (keyInput.getKeyPressDebounced("switchItem")){
+            this.switchItem();
+        }
+
         if (keyInput.getKeyPressDebounced("attack")){
             commands += (Server.PACKET_ATTACK);
             this.attack();
@@ -415,6 +419,9 @@ public class Protagonist extends Character {
         else System.out.println("You don't have an item to use!");
     }
 
+    private void switchItem(){
+        this.inventory.changeEquippedItem(this.inventory.getNextItem());
+    }
 
     public void addEnergy(int amount) {
         this.currEnergy += amount;
